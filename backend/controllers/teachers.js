@@ -3,9 +3,17 @@ const Teacher = require('../models/teacher');
 const Lesson = require('../models/lesson');
 const jsonData = require('../2018-2019-2.json');
 
-teachersRouter.get('/', async (request, response) => {
-  const users = await Teacher.find({}).populate('lessons');
-  response.json(users.map((u) => u.toJSON()));
+teachersRouter.get('/', async (req, res) => {
+  if (!isNaN(Number(req.query.start)) && !isNaN(Number(req.query.total))) {
+    const users = await Teacher.find({})
+      .skip(Number(req.query.start))
+      .limit(Number(req.query.total))
+      .populate('lessons');
+    res.json(users.map((u) => u.toJSON()));
+  } else {
+    const users = await Teacher.find({}).populate('lessons');
+    res.json(users.map((u) => u.toJSON()));
+  }
 });
 
 teachersRouter.get('/delete5', async (req, res) => {

@@ -6,6 +6,18 @@ const addInf = async (start, count) => {
   return req.data;
 };
 
+const getTeacherPage = async (name) => {
+  const req = await axios.get(`${baseUrl}?name=${name}`);
+  return req.data;
+};
+
+const getTotalTeacher = async () => {
+  const req = await axios.get(`${baseUrl}/total`);
+  return req.data;
+};
+
 export default {
   addInf,
+  getTeacherPage,
+  getTotalTeacher,
 };

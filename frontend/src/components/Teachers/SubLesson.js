@@ -3,7 +3,7 @@ import React from 'react';
 const SubLesson = ({ lesson }) => {
   return (
     <div>
-      {lesson.areCode}
+      {lesson.areaCode.toUpperCase()}
       {lesson.digitCode}.{lesson.sectionCode}
     </div>
   );

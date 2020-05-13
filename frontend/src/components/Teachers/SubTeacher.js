@@ -1,14 +1,17 @@
 import React from 'react';
 import SubLesson from './SubLesson';
+import { Link } from 'react-router-dom';
+
 const SubTeacher = ({ teacher }) => {
-  console.log('teacher', teacher);
   return (
     <div>
-      <div>Hoca: {teacher.name}</div>
+      <div>
+        <Link to={`/teachers/${teacher.name}`}>Hoca: {teacher.name}</Link>
+      </div>
       <div>
         Dersler:
         {teacher.lessons.map((l) => (
-          <SubLesson lesson={l} />
+          <SubLesson lesson={l} key={l.id} />
         ))}
       </div>
     </div>

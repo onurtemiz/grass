@@ -24,14 +24,16 @@ const lessonReducer = (state = initialState, action) => {
     case 'TOTAL_LESSON':
       const total = action.data;
       return { ...state, total: total };
+    case 'RESET_LESSONS':
+      return initialState;
     default:
       return state;
   }
 };
 
-export const addInfLesson = (start, count, setHasMore, setStart) => {
+export const addInfLesson = (start, count, setHasMore, setStart, filter) => {
   return async (dispatch) => {
-    const lessons = await lessonsService.addInf(start, count);
+    const lessons = await lessonsService.addInf(start, count, filter);
     setStart(start + count);
     setHasMore(true);
     dispatch({
@@ -41,9 +43,9 @@ export const addInfLesson = (start, count, setHasMore, setStart) => {
   };
 };
 
-export const totalLesson = () => {
+export const totalLesson = (filter) => {
   return async (dispatch) => {
-    const total = await lessonsService.getTotalLesson();
+    const total = await lessonsService.getTotalLesson(filter);
     dispatch({
       type: 'TOTAL_LESSON',
       data: total.total,
@@ -61,6 +63,14 @@ export const getLessonPage = (areaCode, digitCode, sectionCode) => {
     dispatch({
       type: 'GET_LESSON_PAGE',
       data: lesson,
+    });
+  };
+};
+
+export const resetLessons = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'RESET_LESSONS',
     });
   };
 };

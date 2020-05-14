@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-import { addInfTeacher, totalTeacher } from '../../reducers/teacherReducer';
+import {
+  addInfTeacher,
+  totalTeacher,
+  resetTeachers,
+} from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 const Teachers = () => {
   const [count, setCount] = useState(20);
@@ -9,27 +13,34 @@ const Teachers = () => {
   const [hasMore, setHasMore] = useState(false);
   const teachers = useSelector((state) => state.teachers.teachers);
   const total = useSelector((state) => state.teachers.total);
+  const filter = useSelector((state) => state.filter);
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(totalTeacher());
-    dispatch(addInfTeacher(start, count, setHasMore, setStart));
-  }, []);
+    setStart(0);
+    setHasMore(false);
+    dispatch(resetTeachers());
+    dispatch(totalTeacher(filter));
+    dispatch(addInfTeacher(0, count, setHasMore, setStart, filter));
+  }, [filter]);
 
   const loadFunc = () => {
     setHasMore(false);
+    console.log('loadFunck', hasMore);
     if (total + count < count + start) {
       return;
     }
-    dispatch(addInfTeacher(start, count, setHasMore, setStart, total));
+    dispatch(addInfTeacher(start, count, setHasMore, setStart, filter));
   };
   const windowStyle = {
     height: 400,
     overflow: 'auto',
   };
-  console.log('state', state);
 
+  if (teachers.length === 0) {
+    return null;
+  }
   return (
     <div style={windowStyle}>
       <InfiniteScroll
@@ -43,9 +54,11 @@ const Teachers = () => {
         }
         useWindow={false}
       >
-        {teachers.map((t) => (
-          <SubTeacher teacher={t} key={t.id} />
-        ))}
+        {teachers
+          .filter((t) => t.name.includes(filter))
+          .map((t) => (
+            <SubTeacher teacher={t} key={t.id} />
+          ))}
       </InfiniteScroll>
     </div>
   );

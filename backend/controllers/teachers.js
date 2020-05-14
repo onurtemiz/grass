@@ -9,15 +9,13 @@ teachersRouter.get('/', async (req, res) => {
       'lessons'
     );
     return res.json(teacher.toJSON());
-  } else if (
-    !isNaN(Number(req.query.start)) &&
-    !isNaN(Number(req.query.total))
-  ) {
-    const users = await Teacher.find({})
+  } else if ('start' in req.query && 'total' in req.query) {
+    const users = await Teacher.find({
+      name: { $regex: req.query.result, $options: 'i' },
+    })
       .skip(Number(req.query.start))
       .limit(Number(req.query.total))
       .populate('lessons');
-
     return res.json(users.map((u) => u.toJSON()));
   } else {
     const users = await Teacher.find({}).populate('lessons');
@@ -26,7 +24,9 @@ teachersRouter.get('/', async (req, res) => {
 });
 
 teachersRouter.get('/total', async (req, res) => {
-  const total = await Teacher.countDocuments();
+  const total = await Teacher.find({
+    name: { $regex: req.query.result, $options: 'i' },
+  }).countDocuments();
   res.json({ total: total });
 });
 

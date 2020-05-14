@@ -21,12 +21,14 @@ lessonsRouter.get('/loadjson/', async (req, res) => {
         areaCode: areaCode,
         digitCode: digitCode,
         sectionCode: sectionCode,
+        fullName: `${areaCode}${digitCode}.${sectionCode}`,
       });
       if (!lessonExists) {
         let lesson = new Lesson({
           areaCode: areaCode,
           digitCode: digitCode,
           sectionCode: sectionCode,
+          fullName: `${areaCode}${digitCode}.${sectionCode}`,
           teacher: teacherDB._id,
         });
         teacherDB.lessons = teacherDB.lessons.concat(lesson._id);
@@ -46,7 +48,10 @@ lessonsRouter.get('/loadjson/', async (req, res) => {
 });
 
 lessonsRouter.get('/total', async (req, res) => {
-  const total = await Lesson.countDocuments();
+  const result = req.params.result === undefined ? '' : req.params.result;
+  const total = await Lesson.find({
+    fullName: { $regex: result, $options: 'i' },
+  }).countDocuments();
   res.json({ total: total });
 });
 
@@ -54,7 +59,7 @@ const getSingleLesson = async (req) => {
   const q = req.query;
   const lesson = await Lesson.findOne({
     areaCode: q.areaCode,
-    digitCode: Number(q.digitCode),
+    digitCode: q.digitCode,
     sectionCode: q.sectionCode,
   }).populate('teacher');
   return lesson.toJSON();
@@ -70,7 +75,10 @@ lessonsRouter.get('/', async (req, res) => {
     return res.json(jsonLesson);
   } else if ('start' in req.query && 'total' in req.query) {
     const q = req.query;
-    const lessons = await Lesson.find({})
+    const result = q.result === undefined ? '' : q.result;
+    const lessons = await Lesson.find({
+      fullName: { $regex: result, $options: 'i' },
+    })
       .skip(Number(q.start))
       .limit(Number(q.total))
       .populate('teacher');

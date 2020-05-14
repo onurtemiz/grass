@@ -24,16 +24,20 @@ const teacherReducer = (state = initialState, action) => {
     case 'TOTAL_TEACHER':
       const total = action.data;
       return { ...state, total: total };
+    case 'RESET_TEACHERS':
+      return initialState;
     default:
       return state;
   }
 };
 
-export const addInfTeacher = (start, count, setHasMore, setStart) => {
+export const addInfTeacher = (start, count, setHasMore, setStart, filter) => {
   return async (dispatch) => {
-    const teachers = await teachersService.addInf(start, count);
-    setStart(start + count);
-    setHasMore(true);
+    const teachers = await teachersService.addInf(start, count, filter);
+    if (teachers.length !== 0) {
+      setStart(start + count);
+      setHasMore(true);
+    }
     dispatch({
       type: 'ADD_INF_TEACHER',
       data: teachers,
@@ -41,9 +45,9 @@ export const addInfTeacher = (start, count, setHasMore, setStart) => {
   };
 };
 
-export const totalTeacher = () => {
+export const totalTeacher = (filter) => {
   return async (dispatch) => {
-    const total = await teachersService.getTotalTeacher();
+    const total = await teachersService.getTotalTeacher(filter);
     dispatch({
       type: 'TOTAL_TEACHER',
       data: total.total,
@@ -58,6 +62,14 @@ export const getTeacherPage = (name) => {
     dispatch({
       type: 'GET_TEACHER_PAGE',
       data: teacher,
+    });
+  };
+};
+
+export const resetTeachers = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'RESET_TEACHERS',
     });
   };
 };

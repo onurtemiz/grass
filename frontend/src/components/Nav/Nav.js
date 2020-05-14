@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import Filter from '../Filter/Filter';
 const Nav = () => {
   const padding = {
     padding: 5,
@@ -14,6 +14,7 @@ const Nav = () => {
       <Link to="/lessons" style={padding}>
         Lessons
       </Link>
+      <Filter />
     </div>
   );
 };

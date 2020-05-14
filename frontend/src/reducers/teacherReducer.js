@@ -27,9 +27,11 @@ const teacherReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfTeacher = (start, count) => {
+export const addInfTeacher = (start, count, setHasMore, setStart) => {
   return async (dispatch) => {
     const teachers = await teachersService.addInf(start, count);
+    setStart(start + count);
+    setHasMore(true);
     dispatch({
       type: 'ADD_INF',
       data: teachers,

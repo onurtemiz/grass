@@ -4,11 +4,12 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTeacher, totalTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 const Teachers = () => {
-  const [count, setCount] = useState(200);
+  const [count, setCount] = useState(20);
   const [start, setStart] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const teachers = useSelector((state) => state.teachers.teachers);
   const total = useSelector((state) => state.teachers.total);
+  const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,17 +19,16 @@ const Teachers = () => {
 
   const loadFunc = () => {
     setHasMore(false);
-    if (total.total + count < count + start) {
+    if (total + count < count + start) {
       return;
     }
     dispatch(addInfTeacher(start, count, setHasMore, setStart, total));
   };
-
   const windowStyle = {
     height: 400,
     overflow: 'auto',
   };
-  console.log('hasMore', hasMore);
+  console.log('state', state);
 
   return (
     <div style={windowStyle}>

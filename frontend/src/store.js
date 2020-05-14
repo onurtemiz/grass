@@ -7,7 +7,7 @@ import teacherReducer from './reducers/teacherReducer';
 
 const reducer = combineReducers({
   teachers: teacherReducer,
-  lessons: null,
+  lessons: lessonReducer,
 });
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));

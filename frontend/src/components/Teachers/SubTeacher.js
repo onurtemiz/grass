@@ -1,12 +1,13 @@
 import React from 'react';
 import SubLesson from './SubLesson';
+import { TEACHER_PATH } from '../../utils/config';
 import { Link } from 'react-router-dom';
 
 const SubTeacher = ({ teacher }) => {
   return (
     <div>
       <div>
-        <Link to={`/teachers/${teacher.name}`}>Hoca: {teacher.name}</Link>
+        <Link to={TEACHER_PATH(teacher)}>Hoca: {teacher.name}</Link>
       </div>
       <div>
         Dersler:

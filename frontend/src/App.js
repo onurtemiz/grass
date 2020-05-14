@@ -19,7 +19,7 @@ function App() {
         <Route path="/teachers">
           <Teachers />
         </Route>
-        <Route path="/lesson/:id">
+        <Route path="/lessons/:areaCode/:digitCode/:sectionCode">
           <Lesson />
         </Route>
         <Route path="/lessons">

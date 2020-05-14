@@ -8,7 +8,7 @@ teachersRouter.get('/', async (req, res) => {
     const teacher = await Teacher.findOne({ name: req.query.name }).populate(
       'lessons'
     );
-    res.json(teacher.toJSON());
+    return res.json(teacher.toJSON());
   } else if (
     !isNaN(Number(req.query.start)) &&
     !isNaN(Number(req.query.total))
@@ -18,7 +18,7 @@ teachersRouter.get('/', async (req, res) => {
       .limit(Number(req.query.total))
       .populate('lessons');
 
-    res.json(users.map((u) => u.toJSON()));
+    return res.json(users.map((u) => u.toJSON()));
   } else {
     const users = await Teacher.find({}).populate('lessons');
     res.json(users.map((u) => u.toJSON()));

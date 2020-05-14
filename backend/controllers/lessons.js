@@ -45,7 +45,37 @@ lessonsRouter.get('/loadjson/', async (req, res) => {
   });
 });
 
+lessonsRouter.get('/total', async (req, res) => {
+  const total = await Lesson.countDocuments();
+  res.json({ total: total });
+});
+
+const getSingleLesson = async (req) => {
+  const q = req.query;
+  const lesson = await Lesson.findOne({
+    areaCode: q.areaCode,
+    digitCode: Number(q.digitCode),
+    sectionCode: q.sectionCode,
+  }).populate('teacher');
+  return lesson.toJSON();
+};
+
 lessonsRouter.get('/', async (req, res) => {
+  if (
+    'areaCode' in req.query &&
+    'digitCode' in req.query &&
+    'sectionCode' in req.query
+  ) {
+    const jsonLesson = await getSingleLesson(req);
+    return res.json(jsonLesson);
+  } else if ('start' in req.query && 'total' in req.query) {
+    const q = req.query;
+    const lessons = await Lesson.find({})
+      .skip(Number(q.start))
+      .limit(Number(q.total))
+      .populate('teacher');
+    return res.json(lessons.map((l) => l.toJSON()));
+  }
   const lessons = await Lesson.find({}).populate('teacher');
   res.json(lessons.map((l) => l.toJSON()));
 });

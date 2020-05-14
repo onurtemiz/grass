@@ -18,6 +18,7 @@ lessonSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // eslint-disable-next-line no-underscore-dangle
     returnedObject.id = returnedObject._id.toString();
+    returnedObject.fullName = `${returnedObject.areaCode}${returnedObject.digitCode}.${returnedObject.sectionCode}`;
     delete returnedObject._id;
     delete returnedObject.__v;
   },

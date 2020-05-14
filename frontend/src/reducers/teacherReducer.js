@@ -4,20 +4,22 @@ import lodash from 'lodash';
 const initialState = { teachers: [], total: 0 };
 const teacherReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_INF':
+    case 'ADD_INF_TEACHER':
       const uniq = lodash.uniqBy([...state.teachers, ...action.data], 'name');
       const currentState = { ...state, teachers: uniq };
       return currentState;
     case 'GET_TEACHER_PAGE':
       const t = state.teachers.find((te) => te.name === action.data.name);
       if (t === undefined) {
-        const uniq = lodash.uniqBy([...state.teachers, ...action.data], 'name');
+        const uniq = lodash.uniqBy([...state.teachers, action.data], 'name');
         return { ...state, teachers: uniq };
       } else {
-        console.log('action.data.name', action.data.name);
-        return state.teachers.map((t) =>
-          t.name === action.data.name ? action.data : t
-        );
+        return {
+          ...state,
+          teachers: state.teachers.map((t) =>
+            t.name === action.data.name ? action.data : t
+          ),
+        };
       }
     case 'TOTAL_TEACHER':
       const total = action.data;
@@ -33,7 +35,7 @@ export const addInfTeacher = (start, count, setHasMore, setStart) => {
     setStart(start + count);
     setHasMore(true);
     dispatch({
-      type: 'ADD_INF',
+      type: 'ADD_INF_TEACHER',
       data: teachers,
     });
   };
@@ -44,7 +46,7 @@ export const totalTeacher = () => {
     const total = await teachersService.getTotalTeacher();
     dispatch({
       type: 'TOTAL_TEACHER',
-      data: total,
+      data: total.total,
     });
   };
 };

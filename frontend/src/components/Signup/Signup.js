@@ -2,15 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
+import { signupUser } from '../../reducers/userReducer';
+import { useDispatch } from 'react-redux';
 const Signup = () => {
-  const handleSubmit = (values, setSubmitting) => {
-    console.log(
-      'JSOB.stringify(values,null,2)',
-      JSON.stringify(values, null, 2)
-    );
+  const dispatch = useDispatch();
+  const handleSubmit = async (values, setSubmitting) => {
+    dispatch(signupUser(values));
     setSubmitting(false);
-    
   };
 
   return (

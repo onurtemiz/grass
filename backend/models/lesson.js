@@ -7,6 +7,12 @@ const lessonSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
   areaCode: { type: String, required: true },
   digitCode: { type: String, required: true },
   sectionCode: { type: String, required: true },

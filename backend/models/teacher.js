@@ -10,6 +10,12 @@ const teacherSchema = new mongoose.Schema({
       ref: 'Lesson',
     },
   ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
 });
 
 teacherSchema.set(uniqueValidator);

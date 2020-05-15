@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
+    "formik": "^2.1.4",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -20,7 +21,8 @@
     "redux-cache": "^0.3.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-form": "^8.3.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yup": "^0.28.5"
   },
   "scripts": {
     "start": "react-scripts start",

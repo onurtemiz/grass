@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const lessonsRouter = require('./controllers/lessons');
 const teachersRouter = require('./controllers/teachers');
+const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 
 console.log('connecting to', config.MONGODB_URI);
 const mongoUri = process.env.MONGODB_URI;
@@ -25,5 +27,7 @@ app.use(express.json());
 
 app.use('/api/teachers', teachersRouter);
 app.use('/api/lessons', lessonsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 module.exports = app;

@@ -1,34 +1,20 @@
 import React, { useEffect } from 'react';
-import Footer from './components/Footer/Footer';
-import Nav from './components/Nav/Nav';
-import Lesson from './components/Lesson/Lesson';
-import Lessons from './components/Lessons/Lessons';
-import Teacher from './components/Teacher/Teacher';
-import Teachers from './components/Teachers/Teachers';
 import { useDispatch, useSelector } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { setUser } from './reducers/userReducer';
+const AuthenticatedApp = React.lazy(() => import('./AuthorizedApp'));
+const UnauthenticatedApp = React.lazy(() => import('./UnauthorizedApp'));
 
 function App() {
-  return (
-    <div className="App">
-      <Nav />
-      <Switch>
-        <Route path="/teachers/:name">
-          <Teacher />
-        </Route>
-        <Route path="/teachers">
-          <Teachers />
-        </Route>
-        <Route path="/lessons/:areaCode/:digitCode/:sectionCode">
-          <Lesson />
-        </Route>
-        <Route path="/lessons">
-          <Lessons />
-        </Route>
-      </Switch>
-      <Footer />
-    </div>
-  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const grassUser = window.localStorage.getItem('grassUser');
+    if (grassUser) {
+      const jsonUser = JSON.parse(grassUser);
+      dispatch(setUser(jsonUser));
+    }
+  }, []);
+  const user = useSelector((state) => state.user);
+  return user === null ? <UnauthenticatedApp /> : <AuthenticatedApp />;
 }
 
 export default App;

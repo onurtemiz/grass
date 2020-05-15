@@ -8,30 +8,20 @@ import {
 } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 const Teachers = () => {
-  const [count, setCount] = useState(20);
-  const [start, setStart] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const count = useSelector((state) => state.teachers.count);
+  const start = useSelector((state) => state.teachers.start);
+  const hasMore = useSelector((state) => state.teachers.hasMore);
   const teachers = useSelector((state) => state.teachers.teachers);
-  const total = useSelector((state) => state.teachers.total);
   const filter = useSelector((state) => state.filter);
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setStart(0);
-    setHasMore(false);
-    dispatch(resetTeachers());
-    dispatch(totalTeacher(filter));
-    dispatch(addInfTeacher(0, count, setHasMore, setStart, filter));
+    dispatch(addInfTeacher(0, count, filter));
   }, [filter]);
 
   const loadFunc = () => {
-    setHasMore(false);
-    console.log('loadFunck', hasMore);
-    if (total + count < count + start) {
-      return;
-    }
-    dispatch(addInfTeacher(start, count, setHasMore, setStart, filter));
+    dispatch(addInfTeacher(start, count, filter));
   };
   const windowStyle = {
     height: 400,
@@ -41,6 +31,7 @@ const Teachers = () => {
   if (teachers.length === 0) {
     return null;
   }
+  console.log('state', state)
   return (
     <div style={windowStyle}>
       <InfiniteScroll
@@ -56,6 +47,7 @@ const Teachers = () => {
       >
         {teachers
           .filter((t) => t.name.includes(filter))
+          .sort((a, b) => b.fullName - a.fullName)
           .map((t) => (
             <SubTeacher teacher={t} key={t.id} />
           ))}

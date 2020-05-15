@@ -48,9 +48,9 @@ lessonsRouter.get('/loadjson/', async (req, res) => {
 });
 
 lessonsRouter.get('/total', async (req, res) => {
-  const result = req.params.result === undefined ? '' : req.params.result;
+  const search = req.query.search === undefined ? '' : req.query.search;
   const total = await Lesson.find({
-    fullName: { $regex: result, $options: 'i' },
+    fullName: { $regex: search, $options: 'i' },
   }).countDocuments();
   res.json({ total: total });
 });

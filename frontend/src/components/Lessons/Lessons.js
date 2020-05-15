@@ -8,35 +8,28 @@ import {
 } from '../../reducers/lessonReducer';
 import SubLesson from './SubLesson';
 const Lessons = () => {
-  const [count, setCount] = useState(20);
-  const [start, setStart] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const count = useSelector((state) => state.lessons.count);
+  const start = useSelector((state) => state.lessons.start);
+  const hasMore = useSelector((state) => state.lessons.hasMore);
   const state = useSelector((state) => state);
   const lessons = useSelector((state) => state.lessons.lessons);
-  const total = useSelector((state) => state.lessons.total);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setStart(0);
-    setHasMore(false);
-    dispatch(resetLessons());
-    dispatch(totalLesson(filter));
-    dispatch(addInfLesson(0, count, setHasMore, setStart, filter));
+    dispatch(addInfLesson(0, count, filter));
   }, [filter]);
 
   const loadFunc = () => {
-    setHasMore(false);
-    if (total + count < count + start) {
-      return;
-    }
-    dispatch(addInfLesson(start, count, setHasMore, setStart, filter));
+    dispatch(addInfLesson(start, count, filter));
   };
   console.log('state', state);
   const windowStyle = {
     height: 400,
     overflow: 'auto',
   };
+  console.log('state', state);
+
   return (
     <div style={windowStyle}>
       <InfiniteScroll

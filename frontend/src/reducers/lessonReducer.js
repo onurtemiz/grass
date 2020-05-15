@@ -1,12 +1,29 @@
 import lessonsService from '../services/lessons';
 import lodash from 'lodash';
-const initialState = { lessons: [], total: 0 };
+const initialState = {
+  lessons: [],
+  total: 0,
+  hasMore: false,
+  start: 0,
+  count: 20,
+};
 
 const lessonReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_INF_LESSON':
-      const uniq = lodash.uniqBy([...state.lessons, ...action.data], 'id');
-      const currentState = { ...state, lessons: uniq };
+      const uniqLessons = lodash.uniqBy(
+        [...state.lessons, ...action.data.lessons],
+        'id'
+      );
+      const currentState = {
+        ...state,
+        total: action.data.total,
+        hasMore: action.data.hasMore,
+        start: action.data.start,
+        count: action.data.count,
+
+        lessons: uniqLessons,
+      };
       return currentState;
     case 'GET_LESSON_PAGE':
       const l = state.lessons.find((le) => le.id === action.data.id);
@@ -22,8 +39,8 @@ const lessonReducer = (state = initialState, action) => {
         };
       }
     case 'TOTAL_LESSON':
-      const total = action.data;
-      return { ...state, total: total };
+      const totalc = action.data;
+      return { ...state, total: totalc };
     case 'RESET_LESSONS':
       return initialState;
     default:
@@ -31,14 +48,25 @@ const lessonReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfLesson = (start, count, setHasMore, setStart, filter) => {
+export const addInfLesson = (start, count, filter) => {
   return async (dispatch) => {
     const lessons = await lessonsService.addInf(start, count, filter);
-    setStart(start + count);
-    setHasMore(true);
+    const total = await lessonsService.getTotalLesson(filter);
+    let data = {
+      hasMore: true,
+      start: start + count,
+      lessons: lessons,
+      total: total.total,
+      count: count,
+    };
+    if (total.total === 0 || total.total < count + start) {
+      data.hasMore = false;
+      data.start = 0;
+    }
+
     dispatch({
       type: 'ADD_INF_LESSON',
-      data: lessons,
+      data: data,
     });
   };
 };
@@ -46,6 +74,7 @@ export const addInfLesson = (start, count, setHasMore, setStart, filter) => {
 export const totalLesson = (filter) => {
   return async (dispatch) => {
     const total = await lessonsService.getTotalLesson(filter);
+    console.log('total', total);
     dispatch({
       type: 'TOTAL_LESSON',
       data: total.total,

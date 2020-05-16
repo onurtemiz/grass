@@ -84,6 +84,7 @@ commentsRouter.post('/', async (req, res) => {
       error: 'Could not find the teacher,lesson,user',
     });
   }
+  // ONLY ONE COMMENT PER LESSON
   // if (isDuplicate !== null) {
   //   return res.status(400).json({
   //     error: 'you have already commented',

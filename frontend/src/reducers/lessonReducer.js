@@ -82,12 +82,26 @@ export const totalLesson = (filter) => {
   };
 };
 
-export const getLessonPage = (areaCode, digitCode, sectionCode) => {
+export const getLessonPageByName = (areaCode, digitCode, teacherName) => {
   return async (dispatch) => {
-    const lesson = await lessonsService.getLessonPage(
+    const lesson = await lessonsService.getLessonPageByName(
       areaCode,
       digitCode,
-      sectionCode
+      teacherName
+    );
+    dispatch({
+      type: 'GET_LESSON_PAGE',
+      data: lesson,
+    });
+  };
+};
+
+export const getLessonPageById = (areaCode, digitCode, teacherId) => {
+  return async (dispatch) => {
+    const lesson = await lessonsService.getLessonPageById(
+      areaCode,
+      digitCode,
+      teacherId
     );
     dispatch({
       type: 'GET_LESSON_PAGE',

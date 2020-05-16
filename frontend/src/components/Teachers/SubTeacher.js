@@ -12,7 +12,7 @@ const SubTeacher = ({ teacher }) => {
       <div>
         Dersler:
         {teacher.lessons.map((l) => (
-          <SubLesson lesson={l} key={l.id} />
+          <SubLesson lesson={l} teacherName = {teacher.name} key={l.id} />
         ))}
       </div>
     </div>

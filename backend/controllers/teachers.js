@@ -46,7 +46,7 @@ teachersRouter.get('/delete5', async (req, res) => {
 teachersRouter.get('/loadjson', async (req, res) => {
   const lessons = Object.keys(jsonData);
   for (i = 0; i < lessons.length; i++) {
-    let teacher = jsonData[lessons[i]].instructor.toLowerCase();
+    let teacher = jsonData[lessons[i]].instructor;
     let teacherExists = await Teacher.exists({ name: teacher });
     if (!teacherExists) {
       let newTeacher = new Teacher({

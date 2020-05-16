@@ -44,7 +44,9 @@ const Lessons = () => {
         useWindow={false}
       >
         {lessons
-          .filter((l) => l.fullName.includes(filter))
+          .filter((l) =>
+            l.fullName.toUpperCase().includes(filter.toUpperCase())
+          )
           .map((l) => (
             <SubLesson key={l.id} lesson={l} />
           ))}

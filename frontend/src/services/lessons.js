@@ -10,9 +10,16 @@ const addInf = async (start, count, filter) => {
   return req.data;
 };
 
-const getLessonPage = async (areaCode, digitCode, sectionCode) => {
+const getLessonPageByName = async (areaCode, digitCode, teacherName) => {
   const req = await axios.get(
-    `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&sectionCode=${sectionCode}`
+    `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherName=${teacherName}`
+  );
+  return req.data;
+};
+
+const getLessonPageById = async (areaCode, digitCode, teacherId) => {
+  const req = await axios.get(
+    `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherId=${teacherId}`
   );
   return req.data;
 };
@@ -24,6 +31,7 @@ const getTotalLesson = async (filter) => {
 
 export default {
   addInf,
-  getLessonPage,
+  getLessonPageByName,
+  getLessonPageById,
   getTotalLesson,
 };

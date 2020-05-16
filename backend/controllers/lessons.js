@@ -15,29 +15,31 @@ lessonsRouter.get('/loadjson/', async (req, res) => {
       let areaCode = result[1].toLowerCase();
       let digitCode = result[2];
       let sectionCode = result[3];
-      let teacher = jsonData[lessons[i]].instructor.toLowerCase();
+      let teacher = jsonData[lessons[i]].instructor;
       let teacherDB = await Teacher.findOne({ name: teacher });
-      let lessonExists = await Lesson.exists({
+      let lessonExists = await Lesson.findOne({
         areaCode: areaCode,
         digitCode: digitCode,
-        sectionCode: sectionCode,
-        fullName: `${areaCode}${digitCode}.${sectionCode}`,
+        teacher: teacherDB._id,
       });
-      if (!lessonExists) {
-        let lesson = new Lesson({
-          areaCode: areaCode,
-          digitCode: digitCode,
-          sectionCode: sectionCode,
-          fullName: `${areaCode}${digitCode}.${sectionCode}`,
-          teacher: teacherDB._id,
-        });
+      let lesson =
+        lessonExists === null
+          ? new Lesson({
+              areaCode: areaCode,
+              digitCode: digitCode,
+              sectionCode: [],
+              fullName: `${areaCode}${digitCode}`,
+              teacher: teacherDB._id,
+            })
+          : lessonExists;
+      lesson.sectionCode = lesson.sectionCode.concat(sectionCode);
+      if (lessonExists === null)
         teacherDB.lessons = teacherDB.lessons.concat(lesson._id);
-        console.log(
-          `teacher ${i}: ${teacher} ${areaCode}${digitCode}.${sectionCode}`
-        );
-        await teacherDB.save();
-        await lesson.save();
-      }
+      console.log(
+        `teacher ${i}: ${teacher} ${areaCode}${digitCode}.${sectionCode}`
+      );
+      await teacherDB.save();
+      await lesson.save();
     } else {
       console.log('atlandi', jsonData[lessons[i]].code);
     }
@@ -56,11 +58,13 @@ lessonsRouter.get('/total', async (req, res) => {
 });
 
 const getSingleLesson = async (req) => {
+  var ObjectId = require('mongoose').Types.ObjectId;
   const q = req.query;
+  const teacher = await Teacher.findOne({ name: q.teacherName });
   const lesson = await Lesson.findOne({
     areaCode: q.areaCode,
     digitCode: q.digitCode,
-    sectionCode: q.sectionCode,
+    teacher: teacher._id,
   }).populate('teacher');
   return lesson.toJSON();
 };
@@ -69,13 +73,14 @@ lessonsRouter.get('/', async (req, res) => {
   if (
     'areaCode' in req.query &&
     'digitCode' in req.query &&
-    'sectionCode' in req.query
+    'teacherName' in req.query
   ) {
     const jsonLesson = await getSingleLesson(req);
     return res.json(jsonLesson);
   } else if ('start' in req.query && 'total' in req.query) {
     const q = req.query;
     const result = q.result === undefined ? '' : q.result;
+
     const lessons = await Lesson.find({
       fullName: { $regex: result, $options: 'i' },
     })

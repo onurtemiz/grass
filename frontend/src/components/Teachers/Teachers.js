@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-import {
-  addInfTeacher,
-  totalTeacher,
-  resetTeachers,
-} from '../../reducers/teacherReducer';
+import { addInfTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 const Teachers = () => {
   const count = useSelector((state) => state.teachers.count);
@@ -31,7 +27,7 @@ const Teachers = () => {
   if (teachers.length === 0) {
     return null;
   }
-  console.log('state', state)
+  console.log('state', state);
   return (
     <div style={windowStyle}>
       <InfiniteScroll
@@ -46,8 +42,12 @@ const Teachers = () => {
         useWindow={false}
       >
         {teachers
-          .filter((t) => t.name.includes(filter))
-          .sort((a, b) => b.fullName - a.fullName)
+          .filter((t) =>
+            t.name
+              .toLocaleUpperCase('tr-TR')
+              .includes(filter.toLocaleUpperCase('tr-TR'))
+          )
+          .sort((a, b) => b.name - a.name)
           .map((t) => (
             <SubTeacher teacher={t} key={t.id} />
           ))}

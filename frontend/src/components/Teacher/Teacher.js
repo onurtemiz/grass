@@ -21,7 +21,7 @@ const Teacher = () => {
       <ul>
         {teacher.lessons.map((l) => (
           <li key={l.id}>
-            <Link to={LESSON_PATH(l)}>{l.fullName}</Link>
+            <Link to={LESSON_PATH(l, teacher.name)}>{l.fullName}</Link>
           </li>
         ))}
       </ul>

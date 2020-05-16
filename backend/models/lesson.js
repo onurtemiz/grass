@@ -15,7 +15,7 @@ const lessonSchema = new mongoose.Schema({
   ],
   areaCode: { type: String, required: true },
   digitCode: { type: String, required: true },
-  sectionCode: { type: String, required: true },
+  sectionCode: [{ type: String }],
   fullName: { type: String, required: true },
 });
 

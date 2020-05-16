@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Footer from './components/Footer/Footer';
 import Nav from './components/Nav/Nav';
 import Lesson from './components/Lesson/Lesson';
 import Lessons from './components/Lessons/Lessons';
 import Teacher from './components/Teacher/Teacher';
 import Teachers from './components/Teachers/Teachers';
-import Login from './components/Login/Login';
-import Signup from './components/Signup/Signup';
-import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 
 function AuthorizedApp() {
@@ -21,7 +18,7 @@ function AuthorizedApp() {
         <Route path="/teachers">
           <Teachers />
         </Route>
-        <Route path="/lessons/:areaCode/:digitCode/:sectionCode">
+        <Route path="/lessons/:areaCode/:digitCode/:teacherName">
           <Lesson />
         </Route>
         <Route path="/lessons">

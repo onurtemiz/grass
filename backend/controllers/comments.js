@@ -6,6 +6,26 @@ const Comment = require('../models/comment');
 const jwt = require('jsonwebtoken');
 
 commentsRouter.get('/', async (req, res) => {
+  const q = req.query;
+  if ('teacherId' in q) {
+    const comments =
+      'start' in q && 'total' in q
+        ? await Comment.find({ teacher: q.teacherId })
+            .skip(Number(q.start))
+            .limit(Number(q.total))
+        : await Comment.find({ teacher: q.teacherId });
+
+    return res.json(comments.map((c) => c.toJSON()));
+  } else if ('lessonId' in q) {
+    const comments =
+      'start' in q && 'total' in q
+        ? await Comment.find({ lesson: q.lessonId })
+            .skip(Number(q.start))
+            .limit(Number(q.total))
+        : await Comment.find({ lesson: q.lessonId });
+    return res.json(comments.map((c) => c.toJSON()));
+  }
+
   const comments = await Comment.find({});
   res.json(comments.map((c) => c.toJSON()));
 });

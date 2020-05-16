@@ -12,6 +12,7 @@ const Comments = ({ type, typeId }) => {
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
+  const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const Comments = ({ type, typeId }) => {
     height: 400,
     overflow: 'auto',
   };
-  console.log('comments', comments);
+  console.log('comments', state);
   return (
     <div style={windowStyle}>
       <InfiniteScroll

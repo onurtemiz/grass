@@ -16,10 +16,12 @@ const updateComment = async (comment, id) => {
   return req.data;
 };
 
-const postComment = async (comment, teacherId, lessonId) => {
+const postComment = async (comment) => {
+  console.log('object', { ...comment });
+  console.log('config', config);
   const req = await axios.post(
     baseUrl,
-    { comment, teacherId, lessonId },
+    { ...comment },
     config
   );
   return req.data;

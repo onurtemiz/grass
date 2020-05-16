@@ -13,7 +13,8 @@ commentsRouter.get('/', async (req, res) => {
         ? await Comment.find({ teacher: q.teacherId })
             .skip(Number(q.start))
             .limit(Number(q.total))
-        : await Comment.find({ teacher: q.teacherId });
+            .populate('user')
+        : await Comment.find({ teacher: q.teacherId }).populate('user');
 
     return res.json(comments.map((c) => c.toJSON()));
   } else if ('lessonId' in q) {
@@ -22,7 +23,8 @@ commentsRouter.get('/', async (req, res) => {
         ? await Comment.find({ lesson: q.lessonId })
             .skip(Number(q.start))
             .limit(Number(q.total))
-        : await Comment.find({ lesson: q.lessonId });
+            .populate('user')
+        : await Comment.find({ lesson: q.lessonId }).populate('user');
     return res.json(comments.map((c) => c.toJSON()));
   }
 
@@ -46,8 +48,6 @@ commentsRouter.get('/total', async (req, res) => {
 });
 
 commentsRouter.post('/', async (req, res) => {
-  console.log('req.token', req);
-
   const body = req.body;
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
@@ -84,11 +84,12 @@ commentsRouter.post('/', async (req, res) => {
       error: 'Could not find the teacher,lesson,user',
     });
   }
-  if (isDuplicate !== null) {
-    return res.status(400).json({
-      error: 'you have already commented',
-    });
-  } else if (!isTeacherRight) {
+  // if (isDuplicate !== null) {
+  //   return res.status(400).json({
+  //     error: 'you have already commented',
+  //   });
+  // }
+  if (!isTeacherRight) {
     return res.status(400).json({
       error: 'teacher and lesson dont match.',
     });
@@ -108,7 +109,10 @@ commentsRouter.post('/', async (req, res) => {
   await user.save();
   await teacher.save();
   await lesson.save();
-  res.json(comment.toJSON());
+  const opts = [{ path: 'user' }];
+  Comment.populate(comment, opts, function (err, comment) {
+    res.status(201).json(comment.toJSON());
+  });
 });
 
 commentsRouter.post('/:id', async (req, res) => {

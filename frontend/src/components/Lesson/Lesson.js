@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/lessonReducer';
+import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
 const Lesson = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const Lesson = () => {
     <div>
       {lesson.fullName.toUpperCase()}
       <h2>Comments</h2>
+      <CommentForm lessonId={lesson.id} teacherId={lesson.teacher.id} />
       <Comments typeId={lesson.id} type="lesson" />
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/lessonReducer';
-
+import Comments from '../Comments/Comments';
 const Lesson = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
@@ -29,7 +29,13 @@ const Lesson = () => {
   );
   console.log('lesson', lesson);
 
-  return <div>{lesson.fullName.toUpperCase()}</div>;
+  return (
+    <div>
+      {lesson.fullName.toUpperCase()}
+      <h2>Comments</h2>
+      <Comments typeId={lesson.id} type="lesson" />
+    </div>
+  );
 };
 
 export default Lesson;

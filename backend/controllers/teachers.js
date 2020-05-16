@@ -5,9 +5,9 @@ const jsonData = require('../2018-2019-2.json');
 
 teachersRouter.get('/', async (req, res) => {
   if ('name' in req.query) {
-    const teacher = await Teacher.findOne({ name: req.query.name }).populate(
-      'lessons'
-    );
+    const teacher = await Teacher.findOne({ name: req.query.name })
+      .populate('lessons')
+      .populate('comments');
     return res.json(teacher.toJSON());
   } else if ('start' in req.query && 'total' in req.query) {
     const users = await Teacher.find({
@@ -15,10 +15,13 @@ teachersRouter.get('/', async (req, res) => {
     })
       .skip(Number(req.query.start))
       .limit(Number(req.query.total))
-      .populate('lessons');
+      .populate('lessons')
+      .populate('comments');
     return res.json(users.map((u) => u.toJSON()));
   } else {
-    const users = await Teacher.find({}).populate('lessons');
+    const users = await Teacher.find({})
+      .populate('lessons')
+      .populate('comments');
     res.json(users.map((u) => u.toJSON()));
   }
 });

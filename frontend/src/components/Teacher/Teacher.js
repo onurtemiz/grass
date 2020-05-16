@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../reducers/teacherReducer';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../utils/config';
+import Comments from '../Comments/Comments'
 const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
@@ -27,6 +28,7 @@ const Teacher = () => {
         ))}
       </ul>
       <h2>Comments</h2>
+      <Comments typeId={teacher.id} type="teacher"/>
     </div>
   );
 };

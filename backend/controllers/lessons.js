@@ -65,7 +65,9 @@ const getSingleLesson = async (req) => {
     areaCode: q.areaCode,
     digitCode: q.digitCode,
     teacher: teacher._id,
-  }).populate('teacher');
+  })
+    .populate('teacher')
+    .populate('comments');
   return lesson.toJSON();
 };
 
@@ -86,10 +88,13 @@ lessonsRouter.get('/', async (req, res) => {
     })
       .skip(Number(q.start))
       .limit(Number(q.total))
-      .populate('teacher');
+      .populate('teacher')
+      .populate('comments');
     return res.json(lessons.map((l) => l.toJSON()));
   }
-  const lessons = await Lesson.find({}).populate('teacher');
+  const lessons = await Lesson.find({})
+    .populate('teacher')
+    .populate('comments');
   res.json(lessons.map((l) => l.toJSON()));
 });
 

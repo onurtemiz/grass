@@ -30,6 +30,21 @@ commentsRouter.get('/', async (req, res) => {
   res.json(comments.map((c) => c.toJSON()));
 });
 
+commentsRouter.get('/total', async (req, res) => {
+  const q = req.query;
+  if ('teacherId' in q) {
+    const total = await Comment.find({
+      teacher: q.teacherId,
+    }).countDocuments();
+    return res.json({ total: total });
+  } else if ('lessonId' in q) {
+    const total = await Comment.find({
+      lesson: q.lessonId,
+    }).countDocuments();
+    return res.json({ total: total });
+  }
+});
+
 commentsRouter.post('/', async (req, res) => {
   console.log('req.token', req);
 

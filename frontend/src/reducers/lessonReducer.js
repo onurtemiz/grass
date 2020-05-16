@@ -74,7 +74,6 @@ export const addInfLesson = (start, count, filter) => {
 export const totalLesson = (filter) => {
   return async (dispatch) => {
     const total = await lessonsService.getTotalLesson(filter);
-    console.log('total', total);
     dispatch({
       type: 'TOTAL_LESSON',
       data: total.total,

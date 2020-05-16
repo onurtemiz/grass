@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-import {
-  addInfLesson,
-  totalLesson,
-  resetLessons,
-} from '../../reducers/lessonReducer';
+import { addInfLesson } from '../../reducers/lessonReducer';
 import SubLesson from './SubLesson';
 const Lessons = () => {
   const count = useSelector((state) => state.lessons.count);

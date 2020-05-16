@@ -6,16 +6,21 @@ const commentSchema = new mongoose.Schema({
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
+    required: true,
   },
   lesson: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Lesson',
+    required: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   comment: { type: String, required: true },
+  likes: { type: Number, required: true, default: 0 },
+  date: { type: Date, required: true },
 });
 
 commentSchema.set(uniqueValidator);

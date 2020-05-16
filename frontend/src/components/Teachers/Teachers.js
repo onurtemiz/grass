@@ -9,7 +9,6 @@ const Teachers = () => {
   const hasMore = useSelector((state) => state.teachers.hasMore);
   const teachers = useSelector((state) => state.teachers.teachers);
   const filter = useSelector((state) => state.filter);
-  const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,7 +26,6 @@ const Teachers = () => {
   if (teachers.length === 0) {
     return null;
   }
-  console.log('state', state);
   return (
     <div style={windowStyle}>
       <InfiniteScroll

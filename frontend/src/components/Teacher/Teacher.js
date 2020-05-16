@@ -15,6 +15,7 @@ const Teacher = () => {
     return null;
   }
   const teacher = teachers.find((t) => t.name === match.params.name);
+  console.log('teacher', teacher);
   return (
     <div>
       {teacher.name}

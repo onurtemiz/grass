@@ -120,7 +120,7 @@ lessonsRouter.post('/', async (req, res) => {
     });
     await newTeacher.save();
   } else {
-    teacher.lessons.concat(lesson._id);
+    teacher.lessons = teacher.lessons.concat(lesson._id);
   }
   lesson.teacher = teacher._id;
   await lesson.save();

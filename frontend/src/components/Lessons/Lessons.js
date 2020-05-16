@@ -11,7 +11,6 @@ const Lessons = () => {
   const count = useSelector((state) => state.lessons.count);
   const start = useSelector((state) => state.lessons.start);
   const hasMore = useSelector((state) => state.lessons.hasMore);
-  const state = useSelector((state) => state);
   const lessons = useSelector((state) => state.lessons.lessons);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
@@ -23,12 +22,10 @@ const Lessons = () => {
   const loadFunc = () => {
     dispatch(addInfLesson(start, count, filter));
   };
-  console.log('state', state);
   const windowStyle = {
     height: 400,
     overflow: 'auto',
   };
-  console.log('state', state);
 
   return (
     <div style={windowStyle}>

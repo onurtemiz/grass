@@ -8,7 +8,6 @@ const Lesson = () => {
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
     .params;
   const lessons = useSelector((state) => state.lessons.lessons);
-  const state = useSelector((state) => state);
   useEffect(() => {
     const q = match;
     dispatch(getLessonPageByName(q.areaCode, q.digitCode, q.teacherName));
@@ -23,12 +22,12 @@ const Lesson = () => {
   ) {
     return null;
   }
-  console.log('state', state);
   const lesson = lessons.find(
     (l) =>
       l.fullName === `${match.areaCode}${match.digitCode}` &&
       l.teacher.name === decodeURI(match.teacherName)
   );
+  console.log('lesson', lesson);
 
   return <div>{lesson.fullName.toUpperCase()}</div>;
 };

@@ -140,8 +140,6 @@ commentsRouter.put('/:id', async (req, res) => {
       });
     }
     comment.comment = body.comment;
-    await comment.save();
-    return res.json(comment.toJSON());
   } else {
     const isLiked = comment.likes.some((u) => u.equals(user._id));
     if (isLiked) {
@@ -149,12 +147,12 @@ commentsRouter.put('/:id', async (req, res) => {
     } else {
       comment.likes = comment.likes.concat(user._id);
     }
-    await comment.save();
-    const opts = [{ path: 'user' }];
-    Comment.populate(comment, opts, function (err, comment) {
-      res.json(comment.toJSON());
-    });
   }
+  await comment.save();
+  const opts = [{ path: 'user' }];
+  Comment.populate(comment, opts, function (err, comment) {
+    res.json(comment.toJSON());
+  });
 });
 
 commentsRouter.delete('/:id', async (req, res) => {

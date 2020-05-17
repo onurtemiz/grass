@@ -9,8 +9,7 @@ const CommentForm = ({ lessonId, teacherId, comment, setIsUpdate }) => {
   const handleComment = async (values, setSubmitting) => {
     setSubmitting(false);
     if (comment) {
-      dispatch(updateComment(values.comment, comment.id));
-      setIsUpdate(false);
+      dispatch(updateComment(values.comment, comment.id,setIsUpdate));
     } else {
       dispatch(postComment(values));
     }

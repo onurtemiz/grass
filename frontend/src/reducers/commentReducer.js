@@ -72,9 +72,10 @@ export const postComment = (c) => {
   };
 };
 
-export const updateComment = (c, id) => {
+export const updateComment = (c, id, setIsUpdate) => {
   return async (dispatch) => {
     const comment = await commentsService.updateComment(c, id);
+    setIsUpdate(false);
     dispatch({
       type: 'UPDATE_COMMENT',
       data: comment,

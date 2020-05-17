@@ -52,6 +52,9 @@ const Comments = ({ type, typeId }) => {
           .filter((c) =>
             type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
           )
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .sort((a, b) => b.likes.length - a.likes.length)
+
           .map((c) => (
             <Comment key={c.id} comment={c} />
           ))}

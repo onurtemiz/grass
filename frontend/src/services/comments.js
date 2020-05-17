@@ -12,18 +12,21 @@ const setToken = (newToken) => {
 };
 
 const updateComment = async (comment, id) => {
-  const req = await axios.post(`${baseUrl}/${id}`, { comment, id }, config);
+  const req = await axios.put(`${baseUrl}/${id}`, { comment }, config);
+  return req.data;
+};
+
+const removeComment = async (id) => {
+  await axios.delete(`${baseUrl}/${id}`, config);
+};
+
+const likeComment = async (id) => {
+  const req = await axios.put(`${baseUrl}/${id}`, null, config);
   return req.data;
 };
 
 const postComment = async (comment) => {
-  console.log('object', { ...comment });
-  console.log('config', config);
-  const req = await axios.post(
-    baseUrl,
-    { ...comment },
-    config
-  );
+  const req = await axios.post(baseUrl, { ...comment }, config);
   return req.data;
 };
 
@@ -58,6 +61,8 @@ const allComments = async () => {
 
 export default {
   allComments,
+  removeComment,
+  likeComment,
   setToken,
   updateComment,
   postComment,

@@ -102,6 +102,7 @@ commentsRouter.post('/', async (req, res) => {
     user: user._id,
     comment: body.comment,
     date: new Date(),
+    likes: [user._id],
   });
   await comment.save();
   user.comments = user.comments.concat(comment._id);
@@ -116,34 +117,68 @@ commentsRouter.post('/', async (req, res) => {
   });
 });
 
-commentsRouter.post('/:id', async (req, res) => {
+commentsRouter.put('/:id', async (req, res) => {
   const body = req.body;
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  const comment = await Comment.findById(req.params.id);
+  const user = await User.findById(decodedToken.id);
 
-  if (!body.comment || !body.id) {
-    return res.status(400).json({
-      error: 'Comment must be present',
-    });
-  } else if (!req.token || !decodedToken.id) {
+  if (!req.token || !decodedToken.id) {
     return response.status(401).json({
       error: 'token missing or invalid',
     });
-  }
-  const comment = await Comment.findById(body.id);
-  const user = await User.findById(decodedToken.id);
-  if (!comment || !user) {
+  } else if (!comment || !user) {
     return res.status(400).json({
       error: 'comment or user not found.',
     });
   }
-  if (!user.comments.includes(body.id)) {
+  if ('comment' in body) {
+    const isUserHave = user.comments.some((c) => c.equals(req.params.id));
+    if (!isUserHave) {
+      return res.status(400).json({
+        error: 'you have no right',
+      });
+    }
+    comment.comment = body.comment;
+    await comment.save();
+    return res.json(comment.toJSON());
+  } else {
+    const isLiked = comment.likes.some((u) => u.equals(user._id));
+    if (isLiked) {
+      comment.likes = comment.likes.filter((u) => !u.equals(user._id));
+    } else {
+      comment.likes = comment.likes.concat(user._id);
+    }
+    await comment.save();
+    const opts = [{ path: 'user' }];
+    Comment.populate(comment, opts, function (err, comment) {
+      res.json(comment.toJSON());
+    });
+  }
+});
+
+commentsRouter.delete('/:id', async (req, res) => {
+  console.log('req.token', req.token);
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  const comment = await Comment.findById(req.params.id);
+  const user = await User.findById(decodedToken.id);
+  const isUserHave = user.comments.some((c) => c.equals(req.params.id));
+  if (!req.token || !decodedToken.id) {
+    return response.status(401)({
+      error: 'token missing or invalid',
+    });
+  } else if (!comment || !user) {
+    return res.status(400).json({
+      error: 'comment or user not found.',
+    });
+  } else if (!isUserHave) {
     return res.status(400).json({
       error: 'you have no right',
     });
   }
-  comment.comment = body.comment;
-  await comment.save();
-  return res.json(comment.toJSON());
+  await Comment.findByIdAndRemove(req.params.id);
+  res.status(204).end();
 });
 
 module.exports = commentsRouter;

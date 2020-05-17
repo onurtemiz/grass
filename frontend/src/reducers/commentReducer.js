@@ -29,9 +29,6 @@ const commentReducer = (state = initialState, action) => {
       const addedComments = state.comments.filter(
         (c) => c.id !== action.data.id
       );
-      console.log('addedComments', addedComments);
-      console.log('currentState', state);
-      console.log('action.data', action.data);
       return {
         ...state,
         comments: [...addedComments, action.data],
@@ -43,6 +40,22 @@ const commentReducer = (state = initialState, action) => {
       return {
         ...state,
         comments: [...updatedComments, action.data],
+      };
+    case 'LIKE_COMMENT':
+      const likedComments = state.comments.filter(
+        (c) => c.id !== action.data.id
+      );
+      return {
+        ...state,
+        comments: [...likedComments, action.data],
+      };
+    case 'REMOVE_COMMENT':
+      const removedComments = state.comments.filter(
+        (c) => c.id !== action.data
+      );
+      return {
+        ...state,
+        comments: [...removedComments],
       };
     default:
       return state;
@@ -65,6 +78,26 @@ export const updateComment = (c, id) => {
     dispatch({
       type: 'UPDATE_COMMENT',
       data: comment,
+    });
+  };
+};
+
+export const likeComment = (id) => {
+  return async (dispatch) => {
+    const comment = await commentsService.likeComment(id);
+    dispatch({
+      type: 'LIKE_COMMENT',
+      data: comment,
+    });
+  };
+};
+
+export const removeComment = (id) => {
+  return async (dispatch) => {
+    await commentsService.removeComment(id);
+    dispatch({
+      type: 'REMOVE_COMMENT',
+      data: id,
     });
   };
 };

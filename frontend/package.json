@@ -10,6 +10,7 @@
     "formik": "^2.1.4",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
+    "react-confirm-alert": "^2.6.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroll": "^0.1.5",
     "react-infinite-scroll-component": "^5.0.4",

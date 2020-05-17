@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/lessonReducer';
 import CommentForm from '../CommentForm/CommentForm';
@@ -28,10 +28,14 @@ const Lesson = () => {
       l.fullName === `${match.areaCode}${match.digitCode}` &&
       l.teacher.name === decodeURI(match.teacherName)
   );
-  console.log('lesson', lesson);
 
   return (
     <div>
+      <div>
+        <Link to={`/teachers/${lesson.teacher.name}`}>
+          {lesson.teacher.name}
+        </Link>
+      </div>
       {lesson.fullName.toUpperCase()}
       <h2>Comments</h2>
       <CommentForm lessonId={lesson.id} teacherId={lesson.teacher.id} />

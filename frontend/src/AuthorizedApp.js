@@ -5,6 +5,7 @@ import Lesson from './components/Lesson/Lesson';
 import Lessons from './components/Lessons/Lessons';
 import Teacher from './components/Teacher/Teacher';
 import Teachers from './components/Teachers/Teachers';
+import All from './components/All/All';
 import { Switch, Route } from 'react-router-dom';
 
 function AuthorizedApp() {
@@ -15,14 +16,17 @@ function AuthorizedApp() {
         <Route path="/teachers/:name">
           <Teacher />
         </Route>
-        <Route path="/teachers">
+        {/* <Route path="/teachers">
           <Teachers />
-        </Route>
+        </Route> */}
         <Route path="/lessons/:areaCode/:digitCode/:teacherName">
           <Lesson />
         </Route>
-        <Route path="/lessons">
+        {/* <Route path="/lessons">
           <Lessons />
+        </Route> */}
+        <Route path="/">
+          <All />
         </Route>
       </Switch>
       <Footer />

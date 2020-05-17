@@ -8,6 +8,7 @@ const lessonsRouter = require('./controllers/lessons');
 const teachersRouter = require('./controllers/teachers');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
+const allRouter = require('./controllers/all');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
 
@@ -28,6 +29,7 @@ app.use(express.static('build'));
 app.use(express.json());
 app.use(middleware.tokenExtractor);
 
+app.use('/api/all', allRouter);
 app.use('/api/teachers', teachersRouter);
 app.use('/api/lessons', lessonsRouter);
 app.use('/api/users', usersRouter);

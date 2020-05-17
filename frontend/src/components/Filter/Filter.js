@@ -8,8 +8,16 @@ const Filter = () => {
   };
   const s = {
     textTransform: 'uppercase',
+    width: 190,
   };
-  return <input lang="tr" onInput={(e) => handleChange(e)} style={s} />;
+  return (
+    <input
+      lang="tr"
+      onInput={(e) => handleChange(e)}
+      style={s}
+      placeholder="SEARCH LESSON OR INSTRUCTOR"
+    />
+  );
 };
 
 export default Filter;

@@ -19,6 +19,5 @@
     "mongoose": "^5.9.13",
     "mongoose-unique-validator": "^2.0.3",
     "nodemon": "^2.0.3"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

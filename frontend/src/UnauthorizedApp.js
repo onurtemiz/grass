@@ -3,7 +3,6 @@ import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import Footer from './components/Footer/Footer';
-
 const UnauthorizedApp = () => {
   return (
     <div>
@@ -11,11 +10,9 @@ const UnauthorizedApp = () => {
       <Switch>
         <Route path="/login">
           <Login />
-          <Link to="/signup">Uyeyseniz tiklayin.</Link>
         </Route>
         <Route path="/signup">
           <Signup />
-          <Link to="/login">Kayit icin tiklayin.</Link>
         </Route>
       </Switch>
       <Footer />

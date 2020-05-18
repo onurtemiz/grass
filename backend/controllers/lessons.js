@@ -1,53 +1,53 @@
 const lessonsRouter = require('express').Router();
 const Lesson = require('../models/lesson');
 const Teacher = require('../models/teacher');
-const jsonData = require('../2018-2019-2.json');
+// const jsonData = require('../2018-2019-2.json');
 
-lessonsRouter.get('/loadjson/', async (req, res) => {
-  let re = new RegExp('([a-zA-Z]+)([0-9]+).([0-9]+)');
-  let firstD = new RegExp('([1-4])[0-9][0-9].');
-  const lessons = Object.keys(jsonData);
+// lessonsRouter.get('/loadjson/', async (req, res) => {
+//   let re = new RegExp('([a-zA-Z]+)([0-9]+).([0-9]+)');
+//   let firstD = new RegExp('([1-4])[0-9][0-9].');
+//   const lessons = Object.keys(jsonData);
 
-  for (i = 0; i < lessons.length; i++) {
-    let f = firstD.exec(jsonData[lessons[i]].code);
-    if (f !== null) {
-      let result = re.exec(jsonData[lessons[i]].code);
-      let areaCode = result[1].toLowerCase();
-      let digitCode = result[2];
-      let sectionCode = result[3];
-      let teacher = jsonData[lessons[i]].instructor;
-      let teacherDB = await Teacher.findOne({ name: teacher });
-      let lessonExists = await Lesson.findOne({
-        areaCode: areaCode,
-        digitCode: digitCode,
-        teacher: teacherDB._id,
-      });
-      let lesson =
-        lessonExists === null
-          ? new Lesson({
-              areaCode: areaCode,
-              digitCode: digitCode,
-              sectionCode: [],
-              fullName: `${areaCode}${digitCode}`,
-              teacher: teacherDB._id,
-            })
-          : lessonExists;
-      lesson.sectionCode = lesson.sectionCode.concat(sectionCode);
-      if (lessonExists === null)
-        teacherDB.lessons = teacherDB.lessons.concat(lesson._id);
-      console.log(
-        `teacher ${i}: ${teacher} ${areaCode}${digitCode}.${sectionCode}`
-      );
-      await teacherDB.save();
-      await lesson.save();
-    } else {
-      console.log('atlandi', jsonData[lessons[i]].code);
-    }
-  }
-  res.status(200).json({
-    status: 'done',
-  });
-});
+//   for (i = 0; i < lessons.length; i++) {
+//     let f = firstD.exec(jsonData[lessons[i]].code);
+//     if (f !== null) {
+//       let result = re.exec(jsonData[lessons[i]].code);
+//       let areaCode = result[1].toLowerCase();
+//       let digitCode = result[2];
+//       let sectionCode = result[3];
+//       let teacher = jsonData[lessons[i]].instructor;
+//       let teacherDB = await Teacher.findOne({ name: teacher });
+//       let lessonExists = await Lesson.findOne({
+//         areaCode: areaCode,
+//         digitCode: digitCode,
+//         teacher: teacherDB._id,
+//       });
+//       let lesson =
+//         lessonExists === null
+//           ? new Lesson({
+//               areaCode: areaCode,
+//               digitCode: digitCode,
+//               sectionCode: [],
+//               fullName: `${areaCode}${digitCode}`,
+//               teacher: teacherDB._id,
+//             })
+//           : lessonExists;
+//       lesson.sectionCode = lesson.sectionCode.concat(sectionCode);
+//       if (lessonExists === null)
+//         teacherDB.lessons = teacherDB.lessons.concat(lesson._id);
+//       console.log(
+//         `teacher ${i}: ${teacher} ${areaCode}${digitCode}.${sectionCode}`
+//       );
+//       await teacherDB.save();
+//       await lesson.save();
+//     } else {
+//       console.log('atlandi', jsonData[lessons[i]].code);
+//     }
+//   }
+//   res.status(200).json({
+//     status: 'done',
+//   });
+// });
 
 lessonsRouter.get('/total', async (req, res) => {
   const search = req.query.search === undefined ? '' : req.query.search;

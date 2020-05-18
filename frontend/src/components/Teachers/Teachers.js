@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
+import { LinearProgress } from '@material-ui/core';
 const Teachers = () => {
   const count = useSelector((state) => state.teachers.count);
   const start = useSelector((state) => state.teachers.start);
@@ -24,7 +25,7 @@ const Teachers = () => {
   };
 
   if (teachers.length === 0) {
-    return null;
+    return <LinearProgress />;
   }
   return (
     <div style={windowStyle}>
@@ -34,7 +35,7 @@ const Teachers = () => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            Loading ...
+            <LinearProgress />
           </div>
         }
         useWindow={false}

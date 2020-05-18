@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfAll } from '../../reducers/allReducer';
 import SubTeacher from '../Teachers/SubTeacher';
+import { LinearProgress } from '@material-ui/core';
 import lodash from 'lodash';
 const All = () => {
   const count = useSelector((state) => state.all.count);
@@ -44,7 +45,7 @@ const All = () => {
   };
 
   if (teachers.length === 0) {
-    return null;
+    return <LinearProgress />;
   }
   console.log('state', state);
   return (
@@ -55,7 +56,7 @@ const All = () => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            Loading ...
+            <LinearProgress variant="query" />
           </div>
         }
         useWindow={false}

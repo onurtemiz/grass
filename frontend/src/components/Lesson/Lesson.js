@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/lessonReducer';
 import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
+import { LinearProgress } from '@material-ui/core';
 const Lesson = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
@@ -21,7 +22,7 @@ const Lesson = () => {
         l.teacher.name === decodeURI(match.teacherName)
     ) === undefined
   ) {
-    return null;
+    return <LinearProgress />;
   }
   const lesson = lessons.find(
     (l) =>

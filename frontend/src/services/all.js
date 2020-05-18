@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/all';
+const baseUrl = '/api/all';
 
 const getTotal = async (filter) => {
   const req = await axios.get(`${baseUrl}/total?search=${filter}`);

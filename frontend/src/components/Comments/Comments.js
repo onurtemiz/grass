@@ -6,7 +6,7 @@ import {
   addInfCommentTeacher,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
-
+import {LinearProgress } from '@material-ui/core'
 const Comments = ({ type, typeId }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
@@ -43,7 +43,7 @@ const Comments = ({ type, typeId }) => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            Loading ...
+            <LinearProgress />
           </div>
         }
         useWindow={false}

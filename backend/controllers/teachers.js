@@ -1,7 +1,7 @@
 const teachersRouter = require('express').Router();
 const Teacher = require('../models/teacher');
 const Lesson = require('../models/lesson');
-const jsonData = require('../2018-2019-2.json');
+// const jsonData = require('../2018-2019-2.json');
 
 teachersRouter.get('/', async (req, res) => {
   if ('name' in req.query) {
@@ -46,22 +46,22 @@ teachersRouter.get('/delete5', async (req, res) => {
     status: 'done',
   });
 });
-teachersRouter.get('/loadjson', async (req, res) => {
-  const lessons = Object.keys(jsonData);
-  for (i = 0; i < lessons.length; i++) {
-    let teacher = jsonData[lessons[i]].instructor;
-    let teacherExists = await Teacher.exists({ name: teacher });
-    if (!teacherExists) {
-      let newTeacher = new Teacher({
-        name: teacher,
-      });
-      console.log('teacher', teacher);
-      await newTeacher.save();
-    }
-  }
-  res.status(200).json({
-    status: 'done',
-  });
-});
+// teachersRouter.get('/loadjson', async (req, res) => {
+//   const lessons = Object.keys(jsonData);
+//   for (i = 0; i < lessons.length; i++) {
+//     let teacher = jsonData[lessons[i]].instructor;
+//     let teacherExists = await Teacher.exists({ name: teacher });
+//     if (!teacherExists) {
+//       let newTeacher = new Teacher({
+//         name: teacher,
+//       });
+//       console.log('teacher', teacher);
+//       await newTeacher.save();
+//     }
+//   }
+//   res.status(200).json({
+//     status: 'done',
+//   });
+// });
 
 module.exports = teachersRouter;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/teachers';
+const baseUrl = '/api/teachers';
 
 const addInf = async (start, count, filter) => {
   const req = await axios.get(

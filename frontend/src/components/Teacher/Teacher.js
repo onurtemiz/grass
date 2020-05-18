@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../reducers/teacherReducer';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../utils/config';
-import Comments from '../Comments/Comments'
+import Comments from '../Comments/Comments';
+import { LinearProgress } from '@material-ui/core';
 const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
@@ -12,8 +13,9 @@ const Teacher = () => {
   useEffect(() => {
     dispatch(getTeacherPage(match.params.name));
   }, []);
+
   if (teachers.find((t) => t.name === match.params.name) === undefined) {
-    return null;
+    return <LinearProgress />;
   }
   const teacher = teachers.find((t) => t.name === match.params.name);
   console.log('teacher', teacher);
@@ -28,7 +30,7 @@ const Teacher = () => {
         ))}
       </ul>
       <h2>Comments</h2>
-      <Comments typeId={teacher.id} type="teacher"/>
+      <Comments typeId={teacher.id} type="teacher" />
     </div>
   );
 };

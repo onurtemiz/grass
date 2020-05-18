@@ -1,53 +1,55 @@
-import React from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { loginUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
-
+import { Link } from 'react-router-dom';
+import { TextField, Button } from '@material-ui/core';
 const Login = () => {
   const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const handleLogin = async (values, setSubmitting) => {
-    console.log(JSON.stringify(values, null, 2));
-    setSubmitting(false);
     dispatch(loginUser(values));
   };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    handleLogin({ email, password });
+  };
+
   return (
-    <Formik
-      initialValues={{ email: '', password: '' }}
-      validationSchema={Yup.object({
-        email: Yup.string()
-          .required('Required')
-          .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'Only boun'),
-        password: Yup.string()
-          .required('Required')
-          .min(8, 'Must be 8 character or more'),
-      })}
-      onSubmit={(values, { setSubmitting }) => {
-        handleLogin(values, setSubmitting);
-      }}
-    >
-      <Form>
-        <div>
-          <label htmlFor="email">Email: </label>
-          <Field
-            name="email"
-            type="text"
-            placeholder="onur.temiz@boun.edu.tr"
-          />
-        </div>
-        <div>
-          <ErrorMessage name="email" />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <Field name="password" type="password" />
-        </div>
-        <div>
-          <ErrorMessage name="password" />
-        </div>
-        <button type="submit">Submit</button>
-      </Form>
-    </Formik>
+    <div>
+      <form onSubmit={onSubmit}>
+        <TextField
+          error={false}
+          required
+          size="small"
+          id="outlined-required"
+          label="Email"
+          variant="outlined"
+          value={email}
+          placeholder="onur.temiz@boun.edu.tr"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          error={true}
+          size="small"
+          value={password}
+          id="outlined-password-input"
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </form>
+      <Link to="/signup">Kayit icin tiklayin.</Link>
+    </div>
   );
 };
 

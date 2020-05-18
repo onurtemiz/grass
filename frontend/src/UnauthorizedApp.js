@@ -6,7 +6,7 @@ import Footer from './components/Footer/Footer';
 const UnauthorizedApp = () => {
   return (
     <div>
-      <Redirect to="/login" />
+      <Redirect to="/signup" />
       <Switch>
         <Route path="/login">
           <Login />

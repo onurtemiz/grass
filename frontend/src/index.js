@@ -5,7 +5,7 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
-import { SnackbarProvider } from 'notistack';
+import 'semantic-ui-css/semantic.min.css'
 
 ReactDOM.render(
   <Provider store={store}>
@@ -17,15 +17,7 @@ ReactDOM.render(
       }
     >
       <Router>
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <App />
-        </SnackbarProvider>
+        <App />
       </Router>
     </Suspense>
   </Provider>,

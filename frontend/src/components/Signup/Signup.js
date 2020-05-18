@@ -1,87 +1,189 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { signupUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Container, Button, TextField } from '@material-ui/core';
+import * as Yup from 'yup'; // for everything
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+  Icon,
+  Label,
+  Divider,
+} from 'semantic-ui-react';
+
 const Signup = () => {
   const dispatch = useDispatch();
-  const handleSubmit = async (values, setSubmitting) => {
-    dispatch(signupUser(values));
-    setSubmitting(false);
-  };
+  const [passwordError, setPasswordError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [firstNameError, setFirstNameError] = useState(null);
+  const [lastNameError, setLastNameError] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
   const validationSchema = Yup.object({
-    firstName: Yup.string()
-      .max(15, 'Must be 15 characters or less')
-      .required('Required'),
-    lastName: Yup.string()
-      .required('Required')
-      .max(15, 'Must be 15 characters or less'),
+    firstName: Yup.string().max(15, 'firstName').required('Required'),
+    lastName: Yup.string().required('Required').max(15, 'lastName'),
     email: Yup.string()
       .required('Required')
-      .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'Only boun'),
-    password: Yup.string()
-      .required('Required')
-      .min(8, 'Must be 8 characters or more'),
+      .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'email'),
+    password: Yup.string().required('Required').min(8, 'password'),
   });
 
+  const emailSet = (value) => {
+    setEmailError(null);
+    setEmail(value);
+  };
+  const firstSet = (value) => {
+    setFirstNameError(null);
+    setFirstName(value);
+  };
+  const lastSet = (value) => {
+    setLastNameError(null);
+    setLastName(value);
+  };
+  const passwordSet = (value) => {
+    setPasswordError(null);
+    setPassword(value);
+  };
+
+  const handleSubmit = async () => {
+    validationSchema
+      .validate(
+        {
+          password,
+          lastName,
+          email,
+          firstName,
+        },
+        { abortEarly: false }
+      )
+      .catch((e) => {
+        console.log('e', e);
+        e.errors.forEach((q) => {
+          switch (q) {
+            case 'password':
+              setPasswordError('Şifre en az 8 karakterden oluşmalı');
+              break;
+            case 'email':
+              setEmailError('Lütfen @boun.edu.tr emaili giriniz.');
+              break;
+            case 'firstName':
+              setFirstNameError('İsim 15 harf veya daha az olmalı');
+              break;
+            case 'lastName':
+              setLastNameError('Soyisim 15 harf veya daha az olmalı');
+              break;
+            default:
+              return;
+          }
+        });
+      });
+    // dispatch(signupUser(values));
+    // setSubmitting(false);
+  };
+
+  const q = () => {
+    return;
+  };
   return (
-    <Container maxWidth="sm" fixed={true}>
-      <Formik
-        initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values, setSubmitting);
-        }}
-      >
-        <Form>
-          <div>
-            <label htmlFor="firstName">First Name: </label>
-            <Field name="firstName" type="text" placeholder="Onur" />
-          </div>
-          <div>
-            <ErrorMessage name="firstName" />
-          </div>
-          <div>
-            <label htmlFor="lastName">Last Name: </label>
-            <Field name="lastName" type="text" placeholder="Temiz" />
-          </div>
-          <div>
-            <ErrorMessage name="lastName" />
-          </div>
-          <div>
-            <label htmlFor="email">Email: </label>
-            <Field
-              name="email"
-              type="text"
-              placeholder="onur.temiz@boun.edu.tr"
+    <Grid
+      textAlign="center"
+      style={{ height: '100vh' }}
+      verticalAlign="middle"
+      columns="equal"
+    >
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Header as="h1" color="green" textAlign="center">
+          Çim
+        </Header>
+        <Header as="h2" textAlign="center" color="blue">
+          Kaydol
+        </Header>
+        <Message color="green">
+          Çim uygulamasına sadece <Label color="blue">@boun.edu.tr</Label>{' '}
+          emaili olanlar kayıt olabilir.
+        </Message>
+        <Form size="large">
+          <Segment>
+            <Form.Group unstackable widths={2}>
+              <Form.Input
+                fluid
+                icon={<Icon inverted bordered name="user" color="green" />}
+                iconPosition="left"
+                placeholder="Isim"
+                onChange={(e) => firstSet(e.target.value)}
+              />
+
+              <Form.Input
+                fluid
+                icon={<Icon inverted bordered name="user" color="green" />}
+                iconPosition="left"
+                placeholder="Soyisim"
+                onChange={(e) => lastSet(e.target.value)}
+              />
+            </Form.Group>{' '}
+            {(firstNameError || lastNameError) && (
+              <Form.Group unstackable widths={2}>
+                {firstNameError && (
+                  <Label basic color="red" pointing="above">
+                    {firstNameError}
+                  </Label>
+                )}{' '}
+                {lastNameError && (
+                  <Label basic color="red" pointing="above">
+                    {lastNameError}
+                  </Label>
+                )}
+              </Form.Group>
+            )}
+            <Form.Input
+              fluid
+              icon={<Icon inverted bordered color="green" name="mail" />}
+              iconPosition="left"
+              placeholder="E-mail address"
+              onChange={(e) => emailSet(e.target.value)}
             />
-          </div>
-          <div>
-            <ErrorMessage name="email" />
-          </div>
-          <div>
-            <label htmlFor="password">Password: </label>
-          
-            <Field name="password" type="password" />
-          </div>
-          <div>
-            <ErrorMessage name="password" />
-          </div>
-          <Button type="submit" variant="outlined" color="primary" size="large">
-            Submit
-          </Button>
+            {emailError && (
+              <Label basic color="red" pointing="above">
+                {emailError}
+              </Label>
+            )}
+            <Form.Field inline>
+              <Form.Input
+                fluid
+                icon={<Icon inverted bordered color="green" name="key" />}
+                iconPosition="left"
+                placeholder="Password"
+                type="password"
+                onChange={(e) => passwordSet(e.target.value)}
+              />
+              {passwordError && (
+                <Label basic color="red" pointing="above">
+                  {passwordError}
+                </Label>
+              )}
+            </Form.Field>
+            <Divider />
+            <Button fluid size="large" primary onClick={handleSubmit}>
+              Kaydol
+            </Button>
+          </Segment>
         </Form>
-      </Formik>
-      <Link to="/login">Uyeyseniz tiklayin.</Link>
-    </Container>
+        <Message info>
+          Zaten Üye misiniz? <a href="#">Giriş Yap</a>
+        </Message>
+        <Message error>
+          <a href="#">Şifremi Unuttum</a>
+        </Message>
+      </Grid.Column>
+    </Grid>
   );
 };
 

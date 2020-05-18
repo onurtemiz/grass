@@ -3,7 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { postComment, updateComment } from '../../reducers/commentReducer';
 import { useDispatch } from 'react-redux';
-import { withSnackbar } from 'notistack';
 
 const CommentForm = ({
   lessonId,
@@ -61,4 +60,4 @@ const CommentForm = ({
   );
 };
 
-export default withSnackbar(CommentForm);
+export default CommentForm;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/lessons';
+const baseUrl = 'http://localhost:3001/api/lessons';
 
 const addInf = async (start, count, filter) => {
   const url =

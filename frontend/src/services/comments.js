@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/comments';
+const baseUrl = 'http://localhost:3001/api/comments';
 
 let config = {
   headers: { Authorization: null },

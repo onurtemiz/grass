@@ -1,5 +1,8 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/comments';
+const baseUrl =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3001/api/comments'
+    : '/api/comments';
 
 let config = {
   headers: { Authorization: null },

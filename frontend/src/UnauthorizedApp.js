@@ -6,13 +6,15 @@ import Footer from './components/Footer/Footer';
 const UnauthorizedApp = () => {
   return (
     <div>
-      <Redirect to="/signup" />
       <Switch>
         <Route path="/login">
           <Login />
         </Route>
         <Route path="/signup">
           <Signup />
+        </Route>
+        <Route path="/">
+          <Login />
         </Route>
       </Switch>
       <Footer />

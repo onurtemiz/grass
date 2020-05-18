@@ -1,5 +1,8 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/lessons';
+const baseUrl =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3001/api/lessons'
+    : '/api/lessons';
 
 const addInf = async (start, count, filter) => {
   const url =

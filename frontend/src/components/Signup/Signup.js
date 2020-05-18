@@ -64,6 +64,9 @@ const Signup = () => {
         },
         { abortEarly: false }
       )
+      .then((values) => {
+        dispatch(signupUser(values));
+      })
       .catch((e) => {
         console.log('e', e);
         e.errors.forEach((q) => {
@@ -85,13 +88,8 @@ const Signup = () => {
           }
         });
       });
-    // dispatch(signupUser(values));
-    // setSubmitting(false);
   };
 
-  const q = () => {
-    return;
-  };
   return (
     <Grid
       textAlign="center"
@@ -101,11 +99,9 @@ const Signup = () => {
     >
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h1" color="green" textAlign="center">
-          Çim
+          Çimlerde Yerinizi Alın.
         </Header>
-        <Header as="h2" textAlign="center" color="blue">
-          Kaydol
-        </Header>
+
         <Message color="green">
           Çim uygulamasına sadece <Label color="blue">@boun.edu.tr</Label>{' '}
           emaili olanlar kayıt olabilir.
@@ -115,15 +111,15 @@ const Signup = () => {
             <Form.Group unstackable widths={2}>
               <Form.Input
                 fluid
-                icon={<Icon inverted bordered name="user" color="green" />}
+                icon={<Icon name="user" color="green" />}
                 iconPosition="left"
-                placeholder="Isim"
+                placeholder="İsim"
                 onChange={(e) => firstSet(e.target.value)}
               />
 
               <Form.Input
                 fluid
-                icon={<Icon inverted bordered name="user" color="green" />}
+                icon={<Icon name="user" color="green" />}
                 iconPosition="left"
                 placeholder="Soyisim"
                 onChange={(e) => lastSet(e.target.value)}
@@ -145,9 +141,9 @@ const Signup = () => {
             )}
             <Form.Input
               fluid
-              icon={<Icon inverted bordered color="green" name="mail" />}
+              icon={<Icon color="green" name="mail" />}
               iconPosition="left"
-              placeholder="E-mail address"
+              placeholder="Eposta Adresi"
               onChange={(e) => emailSet(e.target.value)}
             />
             {emailError && (
@@ -158,9 +154,9 @@ const Signup = () => {
             <Form.Field inline>
               <Form.Input
                 fluid
-                icon={<Icon inverted bordered color="green" name="key" />}
+                icon={<Icon color="green" name="key" />}
                 iconPosition="left"
-                placeholder="Password"
+                placeholder="Şifre"
                 type="password"
                 onChange={(e) => passwordSet(e.target.value)}
               />
@@ -172,15 +168,12 @@ const Signup = () => {
             </Form.Field>
             <Divider />
             <Button fluid size="large" primary onClick={handleSubmit}>
-              Kaydol
+              Hesap Oluştur
             </Button>
           </Segment>
         </Form>
         <Message info>
-          Zaten Üye misiniz? <a href="#">Giriş Yap</a>
-        </Message>
-        <Message error>
-          <a href="#">Şifremi Unuttum</a>
+          Zaten Üye misiniz? <Link to="/login">Giriş Yap</Link>
         </Message>
       </Grid.Column>
     </Grid>

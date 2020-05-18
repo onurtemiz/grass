@@ -1,5 +1,8 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/all';
+const baseUrl =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3001/api/all'
+    : '/api/all';
 
 const getTotal = async (filter) => {
   const req = await axios.get(`${baseUrl}/total?search=${filter}`);

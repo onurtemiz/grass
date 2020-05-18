@@ -4,52 +4,130 @@ import * as Yup from 'yup';
 import { loginUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TextField, Button } from '@material-ui/core';
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+  Icon,
+  Label,
+  Divider,
+  Container,
+} from 'semantic-ui-react';
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
   const [password, setPassword] = useState('');
-  const handleLogin = async (values, setSubmitting) => {
-    dispatch(loginUser(values));
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .required('Required')
+      .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'email'),
+    password: Yup.string().required('Required').min(8, 'password'),
+  });
+
+  const handleSubmit = async () => {
+    validationSchema
+      .validate(
+        {
+          password,
+          email,
+        },
+        { abortEarly: false }
+      )
+      .then((values) => {
+        dispatch(loginUser(values));
+      })
+      .catch((e) => {
+        e.errors.forEach((q) => {
+          switch (q) {
+            case 'password':
+              setPasswordError('Şifre en az 8 karakterden oluşmalı');
+              break;
+            case 'email':
+              setEmailError('Lütfen @boun.edu.tr emaili giriniz.');
+              break;
+
+            default:
+              return;
+          }
+        });
+      });
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    handleLogin({ email, password });
+  const emailSet = (value) => {
+    setEmailError(null);
+    setEmail(value);
+  };
+
+  const passwordSet = (value) => {
+    setPasswordError(null);
+    setPassword(value);
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <TextField
-          error={false}
-          required
-          size="small"
-          id="outlined-required"
-          label="Email"
-          variant="outlined"
-          value={email}
-          placeholder="onur.temiz@boun.edu.tr"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          error={true}
-          size="small"
-          value={password}
-          id="outlined-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          variant="outlined"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+    <Grid
+      textAlign="center"
+      style={{ height: '100vh' }}
+      verticalAlign="middle"
+      columns="equal"
+    >
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Header as="h1" color="green">
+          Çimlere Hoşgeldiniz.
+        </Header>
 
-        <Button type="submit" variant="contained" color="primary">
-          Submit
-        </Button>
-      </form>
-      <Link to="/signup">Kayit icin tiklayin.</Link>
-    </div>
+        <Message color="green">
+          Çim uygulamasına sadece <Label color="blue">@boun.edu.tr</Label>{' '}
+          emaili olanlar kayıt olabilir.
+        </Message>
+        <Form size="large">
+          <Segment>
+            <Form.Input
+              fluid
+              icon={<Icon color="green" name="mail" />}
+              iconPosition="left"
+              placeholder="Eposta Adresi"
+              onChange={(e) => emailSet(e.target.value)}
+            />
+            {emailError && (
+              <Label basic color="red" pointing="above">
+                {emailError}
+              </Label>
+            )}
+            <Form.Field inline>
+              <Form.Input
+                fluid
+                icon={<Icon color="green" name="key" />}
+                iconPosition="left"
+                placeholder="Şifre"
+                type="password"
+                onChange={(e) => passwordSet(e.target.value)}
+              />
+              {passwordError && (
+                <Label basic color="red" pointing="above">
+                  {passwordError}
+                </Label>
+              )}
+            </Form.Field>
+            <Divider />
+            <Button fluid size="large" primary onClick={handleSubmit}>
+              Giriş Yap
+            </Button>
+          </Segment>
+        </Form>
+        <Message info>
+          <Link to="/signup">Hesap Oluştur</Link>
+        </Message>
+        <Message error>
+          <a href="#">Şifremi Unuttum</a>
+        </Message>
+      </Grid.Column>
+    </Grid>
   );
 };
 

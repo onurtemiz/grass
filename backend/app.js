@@ -2,6 +2,8 @@ const config = require('./utils/config');
 const express = require('express');
 require('express-async-errors');
 const app = express();
+const path = require('path');
+
 const cors = require('cors');
 const mongoose = require('mongoose');
 const lessonsRouter = require('./controllers/lessons');
@@ -25,7 +27,8 @@ mongoose
   });
 
 app.use(cors());
-app.use(express.static('build'));
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.use(express.json());
 app.use(middleware.tokenExtractor);
 
@@ -35,7 +38,10 @@ app.use('/api/lessons', lessonsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/comments', commentsRouter);
-// app.use(middleware.unknownEndpoint);
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
 module.exports = app;

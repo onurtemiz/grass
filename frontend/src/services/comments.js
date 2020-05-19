@@ -43,16 +43,20 @@ const getTotalCommentsLesson = async (lessonId) => {
   return req.data;
 };
 
-const addInfTeacher = async (start, count, teacherId) => {
+const addInfTeacher = async (start, count, teacherId, filter) => {
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&teacherId=${teacherId}`
+    `${baseUrl}?start=${start}&total=${count}&teacherId=${teacherId}&filter=${filter}`
   );
   return req.data;
 };
 
-const addInfLesson = async (start, count, lessonId) => {
+const addInfLesson = async (start, count, lessonId, filter) => {
+  console.log(
+    `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}&filter=${filter}`
+  );
+
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}`
+    `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}&filter=${filter}`
   );
   return req.data;
 };

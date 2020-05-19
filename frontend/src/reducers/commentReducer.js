@@ -7,6 +7,7 @@ const initialState = {
   hasMore: false,
   start: 0,
   count: 20,
+  filter: 'mostRecent',
 };
 
 const commentReducer = (state = initialState, action) => {
@@ -57,9 +58,23 @@ const commentReducer = (state = initialState, action) => {
         ...state,
         comments: [...removedComments],
       };
+    case 'SORT_COMMENT':
+      return {
+        ...state,
+        filter: action.data,
+      };
     default:
       return state;
   }
+};
+
+export const sortComment = (option) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SORT_COMMENT',
+      data: option,
+    });
+  };
 };
 
 export const postComment = (c) => {
@@ -123,14 +138,18 @@ export const totalCommentLesson = (lessonId) => {
   };
 };
 
-export const addInfCommentTeacher = (start, count, teacherId) => {
+export const addInfCommentTeacher = (start, count, teacherId, filter) => {
   return async (dispatch) => {
     const comments = await commentsService.addInfTeacher(
       start,
       count,
-      teacherId
+      teacherId,
+      filter
     );
-    const total = await commentsService.getTotalCommentsTeacher(teacherId);
+    const total = await commentsService.getTotalCommentsTeacher(
+      teacherId,
+      filter
+    );
     let data = {
       hasMore: true,
       start: start + count,
@@ -149,10 +168,18 @@ export const addInfCommentTeacher = (start, count, teacherId) => {
   };
 };
 
-export const addInfCommentLesson = (start, count, lessonId) => {
+export const addInfCommentLesson = (start, count, lessonId, filter) => {
   return async (dispatch) => {
-    const comments = await commentsService.addInfLesson(start, count, lessonId);
-    const total = await commentsService.getTotalCommentsLesson(lessonId);
+    const comments = await commentsService.addInfLesson(
+      start,
+      count,
+      lessonId,
+      filter
+    );
+    const total = await commentsService.getTotalCommentsLesson(
+      lessonId,
+      filter
+    );
     let data = {
       hasMore: true,
       start: start + count,

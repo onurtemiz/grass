@@ -9,6 +9,7 @@ import {
   Menu,
   Segment,
   Icon,
+  Header,
 } from 'semantic-ui-react';
 const Nav = () => {
   return (
@@ -16,7 +17,7 @@ const Nav = () => {
       <Menu.Item
         as={Link}
         to="/"
-        style={{ backgroundColor: '#049a04a6', color: 'white' }}
+        style={{ backgroundColor: '#21ba45', color: 'white' }}
       >
         <Icon name="home" />
         Ana Sayfa

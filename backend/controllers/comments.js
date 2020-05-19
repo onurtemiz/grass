@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 commentsRouter.get('/', async (req, res) => {
   const q = req.query;
-  if ('teacherId' in q) {
+  if ('teacherId' in q && 'filter' in q) {
     const comments =
       'start' in q && 'total' in q
         ? await Comment.find({ teacher: q.teacherId })
@@ -17,15 +17,34 @@ commentsRouter.get('/', async (req, res) => {
         : await Comment.find({ teacher: q.teacherId }).populate('user');
 
     return res.json(comments.map((c) => c.toJSON()));
-  } else if ('lessonId' in q) {
-    const comments =
-      'start' in q && 'total' in q
-        ? await Comment.find({ lesson: q.lessonId })
-            .skip(Number(q.start))
-            .limit(Number(q.total))
-            .populate('user')
-        : await Comment.find({ lesson: q.lessonId }).populate('user');
-    return res.json(comments.map((c) => c.toJSON()));
+  } else if ('lessonId' in q && 'filter' in q) {
+    // MySchema.find().sort({ _id: -1 }).limit(10);
+    if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
+      const sort = q.filter === 'mostRecent' ? -1 : 1;
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.find({ lesson: q.lessonId })
+              .sort({ _id: sort })
+              .skip(Number(q.start))
+              .limit(Number(q.total))
+              .populate('user')
+          : await Comment.find({ lesson: q.lessonId })
+              .sort({ _id: sort })
+              .populate('user');
+      return res.json(comments.map((c) => c.toJSON()));
+    } else if (q.filter === 'mostPopular') {
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.find({ lesson: q.lessonId })
+              .sort({ likes: -1 })
+              .skip(Number(q.start))
+              .limit(Number(q.total))
+              .populate('user')
+          : await Comment.find({ lesson: q.lessonId })
+              .sort({ likes: -1 })
+              .populate('user');
+      return res.json(comments.map((c) => c.toJSON()));
+    }
   }
 
   const comments = await Comment.find({});

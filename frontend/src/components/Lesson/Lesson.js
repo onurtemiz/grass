@@ -2,15 +2,18 @@ import React, { useEffect } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/lessonReducer';
+import { sortComment } from '../../reducers/commentReducer';
 import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
 import { LinearProgress } from '@material-ui/core';
-import { Header, Divider, Icon } from 'semantic-ui-react';
+import { Header, Divider, Icon, Menu } from 'semantic-ui-react';
 const Lesson = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
     .params;
   const lessons = useSelector((state) => state.lessons.lessons);
+  const filter = useSelector((state) => state.comments.filter);
+
   useEffect(() => {
     const q = match;
     dispatch(getLessonPageByName(q.areaCode, q.digitCode, q.teacherName));
@@ -49,6 +52,23 @@ const Lesson = () => {
       <Header as="h1" color="green">
         Yorumlar
       </Header>{' '}
+      <Menu text>
+        <Menu.Item
+          name="En Yeni"
+          active={filter === 'mostRecent'}
+          onClick={() => dispatch(sortComment('mostRecent'))}
+        />
+        <Menu.Item
+          name="En Eski"
+          active={filter === 'mostPast'}
+          onClick={() => dispatch(sortComment('mostPast'))}
+        />
+        <Menu.Item
+          name="En Patili"
+          active={filter === 'mostPopular'}
+          onClick={() => dispatch(sortComment('mostPopular'))}
+        />
+      </Menu>
       <Divider />
       <CommentForm lessonId={lesson.id} teacherId={lesson.teacher.id} />
       <Comments typeId={lesson.id} type="lesson" />

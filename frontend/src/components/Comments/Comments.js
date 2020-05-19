@@ -12,29 +12,26 @@ const Comments = ({ type, typeId }) => {
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
+  const filter = useSelector((state) => state.comments.filter);
+
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (type === 'teacher') {
-      dispatch(addInfCommentTeacher(0, count, typeId));
+      dispatch(addInfCommentTeacher(0, count, typeId, filter));
     } else if (type === 'lesson') {
-      dispatch(addInfCommentLesson(0, count, typeId));
+      dispatch(addInfCommentLesson(0, count, typeId, filter));
     }
   }, []);
 
   const loadFunc = () => {
     if (type === 'teacher') {
-      dispatch(addInfCommentTeacher(start, count, typeId));
+      dispatch(addInfCommentTeacher(start, count, typeId, filter));
     } else if (type === 'lesson') {
-      dispatch(addInfCommentLesson(start, count, typeId));
+      dispatch(addInfCommentLesson(start, count, typeId, filter));
     }
   };
-  const windowStyle = {
-    height: 400,
-    overflow: 'auto',
-  };
-  console.log('comments', state);
   return (
     <InfiniteScroll
       pageStart={0}
@@ -51,9 +48,15 @@ const Comments = ({ type, typeId }) => {
         .filter((c) =>
           type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
         )
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .sort((a, b) => b.likes.length - a.likes.length)
-
+        .sort((a, b) => {
+          if (filter === 'mostRecent') {
+            return new Date(b.date) - new Date(a.date);
+          } else if (filter === 'mostPast') {
+            return new Date(a.date) - new Date(b.date);
+          } else if (filter === 'mostPopular') {
+            return b.likes.length - a.likes.length;
+          }
+        })
         .map((c) => (
           <Comment key={c.id} comment={c} />
         ))}

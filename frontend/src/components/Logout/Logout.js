@@ -14,8 +14,8 @@ const Logout = () => {
         position="right"
         style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
       >
-        <Icon name="log out"  />
-        Logout
+        <Icon name="log out" />
+        Çıkış Yap
       </Menu.Item>
     </>
   );

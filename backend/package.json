@@ -8,7 +8,7 @@
     "dev": "nodemon ./index.js",
     "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend/",
     "deploy": "cd ../ && git subtree push --prefix backend heroku master && cd ./backend",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
+    "deploy:full": "npm run build:ui && git add . && git commit --am buildui && npm run deploy"
   },
   "author": "Onur Temiz",
   "license": "ISC",

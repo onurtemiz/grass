@@ -16,7 +16,7 @@ const Filter = () => {
       lang="tr"
       onInput={(e) => handleChange(e)}
       style={s}
-      placeholder="SEARCH LESSON OR INSTRUCTOR"
+      placeholder="Ders ya da hoca arayın"
     />
   );
 };

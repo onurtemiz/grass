@@ -97,20 +97,18 @@ const Comment = ({ comment, setIsUpdate }) => {
             <SComment.Author>
               {comment.user.firstName} {comment.user.lastName}
               <SComment.Metadata>
-                {getDay(new Date(comment.date))}
+                {comment.likes.length} Pati · {getDay(new Date(comment.date))}
               </SComment.Metadata>
             </SComment.Author>
-            <SComment.Metadata>{comment.likes.length} Beğeni</SComment.Metadata>
-
             <SComment.Text>{comment.comment}</SComment.Text>
             <SComment.Actions>
               <SComment.Action
                 onClick={handleLike}
                 active={likeType}
-                style={{ color: '#21ba45' }}
+                style={{ color: likeType === true ? '#0E6EB8' : '#21bb45' }}
               >
-                <Icon name={likeType === true ? 'heart' : 'heart outline'} />
-                Beğen
+                <Icon name="paw" />
+                {likeType === true ? 'Patiledin' : 'Patile'}
               </SComment.Action>
               {user.id === comment.user.id ? (
                 <SComment.Action

@@ -6,6 +6,15 @@ import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../utils/config';
 import Comments from '../Comments/Comments';
 import { LinearProgress } from '@material-ui/core';
+import {
+  Icon,
+  Button,
+  Label,
+  Divider,
+  Header,
+  Container,
+  Segment,
+} from 'semantic-ui-react';
 const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
@@ -18,17 +27,30 @@ const Teacher = () => {
     return <LinearProgress />;
   }
   const teacher = teachers.find((t) => t.name === match.params.name);
-  console.log('teacher', teacher);
   return (
     <div>
-      {teacher.name}
-      <ul>
-        {teacher.lessons.map((l) => (
-          <li key={l.id}>
-            <Link to={LESSON_PATH(l, teacher.name)}>{l.fullName}</Link>
-          </li>
-        ))}
-      </ul>
+      <Header color="blue" size="huge">
+        <Icon name="student" />
+        {teacher.name}
+      </Header>
+      {
+        <ul style={{ listStyle: 'none' }}>
+          {teacher.lessons.map((l) => (
+            <li key={l.id} style={{ padding: '0.5em' }}>
+              <Header
+                size="huge"
+                color="green"
+                as={Link}
+                to={LESSON_PATH(l, teacher.name)}
+              >
+                <Icon name="book" />
+                {l.fullName.toUpperCase()}
+              </Header>
+            </li>
+          ))}
+        </ul>
+      }
+
       <h2>Comments</h2>
       <Comments typeId={teacher.id} type="teacher" />
     </div>

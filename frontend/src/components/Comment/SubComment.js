@@ -8,28 +8,59 @@ import { useDispatch, useSelector } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import CommentForm from '../CommentForm/CommentForm';
-
+import {
+  Comment as SComment,
+  Icon,
+  Button,
+  Label,
+  Divider,
+  Header,
+  Container,
+  Segment,
+} from 'semantic-ui-react';
 const Comment = ({ comment, setIsUpdate }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [likeType, setLikeType] = useState('');
-  const timeOptions = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: false,
+  const [likeType, setLikeType] = useState(false);
+
+  const getDay = (someDate) => {
+    const today = new Date();
+    if (
+      someDate.getFullYear() === today.getFullYear() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getDate() === today.getDate()
+    ) {
+      return 'Bugün';
+    } else if (
+      someDate.getFullYear() === today.getFullYear() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getDate() + 1 === today.getDate()
+    ) {
+      return 'Dün';
+    } else {
+      const year = today.getFullYear() - someDate.getFullYear();
+      const month = today.getMonth() - someDate.getMonth();
+      const day = today.getDate() - someDate.getDate();
+      let s = '';
+      if (year != 0) {
+        s += `${year} yıl`;
+      }
+      if (month != 0) {
+        s += `${month} ay`;
+      }
+      if (day != 0) {
+        s += `${day} gün`;
+      }
+      return s + ' önce';
+    }
   };
+
   useEffect(() => {
-    comment.likes.includes(user.id)
-      ? setLikeType('liked')
-      : setLikeType('like');
+    comment.likes.includes(user.id) ? setLikeType(true) : setLikeType(false);
   }, []);
   const handleLike = () => {
     dispatch(likeComment(comment.id));
-    likeType === 'like' ? setLikeType('liked') : setLikeType('like');
+    likeType === false ? setLikeType(true) : setLikeType(false);
   };
 
   const handleRemove = () => {
@@ -58,35 +89,53 @@ const Comment = ({ comment, setIsUpdate }) => {
     setIsUpdate(true);
   };
 
-  const border = {
-    border: 'solid 1px black',
-  };
-
   return (
-    <div style={border}>
-      <div>
-        Name: {comment.user.firstName} {comment.user.lastName}
-      </div>
-      <div>
-        {new Date(comment.date).toLocaleDateString('tr-TR', timeOptions)}
-      </div>
-      <div>Comment: {comment.comment}</div>
-      <div>
-        Likes: {comment.likes.length}
-        <button onClick={handleLike}>{likeType}</button>
-      </div>
+    <Segment color="blue">
+      <SComment.Group>
+        <SComment>
+          <SComment.Content>
+            <SComment.Author>
+              {comment.user.firstName} {comment.user.lastName}
+              <SComment.Metadata>
+                {getDay(new Date(comment.date))}
+              </SComment.Metadata>
+            </SComment.Author>
+            <SComment.Metadata>{comment.likes.length} Beğeni</SComment.Metadata>
 
-      {user.id === comment.user.id ? (
-        <div>
-          <button onClick={handleRemove}>Remove</button>
-        </div>
-      ) : null}
-      {user.id === comment.user.id ? (
-        <div>
-          <button onClick={handleUpdate}>Update</button>
-        </div>
-      ) : null}
-    </div>
+            <SComment.Text>{comment.comment}</SComment.Text>
+            <SComment.Actions>
+              <SComment.Action
+                onClick={handleLike}
+                active={likeType}
+                style={{ color: '#21ba45' }}
+              >
+                <Icon name={likeType === true ? 'heart' : 'heart outline'} />
+                Beğen
+              </SComment.Action>
+              {user.id === comment.user.id ? (
+                <SComment.Action
+                  onClick={handleUpdate}
+                  style={{ color: '#4183c4' }}
+                >
+                  <Icon name="edit outline" />
+                  Değiştir
+                </SComment.Action>
+              ) : null}
+              {user.id === comment.user.id ? (
+                <SComment.Action
+                  onClick={handleRemove}
+                  style={{ color: '#db2828' }}
+                >
+                  <Icon name="delete" color="red" />
+                  Sil
+                </SComment.Action>
+              ) : null}
+            </SComment.Actions>
+          </SComment.Content>
+        </SComment>
+        {/* <Divider /> */}
+      </SComment.Group>
+    </Segment>
   );
 };
 

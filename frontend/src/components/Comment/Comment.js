@@ -13,9 +13,10 @@ import SubComment from './SubComment';
 const Comment = ({ comment }) => {
   const [isUpdate, setIsUpdate] = useState(false);
 
+
   if (!isUpdate) {
     return (
-      <div>
+      <div >
         <SubComment comment={comment} setIsUpdate={setIsUpdate} />
       </div>
     );

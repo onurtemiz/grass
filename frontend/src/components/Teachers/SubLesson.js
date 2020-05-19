@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH, TEACHER_PATH } from '../../utils/config';
-import { Card, Label, Header, Divider, Statistic } from 'semantic-ui-react';
+import {
+  Card,
+  Label,
+  Header,
+  Divider,
+  Statistic,
+  Icon,
+} from 'semantic-ui-react';
 const SubLesson = ({ lesson, teacherName }) => {
   const header = () => {};
 
@@ -15,12 +22,19 @@ const SubLesson = ({ lesson, teacherName }) => {
       >
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2" color="green">
-            {lesson.fullName.toUpperCase()}
-            {lesson.sectionCode.map((s) => (
-              <Label color="blue" key={`${lesson.fullName}.${s}`}>
-                {s}
-              </Label>
-            ))}
+            <Icon name="book" size="small" />
+            <Header.Content>
+              {lesson.fullName.toUpperCase()}
+              {lesson.sectionCode.map((s) => (
+                <Label
+                  color="blue"
+                  // style={{ padding: '0.5em' }}
+                  key={`${lesson.fullName}.${s}`}
+                >
+                  {s}
+                </Label>
+              ))}
+            </Header.Content>
           </Header>
         </Card.Header>
         <Card.Meta>{teacherName}</Card.Meta>

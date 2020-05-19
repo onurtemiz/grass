@@ -6,7 +6,7 @@ import {
   addInfCommentTeacher,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
-import {LinearProgress } from '@material-ui/core'
+import { LinearProgress } from '@material-ui/core';
 const Comments = ({ type, typeId }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
@@ -36,30 +36,28 @@ const Comments = ({ type, typeId }) => {
   };
   console.log('comments', state);
   return (
-    <div style={windowStyle}>
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadFunc}
-        hasMore={hasMore}
-        loader={
-          <div className="loader" key={0}>
-            <LinearProgress />
-          </div>
-        }
-        useWindow={false}
-      >
-        {comments
-          .filter((c) =>
-            type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
-          )
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .sort((a, b) => b.likes.length - a.likes.length)
+    <InfiniteScroll
+      pageStart={0}
+      loadMore={loadFunc}
+      hasMore={hasMore}
+      loader={
+        <div className="loader" key={0}>
+          <LinearProgress />
+        </div>
+      }
+      useWindow={false}
+    >
+      {comments
+        .filter((c) =>
+          type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
+        )
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .sort((a, b) => b.likes.length - a.likes.length)
 
-          .map((c) => (
-            <Comment key={c.id} comment={c} />
-          ))}
-      </InfiniteScroll>
-    </div>
+        .map((c) => (
+          <Comment key={c.id} comment={c} />
+        ))}
+    </InfiniteScroll>
   );
 };
 

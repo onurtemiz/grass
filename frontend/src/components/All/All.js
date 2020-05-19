@@ -4,6 +4,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { addInfAll } from '../../reducers/allReducer';
 import SubTeacher from '../Teachers/SubTeacher';
 import { LinearProgress } from '@material-ui/core';
+import { Card } from 'semantic-ui-react';
+
 import lodash from 'lodash';
 const All = () => {
   const count = useSelector((state) => state.all.count);
@@ -39,17 +41,18 @@ const All = () => {
   const loadFunc = () => {
     dispatch(addInfAll(start, count, filter));
   };
-  const windowStyle = {
-    height: 400,
-    overflow: 'auto',
-  };
 
   if (teachers.length === 0) {
     return <LinearProgress />;
   }
   console.log('state', state);
   return (
-    <div style={windowStyle}>
+    <div
+      style={{
+        height: '90vh',
+        overflow: 'auto',
+      }}
+    >
       <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}

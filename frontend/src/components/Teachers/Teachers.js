@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 import { LinearProgress } from '@material-ui/core';
+
 const Teachers = () => {
   const count = useSelector((state) => state.teachers.count);
   const start = useSelector((state) => state.teachers.start);

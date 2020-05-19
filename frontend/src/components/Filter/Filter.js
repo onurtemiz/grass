@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { setFilter } from '../../reducers/filterReducer';
 import { useDispatch } from 'react-redux';
+import { Search } from 'semantic-ui-react';
 const Filter = () => {
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -8,7 +9,7 @@ const Filter = () => {
   };
   const s = {
     textTransform: 'uppercase',
-    width: 190,
+    width: '50%',
   };
   return (
     <input

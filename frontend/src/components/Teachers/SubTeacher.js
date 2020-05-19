@@ -5,17 +5,11 @@ import { Link } from 'react-router-dom';
 
 const SubTeacher = ({ teacher }) => {
   return (
-    <div>
-      <div>
-        <Link to={TEACHER_PATH(teacher)}>Hoca: {teacher.name}</Link>
-      </div>
-      <div>
-        Dersler:
-        {teacher.lessons.map((l) => (
-          <SubLesson lesson={l} teacherName = {teacher.name} key={l.id} />
-        ))}
-      </div>
-    </div>
+    <>
+      {teacher.lessons.map((l) => (
+        <SubLesson lesson={l} teacherName={teacher.name} key={l.id} />
+      ))}
+    </>
   );
 };
 

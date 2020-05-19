@@ -82,7 +82,10 @@ const Login = () => {
         </Header>
 
         <Message color="green">
-          Çim uygulamasına sadece <Label color="blue">@boun.edu.tr</Label>{' '}
+          Çim uygulamasına sadece{' '}
+          <Label color="blue" style={{ padding: 5 }}>
+            @boun.edu.tr
+          </Label>{' '}
           emaili olanlar kayıt olabilir.
         </Message>
         <Form size="large">
@@ -124,7 +127,9 @@ const Login = () => {
           <Link to="/signup">Hesap Oluştur</Link>
         </Message>
         <Message error>
-          <a href="#">Şifremi Unuttum</a>
+          <Link to="/signup" style={{ color: '#f53131' }}>
+            Şifremi Unuttum
+          </Link>
         </Message>
       </Grid.Column>
     </Grid>

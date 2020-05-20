@@ -51,10 +51,6 @@ const addInfTeacher = async (start, count, teacherId, filter) => {
 };
 
 const addInfLesson = async (start, count, lessonId, filter) => {
-  console.log(
-    `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}&filter=${filter}`
-  );
-
   const req = await axios.get(
     `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}&filter=${filter}`
   );

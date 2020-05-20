@@ -13,8 +13,7 @@ const Comments = ({ type, typeId }) => {
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
-
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.comments);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,34 +32,36 @@ const Comments = ({ type, typeId }) => {
     }
   };
   return (
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={loadFunc}
-      hasMore={hasMore}
-      loader={
-        <div className="loader" key={0}>
-          <LinearProgress />
-        </div>
-      }
-      useWindow={false}
-    >
-      {comments
-        .filter((c) =>
-          type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
-        )
-        .sort((a, b) => {
-          if (filter === 'mostRecent') {
-            return new Date(b.date) - new Date(a.date);
-          } else if (filter === 'mostPast') {
-            return new Date(a.date) - new Date(b.date);
-          } else if (filter === 'mostPopular') {
-            return b.likes.length - a.likes.length;
-          }
-        })
-        .map((c) => (
-          <Comment key={c.id} comment={c} />
-        ))}
-    </InfiniteScroll>
+    <div style={{ height: '50vh', overflow: 'auto' }}>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={loadFunc}
+        hasMore={hasMore}
+        loader={
+          <div className="loader" key={0}>
+            <LinearProgress />
+          </div>
+        }
+        useWindow={false}
+      >
+        {comments
+          .filter((c) =>
+            type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
+          )
+          .sort((a, b) => {
+            if (filter === 'mostRecent') {
+              return new Date(b.date) - new Date(a.date);
+            } else if (filter === 'mostPast') {
+              return new Date(a.date) - new Date(b.date);
+            } else if (filter === 'mostPopular') {
+              return b.likes.length - a.likes.length;
+            }
+          })
+          .map((c) => (
+            <Comment key={c.id} comment={c} />
+          ))}
+      </InfiniteScroll>
+    </div>
   );
 };
 

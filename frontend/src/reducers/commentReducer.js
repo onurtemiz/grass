@@ -187,10 +187,12 @@ export const addInfCommentLesson = (start, count, lessonId, filter) => {
       total: total.total,
       count: count,
     };
+
     if (total.total === 0 || total.total < count + start) {
       data.hasMore = false;
       data.start = 0;
     }
+    console.log('data', data);
     dispatch({
       type: 'ADD_INF_COMMENT',
       data: data,

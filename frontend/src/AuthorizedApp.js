@@ -5,6 +5,8 @@ import Lesson from './components/Lesson/Lesson';
 import Lessons from './components/Lessons/Lessons';
 import Teacher from './components/Teacher/Teacher';
 import Teachers from './components/Teachers/Teachers';
+import Contribution from './components/Contribution/Contribution';
+import About from './components/About/About';
 import All from './components/All/All';
 import { Switch, Route } from 'react-router-dom';
 
@@ -25,6 +27,12 @@ function AuthorizedApp() {
         {/* <Route path="/lessons">
           <Lessons />
         </Route> */}
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/contribution">
+          <Contribution />
+        </Route>
         <Route path="/">
           <All />
         </Route>

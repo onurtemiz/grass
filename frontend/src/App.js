@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './reducers/userReducer';
-import commentsService from './services/comments';
+import { setToken } from './utils/token';
+
 const AuthenticatedApp = React.lazy(() => import('./AuthorizedApp'));
 const UnauthenticatedApp = React.lazy(() => import('./UnauthorizedApp'));
 
@@ -12,7 +13,7 @@ function App() {
     if (grassUser) {
       const jsonUser = JSON.parse(grassUser);
       dispatch(setUser(jsonUser));
-      commentsService.setToken(jsonUser.token);
+      setToken(jsonUser.token);
     }
   }, []);
   const user = useSelector((state) => state.user);

@@ -6,20 +6,20 @@ const jwt = require('jsonwebtoken');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
-  const isDuplicate = await User.findOne({ email: body.email });
+  const isEmailDuplicate = await User.findOne({ email: body.email });
+  const isUserDuplicate = await User.findOne({ username: body.username });
   const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
-  console.log('reResult', isDuplicate);
   if (!body.email || reResult === null) {
     return res.status(400).json({
       error: 'Must have boun email',
     });
-  } else if (isDuplicate !== null) {
+  } else if (isEmailDuplicate !== null) {
     return res.status(400).json({
       error: 'User is already signin',
     });
-  } else if (!body.username || body.username.length > 15) {
+  } else if (!body.username || body.username.length > 15 || isUserDuplicate) {
     return res.status(400).json({
-      error: 'User name must be present and less than 15 characters',
+      error: 'Username must be present, unique and less than 15 characters',
     });
   } else if (!body.password || body.password.length < 8) {
     return res.status(400).json({
@@ -35,6 +35,54 @@ usersRouter.post('/signup', async (req, res) => {
   });
   await user.save();
   res.status(201).json(user.toJSON());
+});
+
+usersRouter.put('/', async (req, res) => {
+  const body = req.body;
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  }
+
+  if (body.username) {
+    const isUserDuplicate = await User.findOne({ username: body.username });
+    if (body.username.length > 15 || isUserDuplicate) {
+      return res.status(401).json({
+        error: 'Username must be unique and less than 15 characters',
+      });
+    }
+    await User.findByIdAndUpdate(decodedToken.id, { username: body.username });
+  }
+  if (body.password) {
+    console.log('body.password', body.password);
+    if (body.password.length < 8) {
+      console.log('body.password', body.password);
+
+      return res.status(401).json({
+        error: 'password must be 8 or more characters',
+      });
+    }
+    const passwordHash = await bcrypt.hash(body.password, 10);
+    await User.findByIdAndUpdate(decodedToken.id, {
+      passwordHash: passwordHash,
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  const userForToken = {
+    email: user.email,
+    id: user._id,
+  };
+  const token = jwt.sign(userForToken, process.env.SECRET);
+
+  res.status(200).send({
+    token,
+    id: user._id,
+    email: user.email,
+    username: user.username,
+  });
 });
 
 usersRouter.get('/', async (req, res) => {

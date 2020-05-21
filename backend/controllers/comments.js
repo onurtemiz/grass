@@ -83,7 +83,7 @@ commentsRouter.post('/', async (req, res) => {
       error: 'LessonId must be present',
     });
   } else if (!req.token || !decodedToken.id) {
-    return response.status(401).json({
+    return res.status(401).json({
       error: 'token missing or invalid',
     });
   }

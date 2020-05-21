@@ -1,18 +1,9 @@
 import axios from 'axios';
+import { config } from '../utils/token';
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001/api/comments'
     : '/api/comments';
-
-let config = {
-  headers: { Authorization: null },
-};
-
-const setToken = (newToken) => {
-  config = {
-    headers: { Authorization: `bearer ${newToken}` },
-  };
-};
 
 const updateComment = async (comment, id) => {
   const req = await axios.put(`${baseUrl}/${id}`, { comment }, config);
@@ -66,7 +57,6 @@ export default {
   allComments,
   removeComment,
   likeComment,
-  setToken,
   updateComment,
   postComment,
   getTotalCommentsTeacher,

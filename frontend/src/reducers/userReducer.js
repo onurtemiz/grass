@@ -1,13 +1,29 @@
 import loginService from '../services/login';
 import signupService from '../services/signup';
 import commentsService from '../services/comments';
+import userService from '../services/user';
+import { setToken } from '../utils/token';
 const userReducer = (state = null, action) => {
   switch (action.type) {
     case 'SET_USER':
       return action.data;
+    case 'UPDATE_USER':
+      return { ...action.data, ...state };
     default:
       return state;
   }
+};
+
+export const updateUser = (u) => {
+  return async (dispatch) => {
+    const user = await userService.updateUser(u);
+    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setToken(user.token);
+    dispatch({
+      type: 'UPDATE_USER',
+      data: user,
+    });
+  };
 };
 
 export const logoutUser = () => {
@@ -33,7 +49,7 @@ export const loginUser = (userInfo) => {
   return async (dispatch) => {
     const user = await loginService.login(userInfo);
     window.localStorage.setItem('grassUser', JSON.stringify(user));
-    commentsService.setToken(user.token);
+    setToken(user.token);
     dispatch({
       type: 'SET_USER',
       data: user,
@@ -49,7 +65,7 @@ export const signupUser = (userInfo) => {
       password: userInfo.password,
     });
     window.localStorage.setItem('grassUser', JSON.stringify(user));
-    commentsService.setToken(user.token);
+    setToken(user.token);
 
     dispatch({
       type: 'SET_USER',

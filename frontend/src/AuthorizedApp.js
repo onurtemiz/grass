@@ -8,6 +8,8 @@ import Teachers from './components/Teachers/Teachers';
 import Contribution from './components/Contribution/Contribution';
 import About from './components/About/About';
 import All from './components/All/All';
+import EditUser from './components/EditUser/EditUser';
+import User from './components/User/user';
 import { Switch, Route } from 'react-router-dom';
 
 function AuthorizedApp() {
@@ -32,6 +34,12 @@ function AuthorizedApp() {
         </Route>
         <Route path="/contribution">
           <Contribution />
+        </Route>
+        <Route path="/user/edit">
+          <EditUser />
+        </Route>
+        <Route path="/user">
+          <User />
         </Route>
         <Route path="/">
           <All />

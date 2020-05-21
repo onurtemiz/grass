@@ -23,6 +23,14 @@ const Nav = () => {
         Ana Sayfa
       </Menu.Item>
       <Filter />
+      <Menu.Item
+        as={Link}
+        to="/user/edit"
+        position="right"
+        style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
+      >
+        Hesabım
+      </Menu.Item>
       <Logout />
     </Menu>
   );

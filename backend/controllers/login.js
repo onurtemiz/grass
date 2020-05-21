@@ -5,8 +5,8 @@ const User = require('../models/user');
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body;
-  const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
-  if (!body.email || reResult === null) {
+  const isEmailBoun = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
+  if (!body.email || isEmailBoun === null) {
     return response.status(400).json({
       error: 'Must have boun email',
     });
@@ -38,8 +38,7 @@ loginRouter.post('/', async (request, response) => {
     token,
     id: user._id,
     email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    username: user.username,
   });
 });
 

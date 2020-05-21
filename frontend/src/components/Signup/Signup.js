@@ -21,15 +21,12 @@ const Signup = () => {
   const dispatch = useDispatch();
   const [passwordError, setPasswordError] = useState(null);
   const [emailError, setEmailError] = useState(null);
-  const [firstNameError, setFirstNameError] = useState(null);
-  const [lastNameError, setLastNameError] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
   const [password, setPassword] = useState(null);
   const [email, setEmail] = useState(null);
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
+  const [username, setUsername] = useState(null);
   const validationSchema = Yup.object({
-    firstName: Yup.string().max(15, 'firstName').required('Required'),
-    lastName: Yup.string().required('Required').max(15, 'lastName'),
+    username: Yup.string().max(15, 'username').required('Required'),
     email: Yup.string()
       .required('Required')
       .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'email'),
@@ -40,13 +37,9 @@ const Signup = () => {
     setEmailError(null);
     setEmail(value);
   };
-  const firstSet = (value) => {
-    setFirstNameError(null);
-    setFirstName(value);
-  };
-  const lastSet = (value) => {
-    setLastNameError(null);
-    setLastName(value);
+  const usernameSet = (value) => {
+    setUsernameError(null);
+    setUsername(value);
   };
   const passwordSet = (value) => {
     setPasswordError(null);
@@ -58,9 +51,8 @@ const Signup = () => {
       .validate(
         {
           password,
-          lastName,
           email,
-          firstName,
+          username,
         },
         { abortEarly: false }
       )
@@ -68,7 +60,6 @@ const Signup = () => {
         dispatch(signupUser(values));
       })
       .catch((e) => {
-        console.log('e', e);
         e.errors.forEach((q) => {
           switch (q) {
             case 'password':
@@ -77,11 +68,8 @@ const Signup = () => {
             case 'email':
               setEmailError('Lütfen @boun.edu.tr emaili giriniz.');
               break;
-            case 'firstName':
-              setFirstNameError('İsim 15 harf veya daha az olmalı');
-              break;
-            case 'lastName':
-              setLastNameError('Soyisim 15 harf veya daha az olmalı');
+            case 'username':
+              setUsernameError('Kullanıcı adı 15 harf veya daha az olmalı');
               break;
             default:
               return;
@@ -108,37 +96,20 @@ const Signup = () => {
         </Message>
         <Form size="large">
           <Segment>
-            <Form.Group unstackable widths={2}>
-              <Form.Input
-                fluid
-                icon={<Icon name="user" color="green" />}
-                iconPosition="left"
-                placeholder="İsim"
-                onChange={(e) => firstSet(e.target.value)}
-              />
+            <Form.Input
+              fluid
+              icon={<Icon name="user" color="green" />}
+              iconPosition="left"
+              placeholder="Kullanıcı Adı"
+              onChange={(e) => usernameSet(e.target.value)}
+            />
 
-              <Form.Input
-                fluid
-                icon={<Icon name="user" color="green" />}
-                iconPosition="left"
-                placeholder="Soyisim"
-                onChange={(e) => lastSet(e.target.value)}
-              />
-            </Form.Group>{' '}
-            {(firstNameError || lastNameError) && (
-              <Form.Group unstackable widths={2}>
-                {firstNameError && (
-                  <Label basic color="red" pointing="above">
-                    {firstNameError}
-                  </Label>
-                )}{' '}
-                {lastNameError && (
-                  <Label basic color="red" pointing="above">
-                    {lastNameError}
-                  </Label>
-                )}
-              </Form.Group>
+            {usernameError && (
+              <Label basic color="red" pointing="above">
+                {usernameError}
+              </Label>
             )}
+
             <Form.Input
               fluid
               icon={<Icon color="green" name="mail" />}

@@ -95,7 +95,7 @@ const Comment = ({ comment, setIsUpdate }) => {
         <SComment>
           <SComment.Content>
             <SComment.Author>
-              {comment.user.firstName} {comment.user.lastName}
+              {comment.user.username}
               <SComment.Metadata>
                 {comment.likes.length} Pati · {getDay(new Date(comment.date))}
               </SComment.Metadata>

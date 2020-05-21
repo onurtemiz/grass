@@ -2,6 +2,7 @@ const usersRouter = require('express').Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const config = require('../utils/config');
+const jwt = require('jsonwebtoken');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -16,13 +17,9 @@ usersRouter.post('/signup', async (req, res) => {
     return res.status(400).json({
       error: 'User is already signin',
     });
-  } else if (!body.firstName || body.firstName.length > 15) {
+  } else if (!body.username || body.username.length > 15) {
     return res.status(400).json({
-      error: 'First name must be present and less than 15 characters',
-    });
-  } else if (!body.lastName || body.lastName.length > 15) {
-    return res.status(400).json({
-      error: 'Last name must be present and less than 15 characters',
+      error: 'User name must be present and less than 15 characters',
     });
   } else if (!body.password || body.password.length < 8) {
     return res.status(400).json({
@@ -32,8 +29,7 @@ usersRouter.post('/signup', async (req, res) => {
 
   const passwordHash = await bcrypt.hash(body.password, 10);
   const user = new User({
-    firstName: body.firstName,
-    lastName: body.lastName,
+    username: body.username,
     email: body.email,
     passwordHash: passwordHash,
   });

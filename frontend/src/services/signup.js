@@ -6,6 +6,7 @@ const baseUrl =
     : '/api/users/signup';
 
 const signup = async (user) => {
+  console.log('user', user);
   const req = await axios.post(baseUrl, user);
   console.log('req.data', req.data);
   return req.data;

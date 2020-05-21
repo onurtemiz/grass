@@ -138,6 +138,32 @@ export const totalCommentLesson = (lessonId) => {
   };
 };
 
+export const addInfCommentUser = (start, count, userId, filter) => {
+  return async (dispatch) => {
+    const comments = await commentsService.addInfCommentsUser(
+      start,
+      count,
+      userId,
+      filter
+    );
+    const total = await commentsService.getTotalCommentsUser(userId, filter);
+    let data = {
+      hasMore: true,
+      start: start + count,
+      comments: comments,
+      total: total.total,
+      count: count,
+    };
+    if (total.total === 0 || total.total < count + start) {
+      data.hasMore = false;
+      data.start = 0;
+    }
+    dispatch({
+      type: 'ADD_INF_COMMENT',
+      data: data,
+    });
+  };
+};
 export const addInfCommentTeacher = (start, count, teacherId, filter) => {
   return async (dispatch) => {
     const comments = await commentsService.addInfTeacher(

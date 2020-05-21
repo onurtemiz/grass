@@ -25,7 +25,7 @@ const Nav = () => {
       <Filter />
       <Menu.Item
         as={Link}
-        to="/user/edit"
+        to="/user"
         position="right"
         style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
       >

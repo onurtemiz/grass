@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { updateUser } from '../../reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { LinearProgress } from '@material-ui/core';
+
 import * as Yup from 'yup'; // for everything
 import {
   Button,
@@ -16,9 +19,11 @@ import {
   Label,
   Divider,
 } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
 const EditUser = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [edited, setEdited] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [usernameError, setUsernameError] = useState(null);
   const [password, setPassword] = useState('');
@@ -48,10 +53,10 @@ const EditUser = () => {
       )
       .then((values) => {
         // console.log('values', values);
-        dispatch(updateUser(values));
+        setEdited('started');
+        dispatch(updateUser(values, setEdited));
       })
       .catch((e) => {
-        console.log('e', e);
         e.errors.forEach((q) => {
           switch (q) {
             case 'password':
@@ -66,6 +71,13 @@ const EditUser = () => {
         });
       });
   };
+  if (edited === 'started') {
+    return <LinearProgress />;
+  }
+
+  if (edited === 'finished') {
+    return <Redirect to="/user" />;
+  }
 
   return (
     <Grid

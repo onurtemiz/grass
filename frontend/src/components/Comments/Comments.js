@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import {
   addInfCommentLesson,
   addInfCommentTeacher,
+  addInfCommentUser,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import { LinearProgress } from '@material-ui/core';
@@ -13,7 +14,6 @@ const Comments = ({ type, typeId }) => {
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
-  const state = useSelector((state) => state.comments);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,6 +21,8 @@ const Comments = ({ type, typeId }) => {
       dispatch(addInfCommentTeacher(0, count, typeId, filter));
     } else if (type === 'lesson') {
       dispatch(addInfCommentLesson(0, count, typeId, filter));
+    } else if (type === 'user') {
+      dispatch(addInfCommentUser(start, count, typeId, filter));
     }
   }, []);
 
@@ -29,6 +31,8 @@ const Comments = ({ type, typeId }) => {
       dispatch(addInfCommentTeacher(start, count, typeId, filter));
     } else if (type === 'lesson') {
       dispatch(addInfCommentLesson(start, count, typeId, filter));
+    } else if (type === 'user') {
+      dispatch(addInfCommentUser(start, count, typeId, filter));
     }
   };
   return (
@@ -45,9 +49,15 @@ const Comments = ({ type, typeId }) => {
         useWindow={false}
       >
         {comments
-          .filter((c) =>
-            type === 'teacher' ? c.teacher === typeId : c.lesson === typeId
-          )
+          .filter((c) => {
+            if (type === 'teacher') {
+              return c.teacher === typeId;
+            } else if (type === 'lesson') {
+              return (c.lesson = typeId);
+            } else if (type === 'user') {
+              return c.user.id === typeId;
+            }
+          })
           .sort((a, b) => {
             if (filter === 'mostRecent') {
               return new Date(b.date) - new Date(a.date);

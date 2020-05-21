@@ -45,6 +45,33 @@ commentsRouter.get('/', async (req, res) => {
               .populate('user');
       return res.json(comments.map((c) => c.toJSON()));
     }
+  } else if ('userId' in q && 'filter' in q) {
+    if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
+      const sort = q.filter === 'mostRecent' ? -1 : 1;
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.find({ user: q.userId })
+              .sort({ _id: sort })
+              .skip(Number(q.start))
+              .limit(Number(q.total))
+              .populate('user')
+          : await Comment.find({ user: q.userId })
+              .sort({ _id: sort })
+              .populate('user');
+      return res.json(comments.map((c) => c.toJSON()));
+    } else if (q.filter === 'mostPopular') {
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.find({ user: q.userId })
+              .sort({ likes: -1 })
+              .skip(Number(q.start))
+              .limit(Number(q.total))
+              .populate('user')
+          : await Comment.find({ user: q.userId })
+              .sort({ likes: -1 })
+              .populate('user');
+      return res.json(comments.map((c) => c.toJSON()));
+    }
   }
 
   const comments = await Comment.find({});
@@ -62,6 +89,9 @@ commentsRouter.get('/total', async (req, res) => {
     const total = await Comment.find({
       lesson: q.lessonId,
     }).countDocuments();
+    return res.json({ total: total });
+  } else if ('userId' in q) {
+    const total = await Comment.find({ user: q.userId }).countDocuments();
     return res.json({ total: total });
   }
 });
@@ -163,11 +193,16 @@ commentsRouter.put('/:id', async (req, res) => {
     const isLiked = comment.likes.some((u) => u.equals(user._id));
     if (isLiked) {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
+      user.totalLikes = user.totalLikes - 1;
     } else {
       comment.likes = comment.likes.concat(user._id);
+      if (!user.equals(comment.user)) {
+        user.totalLikes = user.totalLikes + 1;
+      }
     }
   }
   await comment.save();
+  await user.save();
   const opts = [{ path: 'user' }];
   Comment.populate(comment, opts, function (err, comment) {
     res.json(comment.toJSON());

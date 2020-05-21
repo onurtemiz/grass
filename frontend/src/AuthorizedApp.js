@@ -9,7 +9,7 @@ import Contribution from './components/Contribution/Contribution';
 import About from './components/About/About';
 import All from './components/All/All';
 import EditUser from './components/EditUser/EditUser';
-import User from './components/User/user';
+import User from './components/User/User';
 import { Switch, Route } from 'react-router-dom';
 
 function AuthorizedApp() {

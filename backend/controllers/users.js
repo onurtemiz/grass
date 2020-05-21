@@ -57,10 +57,7 @@ usersRouter.put('/', async (req, res) => {
     await User.findByIdAndUpdate(decodedToken.id, { username: body.username });
   }
   if (body.password) {
-    console.log('body.password', body.password);
     if (body.password.length < 8) {
-      console.log('body.password', body.password);
-
       return res.status(401).json({
         error: 'password must be 8 or more characters',
       });
@@ -71,17 +68,40 @@ usersRouter.put('/', async (req, res) => {
     });
   }
   const user = await User.findById(decodedToken.id);
+
   const userForToken = {
     email: user.email,
     id: user._id,
   };
-  const token = jwt.sign(userForToken, process.env.SECRET);
 
+  const token = jwt.sign(userForToken, process.env.SECRET);
   res.status(200).send({
     token,
     id: user._id,
     email: user.email,
     username: user.username,
+  });
+});
+
+usersRouter.get('/:id', async (req, res) => {
+  console.log('req.token', req.token);
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (req.params.id !== decodedToken.id) {
+    return res.status(400).json({
+      error: 'token id does not match',
+    });
+  }
+
+  const user = await User.findById(req.params.id).populate('comments');
+  const jsonedUser = user.toJSON();
+
+  res.json({
+    id: jsonedUser.id,
+    email: jsonedUser.email,
+    totalLikes: jsonedUser.totalLikes,
+    username: jsonedUser.username,
+    token: req.token,
   });
 });
 

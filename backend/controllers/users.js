@@ -83,26 +83,11 @@ usersRouter.put('/', async (req, res) => {
   });
 });
 
-usersRouter.get('/:id', async (req, res) => {
-  console.log('req.token', req.token);
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (req.params.id !== decodedToken.id) {
-    return res.status(400).json({
-      error: 'token id does not match',
-    });
-  }
-
-  const user = await User.findById(req.params.id).populate('comments');
-  const jsonedUser = user.toJSON();
-
-  res.json({
-    id: jsonedUser.id,
-    email: jsonedUser.email,
-    totalLikes: jsonedUser.totalLikes,
-    username: jsonedUser.username,
-    token: req.token,
-  });
+usersRouter.get('/:username', async (req, res) => {
+  const user = await User.findOne({ username: req.params.username }).populate(
+    'comments'
+  );
+  res.json(user.toJSON());
 });
 
 usersRouter.get('/', async (req, res) => {

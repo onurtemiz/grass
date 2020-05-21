@@ -11,7 +11,9 @@ import {
   Icon,
   Header,
 } from 'semantic-ui-react';
+import { useSelector } from 'react-redux';
 const Nav = () => {
+  const user = useSelector((state) => state.user);
   return (
     <Menu style={{ marginBottom: '0' }}>
       <Menu.Item
@@ -25,7 +27,7 @@ const Nav = () => {
       <Filter />
       <Menu.Item
         as={Link}
-        to="/user"
+        to={`/users/${user.username}`}
         position="right"
         style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
       >

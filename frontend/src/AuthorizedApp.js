@@ -35,10 +35,10 @@ function AuthorizedApp() {
         <Route path="/contribution">
           <Contribution />
         </Route>
-        <Route path="/user/edit">
+        <Route path="/users/:username/edit">
           <EditUser />
         </Route>
-        <Route path="/user">
+        <Route path="/users/:username">
           <User />
         </Route>
         <Route path="/">

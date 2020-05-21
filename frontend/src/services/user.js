@@ -11,9 +11,8 @@ const updateUser = async (user) => {
   return res.data;
 };
 
-const getPopulatedUser = async (id) => {
-  console.log('config', config);
-  const res = await axios.get(`${baseUrl}/${id}`, config);
+const getPopulatedUser = async (username) => {
+  const res = await axios.get(`${baseUrl}/${username}`);
   return res.data;
 };
 

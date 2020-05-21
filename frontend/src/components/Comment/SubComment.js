@@ -18,6 +18,7 @@ import {
   Container,
   Segment,
 } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 const Comment = ({ comment, setIsUpdate }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -95,7 +96,9 @@ const Comment = ({ comment, setIsUpdate }) => {
         <SComment>
           <SComment.Content>
             <SComment.Author>
-              {comment.user.username}
+              <Link to={`/users/${comment.user.username}`}>
+                {comment.user.username}
+              </Link>
               <SComment.Metadata>
                 {comment.likes.length} Pati · {getDay(new Date(comment.date))}
               </SComment.Metadata>

@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPopulatedUser } from '../../reducers/userReducer';
+import { getPopulatedUser } from '../../reducers/usersReducer';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../Comments/Comments';
 import { Header } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 const User = () => {
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const match = useRouteMatch('/users/:username/').params;
+  const users = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(getPopulatedUser(user.id));
+    dispatch(getPopulatedUser(match.username));
   }, []);
 
-  if (!('totalLikes' in user)) {
+  if (users.find((u) => u.username === match.username) === undefined) {
     return <LinearProgress />;
   }
+  const user = users.find((u) => u.username === match.username);
 
   return (
     <div style={{ height: '90vh' }}>

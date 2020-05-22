@@ -84,10 +84,22 @@ usersRouter.put('/', async (req, res) => {
 });
 
 usersRouter.get('/:username', async (req, res) => {
-  const user = await User.findOne({ username: req.params.username }).populate(
-    'comments'
-  );
-  res.json(user.toJSON());
+  const user = await User.findOne({ username: req.params.username }).populate({
+    path: 'comments',
+    populate: [{ path: 'lesson' }],
+  });
+  const jsonedUser = user.toJSON();
+  console.log('jsonedUser', jsonedUser);
+  const totalLikedUser = {
+    ...jsonedUser,
+    totalLikes:
+      jsonedUser.comments.length !== 0
+        ? jsonedUser.comments
+            .map((c) => c.likes.length)
+            .reduce((total, c) => total + c)
+        : 0,
+  };
+  res.json(totalLikedUser);
 });
 
 usersRouter.get('/', async (req, res) => {

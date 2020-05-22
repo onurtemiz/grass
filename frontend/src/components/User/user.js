@@ -9,6 +9,7 @@ const User = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:username/').params;
   const users = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getPopulatedUser(match.username));
@@ -18,7 +19,6 @@ const User = () => {
     return <LinearProgress />;
   }
   const user = users.find((u) => u.username === match.username);
-
   return (
     <div style={{ height: '90vh' }}>
       <Header as="h1" color="green">
@@ -27,9 +27,11 @@ const User = () => {
       <Header as="h1" color="blue">
         {user.totalLikes}
       </Header>
-      <Header as={Link} to="user/edit">
-        Bilgilerini Güncelle
-      </Header>
+      {user.id === currentUser.id ? (
+        <Header as={Link} to="user/edit">
+          Bilgilerini Güncelle
+        </Header>
+      ) : null}
       <Comments type="user" typeId={user.id} />
     </div>
   );

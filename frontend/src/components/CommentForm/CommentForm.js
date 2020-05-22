@@ -27,7 +27,7 @@ const CommentForm = ({
     if (comment) {
       dispatch(updateComment(values.comment, comment.id, setIsUpdate));
     } else {
-      dispatch(postComment(values));
+      dispatch(postComment(values,setValue));
     }
   };
   return (

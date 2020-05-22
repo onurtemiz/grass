@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
-  totalLikes: { type: Number, required: true, default: 0, min: 0 },
 });
 
 userSchema.set(uniqueValidator);

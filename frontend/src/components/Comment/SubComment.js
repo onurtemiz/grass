@@ -18,12 +18,19 @@ import {
   Container,
   Segment,
 } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 const Comment = ({ comment, setIsUpdate }) => {
+  const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [likeType, setLikeType] = useState(false);
-
+  const match = useRouteMatch('/users/:username/');
+  const pagedUser = users.find((u) =>
+    match ? u.username === match.params.username : false
+  );
+  const pagedComment = pagedUser
+    ? pagedUser.comments.find((c) => c.id === comment.id)
+    : null;
   const getDay = (someDate) => {
     const today = new Date();
     if (
@@ -89,7 +96,6 @@ const Comment = ({ comment, setIsUpdate }) => {
   const handleUpdate = () => {
     setIsUpdate(true);
   };
-
   return (
     <Segment color="blue">
       <SComment.Group>
@@ -101,6 +107,9 @@ const Comment = ({ comment, setIsUpdate }) => {
               </Link>
               <SComment.Metadata>
                 {comment.likes.length} Pati · {getDay(new Date(comment.date))}
+                {pagedComment
+                  ? ` · ${pagedComment.lesson.fullName.toUpperCase()}`
+                  : null}
               </SComment.Metadata>
             </SComment.Author>
             <SComment.Text>{comment.comment}</SComment.Text>

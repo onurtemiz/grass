@@ -170,6 +170,8 @@ commentsRouter.put('/:id', async (req, res) => {
   const body = req.body;
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
   const comment = await Comment.findById(req.params.id);
+  // User.update({ _id: decodedToken.id }, { $set: { totalLikes: 0 } });
+
   const user = await User.findById(decodedToken.id);
 
   if (!req.token || !decodedToken.id) {
@@ -191,18 +193,17 @@ commentsRouter.put('/:id', async (req, res) => {
     comment.comment = body.comment;
   } else {
     const isLiked = comment.likes.some((u) => u.equals(user._id));
+
     if (isLiked) {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
-      user.totalLikes = user.totalLikes - 1;
     } else {
-      comment.likes = comment.likes.concat(user._id);
       if (!user.equals(comment.user)) {
-        user.totalLikes = user.totalLikes + 1;
+        comment.likes = comment.likes.concat(user._id);
       }
     }
   }
+
   await comment.save();
-  await user.save();
   const opts = [{ path: 'user' }];
   Comment.populate(comment, opts, function (err, comment) {
     res.json(comment.toJSON());

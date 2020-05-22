@@ -77,13 +77,14 @@ export const sortComment = (option) => {
   };
 };
 
-export const postComment = (c) => {
+export const postComment = (c, setValue) => {
   return async (dispatch) => {
     const comment = await commentsService.postComment(c);
     dispatch({
       type: 'ADD_COMMENT',
       data: comment,
     });
+    setValue('');
   };
 };
 

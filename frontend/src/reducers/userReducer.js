@@ -9,23 +9,10 @@ const userReducer = (state = null, action) => {
       return action.data;
     case 'UPDATE_USER':
       return { ...state, ...action.data };
-    case 'SET_POPULATED_USER':
-      return { ...state, ...action.data };
+
     default:
       return state;
   }
-};
-
-export const getPopulatedUser = (id) => {
-  return async (dispatch) => {
-    const user = await userService.getPopulatedUser(id);
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
-    setToken(user.token);
-    dispatch({
-      type: 'SET_POPULATED_USER',
-      data: user,
-    });
-  };
 };
 
 export const updateUser = (u, setEdited) => {

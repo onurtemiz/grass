@@ -45,6 +45,17 @@ usersRouter.put('/', async (req, res) => {
     return res.status(401).json({
       error: 'token missing or invalid',
     });
+  } else if (!body.currentPassword) {
+    return res.status(401).json({
+      error: 'current password must be present',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  const oldPassword = await bcrypt.hash(body.currentPassword, 10);
+  if (user.passwordHash !== oldPassword) {
+    return res.status(401).json({
+      error: 'current password is wrong.',
+    });
   }
 
   if (body.username) {
@@ -62,12 +73,12 @@ usersRouter.put('/', async (req, res) => {
         error: 'password must be 8 or more characters',
       });
     }
+
     const passwordHash = await bcrypt.hash(body.password, 10);
     await User.findByIdAndUpdate(decodedToken.id, {
       passwordHash: passwordHash,
     });
   }
-  const user = await User.findById(decodedToken.id);
 
   const userForToken = {
     email: user.email,
@@ -89,13 +100,19 @@ usersRouter.get('/:username', async (req, res) => {
     populate: [{ path: 'lesson' }],
   });
   const jsonedUser = user.toJSON();
-  console.log('jsonedUser', jsonedUser);
   const totalLikedUser = {
     ...jsonedUser,
     totalLikes:
       jsonedUser.comments.length !== 0
         ? jsonedUser.comments
-            .map((c) => c.likes.length)
+            .map((c) =>
+              c.likes.length !== 0
+                ? c.likes.reduce(
+                    (total, l) => (user.equals(l) ? total : (total += 1)),
+                    0
+                  )
+                : 0
+            )
             .reduce((total, c) => total + c)
         : 0,
   };

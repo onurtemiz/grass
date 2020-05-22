@@ -7,8 +7,12 @@ const baseUrl =
     : '/api/users';
 
 const updateUser = async (user) => {
-  const res = await axios.put(baseUrl, user, config);
-  return res.data;
+  try {
+    const res = await axios.put(baseUrl, user, config);
+    return res.data;
+  } catch (e) {
+    return { error: 'Şu anki şifre yanlış' };
+  }
 };
 
 const getPopulatedUser = async (username) => {

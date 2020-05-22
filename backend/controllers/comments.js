@@ -197,12 +197,9 @@ commentsRouter.put('/:id', async (req, res) => {
     if (isLiked) {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
     } else {
-      if (!user.equals(comment.user)) {
-        comment.likes = comment.likes.concat(user._id);
-      }
+      comment.likes = comment.likes.concat(user._id);
     }
   }
-
   await comment.save();
   const opts = [{ path: 'user' }];
   Comment.populate(comment, opts, function (err, comment) {

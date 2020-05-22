@@ -15,9 +15,14 @@ const userReducer = (state = null, action) => {
   }
 };
 
-export const updateUser = (u, setEdited) => {
+export const updateUser = (u, setEdited, setCurrentPasswordError) => {
   return async (dispatch) => {
     const user = await userService.updateUser(u);
+    if (user.error) {
+      setEdited(null);
+      setCurrentPasswordError(user.error);
+      return;
+    }
     window.localStorage.setItem('grassUser', JSON.stringify(user));
     setToken(user.token);
 
@@ -48,9 +53,13 @@ export const setUser = (user) => {
   };
 };
 
-export const loginUser = (userInfo) => {
+export const loginUser = (userInfo, setEmailError) => {
   return async (dispatch) => {
     const user = await loginService.login(userInfo);
+    if (user.error) {
+      setEmailError(user.error);
+      return;
+    }
     window.localStorage.setItem('grassUser', JSON.stringify(user));
     setToken(user.token);
     dispatch({

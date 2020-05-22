@@ -40,7 +40,7 @@ const Login = () => {
         { abortEarly: false }
       )
       .then((values) => {
-        dispatch(loginUser(values));
+        dispatch(loginUser(values, setEmailError));
       })
       .catch((e) => {
         e.errors.forEach((q) => {

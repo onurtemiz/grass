@@ -22,15 +22,38 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState(null);
   const [emailError, setEmailError] = useState(null);
   const [usernameError, setUsernameError] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [samePasswordError, setSamePasswordError] = useState(null);
+  const [samePassword, setSamePassword] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+
+  function equalTo(ref, msg) {
+    return this.test({
+      name: 'equalTo',
+      exclusive: false,
+      message: msg,
+      params: {
+        reference: ref.path,
+      },
+      test: function (value) {
+        return value === this.resolve(ref);
+      },
+    });
+  }
+
+  Yup.addMethod(Yup.string, 'equalTo', equalTo);
+
   const validationSchema = Yup.object({
-    username: Yup.string().max(15, 'username').required('Required'),
+    username: Yup.string()
+      .max(15, 'username')
+      .required('Required')
+      .min(1, 'username'),
     email: Yup.string()
       .required('Required')
       .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'email'),
     password: Yup.string().required('Required').min(8, 'password'),
+    samePassword: Yup.string().equalTo(Yup.ref('password'), 'samePassword'),
   });
 
   const emailSet = (value) => {
@@ -46,6 +69,11 @@ const Signup = () => {
     setPassword(value);
   };
 
+  const samePasswordSet = (value) => {
+    setSamePassword(value);
+    setSamePasswordError(null);
+  };
+
   const handleSubmit = async () => {
     validationSchema
       .validate(
@@ -53,6 +81,7 @@ const Signup = () => {
           password,
           email,
           username,
+          samePassword,
         },
         { abortEarly: false }
       )
@@ -60,6 +89,7 @@ const Signup = () => {
         dispatch(signupUser(values));
       })
       .catch((e) => {
+        console.log('e', e);
         e.errors.forEach((q) => {
           switch (q) {
             case 'password':
@@ -69,7 +99,12 @@ const Signup = () => {
               setEmailError('Lütfen @boun.edu.tr emaili giriniz.');
               break;
             case 'username':
-              setUsernameError('Kullanıcı adı 15 harf veya daha az olmalı');
+              setUsernameError(
+                'Kullanıcı adı 15 veya daha az harften oluşmalı'
+              );
+              break;
+            case 'samePassword':
+              setSamePasswordError('Şifreler Eşleşmeli');
               break;
             default:
               return;
@@ -134,6 +169,22 @@ const Signup = () => {
               {passwordError && (
                 <Label basic color="red" pointing="above">
                   {passwordError}
+                </Label>
+              )}
+            </Form.Field>
+            <Form.Field inline>
+              <Form.Input
+                fluid
+                icon={<Icon color="green" name="key" />}
+                iconPosition="left"
+                placeholder="Şifrenizi Tekrar Yazın"
+                type="password"
+                autoComplete="new-password"
+                onChange={(e) => samePasswordSet(e.target.value)}
+              />
+              {samePasswordError && (
+                <Label basic color="red" pointing="above">
+                  {samePasswordError}
                 </Label>
               )}
             </Form.Field>

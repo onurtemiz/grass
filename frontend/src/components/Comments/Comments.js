@@ -5,15 +5,17 @@ import {
   addInfCommentLesson,
   addInfCommentTeacher,
   addInfCommentUser,
+  addInfCommentAll,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import { LinearProgress } from '@material-ui/core';
-const Comments = ({ type, typeId }) => {
+const Comments = ({ type, typeId, height }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
+  const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,9 +24,37 @@ const Comments = ({ type, typeId }) => {
     } else if (type === 'lesson') {
       dispatch(addInfCommentLesson(0, count, typeId, filter));
     } else if (type === 'user') {
-      dispatch(addInfCommentUser(start, count, typeId, filter));
+      dispatch(addInfCommentUser(0, count, typeId, filter));
+    } else if (type === 'allComments') {
+      dispatch(addInfCommentAll(0, count, filter));
     }
   }, []);
+
+  useEffect(() => {
+    setCurrentComments(
+      comments
+        .filter((c) => {
+          if (type === 'teacher') {
+            return c.teacher === typeId;
+          } else if (type === 'lesson') {
+            return c.lesson === typeId;
+          } else if (type === 'user') {
+            return c.user.id === typeId;
+          } else if (type === 'allComments') {
+            return true;
+          }
+        })
+        .sort((a, b) => {
+          if (filter === 'mostRecent') {
+            return new Date(b.date) - new Date(a.date);
+          } else if (filter === 'mostPast') {
+            return new Date(a.date) - new Date(b.date);
+          } else if (filter === 'mostPopular') {
+            return b.likes.length - a.likes.length;
+          }
+        })
+    );
+  }, [filter, start]);
 
   const loadFunc = () => {
     if (type === 'teacher') {
@@ -33,10 +63,12 @@ const Comments = ({ type, typeId }) => {
       dispatch(addInfCommentLesson(start, count, typeId, filter));
     } else if (type === 'user') {
       dispatch(addInfCommentUser(start, count, typeId, filter));
+    } else if (type === 'allComments') {
+      dispatch(addInfCommentAll(start, count, filter));
     }
   };
   return (
-    <div style={{ height: '50vh', overflow: 'auto' }}>
+    <div style={{ height: height ? height : '50vh', overflow: 'auto' }}>
       <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}
@@ -48,28 +80,9 @@ const Comments = ({ type, typeId }) => {
         }
         useWindow={false}
       >
-        {comments
-          .filter((c) => {
-            if (type === 'teacher') {
-              return c.teacher === typeId;
-            } else if (type === 'lesson') {
-              return (c.lesson = typeId);
-            } else if (type === 'user') {
-              return c.user.id === typeId;
-            }
-          })
-          .sort((a, b) => {
-            if (filter === 'mostRecent') {
-              return new Date(b.date) - new Date(a.date);
-            } else if (filter === 'mostPast') {
-              return new Date(a.date) - new Date(b.date);
-            } else if (filter === 'mostPopular') {
-              return b.likes.length - a.likes.length;
-            }
-          })
-          .map((c) => (
-            <Comment key={c.id} comment={c} />
-          ))}
+        {currentComments.map((c) => (
+          <Comment key={c.id} comment={c} />
+        ))}
       </InfiniteScroll>
     </div>
   );

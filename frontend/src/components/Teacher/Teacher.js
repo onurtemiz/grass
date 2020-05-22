@@ -15,6 +15,8 @@ import {
   Container,
   Segment,
 } from 'semantic-ui-react';
+import CommentSort from '../CommentSort/CommentSort';
+
 const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
@@ -52,6 +54,7 @@ const Teacher = () => {
       }
 
       <h2>Comments</h2>
+      <CommentSort />
       <Comments typeId={teacher.id} type="teacher" />
     </div>
   );

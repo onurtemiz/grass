@@ -59,9 +59,16 @@ const commentReducer = (state = initialState, action) => {
         comments: [...removedComments],
       };
     case 'SORT_COMMENT':
+      const sortedComments = lodash.uniqBy(
+        [...state.comments, ...action.data.comments],
+        'id'
+      );
+
       return {
         ...state,
-        filter: action.data,
+        comments: sortedComments,
+        start: 20,
+        filter: action.data.option,
       };
     default:
       return state;
@@ -69,10 +76,11 @@ const commentReducer = (state = initialState, action) => {
 };
 
 export const sortComment = (option) => {
-  return (dispatch) => {
+  return async (dispatch) => {
+    const comments = await commentsService.addInfCommentsAll(0, 20, option);
     dispatch({
       type: 'SORT_COMMENT',
-      data: option,
+      data: { option, comments },
     });
   };
 };
@@ -135,6 +143,32 @@ export const totalCommentLesson = (lessonId) => {
     dispatch({
       type: 'TOTAL_COMMENT',
       data: total.total,
+    });
+  };
+};
+
+export const addInfCommentAll = (start, count, filter) => {
+  return async (dispatch) => {
+    const comments = await commentsService.addInfCommentsAll(
+      start,
+      count,
+      filter
+    );
+    const total = await commentsService.getTotalCommentsAll(filter);
+    let data = {
+      hasMore: true,
+      start: start + count,
+      comments: comments,
+      total: total.total,
+      count: count,
+    };
+    if (total.total === 0 || total.total < count + start) {
+      data.hasMore = false;
+      data.start = 0;
+    }
+    dispatch({
+      type: 'ADD_INF_COMMENT',
+      data: data,
     });
   };
 };

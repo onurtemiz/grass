@@ -39,6 +39,19 @@ const getTotalCommentsUser = async (userId) => {
   return req.data;
 };
 
+const getTotalCommentsAll = async () => {
+  const req = await axios.get(`${baseUrl}/total`);
+  return req.data;
+};
+
+const addInfCommentsAll = async (start, count, filter) => {
+  console.log(`${baseUrl}?start=${start}&total=${count}&filter=${filter}`);
+  const req = await axios.get(
+    `${baseUrl}?start=${start}&total=${count}&filter=${filter}`
+  );
+  return req.data;
+};
+
 const addInfCommentsUser = async (start, count, userId, filter) => {
   const req = await axios.get(
     `${baseUrl}?start=${start}&total=${count}&userId=${userId}&filter=${filter}`
@@ -77,4 +90,6 @@ export default {
   getTotalCommentsLesson,
   addInfTeacher,
   addInfLesson,
+  addInfCommentsAll,
+  getTotalCommentsAll,
 };

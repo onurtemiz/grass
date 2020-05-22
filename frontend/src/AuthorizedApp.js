@@ -10,6 +10,7 @@ import About from './components/About/About';
 import All from './components/All/All';
 import EditUser from './components/EditUser/EditUser';
 import User from './components/User/User';
+import AllComments from './components/AllComments/AllComments';
 import { Switch, Route } from 'react-router-dom';
 
 function AuthorizedApp() {
@@ -40,6 +41,9 @@ function AuthorizedApp() {
         </Route>
         <Route path="/users/:username">
           <User />
+        </Route>
+        <Route path="/comments">
+          <AllComments />
         </Route>
         <Route path="/">
           <All />

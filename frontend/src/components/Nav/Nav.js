@@ -27,6 +27,14 @@ const Nav = () => {
       <Filter />
       <Menu.Item
         as={Link}
+        to={`/comments`}
+        position="right"
+        style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
+      >
+        Tüm Yorumlar
+      </Menu.Item>
+      <Menu.Item
+        as={Link}
         to={`/users/${user.username}`}
         position="right"
         style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}

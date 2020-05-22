@@ -72,6 +72,57 @@ commentsRouter.get('/', async (req, res) => {
               .populate('user');
       return res.json(comments.map((c) => c.toJSON()));
     }
+  } else if ('filter' in q) {
+    if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
+      const sort = q.filter === 'mostRecent' ? -1 : 1;
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.find()
+              .sort({ _id: sort })
+              .skip(Number(q.start))
+              .limit(Number(q.total))
+              .populate('user')
+          : await Comment.find().sort({ _id: sort }).populate('user');
+      return res.json(comments.map((c) => c.toJSON()));
+    } else if (q.filter === 'mostPopular') {
+      const comments =
+        'start' in q && 'total' in q
+          ? await Comment.aggregate([
+              {
+                $project: {
+                  teacher: 1,
+                  lesson: 1,
+                  user: 1,
+                  comment: 1,
+                  likes: 1,
+                  date: 1,
+                  length: { $size: '$likes' },
+                },
+              },
+              { $sort: { length: -1 } },
+              { $skip: Number(q.start) },
+              { $limit: Number(q.total) },
+              {
+                $lookup: {
+                  from: 'users',
+                  localField: 'user',
+                  foreignField: '_id',
+                  as: 'user',
+                },
+              },
+            ])
+          : await Comment.find().sort({ likes: -1 }).populate('user');
+      comments.map((c) => {
+        c.user = {
+          username: c.user[0].username,
+          id: c.user[0]._id,
+        };
+        c.id = c._id.toString();
+        delete c._id;
+        delete c.__v;
+      });
+      return res.json(comments);
+    }
   }
 
   const comments = await Comment.find({});
@@ -92,6 +143,9 @@ commentsRouter.get('/total', async (req, res) => {
     return res.json({ total: total });
   } else if ('userId' in q) {
     const total = await Comment.find({ user: q.userId }).countDocuments();
+    return res.json({ total: total });
+  } else {
+    const total = await Comment.find().countDocuments();
     return res.json({ total: total });
   }
 });

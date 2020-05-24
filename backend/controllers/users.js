@@ -49,10 +49,18 @@ usersRouter.put('/', async (req, res) => {
     return res.status(401).json({
       error: 'current password must be present',
     });
+  } else if (!body.password && !body.username) {
+    return res.status(401).json({
+      error: 'new password or username must be present',
+    });
   }
   const user = await User.findById(decodedToken.id);
-  const oldPassword = await bcrypt.hash(body.currentPassword, 10);
-  if (user.passwordHash !== oldPassword) {
+  const isPassSame = await bcrypt.compare(
+    body.currentPassword,
+    user.passwordHash
+  );
+
+  if (!isPassSame) {
     return res.status(401).json({
       error: 'current password is wrong.',
     });

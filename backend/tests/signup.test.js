@@ -28,7 +28,6 @@ describe('when there is already a user', () => {
       username: 'temizimben',
     };
     const newUser = await api.post('/api/users/signup').send(user).expect(400);
-    console.log('newUser.body', newUser.body);
 
     expect(newUser.body).toHaveProperty('error');
   });

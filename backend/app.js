@@ -14,8 +14,12 @@ const allRouter = require('./controllers/all');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
 
-console.log('connecting to', config.MONGODB_URI);
-const mongoUri = process.env.MONGODB_URI;
+const mongoUri =
+  process.env.NODE_ENV === 'test'
+    ? process.env.TEST_MONGODB_URI
+    : process.env.MONGODB_URI;
+
+console.log('connecting to', mongoUri);
 
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })

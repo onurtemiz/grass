@@ -13,7 +13,7 @@ usersRouter.post('/signup', async (req, res) => {
     return res.status(400).json({
       error: 'Must have boun email',
     });
-  } else if (isEmailDuplicate !== null) {
+  } else if (isEmailDuplicate != null) {
     return res.status(400).json({
       error: 'User is already signin',
     });

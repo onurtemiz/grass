@@ -104,32 +104,43 @@ lessonsRouter.get('/:id', async (req, res) => {
 });
 
 lessonsRouter.post('/', async (req, res) => {
-  if (!req.body.areaCode || !req.body.digitCode || !req.body.teacher) {
+  if (
+    !req.body.areaCode ||
+    !req.body.digitCode ||
+    !req.body.teacher ||
+    !req.body.sectionCode
+  ) {
     return res.status(400).json({
       error: 'areaCode or digitCode or teacher is missing',
     });
   }
-
   const body = req.body;
+  let teacher = await Teacher.findOne({ name: body.teacher });
+  if (!teacher) {
+    teacher = new Teacher({
+      name: body.teacher,
+    });
+  }
 
-  const lesson = new Lesson({
+  let lesson = await Lesson.findOne({
     areaCode: body.areaCode,
     digitCode: body.digitCode,
+    teacher: teacher._id,
   });
-
-  const teacher = Teacher.findOne({ name: body.teacher });
-  if (!teacher) {
-    const newTeacher = new Teacher({
-      name: body.teacher,
-      lessons: [lesson._id],
+  if (!lesson) {
+    lesson = new Lesson({
+      areaCode: body.areaCode,
+      digitCode: body.digitCode,
+      fullName: `${body.areaCode}${body.digitCode}`,
+      teacher: teacher._id,
     });
-    await newTeacher.save();
-  } else {
-    teacher.lessons = teacher.lessons.concat(lesson._id);
   }
-  lesson.teacher = teacher._id;
+  lesson.sectionCode = [...lesson.sectionCode, body.sectionCode];
+  if (!teacher.lessons.includes(lesson._id))
+    teacher.lessons = teacher.lessons.concat(lesson._id);
+  await teacher.save();
   await lesson.save();
-  Response.status(201).json(lesson.toJSON());
+  res.status(201).json(lesson.toJSON());
 });
 
 module.exports = lessonsRouter;

@@ -46,6 +46,29 @@ teachersRouter.get('/delete5', async (req, res) => {
     status: 'done',
   });
 });
+
+teachersRouter.post('/', async (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).json({
+      error: 'name should be present',
+    });
+  }
+
+  const body = req.body;
+
+  let teacher = await Teacher.findOne({ name: body.name });
+  if (teacher) {
+    return res.status(400).json({
+      error: 'teacher present',
+    });
+  }
+
+  teacher = new Teacher({
+    name: body.name,
+  });
+  await teacher.save();
+  res.status(201).json(teacher.toJSON());
+});
 // teachersRouter.get('/loadjson', async (req, res) => {
 //   const lessons = Object.keys(jsonData);
 //   for (i = 0; i < lessons.length; i++) {

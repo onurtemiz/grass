@@ -7,11 +7,6 @@ const Lesson = require('../models/lesson');
 const Teacher = require('../models/teacher');
 const bcrypt = require('bcrypt');
 
-beforeAll(async () => {
-  await Lesson.deleteMany({});
-  await Teacher.deleteMany({});
-});
-
 beforeEach(async () => {
   await Lesson.deleteMany({});
   await Teacher.deleteMany({});
@@ -22,19 +17,21 @@ afterAll(() => {
 });
 
 describe('when want to add a new lesson', () => {
-  test.only('should work', async () => {
-    const lessons = helper.createFakeDb(2, 2);
-    console.log('lessons', lessons);
-    await Promise.all(
-      lessons.map(async (l) => {
-        res = await api.post('/api/lessons').send(l);
-        console.log('res.body', res.body);
-      })
-    );
-    const total = await Teacher.countDocuments();
-    const totalL = await Lesson.countDocuments();
-    expect(total).toEqual(10);
-    expect(totalL).toEqual(20);
+  test("should add lesson if lesson's teacher is different", async () => {
+    let lesson = {
+      areaCode: 'PSY',
+      digitCode: '101',
+      sectionCode: '01',
+      teacher: 'Ahmet Mehmet',
+    };
+    await api.post('/api/lessons').send(lesson).expect(201);
+    lesson.teacher = 'Mehmet Ahmet';
+    lesson.sectionCode = '02';
+    await api.post('/api/lessons').send(lesson).expect(201);
+    const teacher = await Teacher.find({});
+    expect(teacher).toHaveLength(2);
+    const dbLessons = await Lesson.find({}).populate('teacher');
+    expect(dbLessons).toHaveLength(2);
   });
 
   test("should add lesson's section code if lesson already exists", async () => {

@@ -2,8 +2,42 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
+const Lesson = require('../models/lesson');
 const User = require('../models/user');
 const Teacher = require('../models/teacher');
+
+const lessons = [
+  {
+    areaCode: 'PSY',
+    digitCode: '101',
+    teacher: 'MEHMET AGA',
+    sectionCode: '01',
+  },
+  {
+    areaCode: 'PSY',
+    digitCode: '101',
+    teacher: 'YUSUF AGA',
+    sectionCode: '02',
+  },
+  {
+    areaCode: 'PSY',
+    digitCode: '104',
+    teacher: 'BARIS',
+    sectionCode: '03',
+  },
+  {
+    areaCode: 'PSY',
+    digitCode: '101',
+    teacher: 'TARIH',
+    sectionCode: '04',
+  },
+  {
+    areaCode: 'PSY',
+    digitCode: '101',
+    teacher: 'SARI CIZME',
+    sectionCode: '04',
+  },
+];
 
 const loginUser = async (u) => {
   const user = await api.post('/api/login').send(u);
@@ -21,58 +55,44 @@ const signupAndLoginUser = async (u) => {
   return loggedInUser.body;
 };
 
-const createFakeDb = (teacherCount, lessonCount) => {
-  const teacherNames = getRandomTeacherName(teacherCount);
-  const lessons = getRandomLessonObj(lessonCount, teacherNames);
-  return lessons;
-};
+const createFakeDb = async () => {
+  for (i = 0; i < lessons.length; i++) {
+    await api.post('/api/lessons/').send(lessons[i]);
+    await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '201' });
+    await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '301' });
+    await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '401' });
+    await api
+      .post('/api/lessons/')
+      .send({
+        ...lessons[i],
+        areaCode: 'HIST',
+        teacher: `${lessons[i].teacher} TARIH`,
+      });
+    await api
+      .post('/api/lessons/')
+      .send({
+        ...lessons[i],
+        areaCode: 'HIST',
+        digitCode: '201',
+        teacher: `${lessons[i].teacher} TARIH`,
+      });
+    await api
+      .post('/api/lessons/')
+      .send({
+        ...lessons[i],
+        areaCode: 'HIST',
+        digitCode: '301',
+        teacher: `${lessons[i].teacher} TARIH`,
+      });
 
-const getRandomLessonObj = (count, teacherArr) => {
-  let result = [];
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const numbers = '0123456789';
-  for (let q = 0; q < teacherArr.length; q++) {
-    for (let i = 0; i < count; i++) {
-      let lesson = {
-        sectionCode: '',
-        digitCode: '',
-        areaCode: '',
-        teacher: `${teacherArr[q]}`,
-      };
-      for (let i = 0; i < 4; i++) {
-        lesson.areaCode += characters.charAt(
-          Math.floor(Math.random() * characters.length)
-        );
-      }
-      for (let i = 0; i < 3; i++) {
-        lesson.digitCode += numbers.charAt(
-          Math.floor(Math.random() * numbers.length)
-        );
-      }
-      for (let i = 0; i < 2; i++) {
-        lesson.sectionCode += numbers.charAt(
-          Math.floor(Math.random() * numbers.length)
-        );
-      }
-      result.push(lesson);
-    }
+    await api
+      .post('/api/lessons/')
+      .send({
+        ...lessons[i],
+        areaCode: 'FLED',
+        teacher: `${lessons[i].teacher} EF`,
+      });
   }
-  return result;
-};
-
-const getRandomTeacherName = (count, length = 10) => {
-  let result = [];
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (let i = 0; i < count; i++) {
-    let word = '';
-    for (let i = 0; i < length; i++) {
-      word += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    result.push(word);
-  }
-  return result;
 };
 
 module.exports = { signupAndLoginUser, signupUser, loginUser, createFakeDb };

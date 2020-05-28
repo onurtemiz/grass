@@ -3,17 +3,20 @@ const Teacher = require('../models/teacher');
 const Lesson = require('../models/lesson');
 
 allRouter.get('/total', async (req, res) => {
-  const lessons = await Lesson.find({
-    fullName: { $regex: req.query.search, $options: 'i' },
+  const search = req.query.search ? req.query.search : '';
+
+  const teachers = await Teacher.find({
+    name: { $regex: search, $options: 'i' },
   });
-  const lessonId = lessons.map((l) => l.id);
-  const total = await Teacher.find({
+  const teachersId = teachers.map((t) => t.id);
+  const lessonsTotal = await Lesson.find({
     $or: [
-      { name: { $regex: req.query.search, $options: 'i' } },
-      { lessons: { $in: lessonId } },
+      { fullName: { $regex: search, $options: 'i' } },
+      { teacher: { $in: teachersId } },
     ],
   }).countDocuments();
-  res.json({ total: total });
+
+  res.json({ total: lessonsTotal });
 });
 
 allRouter.get('/', async (req, res) => {
@@ -24,20 +27,20 @@ allRouter.get('/', async (req, res) => {
     });
   }
   const search = q.search ? q.search : '';
-  const lessons = await Lesson.find({
-    fullName: { $regex: search, $options: 'i' },
-  });
-  const lessonId = lessons.map((l) => l.id);
   const teachers = await Teacher.find({
+    name: { $regex: search, $options: 'i' },
+  });
+  const teachersId = teachers.map((t) => t.id);
+  const lessons = await Lesson.find({
     $or: [
-      { name: { $regex: search, $options: 'i' } },
-      { lessons: { $in: lessonId } },
+      { fullName: { $regex: search, $options: 'i' } },
+      { teacher: { $in: teachersId } },
     ],
   })
     .skip(Number(req.query.start))
     .limit(Number(req.query.total))
-    .populate('lessons');
-  res.json(teachers.map((t) => t.toJSON()));
+    .populate('teacher');
+  res.json(lessons.map((l) => l.toJSON()));
 });
 
 module.exports = allRouter;

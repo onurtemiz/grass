@@ -50,7 +50,7 @@ const Teacher = require('../models/teacher');
 // });
 
 lessonsRouter.get('/total', async (req, res) => {
-  const search = req.query.search === undefined ? '' : req.query.search;
+  const search = req.query.search ? req.query.search : '';
   const total = await Lesson.find({
     fullName: { $regex: search, $options: 'i' },
   }).countDocuments();

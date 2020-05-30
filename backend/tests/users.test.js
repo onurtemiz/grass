@@ -27,6 +27,7 @@ afterAll(() => {
 });
 
 describe('when user gives wrong infirmation', () => {
+
   test('should give error when currentPassword is wrong', async () => {
     const password = '123456789';
     const email = 'onurtemiz@boun.edu.tr';

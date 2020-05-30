@@ -61,37 +61,29 @@ const createFakeDb = async () => {
     await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '201' });
     await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '301' });
     await api.post('/api/lessons/').send({ ...lessons[i], digitCode: '401' });
-    await api
-      .post('/api/lessons/')
-      .send({
-        ...lessons[i],
-        areaCode: 'HIST',
-        teacher: `${lessons[i].teacher} TARIH`,
-      });
-    await api
-      .post('/api/lessons/')
-      .send({
-        ...lessons[i],
-        areaCode: 'HIST',
-        digitCode: '201',
-        teacher: `${lessons[i].teacher} TARIH`,
-      });
-    await api
-      .post('/api/lessons/')
-      .send({
-        ...lessons[i],
-        areaCode: 'HIST',
-        digitCode: '301',
-        teacher: `${lessons[i].teacher} TARIH`,
-      });
+    await api.post('/api/lessons/').send({
+      ...lessons[i],
+      areaCode: 'HIST',
+      teacher: `${lessons[i].teacher} TARIH`,
+    });
+    await api.post('/api/lessons/').send({
+      ...lessons[i],
+      areaCode: 'HIST',
+      digitCode: '201',
+      teacher: `${lessons[i].teacher} TARIH`,
+    });
+    await api.post('/api/lessons/').send({
+      ...lessons[i],
+      areaCode: 'HIST',
+      digitCode: '301',
+      teacher: `${lessons[i].teacher} TARIH`,
+    });
 
-    await api
-      .post('/api/lessons/')
-      .send({
-        ...lessons[i],
-        areaCode: 'FLED',
-        teacher: `${lessons[i].teacher} EF`,
-      });
+    await api.post('/api/lessons/').send({
+      ...lessons[i],
+      areaCode: 'FLED',
+      teacher: `${lessons[i].teacher} EF`,
+    });
   }
 };
 

@@ -10,8 +10,9 @@ teachersRouter.get('/', async (req, res) => {
       .populate('comments');
     return res.json(teacher.toJSON());
   } else if ('start' in req.query && 'total' in req.query) {
+    const search = req.query.result ? req.query.result : '';
     const users = await Teacher.find({
-      name: { $regex: req.query.result, $options: 'i' },
+      name: { $regex: search, $options: 'i' },
     })
       .skip(Number(req.query.start))
       .limit(Number(req.query.total))
@@ -27,25 +28,26 @@ teachersRouter.get('/', async (req, res) => {
 });
 
 teachersRouter.get('/total', async (req, res) => {
+  const search = req.query.result ? req.query.result : '';
   const total = await Teacher.find({
-    name: { $regex: req.query.result, $options: 'i' },
+    name: { $regex: search, $options: 'i' },
   }).countDocuments();
   res.json({ total: total });
 });
 
-teachersRouter.get('/delete5', async (req, res) => {
-  const teachers = await Teacher.find({});
-  for (i = 0; i < teachers.length; i++) {
-    lessons = teachers[i].lessons;
-    if (teachers[i].lessons[0] === undefined) {
-      console.log(`${teachers[i]} deleted`);
-      await Teacher.deleteOne({ _id: teachers[i]._id });
-    }
-  }
-  res.status(200).json({
-    status: 'done',
-  });
-});
+// teachersRouter.get('/delete5', async (req, res) => {
+//   const teachers = await Teacher.find({});
+//   for (i = 0; i < teachers.length; i++) {
+//     lessons = teachers[i].lessons;
+//     if (teachers[i].lessons[0] === undefined) {
+//       console.log(`${teachers[i]} deleted`);
+//       await Teacher.deleteOne({ _id: teachers[i]._id });
+//     }
+//   }
+//   res.status(200).json({
+//     status: 'done',
+//   });
+// });
 
 teachersRouter.post('/', async (req, res) => {
   if (!req.body.name) {

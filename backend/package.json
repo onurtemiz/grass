@@ -9,7 +9,8 @@
     "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend/",
     "deploy": "cd ../ && git subtree push --prefix backend heroku master && cd ./backend",
     "deploy:full": "npm run build:ui && git add . && git commit -am 'buildui' && npm run deploy",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
+    "test": "NODE_ENV=test jest --verbose --runInBand",
+    "coverage": "npm test -- --coverage"
   },
   "author": "Onur Temiz",
   "license": "ISC",

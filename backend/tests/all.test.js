@@ -53,6 +53,21 @@ describe('when requesting total', () => {
 });
 
 describe('when get all data', () => {
+  test('should get eror if start not presents', async () => {
+    const res = await api.get(`${baseUrl}?total=5`).expect(400);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('should get error if total not presents', async () => {
+    const res = await api.get(`${baseUrl}?start=0`).expect(400);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('should get error if total and start not present', async () => {
+    const res = await api.get(`${baseUrl}`).expect(400);
+    expect(res.body.error).toBeDefined();
+  });
+
   test('should get all lessons if no search presents', async () => {
     const totalLessons = await api.get(`${baseUrl}/total`).expect(200);
     const res = await api
@@ -63,9 +78,7 @@ describe('when get all data', () => {
 
   test('should get first 20 lessons if no search presents', async () => {
     const totalLessons = await api.get(`${baseUrl}/total`).expect(200);
-    const res = await api
-      .get(`${baseUrl}?total=${totalLessons.body.total}&start=0`)
-      .expect(200);
+    const res = await api.get(`${baseUrl}?total=20&start=0`).expect(200);
 
     expect(res.body).toHaveLength(20);
   });
@@ -78,7 +91,7 @@ describe('when get all data', () => {
     expect(res.body).toHaveLength(20);
   });
 
-  test.only('should get no lesson if start exceeds total and no search is specified', async () => {
+  test('should get no lesson if start exceeds total and no search is specified', async () => {
     const totalLessons = await api.get(`${baseUrl}/total`).expect(200);
     const res = await api
       .get(

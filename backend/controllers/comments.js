@@ -174,13 +174,7 @@ commentsRouter.post('/', async (req, res) => {
   const teacher = await Teacher.findById(body.teacherId);
   const lesson = await Lesson.findById(body.lessonId);
   const user = await User.findById(decodedToken.id);
-  const isTeacherRight = lesson.teacher.equals(teacher._id) ? true : false;
-
-  const isDuplicate = await Comment.findOne({
-    teacher: body.teacherId,
-    lesson: body.lessonId,
-    user: user._id,
-  });
+  const isTeacherRight = lesson.teacher.equals(teacher._id);
 
   if (!teacher || !lesson || !user) {
     return res.status(400).json({
@@ -188,6 +182,11 @@ commentsRouter.post('/', async (req, res) => {
     });
   }
   // ONLY ONE COMMENT PER LESSON
+  // const isDuplicate = await Comment.findOne({
+  //   teacher: body.teacherId,
+  //   lesson: body.lessonId,
+  //   user: user._id,
+  // });
   // if (isDuplicate !== null) {
   //   return res.status(400).json({
   //     error: 'you have already commented',
@@ -262,7 +261,6 @@ commentsRouter.put('/:id', async (req, res) => {
 });
 
 commentsRouter.delete('/:id', async (req, res) => {
-  console.log('req.token', req.token);
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
   const comment = await Comment.findById(req.params.id);
@@ -277,11 +275,29 @@ commentsRouter.delete('/:id', async (req, res) => {
       error: 'comment or user not found.',
     });
   } else if (!isUserHave) {
-    return res.status(400).json({
+    return res.status(401).json({
       error: 'you have no right',
     });
   }
   await Comment.findByIdAndRemove(req.params.id);
+
+  await Teacher.findOneAndUpdate(
+    { comments: { $in: req.params.id } },
+    { $pull: { comments: req.params.id } }
+  );
+  await Lesson.findOneAndUpdate(
+    {
+      comments: { $in: req.params.id },
+    },
+    { $pull: { comments: req.params.id } }
+  );
+  await User.findOneAndUpdate(
+    {
+      comments: { $in: req.params.id },
+    },
+    { $pull: { comments: req.params.id } }
+  );
+
   res.status(204).end();
 });
 

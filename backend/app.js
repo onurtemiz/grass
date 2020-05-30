@@ -13,22 +13,34 @@ const loginRouter = require('./controllers/login');
 const allRouter = require('./controllers/all');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
-const mongoUri =
-  process.env.NODE_ENV === 'test'
-    ? process.env.TEST_MONGODB_URI
-    : process.env.MONGODB_URI;
+// mongoUri =
+//   process.env.NODE_ENV === 'test'
+//     ? process.env.TEST_MONGODB_URI
+//     : process.env.MONGODB_URI;
 
-console.log('connecting to', mongoUri);
+// console.log('connecting to', mongoUri);
 
-mongoose
-  .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('connected to MongoDB');
-  })
-  .catch((e) => {
-    console.log('error connection to MongoDB', e.message);
-  });
+const mongoUri = async () => {
+  let mongoUri;
+  if (process.env.NODE_ENV === 'test') {
+    const mongoServer = new MongoMemoryServer();
+    mongoUri = await mongoServer.getConnectionString();
+  } else {
+    mongoUri = process.env.MONGODB_URI;
+  }
+  mongoose
+    .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+      console.log('connected to MongoDB');
+    })
+    .catch((e) => {
+      console.log('error connection to MongoDB', e.message);
+    });
+};
+
+mongoUri();
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'build')));

@@ -20,6 +20,16 @@ const teacherSchema = new mongoose.Schema({
 
 teacherSchema.set(uniqueValidator);
 
+teacherSchema.statics.getFilteredInf = function (search, start, total) {
+  return this.find({
+    name: { $regex: search, $options: 'i' },
+  })
+    .skip(Number(start))
+    .limit(Number(total))
+    .populate('teacher')
+    .populate('comments');
+};
+
 teacherSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // eslint-disable-next-line no-underscore-dangle

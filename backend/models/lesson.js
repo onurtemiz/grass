@@ -21,6 +21,39 @@ const lessonSchema = new mongoose.Schema({
 
 lessonSchema.set(uniqueValidator);
 
+lessonSchema.statics.getFilteredInf = function (search, start, total) {
+  return this.find({
+    fullName: { $regex: search, $options: 'i' },
+  })
+    .skip(Number(start))
+    .limit(Number(total))
+    .populate('teacher')
+    .populate('comments');
+};
+
+
+
+lessonSchema.statics.getFilteredAllInf = function (
+  search = '',
+  teachersId,
+  start = 0,
+  total = Number.MAX_SAFE_INTEGER
+) {
+  try {
+    return this.find({
+      $or: [
+        { fullName: { $regex: search, $options: 'i' } },
+        { teacher: { $in: teachersId } },
+      ],
+    })
+      .skip(Number(start))
+      .limit(Number(total))
+      .populate('teacher');
+  } catch (e) {
+    console.log('e', e);
+  }
+};
+
 lessonSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // eslint-disable-next-line no-underscore-dangle

@@ -72,30 +72,20 @@ const getSingleLesson = async (req) => {
 };
 
 lessonsRouter.get('/', async (req, res) => {
-  if (
-    'areaCode' in req.query &&
-    'digitCode' in req.query &&
-    'teacherName' in req.query
-  ) {
+  const q = req.query;
+  if ('areaCode' in q && 'digitCode' in q && 'teacherName' in q) {
     const jsonLesson = await getSingleLesson(req);
     return res.json(jsonLesson);
-  } else if ('start' in req.query && 'total' in req.query) {
-    const q = req.query;
-    const result = q.result === undefined ? '' : q.result;
-
-    const lessons = await Lesson.find({
-      fullName: { $regex: result, $options: 'i' },
-    })
-      .skip(Number(q.start))
-      .limit(Number(q.total))
+  } else if ('start' in q && 'total' in q) {
+    const result = q.result ? q.result : '';
+    const lessons = await Lesson.getFilteredInf(result, q.start, q.total);
+    return res.json(lessons.map((l) => l.toJSON()));
+  } else {
+    const lessons = await Lesson.find({})
       .populate('teacher')
       .populate('comments');
-    return res.json(lessons.map((l) => l.toJSON()));
+    res.json(lessons.map((l) => l.toJSON()));
   }
-  const lessons = await Lesson.find({})
-    .populate('teacher')
-    .populate('comments');
-  res.json(lessons.map((l) => l.toJSON()));
 });
 
 lessonsRouter.get('/:id', async (req, res) => {

@@ -9,13 +9,11 @@ allRouter.get('/total', async (req, res) => {
     name: { $regex: search, $options: 'i' },
   });
   const teachersId = teachers.map((t) => t.id);
-  const lessonsTotal = await Lesson.find({
-    $or: [
-      { fullName: { $regex: search, $options: 'i' } },
-      { teacher: { $in: teachersId } },
-    ],
-  }).countDocuments();
 
+  const lessonsTotal = await Lesson.getFilteredAllInf(
+    search,
+    teachersId
+  ).countDocuments();
   res.json({ total: lessonsTotal });
 });
 
@@ -31,15 +29,12 @@ allRouter.get('/', async (req, res) => {
     name: { $regex: search, $options: 'i' },
   });
   const teachersId = teachers.map((t) => t.id);
-  const lessons = await Lesson.find({
-    $or: [
-      { fullName: { $regex: search, $options: 'i' } },
-      { teacher: { $in: teachersId } },
-    ],
-  })
-    .skip(Number(req.query.start))
-    .limit(Number(req.query.total))
-    .populate('teacher');
+  const lessons = await Lesson.getFilteredAllInf(
+    search,
+    teachersId,
+    q.start,
+    q.total
+  );
   res.json(lessons.map((l) => l.toJSON()));
 });
 

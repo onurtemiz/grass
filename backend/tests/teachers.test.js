@@ -79,7 +79,7 @@ describe('when teacher(s) wanted', () => {
 
   test('should get one teachers if name presents', async () => {
     const name = 'BARIS';
-    const res = await api.get(`${baseUrl}?name=${name}`).expect(200);
+    const res = await api.get(`${baseUrl}/${name}`).expect(200);
     const b = res.body;
     const teacher = await Teacher.findOne({ name: name })
       .populate('lessons')

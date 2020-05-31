@@ -4,35 +4,28 @@ const Lesson = require('../models/lesson');
 // const jsonData = require('../2018-2019-2.json');
 
 teachersRouter.get('/', async (req, res) => {
-  if ('name' in req.query) {
-    const teacher = await Teacher.findOne({ name: req.query.name })
-      .populate('lessons')
-      .populate('comments');
-    return res.json(teacher.toJSON());
-  } else if ('start' in req.query && 'total' in req.query) {
-    const search = req.query.result ? req.query.result : '';
-    const users = await Teacher.find({
-      name: { $regex: search, $options: 'i' },
-    })
-      .skip(Number(req.query.start))
-      .limit(Number(req.query.total))
-      .populate('lessons')
-      .populate('comments');
-    return res.json(users.map((u) => u.toJSON()));
-  } else {
-    const users = await Teacher.find({})
-      .populate('lessons')
-      .populate('comments');
-    res.json(users.map((u) => u.toJSON()));
-  }
-});
+  const q = req.query;
+  const search = q.result ? q.result : '';
+  const teachers =
+    'start' in q && 'total' in q
+      ? await Teacher.getFilteredInf(search, q.start, q.total)
+      : await Teacher.find({}).populate('lessons').populate('comments');
 
+  res.json(teachers.map((t) => t.toJSON()));
+});
 teachersRouter.get('/total', async (req, res) => {
   const search = req.query.result ? req.query.result : '';
   const total = await Teacher.find({
     name: { $regex: search, $options: 'i' },
   }).countDocuments();
   res.json({ total: total });
+});
+
+teachersRouter.get('/:name', async (req, res) => {
+  const teacher = await Teacher.findOne({ name: req.params.name })
+    .populate('lessons')
+    .populate('comments');
+  return res.json(teacher.toJSON());
 });
 
 // teachersRouter.get('/delete5', async (req, res) => {
@@ -55,16 +48,13 @@ teachersRouter.post('/', async (req, res) => {
       error: 'name should be present',
     });
   }
-
   const body = req.body;
-
   let teacher = await Teacher.findOne({ name: body.name });
   if (teacher) {
     return res.status(400).json({
       error: 'teacher present',
     });
   }
-
   teacher = new Teacher({
     name: body.name,
   });

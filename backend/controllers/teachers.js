@@ -3,6 +3,16 @@ const Teacher = require('../models/teacher');
 const Lesson = require('../models/lesson');
 // const jsonData = require('../2018-2019-2.json');
 
+teachersRouter.get('/:name', async (req, res) => {
+  const teacher = await Teacher.findOne({
+    name: req.params.name,
+  })
+    .populate('lessons')
+    .populate('comments');
+  console.log('teacher', teacher);
+  return res.json(teacher.toJSON());
+});
+
 teachersRouter.get('/', async (req, res) => {
   const q = req.query;
   const search = q.search ? q.search : '';
@@ -19,13 +29,6 @@ teachersRouter.get('/total', async (req, res) => {
     name: { $regex: search, $options: 'i' },
   }).countDocuments();
   res.json({ total: total });
-});
-
-teachersRouter.get('/:name', async (req, res) => {
-  const teacher = await Teacher.findOne({ name: req.params.name })
-    .populate('lessons')
-    .populate('comments');
-  return res.json(teacher.toJSON());
 });
 
 // teachersRouter.get('/delete5', async (req, res) => {

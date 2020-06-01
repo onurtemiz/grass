@@ -58,7 +58,14 @@ const Comments = ({ type, typeId, height }) => {
     }
   };
   return (
-    <div style={{ height: height ? height : '50vh', overflow: 'auto' }}>
+    <div
+      style={{
+        height: height ? height : '50vh',
+        width: '100vw',
+        overflow: 'auto',
+        
+      }}
+    >
       <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}

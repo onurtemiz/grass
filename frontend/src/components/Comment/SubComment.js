@@ -31,6 +31,15 @@ const Comment = ({ comment, setIsUpdate }) => {
   const pagedComment = pagedUser
     ? pagedUser.comments.find((c) => c.id === comment.id)
     : null;
+
+  function dateDiffInDays(a, b) {
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+  }
   const getDay = (someDate) => {
     const today = new Date();
     if (
@@ -46,9 +55,10 @@ const Comment = ({ comment, setIsUpdate }) => {
     ) {
       return 'Dün';
     } else {
-      const year = today.getFullYear() - someDate.getFullYear();
-      const month = today.getMonth() - someDate.getMonth();
-      const day = today.getDate() - someDate.getDate();
+      const diff = dateDiffInDays(someDate, today);
+      const year = Math.floor(diff / 365);
+      const month = Math.floor((diff % 365) / 30);
+      const day = Math.floor((diff % 365) % 30);
       let s = '';
       if (year != 0) {
         s += `${year} yıl`;
@@ -97,7 +107,14 @@ const Comment = ({ comment, setIsUpdate }) => {
     setIsUpdate(true);
   };
   return (
-    <Segment color="blue">
+    <Segment
+      color="blue"
+      style={{
+        width: '50vw',
+        margin: '0 auto',
+        marginTop: '1rem',
+      }}
+    >
       <SComment.Group>
         <SComment>
           <SComment.Content>

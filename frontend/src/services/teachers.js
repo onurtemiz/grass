@@ -12,7 +12,7 @@ const addInf = async (start, count, filter) => {
 };
 
 const getTeacherPage = async (name) => {
-  const req = await axios.get(`${baseUrl}?name=${name}`);
+  const req = await axios.get(`${baseUrl}/${name}`);
   return req.data;
 };
 

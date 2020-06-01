@@ -47,18 +47,21 @@ describe('when dealing with multiple comments', () => {
   });
 
   describe('when getting comments', () => {
-    
-  })
-  
+    test('should get all comments', async () => {
+      const totalComments = await Comment.find().countDocuments();
+      const res = await api.get(`${baseUrl}`);
+      expect(res.body.total).toEqual(totalComments);
+    });
+  });
 
-  describe('when getting total comments', () => {
+  describe.only('when getting total comments', () => {
     test('should get total if userId presents', async () => {
       const user = await User.findOne({ email: 'o0@boun.edu.tr' });
       const dbCommentCount = await Comment.find({
         user: user._id,
       }).countDocuments();
       const total = await api
-        .get(`${baseUrl}/total?userId=${user._id}`)
+        .get(`${baseUrl}/total?id=${user._id}`)
         .expect(200);
       expect(total.body.total).toBeDefined();
       expect(total.body.total).toEqual(dbCommentCount);
@@ -73,7 +76,7 @@ describe('when dealing with multiple comments', () => {
         lesson: lesson._id,
       }).countDocuments();
       const total = await api
-        .get(`${baseUrl}/total?lessonId=${lesson._id}`)
+        .get(`${baseUrl}/total?id=${lesson._id}`)
         .expect(200);
       expect(total.body.total).toBeDefined();
       expect(total.body.total).toEqual(dbCommentCount);
@@ -87,7 +90,7 @@ describe('when dealing with multiple comments', () => {
         teacher: teacher._id,
       }).countDocuments();
       const total = await api
-        .get(`${baseUrl}/total?teacherId=${teacher._id}`)
+        .get(`${baseUrl}/total?id=${teacher._id}`)
         .expect(200);
       expect(total.body.total).toBeDefined();
       expect(total.body.total).toEqual(dbCommentCount);

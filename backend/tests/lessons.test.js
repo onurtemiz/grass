@@ -26,9 +26,9 @@ describe('when get lesson(s)', () => {
     await Teacher.deleteMany({});
   });
 
-  test('should get first 3 fled lessons if result presents', async () => {
+  test('should get first 3 fled lessons if search presents', async () => {
     const res = await api
-      .get(`${baseUrl}?total=3&start=0&result=FLED`)
+      .get(`${baseUrl}?total=3&start=0&search=FLED`)
       .expect(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toEqual(3);
@@ -39,9 +39,9 @@ describe('when get lesson(s)', () => {
     });
   });
 
-  test('should get lessons containing S if result presents and starts at 5', async () => {
+  test('should get lessons containing S if search presents and starts at 5', async () => {
     const res = await api
-      .get(`${baseUrl}?total=40&start=5&result=S`)
+      .get(`${baseUrl}?total=40&start=5&search=S`)
       .expect(200);
     const lessonsTotal = await api.get(`${baseUrl}/total?search=S`).expect(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -53,13 +53,13 @@ describe('when get lesson(s)', () => {
     });
   });
 
-  test('should get 20 lessons if result not presents', async () => {
+  test('should get 20 lessons if search not presents', async () => {
     const res = await api.get(`${baseUrl}?total=20&start=0`).expect(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toEqual(20);
   });
 
-  test('should get 30 to 40 lessons if result not presents', async () => {
+  test('should get 30 to 40 lessons if search not presents', async () => {
     const res = await api.get(`${baseUrl}?total=20&start=30`);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toEqual(10);

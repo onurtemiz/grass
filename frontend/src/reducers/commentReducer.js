@@ -59,16 +59,9 @@ const commentReducer = (state = initialState, action) => {
         comments: [...removedComments],
       };
     case 'SORT_COMMENT':
-      const sortedComments = lodash.uniqBy(
-        [...state.comments, ...action.data.comments],
-        'id'
-      );
-
       return {
         ...state,
-        comments: sortedComments,
-        start: 20,
-        filter: action.data.option,
+        ...action.data,
       };
     default:
       return state;
@@ -77,10 +70,16 @@ const commentReducer = (state = initialState, action) => {
 
 export const sortComment = (option) => {
   return async (dispatch) => {
-    const comments = await commentsService.addInfCommentsAll(0, 20, option);
+    const state = {
+      total: 0,
+      hasMore: true,
+      start: 0,
+      comments: [],
+      filter: option,
+    };
     dispatch({
       type: 'SORT_COMMENT',
-      data: { option, comments },
+      data: state,
     });
   };
 };
@@ -127,19 +126,9 @@ export const removeComment = (id) => {
   };
 };
 
-export const totalCommentTeacher = (teacherId) => {
+export const totalCommentById = (id) => {
   return async (dispatch) => {
-    const total = await commentsService.getTotalCommentsTeacher(teacherId);
-    dispatch({
-      type: 'TOTAL_COMMENT',
-      data: total.total,
-    });
-  };
-};
-
-export const totalCommentLesson = (lessonId) => {
-  return async (dispatch) => {
-    const total = await commentsService.getTotalCommentsLesson(lessonId);
+    const total = await commentsService.getTotalCommentsById(id);
     dispatch({
       type: 'TOTAL_COMMENT',
       data: total.total,
@@ -173,15 +162,15 @@ export const addInfCommentAll = (start, count, filter) => {
   };
 };
 
-export const addInfCommentUser = (start, count, userId, filter) => {
+export const addInfCommentById = (start, count, id, filter) => {
   return async (dispatch) => {
-    const comments = await commentsService.addInfCommentsUser(
+    const comments = await commentsService.addInfCommentsById(
       start,
       count,
-      userId,
+      id,
       filter
     );
-    const total = await commentsService.getTotalCommentsUser(userId, filter);
+    const total = await commentsService.getTotalCommentsById(id, filter);
     let data = {
       hasMore: true,
       start: start + count,
@@ -193,67 +182,6 @@ export const addInfCommentUser = (start, count, userId, filter) => {
       data.hasMore = false;
       data.start = 0;
     }
-    dispatch({
-      type: 'ADD_INF_COMMENT',
-      data: data,
-    });
-  };
-};
-export const addInfCommentTeacher = (start, count, teacherId, filter) => {
-  return async (dispatch) => {
-    const comments = await commentsService.addInfTeacher(
-      start,
-      count,
-      teacherId,
-      filter
-    );
-    const total = await commentsService.getTotalCommentsTeacher(
-      teacherId,
-      filter
-    );
-    let data = {
-      hasMore: true,
-      start: start + count,
-      comments: comments,
-      total: total.total,
-      count: count,
-    };
-    if (total.total === 0 || total.total < count + start) {
-      data.hasMore = false;
-      data.start = 0;
-    }
-    dispatch({
-      type: 'ADD_INF_COMMENT',
-      data: data,
-    });
-  };
-};
-
-export const addInfCommentLesson = (start, count, lessonId, filter) => {
-  return async (dispatch) => {
-    const comments = await commentsService.addInfLesson(
-      start,
-      count,
-      lessonId,
-      filter
-    );
-    const total = await commentsService.getTotalCommentsLesson(
-      lessonId,
-      filter
-    );
-    let data = {
-      hasMore: true,
-      start: start + count,
-      comments: comments,
-      total: total.total,
-      count: count,
-    };
-
-    if (total.total === 0 || total.total < count + start) {
-      data.hasMore = false;
-      data.start = 0;
-    }
-    console.log('data', data);
     dispatch({
       type: 'ADD_INF_COMMENT',
       data: data,

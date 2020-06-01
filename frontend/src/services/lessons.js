@@ -8,7 +8,7 @@ const addInf = async (start, count, filter) => {
   const url =
     filter === ''
       ? `${baseUrl}?start=${start}&total=${count}`
-      : `${baseUrl}?start=${start}&total=${count}&result=${filter}`;
+      : `${baseUrl}?start=${start}&total=${count}&search=${filter}`;
   const req = await axios.get(url);
   return req.data;
 };

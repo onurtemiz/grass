@@ -31,13 +31,21 @@ const commentSchema = new mongoose.Schema({
 
 commentSchema.set(uniqueValidator);
 
-commentSchema.statics.getLessonMostPopular = function (
-  lessonId,
+commentSchema.statics.getMostPopularById = async function (
+  id,
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
-  let comments = this.aggregate([
-    { $match: { lesson: lessonId } },
+  let comments = await this.aggregate([
+    {
+      $match: {
+        $or: [
+          { teacher: new mongoose.Types.ObjectId(id) },
+          { lesson: new mongoose.Types.ObjectId(id) },
+          { user: new mongoose.Types.ObjectId(id) },
+        ],
+      },
+    },
     {
       $project: {
         teacher: 1,
@@ -61,7 +69,7 @@ commentSchema.statics.getLessonMostPopular = function (
       },
     },
   ]);
-  comments = comments.map((c) => {
+  comments.map((c) => {
     c.user = {
       username: c.user[0].username,
       id: c.user[0]._id,
@@ -73,39 +81,11 @@ commentSchema.statics.getLessonMostPopular = function (
   return comments;
 };
 
-commentSchema.statics.getLessonRecentPast = function (
-  lessonId,
-  sort,
+commentSchema.statics.getMostPopular = async function (
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
-  return this.find({ lesson: lessonId })
-    .sort({ _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate('user');
-};
-
-commentSchema.statics.getTeacherRecentPast = function (
-  teacherId,
-  sort,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({ teacher: teacherId })
-    .sort({ _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate('user');
-};
-
-commentSchema.statics.getTeacherMostPopular = function (
-  teacherId,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  let comments = this.aggregate([
-    { $match: { teacher: teacherId } },
+  let comments = await this.aggregate([
     {
       $project: {
         teacher: 1,
@@ -129,7 +109,7 @@ commentSchema.statics.getTeacherMostPopular = function (
       },
     },
   ]);
-  comments = comments.map((c) => {
+  comments.map((c) => {
     c.user = {
       username: c.user[0].username,
       id: c.user[0]._id,
@@ -141,107 +121,27 @@ commentSchema.statics.getTeacherMostPopular = function (
   return comments;
 };
 
-commentSchema.statics.getUserMostPopular = function (
-  userId,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  let comments = this.aggregate([
-    { $match: { user: userId } },
-    {
-      $project: {
-        teacher: 1,
-        lesson: 1,
-        user: 1,
-        comment: 1,
-        likes: 1,
-        date: 1,
-        length: { $size: '$likes' },
-      },
-    },
-    { $sort: { length: -1 } },
-    { $skip: Number(start) },
-    { $limit: Number(total) },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-  ]);
-  comments = comments.map((c) => {
-    c.user = {
-      username: c.user[0].username,
-      id: c.user[0]._id,
-    };
-    c.id = c._id.toString();
-    delete c._id;
-    delete c.__v;
-  });
-  return comments;
-};
-
-commentSchema.statics.getUserRecentPast = function (
-  userId,
-  sort,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({ user: userId })
-    .sort({ _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate('user');
-};
-
-commentSchema.statics.getCommentMostPopular = function (
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  let comments = this.aggregate([
-    {
-      $project: {
-        teacher: 1,
-        lesson: 1,
-        user: 1,
-        comment: 1,
-        likes: 1,
-        date: 1,
-        length: { $size: '$likes' },
-      },
-    },
-    { $sort: { length: -1 } },
-    { $skip: Number(start) },
-    { $limit: Number(total) },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-  ]);
-  comments = comments.map((c) => {
-    c.user = {
-      username: c.user[0].username,
-      id: c.user[0]._id,
-    };
-    c.id = c._id.toString();
-    delete c._id;
-    delete c.__v;
-  });
-  return comments;
-};
-
-commentSchema.statics.getCommentRecentPast = function (
+commentSchema.statics.getRecentPast = function (
   sort,
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find()
+    .sort({ _id: sort })
+    .skip(Number(start))
+    .limit(Number(total))
+    .populate('user');
+};
+
+commentSchema.statics.getRecentPastById = function (
+  id,
+  sort,
+  start = 0,
+  total = Number.MAX_SAFE_INTEGER
+) {
+  return this.find({
+    $or: [{ teacher: id }, { lesson: id }, { user: id }],
+  })
     .sort({ _id: sort })
     .skip(Number(start))
     .limit(Number(total))

@@ -77,8 +77,8 @@ lessonsRouter.get('/', async (req, res) => {
     const jsonLesson = await getSingleLesson(req);
     return res.json(jsonLesson);
   } else if ('start' in q && 'total' in q) {
-    const result = q.result ? q.result : '';
-    const lessons = await Lesson.getFilteredInf(result, q.start, q.total);
+    const search = q.search ? q.search : '';
+    const lessons = await Lesson.getFilteredInf(search, q.start, q.total);
     return res.json(lessons.map((l) => l.toJSON()));
   } else {
     const lessons = await Lesson.find({})

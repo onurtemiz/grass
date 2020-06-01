@@ -6,7 +6,7 @@ const baseUrl =
 
 const addInf = async (start, count, filter) => {
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&result=${filter}`
+    `${baseUrl}?start=${start}&total=${count}&search=${filter}`
   );
   return req.data;
 };
@@ -17,7 +17,7 @@ const getTeacherPage = async (name) => {
 };
 
 const getTotalTeacher = async (filter) => {
-  const req = await axios.get(`${baseUrl}/total?result=${filter}`);
+  const req = await axios.get(`${baseUrl}/total?search=${filter}`);
   return req.data;
 };
 

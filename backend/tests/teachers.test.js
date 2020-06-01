@@ -57,13 +57,13 @@ describe('when total teachers wanted', () => {
   afterAll(async () => {
     await Teacher.deleteMany({});
   });
-  test('should get total teachers if no result presents', async () => {
+  test('should get total teachers if no search presents', async () => {
     const res = await api.get(`${baseUrl}/total`).expect(200);
     expect(res.body.total).toEqual(15);
   });
 
   test('should get total if name specified', async () => {
-    const res = await api.get(`${baseUrl}/total?result=BARIS`).expect(200);
+    const res = await api.get(`${baseUrl}/total?search=BARIS`).expect(200);
     expect(res.body.total).toEqual(3);
   });
 });
@@ -103,7 +103,7 @@ describe('when teacher(s) wanted', () => {
     expect(b[0].comments).toBeDefined();
   });
 
-  test('should get 5 teachers if result does not presents', async () => {
+  test('should get 5 teachers if search does not presents', async () => {
     const res = await api.get(`${baseUrl}?total=5&start=0`).expect(200);
     const b = res.body;
     expect(Array.isArray(b)).toBe(true);
@@ -112,9 +112,9 @@ describe('when teacher(s) wanted', () => {
     expect(b[0].comments).toBeDefined();
   });
 
-  test('should get 5 teachers if result presents', async () => {
+  test('should get 5 teachers if search presents', async () => {
     const name = 'TARIH';
-    const res = await api.get(`${baseUrl}?total=5&start=0&result=${name}`);
+    const res = await api.get(`${baseUrl}?total=5&start=0&search=${name}`);
     const b = res.body;
     expect(Array.isArray(b)).toBe(true);
     expect(b.length).toEqual(5);
@@ -123,7 +123,7 @@ describe('when teacher(s) wanted', () => {
     });
   });
 
-  test('should get 5 to 10 teachers if result does not presents', async () => {
+  test('should get 5 to 10 teachers if search does not presents', async () => {
     const res = await api.get(`${baseUrl}?total=5&start=5`).expect(200);
     const b = res.body;
     expect(Array.isArray(b)).toBe(true);
@@ -132,13 +132,13 @@ describe('when teacher(s) wanted', () => {
     expect(b[0].comments).toBeDefined();
   });
 
-  test('should get teachers if result presents and starts from 5', async () => {
+  test('should get teachers if search presents and starts from 5', async () => {
     const name = 'TARIH';
     const totalTeachers = await Teacher.find({
       name: { $regex: name, $options: 'i' },
     }).countDocuments();
     const res = await api.get(
-      `${baseUrl}?total=${totalTeachers - 5}&start=5&result=${name}`
+      `${baseUrl}?total=${totalTeachers - 5}&start=5&search=${name}`
     );
     const b = res.body;
     expect(Array.isArray(b)).toBe(true);
@@ -158,14 +158,14 @@ describe('when teacher(s) wanted', () => {
     expect(b.length).toEqual(0);
   });
 
-  test('should not get any teachers if start exceeds with result', async () => {
+  test('should not get any teachers if start exceeds with search', async () => {
     const name = 'TARIH';
     const totalTeachers = await Teacher.find({
       name: { $regex: name, $options: 'i' },
     }).countDocuments();
     console.log('totalTeachers', totalTeachers);
     const res = await api
-      .get(`${baseUrl}?total=5&start=${totalTeachers}&result=${name}`)
+      .get(`${baseUrl}?total=5&start=${totalTeachers}&search=${name}`)
       .expect(200);
     const b = res.body;
     expect(Array.isArray(b)).toBe(true);

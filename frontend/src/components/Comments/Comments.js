@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import {
-  addInfCommentLesson,
-  addInfCommentTeacher,
-  addInfCommentUser,
+  addInfCommentById,
   addInfCommentAll,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
@@ -19,12 +17,8 @@ const Comments = ({ type, typeId, height }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (type === 'teacher') {
-      dispatch(addInfCommentTeacher(0, count, typeId, filter));
-    } else if (type === 'lesson') {
-      dispatch(addInfCommentLesson(0, count, typeId, filter));
-    } else if (type === 'user') {
-      dispatch(addInfCommentUser(0, count, typeId, filter));
+    if (typeId) {
+      dispatch(addInfCommentById(0, count, typeId, filter));
     } else if (type === 'allComments') {
       dispatch(addInfCommentAll(0, count, filter));
     }
@@ -57,12 +51,8 @@ const Comments = ({ type, typeId, height }) => {
   }, [filter, start]);
 
   const loadFunc = () => {
-    if (type === 'teacher') {
-      dispatch(addInfCommentTeacher(start, count, typeId, filter));
-    } else if (type === 'lesson') {
-      dispatch(addInfCommentLesson(start, count, typeId, filter));
-    } else if (type === 'user') {
-      dispatch(addInfCommentUser(start, count, typeId, filter));
+    if (typeId) {
+      dispatch(addInfCommentById(start, count, typeId, filter));
     } else if (type === 'allComments') {
       dispatch(addInfCommentAll(start, count, filter));
     }

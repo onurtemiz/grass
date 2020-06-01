@@ -24,18 +24,8 @@ const postComment = async (comment) => {
   return req.data;
 };
 
-const getTotalCommentsTeacher = async (teacherId) => {
-  const req = await axios.get(`${baseUrl}/total?teacherId=${teacherId}`);
-  return req.data;
-};
-
-const getTotalCommentsLesson = async (lessonId) => {
-  const req = await axios.get(`${baseUrl}/total?lessonId=${lessonId}`);
-  return req.data;
-};
-
-const getTotalCommentsUser = async (userId) => {
-  const req = await axios.get(`${baseUrl}/total?userId=${userId}`);
+const getTotalCommentsById = async (id) => {
+  const req = await axios.get(`${baseUrl}/total?userId=${id}`);
   return req.data;
 };
 
@@ -52,23 +42,9 @@ const addInfCommentsAll = async (start, count, filter) => {
   return req.data;
 };
 
-const addInfCommentsUser = async (start, count, userId, filter) => {
+const addInfCommentsById = async (start, count, id, filter) => {
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&userId=${userId}&filter=${filter}`
-  );
-  return req.data;
-};
-
-const addInfTeacher = async (start, count, teacherId, filter) => {
-  const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&teacherId=${teacherId}&filter=${filter}`
-  );
-  return req.data;
-};
-
-const addInfLesson = async (start, count, lessonId, filter) => {
-  const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&lessonId=${lessonId}&filter=${filter}`
+    `${baseUrl}?start=${start}&total=${count}&id=${id}&filter=${filter}`
   );
   return req.data;
 };
@@ -80,16 +56,12 @@ const allComments = async () => {
 
 export default {
   allComments,
-  getTotalCommentsUser,
   removeComment,
   likeComment,
-  addInfCommentsUser,
   updateComment,
   postComment,
-  getTotalCommentsTeacher,
-  getTotalCommentsLesson,
-  addInfTeacher,
-  addInfLesson,
   addInfCommentsAll,
   getTotalCommentsAll,
+  addInfCommentsById,
+  getTotalCommentsById,
 };

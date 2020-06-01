@@ -5,7 +5,7 @@ const Lesson = require('../models/lesson');
 
 teachersRouter.get('/', async (req, res) => {
   const q = req.query;
-  const search = q.result ? q.result : '';
+  const search = q.search ? q.search : '';
   const teachers =
     'start' in q && 'total' in q
       ? await Teacher.getFilteredInf(search, q.start, q.total)
@@ -14,7 +14,7 @@ teachersRouter.get('/', async (req, res) => {
   res.json(teachers.map((t) => t.toJSON()));
 });
 teachersRouter.get('/total', async (req, res) => {
-  const search = req.query.result ? req.query.result : '';
+  const search = req.query.search ? req.query.search : '';
   const total = await Teacher.find({
     name: { $regex: search, $options: 'i' },
   }).countDocuments();

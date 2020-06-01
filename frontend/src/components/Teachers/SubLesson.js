@@ -9,14 +9,14 @@ import {
   Statistic,
   Icon,
 } from 'semantic-ui-react';
-const SubLesson = ({ lesson, teacherName }) => {
+const SubLesson = ({ lesson }) => {
   const header = () => {};
 
   return (
     <>
       <Card
         as={Link}
-        to={LESSON_PATH(lesson, teacherName)}
+        to={LESSON_PATH(lesson, lesson.teacher.name)}
         fluid
         style={{ paddingTop: '0.5em', paddingLeft: '0.5em' }}
       >
@@ -37,7 +37,7 @@ const SubLesson = ({ lesson, teacherName }) => {
             </Header.Content>
           </Header>
         </Card.Header>
-        <Card.Meta>{teacherName}</Card.Meta>
+        <Card.Meta>{lesson.teacher.name}</Card.Meta>
       </Card>
     </>
   );

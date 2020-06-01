@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfAll } from '../../reducers/allReducer';
 import SubTeacher from '../Teachers/SubTeacher';
+import SubLesson from '../Teachers/SubLesson';
 import { LinearProgress } from '@material-ui/core';
 import { Card } from 'semantic-ui-react';
 
@@ -11,7 +12,7 @@ const All = () => {
   const count = useSelector((state) => state.all.count);
   const start = useSelector((state) => state.all.start);
   const hasMore = useSelector((state) => state.all.hasMore);
-  const teachers = useSelector((state) => state.all.all);
+  const lessons = useSelector((state) => state.all.all);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
   const state = useSelector((state) => state.all);
@@ -19,20 +20,14 @@ const All = () => {
     dispatch(addInfAll(0, count, filter));
   }, [filter]);
 
-  const filterTeachers = (teachers) => {
-    const onlyTeacherNames = teachers.filter((t) =>
-      t.name
+  const filterLessons = (lessons) => {
+    const onlyTeacherNames = lessons.filter((l) =>
+      l.teacher.name
         .toLocaleUpperCase('tr-TR')
         .includes(filter.toLocaleUpperCase('tr-TR'))
     );
-    const onlyLessonNames = teachers.filter((t) => {
-      let isThere = t.lessons.filter((l) =>
-        l.fullName.toUpperCase().includes(filter.toUpperCase())
-      );
-      if (isThere.length > 0) {
-        return true;
-      }
-      return false;
+    const onlyLessonNames = lessons.filter((l) => {
+      return !!l.fullName.toUpperCase().includes(filter.toUpperCase());
     });
     const q = lodash.union(onlyLessonNames, onlyTeacherNames);
     return q;
@@ -42,10 +37,9 @@ const All = () => {
     dispatch(addInfAll(start, count, filter));
   };
 
-  if (teachers.length === 0) {
+  if (lessons.length === 0) {
     return <LinearProgress />;
   }
-  console.log('state', state);
   return (
     <div
       style={{
@@ -64,10 +58,10 @@ const All = () => {
         }
         useWindow={false}
       >
-        {filterTeachers(teachers)
-          .sort((a, b) => a.lessons[0].fullName - b.lessons[0].fullName)
-          .map((t) => (
-            <SubTeacher teacher={t} key={t.id} />
+        {filterLessons(lessons)
+          .sort((a, b) => a.fullName - b.fullName)
+          .map((l) => (
+            <SubLesson lesson={l} key={l.id} />
           ))}
       </InfiniteScroll>
     </div>

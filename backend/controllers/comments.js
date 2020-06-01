@@ -5,78 +5,48 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 const jwt = require('jsonwebtoken');
 
-const getLessonFilter = (q) => {
+const getCommentFilter = async (q) => {
   let comments;
   if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
     const sort = q.filter === 'mostRecent' ? -1 : 1;
     comments =
       'start' in q && 'total' in q
-        ? await Comment.getLessonRecentPast(q.lessonId, sort, q.start, q.total)
-        : await Comment.getLessonRecentPast(q.lessonId, sort);
+        ? await Comment.getRecentPast(sort, q.start, q.total)
+        : await Comment.getRecentPast(sort);
   } else if (q.filter === 'mostPopular') {
     comments =
       'start' in q && 'total' in q
-        ? await Comment.getLessonMostPopular(q.lessonId, q.start, q.total)
-        : await Comment.getLessonMostPopular(q.lessonId);
+        ? await Comment.getMostPopular(q.start, q.total)
+        : await Comment.getMostPopular();
   }
   return comments;
 };
 
-const getUserFilter = (q)=>{
+const getIdFilter = async (q) => {
   let comments;
   if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
     const sort = q.filter === 'mostRecent' ? -1 : 1;
-     comments = 'start' in q && 'total' in q ? await Comment.getUserRecentPast(q.userId,sort,q.start,q.total): await Comment.getUserRecentPast(q.userId,sort)
+    comments =
+      'start' in q && 'total' in q
+        ? await Comment.getRecentPastById(q.id, sort, q.start, q.total)
+        : await Comment.getRecentPastById(q.id, sort);
   } else if (q.filter === 'mostPopular') {
     comments =
       'start' in q && 'total' in q
-        ? await Comment.getUserMostPopular(q.userId, q.start, q.total)
-        : await Comment.getUserMostPopular(q.userId);
-    
+        ? await Comment.getMostPopularById(q.id, q.start, q.total)
+        : await Comment.getMostPopularById(q.id);
   }
-  return comments
-}
-
-const getCommentFilter = (q)=>{
-  let comments;
-  if (q.filter === 'mostRecent' || q.filter === 'mostPast'){
-    const sort = q.filter === 'mostRecent' ? -1 : 1;
-    comments = 'start' in q && 'total' in q ? await Comment.getCommentRecentPast(sort,q.start,q.total): await Comment.getCommentRecentPast(sort)
-  }else if (q.filter === 'mostPopular'){
-    comments = 'start' in q && 'total' in q
-    ? await Comment.getCommentMostPopular(q.start, q.total)
-    : await Comment.getCommentMostPopular();
-  }
-  return comments
-}
-
-const getTeacherFilter = (q)=>{
-  let comments;
-  if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
-    const sort = q.filter === 'mostRecent' ? -1 : 1;
-     comments = 'start' in q && 'total' in q ? await Comment.getTeacherRecentPast(q.teacherId,sort,q.start,q.total): await Comment.getTeacherRecentPast(q.teacherId,sort)
-  } else if (q.filter === 'mostPopular') {
-    comments =
-      'start' in q && 'total' in q
-        ? await Comment.getTeacherMostPopular(q.teacherId, q.start, q.total)
-        : await Comment.getTeacherMostPopular(q.teacherId);
-    
-  }
-  return comments
-}
+  return comments;
+};
 
 commentsRouter.get('/', async (req, res) => {
   const q = req.query;
   let comments;
-  if ('teacherId' in q && 'filter' in q) {
-    comments = await getTeacherFilter(q);
-  } else if ('lessonId' in q && 'filter' in q) {
-     comments = await getLessonFilter(q);
-  } else if ('userId' in q && 'filter' in q) {
-     comments = await getUserFilter(q);
+  if ('id' in q && 'filter' in q) {
+    comments = await getIdFilter(q);
   } else if ('filter' in q) {
-     comments = await getCommentFilter(q)
-  }else{
+    comments = await getCommentFilter(q);
+  } else {
     comments = await Comment.find({});
   }
   if (q.filter === 'mostPopular') {
@@ -88,16 +58,10 @@ commentsRouter.get('/', async (req, res) => {
 commentsRouter.get('/total', async (req, res) => {
   const q = req.query;
   let total =
-    'teacherId' in q
+    'id' in q
       ? await Comment.find({
-          teacher: q.teacherId,
+          $or: [{ teacher: q.id }, { lesson: q.id }, { user: q.id }],
         }).countDocuments()
-      : 'lessonId' in q
-      ? await Comment.find({
-          lesson: q.lessonId,
-        }).countDocuments()
-      : 'userId' in q
-      ? await Comment.find({ user: q.userId }).countDocuments()
       : await Comment.find().countDocuments();
   res.json({ total: total });
 });

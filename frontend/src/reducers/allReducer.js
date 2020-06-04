@@ -22,6 +22,13 @@ const allReducer = (state = initialState, action) => {
         all: uniqAll,
       };
       return currentState;
+    case 'GET_LESSON_PAGE':
+      const uniqGetLesson = lodash.uniqBy([...state.all, action.data], 'id');
+      const newState = {
+        ...state,
+        all: uniqGetLesson,
+      };
+      return newState;
     case 'TOTAL_ALL':
       const totalc = action.data;
       return { ...state, total: totalc };
@@ -34,9 +41,7 @@ export const addInfAll = (start, count, filter) => {
   return async (dispatch) => {
     console.log('hey');
     const total = await allService.getTotal(filter);
-    console.log('hey');
     const all = await allService.addInf(start, count, filter);
-    console.log('hey');
     let data = {
       hasMore: true,
       start: start + count,

@@ -38,17 +38,18 @@ const commentReducer = (state = initialState, action) => {
       const updatedComments = state.comments.filter(
         (c) => c.id !== action.data.id
       );
-      return {
+      const updatedNewComments = updatedComments.concat(action.data);
+      const updatedState = {
         ...state,
-        comments: [...updatedComments, action.data],
+        comments: updatedNewComments,
       };
+      return updatedState;
     case 'LIKE_COMMENT':
-      const likedComments = state.comments.filter(
-        (c) => c.id !== action.data.id
-      );
+      state.comments = state.comments.filter((c) => c.id !== action.data.id);
+      const likedComments = state.comments.concat(action.data);
       return {
         ...state,
-        comments: [...likedComments, action.data],
+        comments: likedComments,
       };
     case 'REMOVE_COMMENT':
       const removedComments = state.comments.filter(
@@ -84,7 +85,7 @@ export const sortComment = (option) => {
   };
 };
 
-export const postComment = (c, setValue) => {
+export const postComment = (c, setValue, setIsLoading) => {
   return async (dispatch) => {
     const comment = await commentsService.postComment(c);
     dispatch({
@@ -92,17 +93,19 @@ export const postComment = (c, setValue) => {
       data: comment,
     });
     setValue('');
+    setIsLoading(false);
   };
 };
 
-export const updateComment = (c, id, setIsUpdate) => {
+export const updateComment = (c, id, setIsUpdate, setIsLoading) => {
   return async (dispatch) => {
     const comment = await commentsService.updateComment(c, id);
-    setIsUpdate(false);
     dispatch({
       type: 'UPDATE_COMMENT',
       data: comment,
     });
+    setIsLoading(false);
+    setIsUpdate(false);
   };
 };
 

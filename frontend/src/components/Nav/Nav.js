@@ -16,11 +16,7 @@ const Nav = () => {
   const user = useSelector((state) => state.user);
   return (
     <Menu style={{ marginBottom: '0' }}>
-      <Menu.Item
-        as={Link}
-        to="/"
-        style={{ backgroundColor: '#21ba45', color: 'white' }}
-      >
+      <Menu.Item as={Link} to="/" >
         <Icon name="home" />
         Ana Sayfa
       </Menu.Item>

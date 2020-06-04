@@ -15,7 +15,6 @@ const All = () => {
   const lessons = useSelector((state) => state.all.all);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.all);
   useEffect(() => {
     dispatch(addInfAll(0, count, filter));
   }, [filter]);

@@ -1,0 +1,8 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+
+/* Menu Item */
+@itemFontWeight: normal;
+@itemTextColor: @blue;

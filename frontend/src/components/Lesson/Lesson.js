@@ -6,7 +6,7 @@ import { sortComment } from '../../reducers/commentReducer';
 import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
 import { LinearProgress } from '@material-ui/core';
-import { Header, Divider, Icon, Menu } from 'semantic-ui-react';
+import { Header, Divider, Icon, Menu,Progress } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
 const Lesson = () => {
   const dispatch = useDispatch();
@@ -50,10 +50,10 @@ const Lesson = () => {
       </Header>
       <Header as="h1" color="green">
         Yorumlar
-      </Header>{' '}
-      <CommentSort />
+      </Header>
       <Divider />
       <CommentForm lessonId={lesson.id} teacherId={lesson.teacher.id} />
+      <CommentSort />
       <Comments typeId={lesson.id} type="lesson" />
     </div>
   );

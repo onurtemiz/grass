@@ -6,10 +6,7 @@ const Lesson = require('../models/lesson');
 teachersRouter.get('/:name', async (req, res) => {
   const teacher = await Teacher.findOne({
     name: req.params.name,
-  })
-    .populate('lessons')
-    .populate('comments');
-  console.log('teacher', teacher);
+  }).populate('lessons');
   return res.json(teacher.toJSON());
 });
 

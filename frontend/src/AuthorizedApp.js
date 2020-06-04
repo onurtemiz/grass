@@ -8,12 +8,24 @@ import Teachers from './components/Teachers/Teachers';
 import Contribution from './components/Contribution/Contribution';
 import About from './components/About/About';
 import All from './components/All/All';
+import Home from './components/Home/Home';
 import EditUser from './components/EditUser/EditUser';
 import User from './components/User/User';
 import AllComments from './components/AllComments/AllComments';
 import { Switch, Route } from 'react-router-dom';
 
-function AuthorizedApp() {
+const HomeContainer = () => {
+  return (
+    <Switch>
+      <Route exact path="/">
+        {/* <All /> */}
+        <Home />
+      </Route>
+    </Switch>
+  );
+};
+
+const DefaultContainer = () => {
   return (
     <div>
       <Nav />
@@ -45,11 +57,23 @@ function AuthorizedApp() {
         <Route path="/comments">
           <AllComments />
         </Route>
-        <Route path="/">
-          <All />
+      </Switch>
+      <Footer />{' '}
+    </div>
+  );
+};
+
+function AuthorizedApp() {
+  return (
+    <div>
+      <Switch>
+        <Route exact path="/">
+          <HomeContainer />
+        </Route>
+        <Route>
+          <DefaultContainer />
         </Route>
       </Switch>
-      <Footer />
     </div>
   );
 }

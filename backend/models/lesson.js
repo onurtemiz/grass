@@ -31,8 +31,6 @@ lessonSchema.statics.getFilteredInf = function (search, start, total) {
     .populate('comments');
 };
 
-
-
 lessonSchema.statics.getFilteredAllInf = function (
   search = '',
   teachersId,

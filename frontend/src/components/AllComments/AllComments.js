@@ -6,7 +6,7 @@ const AllComments = () => {
   return (
     <div>
       <CommentSort />
-      <Comments type="allComments" height="90vh" />
+      <Comments type="allComments" height="90vh" showTeacher={true} />
     </div>
   );
 };

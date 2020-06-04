@@ -13,6 +13,7 @@
     "lodash": "^4.17.15",
     "notistack": "^0.9.14",
     "react": "^16.13.1",
+    "react-autosuggest": "^10.0.2",
     "react-confirm-alert": "^2.6.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroll": "^0.1.5",
@@ -21,20 +22,21 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-textarea-autosize": "^8.0.1",
     "redux": "^4.0.5",
     "redux-cache": "^0.3.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-form": "^8.3.5",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
+    "styled-components": "^5.1.1",
     "yup": "^0.28.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -51,6 +53,10 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@craco/craco": "^5.6.4",
+    "@semantic-ui-react/craco-less": "^1.2.1",
+    "semantic-ui-less": "^2.4.1"
+  },
   "proxy": "http://localhost:3001"
 }

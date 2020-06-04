@@ -1,0 +1,5 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+@verticalPadding: 0.5em; 
+@horizontalPadding: 0.6em;

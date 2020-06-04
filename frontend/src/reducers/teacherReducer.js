@@ -1,5 +1,6 @@
 /* eslint-disable default-case */
 import teachersService from '../services/teachers';
+import lessonsService from '../services/lessons';
 import lodash from 'lodash';
 const initialState = {
   teachers: [],

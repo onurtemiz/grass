@@ -6,8 +6,8 @@ import {
   addInfCommentAll,
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
-import { LinearProgress } from '@material-ui/core';
-const Comments = ({ type, typeId, height }) => {
+import { Placeholder } from 'semantic-ui-react';
+const Comments = ({ type, typeId, height, showTeacher, lessonId }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
@@ -48,7 +48,7 @@ const Comments = ({ type, typeId, height }) => {
           }
         })
     );
-  }, [filter, start]);
+  }, [filter, start, comments]);
 
   const loadFunc = () => {
     if (typeId) {
@@ -62,23 +62,34 @@ const Comments = ({ type, typeId, height }) => {
       style={{
         height: height ? height : '50vh',
         width: '100vw',
-        overflow: 'auto',
-        
+        // overflow: 'auto',
       }}
     >
       <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}
+        useWindow={true}
         hasMore={hasMore}
-        loader={
-          <div className="loader" key={0}>
-            <LinearProgress />
-          </div>
-        }
-        useWindow={false}
+        loader={[...Array(5)].map((e, i) => (
+          <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
+            <Placeholder.Paragraph>
+              <Placeholder.Line />
+              <Placeholder.Line />
+            </Placeholder.Paragraph>
+            <Placeholder.Paragraph>
+              <Placeholder.Line />
+              <Placeholder.Line />
+            </Placeholder.Paragraph>
+          </Placeholder>
+        ))}
       >
         {currentComments.map((c) => (
-          <Comment key={c.id} comment={c} />
+          <Comment
+            key={c.id}
+            comment={c}
+            showTeacher={showTeacher}
+            lessonId={c.lesson}
+          />
         ))}
       </InfiniteScroll>
     </div>

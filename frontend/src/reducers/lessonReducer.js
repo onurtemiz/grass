@@ -109,6 +109,17 @@ export const getLessonPageById = (areaCode, digitCode, teacherId) => {
   };
 };
 
+export const getLessonById = (id) => {
+  return async (dispatch) => {
+    const lesson = await lessonsService.getLessonById(id);
+    console.log('lesson', lesson);
+    dispatch({
+      type: 'GET_LESSON_PAGE',
+      data: lesson,
+    });
+  };
+};
+
 export const resetLessons = () => {
   return (dispatch) => {
     dispatch({

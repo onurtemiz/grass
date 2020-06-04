@@ -89,7 +89,9 @@ lessonsRouter.get('/', async (req, res) => {
 });
 
 lessonsRouter.get('/:id', async (req, res) => {
-  lesson = await Lesson.findById(req.params.id);
+  const lesson = await Lesson.findById(req.params.id)
+    .populate('teacher')
+    .populate('comments');
   res.json(lesson.toJSON());
 });
 

@@ -1,77 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import {
-  removeComment,
-  likeComment,
-  updateComment,
-} from '../../reducers/commentReducer';
+import { removeComment, likeComment } from '../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import CommentForm from '../CommentForm/CommentForm';
+import { getDay } from '../../utils/dateCalc';
 import {
   Comment as SComment,
   Icon,
-  Button,
-  Label,
-  Divider,
-  Header,
-  Container,
   Segment,
+  Confirm,
+  Button,
+  Placeholder,
 } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';
-const Comment = ({ comment, setIsUpdate }) => {
+import { getLessonById } from '../../reducers/lessonReducer';
+import { LinearProgress } from '@material-ui/core';
+const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.user);
+  const all = useSelector((state) => state.all.all);
   const dispatch = useDispatch();
   const [likeType, setLikeType] = useState(false);
+  const [isRemovePanel, setIsRemovePanel] = useState(false);
+  const [isLessonPresent, setIsLessonPresent] = useState(false);
   const match = useRouteMatch('/users/:username/');
-  const pagedUser = users.find((u) =>
-    match ? u.username === match.params.username : false
-  );
-  const pagedComment = pagedUser
-    ? pagedUser.comments.find((c) => c.id === comment.id)
-    : null;
-
-  function dateDiffInDays(a, b) {
-    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
-    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
-  }
-  const getDay = (someDate) => {
-    const today = new Date();
-    if (
-      someDate.getFullYear() === today.getFullYear() &&
-      someDate.getMonth() === today.getMonth() &&
-      someDate.getDate() === today.getDate()
-    ) {
-      return 'Bugün';
-    } else if (
-      someDate.getFullYear() === today.getFullYear() &&
-      someDate.getMonth() === today.getMonth() &&
-      someDate.getDate() + 1 === today.getDate()
-    ) {
-      return 'Dün';
-    } else {
-      const diff = dateDiffInDays(someDate, today);
-      const year = Math.floor(diff / 365);
-      const month = Math.floor((diff % 365) / 30);
-      const day = Math.floor((diff % 365) % 30);
-      let s = '';
-      if (year != 0) {
-        s += `${year} yıl`;
-      }
-      if (month != 0) {
-        s += `${month} ay`;
-      }
-      if (day != 0) {
-        s += `${day} gün`;
-      }
-      return s + ' önce';
-    }
-  };
 
   useEffect(() => {
     comment.likes.includes(user.id) ? setLikeType(true) : setLikeType(false);
@@ -81,40 +32,42 @@ const Comment = ({ comment, setIsUpdate }) => {
     likeType === false ? setLikeType(true) : setLikeType(false);
   };
 
+  const getLesson = () => {
+    return all.find((l) => l.id === lessonId);
+  };
+
   const handleRemove = () => {
-    confirmAlert({
-      customUI: ({ onClose }) => {
-        return (
-          <div>
-            <h1>Are you sure?</h1>
-            <p>You want to delete {comment.comment}</p>
-            <button
-              onClick={() => {
-                dispatch(removeComment(comment.id));
-                onClose();
-              }}
-            >
-              Yes, Delete it!
-            </button>
-            <button onClick={onClose}>No</button>
-          </div>
-        );
-      },
-    });
+    dispatch(removeComment(comment.id));
+    setIsRemovePanel(false);
   };
 
   const handleUpdate = () => {
     setIsUpdate(true);
   };
+
+  useEffect(() => {
+    if (!getLesson()) {
+      dispatch(getLessonById(lessonId));
+    }
+  }, []);
+
+  if (!getLesson()) {
+    return (
+      <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }}>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+      </Placeholder>
+    );
+  }
+  const commentLesson = all.find((l) => l.id === lessonId);
   return (
-    <Segment
-      color="blue"
-      style={{
-        width: '50vw',
-        margin: '0 auto',
-        marginTop: '1rem',
-      }}
-    >
+    <Segment color="blue">
       <SComment.Group>
         <SComment>
           <SComment.Content>
@@ -124,8 +77,8 @@ const Comment = ({ comment, setIsUpdate }) => {
               </Link>
               <SComment.Metadata>
                 {comment.likes.length} Pati · {getDay(new Date(comment.date))}
-                {pagedComment
-                  ? ` · ${pagedComment.lesson.fullName.toUpperCase()}`
+                {!!showTeacher
+                  ? ` · ${commentLesson.fullName.toUpperCase()}`
                   : null}
               </SComment.Metadata>
             </SComment.Author>
@@ -149,13 +102,24 @@ const Comment = ({ comment, setIsUpdate }) => {
                 </SComment.Action>
               ) : null}
               {user.id === comment.user.id ? (
-                <SComment.Action
-                  onClick={handleRemove}
-                  style={{ color: '#db2828' }}
-                >
-                  <Icon name="delete" color="red" />
-                  Sil
-                </SComment.Action>
+                <>
+                  <SComment.Action
+                    onClick={() => setIsRemovePanel(true)}
+                    style={{ color: '#db2828' }}
+                  >
+                    <Icon name="delete" color="red" />
+                    Sil
+                  </SComment.Action>
+                  <Confirm
+                    open={isRemovePanel}
+                    onConfirm={() => handleRemove()}
+                    confirmButton="Sil gitsin"
+                    cancelButton="Hayır"
+                    onCancel={() => setIsRemovePanel(false)}
+                    header="Yorumunu silmek istediğine emin misin?"
+                    content={comment.comment}
+                  />
+                </>
               ) : null}
             </SComment.Actions>
           </SComment.Content>

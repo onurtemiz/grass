@@ -5,14 +5,15 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
-import 'semantic-ui-css/semantic.min.css';
+
+import 'semantic-ui-less/semantic.less';
 
 ReactDOM.render(
   <Provider store={store}>
     <Suspense
       fallback={
         <div style={{ height: '90vh' }}>
-          <LinearProgress />{' '}
+          <LinearProgress />
         </div>
       }
     >

@@ -55,7 +55,7 @@ const Teacher = () => {
 
       <h2>Comments</h2>
       <CommentSort />
-      <Comments typeId={teacher.id} type="teacher" />
+      <Comments typeId={teacher.id} type="teacher" showTeacher={true} />
     </div>
   );
 };

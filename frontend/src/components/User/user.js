@@ -32,7 +32,7 @@ const User = () => {
           Bilgilerini Güncelle
         </Header>
       ) : null}
-      <Comments type="user" typeId={user.id} />
+      <Comments type="user" typeId={user.id} showTeacher={true} />
     </div>
   );
 };

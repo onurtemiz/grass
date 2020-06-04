@@ -20,6 +20,11 @@ const getLessonPageByName = async (areaCode, digitCode, teacherName) => {
   return req.data;
 };
 
+const getLessonById = async (id) => {
+  const req = await axios.get(`${baseUrl}/${id}`);
+  return req.data;
+};
+
 const getLessonPageById = async (areaCode, digitCode, teacherId) => {
   const req = await axios.get(
     `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherId=${teacherId}`
@@ -37,4 +42,5 @@ export default {
   getLessonPageByName,
   getLessonPageById,
   getTotalLesson,
+  getLessonById,
 };

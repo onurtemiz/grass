@@ -364,10 +364,55 @@ describe('when crud single comment', () => {
     });
   });
 
-  describe('when posting new comment', () => {
+  describe.only('when posting new comment', () => {
     beforeEach(async () => {
       await Comment.deleteMany({});
     });
+
+    test('should not post a comment that has over 4000 letter', async () => {
+      let lesson = await Lesson.findOne({});
+      let teacher = await Teacher.findById(lesson.teacher);
+      let user = await helper.loginUser({
+        email,
+        password,
+      });
+      const longComment = 'a'.repeat(4001);
+      expect(longComment.length).toEqual(4001);
+      const comment = {
+        comment: longComment,
+        lessonId: lesson._id,
+        teacherId: teacher._id,
+      };
+      const res = await api
+        .post(`${baseUrl}`)
+        .send(comment)
+        .set('Authorization', `bearer ${user.token}`)
+        .expect(400);
+      expect(res.body.error).toBeDefined();
+    });
+
+    test('should post comment that has 4000 letter', async () => {
+      let lesson = await Lesson.findOne({});
+      let teacher = await Teacher.findById(lesson.teacher);
+      let user = await helper.loginUser({
+        email,
+        password,
+      });
+      const longComment = 'a'.repeat(4000);
+      expect(longComment.length).toEqual(4000);
+      const comment = {
+        comment: longComment,
+        lessonId: lesson._id,
+        teacherId: teacher._id,
+      };
+      const res = await api
+        .post(`${baseUrl}`)
+        .send(comment)
+        .set('Authorization', `bearer ${user.token}`)
+        .expect(201);
+      expect(res.body.error).not.toBeDefined();
+    });
+
     test('should post comment', async () => {
       let lesson = await Lesson.findOne({});
       let teacher = await Teacher.findById(lesson.teacher);

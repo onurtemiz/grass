@@ -5,6 +5,8 @@ const app = require('../app');
 const api = supertest(app);
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const Lesson = require('../models/lesson');
+const Teacher = require('../models/teacher');
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -18,12 +20,133 @@ beforeEach(async () => {
     password: '123456789',
     username: 'onur',
   };
-
+  await helper.createFakeDb();
   await helper.signupUser(user);
   await helper.signupUser(userTwo);
 });
 afterAll(() => {
   mongoose.connection.close();
+});
+
+describe.only('when tries to follow', () => {
+  const password = '123456789';
+  const email = 'onurtemiz@boun.edu.tr';
+
+  test('should unfollow', async () => {
+    const lesson = await Lesson.findOne({});
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    let dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+    await api
+      .put('/api/users/follow')
+      .send({ id: lesson._id })
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(200);
+    dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(1);
+    expect(dbUser.following[0].toString()).toEqual(lesson._id.toString());
+    const res = await api
+      .put('/api/users/follow')
+      .send({ id: lesson._id })
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(200);
+
+    dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+  });
+
+  test('should give error when token is misshape', async () => {
+    const lesson = await Lesson.findOne({});
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    const res = await api
+      .put('/api/users/follow')
+      .send({ id: lesson._id })
+      .set('Authorization', `bearer testhaheheoheokXDXDsdsaad!3rd`);
+    expect(res).toHaveProperty('error');
+  });
+
+  test('should give error when token is missing', async () => {
+    const lesson = await Lesson.findOne({});
+
+    const res = await api.put('/api/users/follow').send({ id: lesson._id });
+    expect(res).toHaveProperty('error');
+  });
+
+  test('should give error if id is not lessonId', async () => {
+    const teacher = await Teacher.findOne({});
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    let dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+    const res = await api
+      .put('/api/users/follow')
+      .send({ id: teacher._id })
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(400);
+    expect(res.body.error).toBeDefined();
+    dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+  });
+
+  test('should give error if id is missing', async () => {
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    let dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+    const res = await api
+      .put('/api/users/follow')
+      .send({})
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(400);
+    expect(res.body.error).toBeDefined();
+    dbUser = await User.findOne({ email });
+
+    expect(dbUser.following.length).toEqual(0);
+  });
+
+  test('should give error if id is misformat', async () => {
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    let dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+    const res = await api
+      .put('/api/users/follow')
+      .send({ id: 'asfgaogekgo' })
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(400);
+    expect(res.body.error).toBeDefined();
+    dbUser = await User.findOne({ email });
+
+    expect(dbUser.following.length).toEqual(0);
+  });
+  test('should follow', async () => {
+    const lesson = await Lesson.findOne({});
+    const user = await helper.loginUser({
+      email,
+      password,
+    });
+    let dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(0);
+    await api
+      .put('/api/users/follow')
+      .send({ id: lesson._id })
+      .set('Authorization', `bearer ${user.token}`)
+      .expect(200);
+    dbUser = await User.findOne({ email });
+    expect(dbUser.following.length).toEqual(1);
+  });
 });
 
 describe('when user gives wrong infirmation', () => {

@@ -3,6 +3,8 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const config = require('../utils/config');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const Lesson = require('../models/lesson');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -35,6 +37,41 @@ usersRouter.post('/signup', async (req, res) => {
   });
   await user.save();
   res.status(201).json(user.toJSON());
+});
+
+usersRouter.put('/follow', async (req, res) => {
+  const body = req.body;
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  let isMalformatedId = false;
+  try {
+    let lessonId = new mongoose.Types.ObjectId(body.id);
+  } catch (e) {
+    isMalformatedId = true;
+  }
+  const lesson = await Lesson.findById(body.id);
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  } else if (!body.id || isMalformatedId) {
+    return res.status(400).json({
+      error: 'id is missing or invalid',
+    });
+  } else if (!lesson) {
+    return res.status(400).json({
+      error: 'lesson not found',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  let isUserFollows = user.following.find((id) => id.toString() === body.id);
+
+  if (isUserFollows) {
+    user.following = user.following.filter((id) => id.toString() !== body.id);
+  } else {
+    user.following.push(body.id);
+  }
+  await user.save();
+  res.status(200).end();
 });
 
 usersRouter.put('/', async (req, res) => {

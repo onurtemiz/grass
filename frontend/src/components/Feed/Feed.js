@@ -2,12 +2,12 @@ import React from 'react';
 import Comments from '../Comments/Comments';
 import CommentSort from '../CommentSort/CommentSort';
 
-const AllComments = () => {
+const Feed = () => {
   return (
     <div>
       <CommentSort />
       <Comments
-        type="allComments"
+        type="feed"
         height="90vh"
         showTeacher={true}
         skeletonLength={8}
@@ -16,4 +16,4 @@ const AllComments = () => {
   );
 };
 
-export default AllComments;
+export default Feed;

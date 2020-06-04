@@ -192,4 +192,30 @@ export const addInfCommentById = (start, count, id, filter) => {
   };
 };
 
+export const addInfCommentFeed = (start, count, filter) => {
+  return async (dispatch) => {
+    const comments = await commentsService.addInfCommentsFeed(
+      start,
+      count,
+      filter
+    );
+    const total = await commentsService.getTotalCommentsById();
+    let data = {
+      hasMore: true,
+      start: start + count,
+      comments: comments,
+      total: total.total,
+      count: count,
+    };
+    if (total.total === 0 || total.total < count + start) {
+      data.hasMore = false;
+      data.start = 0;
+    }
+    dispatch({
+      type: 'ADD_INF_COMMENT',
+      data: data,
+    });
+  };
+};
+
 export default commentReducer;

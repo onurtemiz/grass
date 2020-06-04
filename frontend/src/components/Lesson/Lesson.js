@@ -6,10 +6,12 @@ import { sortComment } from '../../reducers/commentReducer';
 import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
 import { LinearProgress } from '@material-ui/core';
-import { Header, Divider, Icon, Menu,Progress } from 'semantic-ui-react';
+import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
+import Follow from '../Follow/Follow';
 const Lesson = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
     .params;
   const lessons = useSelector((state) => state.lessons.lessons);
@@ -47,6 +49,7 @@ const Lesson = () => {
       <Header size="huge" color="green">
         <Icon name="book" />
         {lesson.fullName.toUpperCase()}
+        <Follow idToFollow={lesson.id} user={user} />
       </Header>
       <Header as="h1" color="green">
         Yorumlar

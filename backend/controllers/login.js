@@ -39,6 +39,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
     email: user.email,
     username: user.username,
+    following: user.following,
   });
 });
 

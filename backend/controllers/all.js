@@ -1,6 +1,7 @@
 const allRouter = require('express').Router();
 const Teacher = require('../models/teacher');
 const Lesson = require('../models/lesson');
+const User = require('../models/user');
 
 allRouter.get('/total', async (req, res) => {
   const search = req.query.search ? req.query.search : '';

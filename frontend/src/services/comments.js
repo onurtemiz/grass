@@ -34,6 +34,19 @@ const getTotalCommentsAll = async () => {
   return req.data;
 };
 
+const getTotalCommentsFeed = async () => {
+  const res = await axios.get(`${baseUrl}/feed/total`, config);
+  return res.data;
+};
+
+const addInfCommentsFeed = async (start, count, filter) => {
+  const res = await axios.get(
+    `${baseUrl}/feed?start=${start}&total=${count}&filter=${filter}`,
+    config
+  );
+  return res.data;
+};
+
 const addInfCommentsAll = async (start, count, filter) => {
   console.log(`${baseUrl}?start=${start}&total=${count}&filter=${filter}`);
   const req = await axios.get(
@@ -64,4 +77,6 @@ export default {
   getTotalCommentsAll,
   addInfCommentsById,
   getTotalCommentsById,
+  getTotalCommentsFeed,
+  addInfCommentsFeed,
 };

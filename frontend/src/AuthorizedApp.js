@@ -13,7 +13,7 @@ import EditUser from './components/EditUser/EditUser';
 import User from './components/User/User';
 import AllComments from './components/AllComments/AllComments';
 import { Switch, Route } from 'react-router-dom';
-
+import Feed from './components/Feed/Feed';
 const HomeContainer = () => {
   return (
     <Switch>
@@ -42,6 +42,9 @@ const DefaultContainer = () => {
         {/* <Route path="/lessons">
           <Lessons />
         </Route> */}
+        <Route path="/feed">
+          <Feed />
+        </Route>
         <Route path="/about">
           <About />
         </Route>

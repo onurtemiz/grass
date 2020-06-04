@@ -16,11 +16,19 @@ const Nav = () => {
   const user = useSelector((state) => state.user);
   return (
     <Menu style={{ marginBottom: '0' }}>
-      <Menu.Item as={Link} to="/" >
+      <Menu.Item as={Link} to="/">
         <Icon name="home" />
         Ana Sayfa
       </Menu.Item>
       <Filter />
+      <Menu.Item
+        as={Link}
+        to={`/feed`}
+        position="right"
+        style={{ backgroundColor: '#f44336', color: 'whitesmoke' }}
+      >
+        Feed
+      </Menu.Item>
       <Menu.Item
         as={Link}
         to={`/comments`}

@@ -16,11 +16,14 @@ import {
   Segment,
 } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
+import Follow from '../Follow/Follow';
+import commentsService from '../../services/comments';
 
 const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
   const teachers = useSelector((state) => state.teachers.teachers);
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     dispatch(getTeacherPage(match.params.name));
   }, []);
@@ -29,6 +32,7 @@ const Teacher = () => {
     return <LinearProgress />;
   }
   const teacher = teachers.find((t) => t.name === match.params.name);
+
   return (
     <div>
       <Header color="blue" size="huge">
@@ -39,14 +43,12 @@ const Teacher = () => {
         <ul style={{ listStyle: 'none' }}>
           {teacher.lessons.map((l) => (
             <li key={l.id} style={{ padding: '0.5em' }}>
-              <Header
-                size="huge"
-                color="green"
-                as={Link}
-                to={LESSON_PATH(l, teacher.name)}
-              >
-                <Icon name="book" />
-                {l.fullName.toUpperCase()}
+              <Header size="huge" color="green">
+                <Link to={LESSON_PATH(l, teacher.name)}>
+                  <Icon name="book" />
+                  {l.fullName.toUpperCase()}
+                </Link>
+                <Follow idToFollow={l.id} user={user} />
               </Header>
             </li>
           ))}

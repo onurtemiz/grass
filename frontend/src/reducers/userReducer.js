@@ -8,11 +8,44 @@ const userReducer = (state = null, action) => {
     case 'SET_USER':
       return action.data;
     case 'UPDATE_USER':
-      return { ...state, ...action.data };
+      const updatedUser = { ...state, ...action.data };
+      return updatedUser;
+    case 'FOLLOW_LESSON':
+      const followedLessons = [...state.following, action.data];
 
+      const followedState = { ...state, following: followedLessons };
+      return followedState;
+    case 'UNFOLLOW_LESSON':
+      const unfollowed = state.following.filter((id) => id !== action.data);
+
+      return { ...state, following: unfollowed };
     default:
       return state;
   }
+};
+
+export const followLesson = (user, id) => {
+  return async (dispatch) => {
+    await userService.followLesson(id);
+    dispatch({
+      type: 'FOLLOW_LESSON',
+      data: id,
+    });
+    user.following.push(id);
+    window.localStorage.setItem('grassUser', JSON.stringify(user));
+  };
+};
+
+export const unfollowLesson = (user, id) => {
+  return async (dispatch) => {
+    await userService.unfollowLesson(id);
+    dispatch({
+      type: 'UNFOLLOW_LESSON',
+      data: id,
+    });
+    user = { ...user, following: user.following.filter((uId) => uId !== id) };
+    window.localStorage.setItem('grassUser', JSON.stringify(user));
+  };
 };
 
 export const updateUser = (u, setEdited, setCurrentPasswordError) => {

@@ -22,6 +22,27 @@ const getCommentFilter = async (q) => {
   return comments;
 };
 
+const getCommentFeed = async (q, user) => {
+  let comments;
+  if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
+    const sort = q.filter === 'mostRecent' ? -1 : 1;
+    comments = await Comment.getRecentPastFeed(
+      user.following,
+      sort,
+      q.start,
+      q.total
+    );
+  } else if (q.filter === 'mostPopular') {
+    comments = await Comment.getMostPopularFeed(
+      user.following,
+      q.start,
+      q.total
+    );
+  }
+
+  return comments;
+};
+
 const getIdFilter = async (q) => {
   let comments;
   if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
@@ -55,6 +76,33 @@ commentsRouter.get('/', async (req, res) => {
   res.json(comments.map((c) => c.toJSON()));
 });
 
+commentsRouter.get('/feed', async (req, res) => {
+  const q = req.query;
+
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  } else if (!'start' in q || !'total' in q || !'filter' in q) {
+    return res.status(401).json({
+      error: 'query is missing',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  if (!user) {
+    return res.status(400).json({
+      error: 'Could not find user',
+    });
+  }
+
+  let comments = await getCommentFeed(q, user);
+  if (q.filter === 'mostPopular') {
+    return res.json(comments);
+  }
+  res.json(comments.map((c) => c.toJSON()));
+});
+
 commentsRouter.get('/total', async (req, res) => {
   const q = req.query;
   let total =
@@ -63,7 +111,30 @@ commentsRouter.get('/total', async (req, res) => {
           $or: [{ teacher: q.id }, { lesson: q.id }, { user: q.id }],
         }).countDocuments()
       : await Comment.find().countDocuments();
-  res.json({ total: total });
+  res.json({ total });
+});
+
+commentsRouter.get('/feed/total', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  if (!user) {
+    return res.status(400).json({
+      error: 'Could not find user',
+    });
+  }
+  const total = await Comment.find({
+    lesson: { $in: user.following },
+  }).countDocuments();
+  console.log('total', total);
+  res.json({
+    total,
+  });
 });
 
 commentsRouter.post('/', async (req, res) => {

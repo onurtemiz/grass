@@ -15,6 +15,17 @@ const updateUser = async (user) => {
   }
 };
 
+const followLesson = async (id) => {
+  const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+
+  return res.data;
+};
+
+
+const unfollowLesson = async (id) => {
+  const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+  return res.data;
+};
 const getPopulatedUser = async (username) => {
   const res = await axios.get(`${baseUrl}/${username}`);
   return res.data;
@@ -23,4 +34,6 @@ const getPopulatedUser = async (username) => {
 export default {
   updateUser,
   getPopulatedUser,
+  followLesson,
+  unfollowLesson,
 };

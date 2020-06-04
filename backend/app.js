@@ -13,18 +13,11 @@ const loginRouter = require('./controllers/login');
 const allRouter = require('./controllers/all');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-
-// mongoUri =
-//   process.env.NODE_ENV === 'test'
-//     ? process.env.TEST_MONGODB_URI
-//     : process.env.MONGODB_URI;
-
-// console.log('connecting to', mongoUri);
 
 const mongoUri = async () => {
   let mongoUri;
   if (process.env.NODE_ENV === 'test') {
+    const { MongoMemoryServer } = require('mongodb-memory-server');
     const mongoServer = new MongoMemoryServer();
     mongoUri = await mongoServer.getConnectionString();
   } else {

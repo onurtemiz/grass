@@ -87,7 +87,6 @@ const EditUser = () => {
         { abortEarly: false }
       )
       .then((values) => {
-        // console.log('values', values);
         setEdited('started');
         dispatch(updateUser(values, setEdited, setCurrentPasswordError));
       })

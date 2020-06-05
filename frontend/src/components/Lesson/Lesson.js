@@ -1,40 +1,46 @@
-import React, { useEffect } from 'react';
-import { useRouteMatch, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useRouteMatch, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLessonPageByName } from '../../reducers/lessonReducer';
+import { getLessonPageByName } from '../../reducers/allReducer';
 import { sortComment } from '../../reducers/commentReducer';
 import CommentForm from '../CommentForm/CommentForm';
 import Comments from '../Comments/Comments';
 import { LinearProgress } from '@material-ui/core';
 import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
+
 import Follow from '../Follow/Follow';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
     .params;
-  const lessons = useSelector((state) => state.lessons.lessons);
+  const location = useLocation();
+
+  const lessons = useSelector((state) => state.all.all);
+  const [lesson, setLesson] = useState(null);
 
   useEffect(() => {
+    setLesson(null);
     const q = match;
     dispatch(getLessonPageByName(q.areaCode, q.digitCode, q.teacherName));
-  }, []);
+  }, [location]);
 
-  if (
-    lessons.find(
+  useEffect(() => {
+    const lesson = lessons.find(
       (l) =>
         l.fullName === `${match.areaCode}${match.digitCode}` &&
         l.teacher.name === decodeURI(match.teacherName)
-    ) === undefined
-  ) {
+    );
+    if (lesson !== undefined) {
+      setLesson(lesson);
+    }
+  }, [lessons]);
+
+  if (lesson === null) {
     return <LinearProgress />;
   }
-  const lesson = lessons.find(
-    (l) =>
-      l.fullName === `${match.areaCode}${match.digitCode}` &&
-      l.teacher.name === decodeURI(match.teacherName)
-  );
+
   return (
     <div>
       <Header

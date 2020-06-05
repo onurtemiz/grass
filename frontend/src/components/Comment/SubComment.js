@@ -3,6 +3,8 @@ import { removeComment, likeComment } from '../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { getDay } from '../../utils/dateCalc';
+import { LESSON_PATH } from '../../utils/config';
+
 import {
   Comment as SComment,
   Icon,
@@ -12,8 +14,10 @@ import {
   Placeholder,
 } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { getLessonById } from '../../reducers/lessonReducer';
+import { getLessonById } from '../../reducers/allReducer';
 import { LinearProgress } from '@material-ui/core';
+import { GreenLabel } from '../Nav/NavTheme';
+
 const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.user);
@@ -77,9 +81,16 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
               </Link>
               <SComment.Metadata>
                 {comment.likes.length} Pati · {getDay(new Date(comment.date))}
-                {!!showTeacher
-                  ? ` · ${commentLesson.fullName.toUpperCase()}`
-                  : null}
+                {!!showTeacher ? ' · ' : null}
+                {!!showTeacher ? (
+                  <Link
+                    to={LESSON_PATH(commentLesson, commentLesson.teacher.name)}
+                  >
+                    <GreenLabel>
+                      {commentLesson.fullName.toUpperCase()}
+                    </GreenLabel>
+                  </Link>
+                ) : null}
               </SComment.Metadata>
             </SComment.Author>
             <SComment.Text>{comment.comment}</SComment.Text>
@@ -95,7 +106,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
               {user.id === comment.user.id ? (
                 <SComment.Action
                   onClick={handleUpdate}
-                  style={{ color: '#4183c4' }}
+                  style={{ color: '#21bb45' }}
                 >
                   <Icon name="edit outline" />
                   Değiştir

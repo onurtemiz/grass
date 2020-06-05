@@ -10,7 +10,7 @@ const AllComments = () => {
         type="allComments"
         height="90vh"
         showTeacher={true}
-        skeletonLength={8}
+        skeletonLength={2}
       />
     </div>
   );

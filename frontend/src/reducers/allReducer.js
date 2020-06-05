@@ -1,4 +1,6 @@
 import allService from '../services/all';
+import lessonsService from '../services/lessons';
+
 import lodash from 'lodash';
 const initialState = {
   all: [],
@@ -67,6 +69,44 @@ export const totalAll = (filter) => {
     dispatch({
       type: 'TOTAL_ALL',
       data: total.total,
+    });
+  };
+};
+
+export const getLessonPageByName = (areaCode, digitCode, teacherName) => {
+  return async (dispatch) => {
+    const lesson = await lessonsService.getLessonPageByName(
+      areaCode,
+      digitCode,
+      teacherName
+    );
+    dispatch({
+      type: 'GET_LESSON_PAGE',
+      data: lesson,
+    });
+  };
+};
+
+export const getLessonPageById = (areaCode, digitCode, teacherId) => {
+  return async (dispatch) => {
+    const lesson = await lessonsService.getLessonPageById(
+      areaCode,
+      digitCode,
+      teacherId
+    );
+    dispatch({
+      type: 'GET_LESSON_PAGE',
+      data: lesson,
+    });
+  };
+};
+
+export const getLessonById = (id) => {
+  return async (dispatch) => {
+    const lesson = await lessonsService.getLessonById(id);
+    dispatch({
+      type: 'GET_LESSON_PAGE',
+      data: lesson,
     });
   };
 };

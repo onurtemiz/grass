@@ -1,66 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { Tab } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 import { sortComment } from '../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { GreenLabel } from '../Nav/NavTheme';
 
 const CommentSort = () => {
   const filter = useSelector((state) => state.comments.filter);
   const dispatch = useDispatch();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [active, setActive] = useState(filter);
 
   useEffect(() => {
-    setActiveIndex(getActiveIndex());
-  }, []);
-  const getActiveIndex = () => {
-    switch (filter) {
-      case 'mostRecent':
-        return 0;
-      case 'mostPast':
-        return 1;
-      case 'mostPopular':
-        return 2;
-      default:
-        return 0;
-    }
-  };
+    dispatch(sortComment(active));
+  }, [active]);
 
-  const getFilterByIndex = (index) => {
-    switch (index) {
-      case 0:
-        return 'mostRecent';
-      case 1:
-        return 'mostPast';
-      case 2:
-        return 'mostPopular';
-      default:
-        return 0;
-    }
-  };
-
-  const handleTabChange = (d) => {
-    setActiveIndex(d.activeIndex);
-    const currentFilter = getFilterByIndex(d.activeIndex);
-    dispatch(sortComment(currentFilter));
-  };
-
-  const panes = [
-    {
-      menuItem: 'En Yeni',
-    },
-    {
-      menuItem: 'En Eski',
-    },
-    {
-      menuItem: 'En Patili',
-    },
-  ];
   return (
-    <Tab
-      menu={{ secondary: true, pointing: true }}
-      panes={panes}
-      activeIndex={activeIndex}
-      onTabChange={(e, d) => handleTabChange(d)}
-    />
+    <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
+      <Menu.Item
+        active={active === 'mostRecent'}
+        onClick={() => setActive('mostRecent')}
+        header
+      >
+        <Icon name="fire" color="green" />
+        <GreenLabel>En Yeni</GreenLabel>
+      </Menu.Item>
+      <Menu.Item
+        active={active === 'mostPast'}
+        onClick={() => setActive('mostPast')}
+        header
+      >
+        <Icon name="time" color="green" />
+        <GreenLabel>En Eski</GreenLabel>
+      </Menu.Item>
+      <Menu.Item
+        active={active === 'mostPopular'}
+        onClick={() => setActive('mostPopular')}
+        header
+      >
+        <Icon name="paw" color="green" />
+        <GreenLabel>En Patili</GreenLabel>
+      </Menu.Item>
+    </Menu>
   );
 };
 

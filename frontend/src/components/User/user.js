@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedUser } from '../../reducers/usersReducer';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../Comments/Comments';
-import { Header } from 'semantic-ui-react';
+import { Header, Label } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';
 const User = () => {
   const dispatch = useDispatch();
@@ -28,10 +28,17 @@ const User = () => {
         {user.totalLikes}
       </Header>
       {user.id === currentUser.id ? (
-        <Header as={Link} to="user/edit">
-          Bilgilerini Güncelle
-        </Header>
+        <>
+          <Header as={Link} to="/user/edit">
+            Bilgilerini Güncelle
+          </Header>
+          <br />
+          <Header as={Link} to="/user/following">
+            Takip Ettiklerim <Label>{user.following.length}</Label>
+          </Header>
+        </>
       ) : null}
+
       <Comments type="user" typeId={user.id} showTeacher={true} />
     </div>
   );

@@ -8,6 +8,8 @@ import {
 } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import { Placeholder } from 'semantic-ui-react';
+import { getLessonById } from '../../reducers/allReducer';
+
 const Comments = ({
   type,
   typeId,
@@ -21,6 +23,7 @@ const Comments = ({
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
+  const all = useSelector((state) => state.all.all);
   const user = useSelector((state) => state.user);
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
@@ -72,6 +75,38 @@ const Comments = ({
       dispatch(addInfCommentFeed(start, count, filter));
     }
   };
+
+  useEffect(() => {
+    if (currentComments.length !== 0) {
+      let leftovers = getLeftOverLessons();
+      if (leftovers.length !== 0) {
+        leftovers.map((id) => {
+          dispatch(getLessonById(id));
+        });
+      }
+    }
+  }, [currentComments]);
+
+  const getLeftOverLessons = () => {
+    let temp = [];
+    const commentLessons = [...new Set(currentComments.map((c) => c.lesson))];
+
+    commentLessons.map((id) => {
+      all.map((l) => {
+        if (l.id === id) {
+          temp.push(l);
+        }
+      });
+    });
+    let leftovers = commentLessons.filter(
+      (id) => !temp.map((l) => l.id).includes(id)
+    );
+    return leftovers;
+  };
+
+  if (getLeftOverLessons().length !== 0) {
+    return <Loading />;
+  }
   return (
     <div
       style={{
@@ -85,18 +120,7 @@ const Comments = ({
         loadMore={loadFunc}
         useWindow={true}
         hasMore={hasMore}
-        loader={[...Array(skeletonLength ? skeletonLength : 4)].map((e, i) => (
-          <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
-            <Placeholder.Paragraph>
-              <Placeholder.Line />
-              <Placeholder.Line />
-            </Placeholder.Paragraph>
-            <Placeholder.Paragraph>
-              <Placeholder.Line />
-              <Placeholder.Line />
-            </Placeholder.Paragraph>
-          </Placeholder>
-        ))}
+        loader={<Loading />}
       >
         {currentComments.map((c) => (
           <Comment
@@ -109,6 +133,21 @@ const Comments = ({
       </InfiniteScroll>
     </div>
   );
+};
+
+const Loading = ({ skeletonLength }) => {
+  return [...Array(skeletonLength ? skeletonLength : 2)].map((e, i) => (
+    <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
+      <Placeholder.Paragraph>
+        <Placeholder.Line />
+        <Placeholder.Line />
+      </Placeholder.Paragraph>
+      <Placeholder.Paragraph>
+        <Placeholder.Line />
+        <Placeholder.Line />
+      </Placeholder.Paragraph>
+    </Placeholder>
+  ));
 };
 
 export default Comments;

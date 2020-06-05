@@ -24,20 +24,7 @@ const lessonReducer = (state = initialState, action) => {
 
         lessons: uniqLessons,
       };
-      return currentState;
-    case 'GET_LESSON_PAGE':
-      const l = state.lessons.find((le) => le.id === action.data.id);
-      if (l === undefined) {
-        const uniq = lodash.uniqBy([...state.lessons, action.data], 'id');
-        return { ...state, lessons: uniq };
-      } else {
-        return {
-          ...state,
-          lessons: state.lessons.map((l) =>
-            l.id === action.data.id ? action.data : l
-          ),
-        };
-      }
+      return currentState
     case 'TOTAL_LESSON':
       const totalc = action.data;
       return { ...state, total: totalc };
@@ -77,45 +64,6 @@ export const totalLesson = (filter) => {
     dispatch({
       type: 'TOTAL_LESSON',
       data: total.total,
-    });
-  };
-};
-
-export const getLessonPageByName = (areaCode, digitCode, teacherName) => {
-  return async (dispatch) => {
-    const lesson = await lessonsService.getLessonPageByName(
-      areaCode,
-      digitCode,
-      teacherName
-    );
-    dispatch({
-      type: 'GET_LESSON_PAGE',
-      data: lesson,
-    });
-  };
-};
-
-export const getLessonPageById = (areaCode, digitCode, teacherId) => {
-  return async (dispatch) => {
-    const lesson = await lessonsService.getLessonPageById(
-      areaCode,
-      digitCode,
-      teacherId
-    );
-    dispatch({
-      type: 'GET_LESSON_PAGE',
-      data: lesson,
-    });
-  };
-};
-
-export const getLessonById = (id) => {
-  return async (dispatch) => {
-    const lesson = await lessonsService.getLessonById(id);
-    console.log('lesson', lesson);
-    dispatch({
-      type: 'GET_LESSON_PAGE',
-      data: lesson,
     });
   };
 };

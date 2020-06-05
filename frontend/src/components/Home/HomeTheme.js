@@ -1,8 +1,8 @@
-import { Search, Grid, Header } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-export const HomeSearch = styled(Search)`
+export const HomeSearch = styled.div`
   .input {
-    width: 75vw;
+    width: 75vw !important;
     max-width: 1000px;
     min-width: 300px;
   }

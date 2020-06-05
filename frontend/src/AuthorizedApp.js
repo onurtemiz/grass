@@ -14,11 +14,13 @@ import User from './components/User/User';
 import AllComments from './components/AllComments/AllComments';
 import { Switch, Route } from 'react-router-dom';
 import Feed from './components/Feed/Feed';
+import Following from './components/Following/Following';
 const HomeContainer = () => {
   return (
     <Switch>
       <Route exact path="/">
         {/* <All /> */}
+
         <Home />
       </Route>
     </Switch>
@@ -28,7 +30,6 @@ const HomeContainer = () => {
 const DefaultContainer = () => {
   return (
     <div>
-      <Nav />
       <Switch>
         <Route path="/teachers/:name">
           <Teacher />
@@ -51,8 +52,11 @@ const DefaultContainer = () => {
         <Route path="/contribution">
           <Contribution />
         </Route>
-        <Route path="/users/:username/edit">
+        <Route path="/user/edit">
           <EditUser />
+        </Route>
+        <Route path="/user/following">
+          <Following />
         </Route>
         <Route path="/users/:username">
           <User />
@@ -61,7 +65,6 @@ const DefaultContainer = () => {
           <AllComments />
         </Route>
       </Switch>
-      <Footer />{' '}
     </div>
   );
 };
@@ -71,9 +74,11 @@ function AuthorizedApp() {
     <div>
       <Switch>
         <Route exact path="/">
+          <Nav />
           <HomeContainer />
         </Route>
         <Route>
+          <Nav search />
           <DefaultContainer />
         </Route>
       </Switch>

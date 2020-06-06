@@ -163,7 +163,6 @@ describe('when teacher(s) wanted', () => {
     const totalTeachers = await Teacher.find({
       name: { $regex: name, $options: 'i' },
     }).countDocuments();
-    console.log('totalTeachers', totalTeachers);
     const res = await api
       .get(`${baseUrl}?total=5&start=${totalTeachers}&search=${name}`)
       .expect(200);

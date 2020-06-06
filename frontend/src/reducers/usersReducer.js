@@ -22,4 +22,14 @@ export const getPopulatedUser = (username) => {
   };
 };
 
+export const getUserById = (id) => {
+  return async (dispatch) => {
+    const user = await userService.getUserById(id);
+    dispatch({
+      type: 'SET_POPULATED_USER',
+      data: user,
+    });
+  };
+};
+
 export default usersReducer;

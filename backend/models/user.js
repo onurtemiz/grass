@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
     },
   ],
+  isAdmin: { type: Boolean, required: true, default: false },
 });
 
 userSchema.set(uniqueValidator);
@@ -27,6 +28,7 @@ userSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+    delete returnedObject.isAdmin;
     delete returnedObject.passwordHash;
   },
 });

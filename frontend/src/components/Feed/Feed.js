@@ -10,15 +10,21 @@ const Feed = () => {
   useEffect(() => {
     if (lessons.length === 0) {
       setBlocking('noLesson');
-      return;
-    }
-    const comments = lessons.reduce((total, l) => total + l.comments.length);
-    if (comments === 0) {
-      setBlocking('noComment');
+    } else {
+      const comments = lessons.reduce(
+        (total, l) => total + l.comments.length,
+        0
+      );
+      if (comments === 0) {
+        setBlocking('noComment');
+      } else {
+        setBlocking(null);
+      }
     }
   }, [lessons]);
+
   if (blocking) {
-    return <NoFeed message={blocking} />;
+    return <NoFeed blocking={blocking} />;
   }
 
   return (

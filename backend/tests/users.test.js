@@ -28,7 +28,7 @@ afterAll(() => {
   mongoose.connection.close();
 });
 
-describe.only('when tries to follow', () => {
+describe('when tries to follow', () => {
   const password = '123456789';
   const email = 'onurtemiz@boun.edu.tr';
 

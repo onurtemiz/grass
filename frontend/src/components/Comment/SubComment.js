@@ -17,6 +17,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { getLessonById } from '../../reducers/allReducer';
 import { LinearProgress } from '@material-ui/core';
 import { GreenLabel } from '../Nav/NavTheme';
+import CommentReport from './CommentReport';
 
 const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const users = useSelector((state) => state.users);
@@ -27,7 +28,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const [isRemovePanel, setIsRemovePanel] = useState(false);
   const [isLessonPresent, setIsLessonPresent] = useState(false);
   const match = useRouteMatch('/users/:username/');
-
+  const [isReportOpen, setIsReportOpen] = useState(false);
   useEffect(() => {
     comment.likes.includes(user.id) ? setLikeType(true) : setLikeType(false);
   }, []);
@@ -47,6 +48,10 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
 
   const handleUpdate = () => {
     setIsUpdate(true);
+  };
+
+  const handleReport = () => {
+    setIsReportOpen(true);
   };
 
   useEffect(() => {
@@ -74,6 +79,11 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
     <Segment color="blue">
       <SComment.Group>
         <SComment>
+          <CommentReport
+            setIsReportOpen={setIsReportOpen}
+            isReportOpen={isReportOpen}
+            comment={comment}
+          />
           <SComment.Content>
             <SComment.Author>
               <Link to={`/users/${comment.user.username}`}>
@@ -103,6 +113,15 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
                 <Icon name="paw" />
                 {likeType === true ? 'Patiledin' : 'Patile'}
               </SComment.Action>
+              {user.id !== comment.user.id ? (
+                <SComment.Action
+                  onClick={handleReport}
+                  style={{ color: '#db2828' }}
+                >
+                  <Icon name="bug" />
+                  Raporla
+                </SComment.Action>
+              ) : null}
               {user.id === comment.user.id ? (
                 <SComment.Action
                   onClick={handleUpdate}

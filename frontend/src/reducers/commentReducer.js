@@ -12,6 +12,13 @@ const initialState = {
 
 const commentReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'GET_COMMENT_BY_ID':
+      const idComments = lodash.uniqBy([...state.comments, action.data], 'id');
+      const idState = {
+        ...state,
+        comments: idComments,
+      };
+      return idState;
     case 'ADD_INF_COMMENT':
       const uniqComments = lodash.uniqBy(
         [...state.comments, ...action.data.comments],
@@ -188,6 +195,16 @@ export const addInfCommentById = (start, count, id, filter) => {
     dispatch({
       type: 'ADD_INF_COMMENT',
       data: data,
+    });
+  };
+};
+
+export const getCommentById = (id) => {
+  return async (dispatch) => {
+    const comment = await commentsService.getCommentById(id);
+    dispatch({
+      type: 'GET_COMMENT_BY_ID',
+      data: comment,
     });
   };
 };

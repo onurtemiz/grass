@@ -13,17 +13,20 @@ import {
 } from 'semantic-ui-react';
 import { GreenLabel, BlueLabel } from '../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
+import tipsService from '../../services/tips';
 
 const Tips = () => {
   const [value, setValue] = useState('');
-  const [userPublic, setUserPublic] = useState(true);
+  const [isAnonim, setIsAnonim] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const handleAction = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    tipsService.postTip(
+      { tip: value, isAnonim: isAnonim },
+      setIsLoading,
+      setIsOpen
+    );
   };
 
   return (
@@ -37,16 +40,16 @@ const Tips = () => {
       <Modal open={isOpen}>
         <Modal.Header>
           <BlueLabel>
-            Tavsiyeniz <GreenLabel>150</GreenLabel> kelimeden az olmalı.
+            Tavsiyeniz <GreenLabel>150</GreenLabel> harften az olmalı.
           </BlueLabel>
         </Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
               <Checkbox
-                label="Kullanıcı adım gözüksün"
-                checked={userPublic}
-                onClick={() => setUserPublic(!userPublic)}
+                label="Kullanıcı adım gözükmesin"
+                checked={isAnonim}
+                onClick={() => setIsAnonim(!isAnonim)}
                 disabled={isLoading}
               />
               <br />

@@ -14,6 +14,7 @@ const userReducer = (state = null, action) => {
       const followedLessons = [...state.following, action.data];
 
       const followedState = { ...state, following: followedLessons };
+      console.log('followedState===state', followedState === state);
       return followedState;
     case 'UNFOLLOW_LESSON':
       const unfollowed = state.following.filter((id) => id !== action.data);

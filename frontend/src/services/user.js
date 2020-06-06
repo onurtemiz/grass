@@ -21,6 +21,16 @@ const followLesson = async (id) => {
   return res.data;
 };
 
+const checkAdmin = async (setIsAdmin) => {
+  const res = await axios.get(`${baseUrl}/admin`, config);
+  console.log('res.data', res.data);
+  setIsAdmin(res.data.isAdmin);
+};
+
+const getUserById = async (id) => {
+  const res = await axios.get(`${baseUrl}?id=${id}`);
+  return res.data;
+};
 
 const unfollowLesson = async (id) => {
   const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
@@ -36,4 +46,6 @@ export default {
   getPopulatedUser,
   followLesson,
   unfollowLesson,
+  checkAdmin,
+  getUserById,
 };

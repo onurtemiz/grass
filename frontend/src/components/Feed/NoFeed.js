@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon, Header, Container, Grid } from 'semantic-ui-react';
 const NoFeed = ({ blocking }) => {
+  console.log('blocking', blocking);
   const message =
     blocking === 'noLesson'
       ? 'Henüz hiçbir dersi takip etmiyorsun.'

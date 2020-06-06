@@ -60,49 +60,6 @@ const getIdFilter = async (q) => {
   return comments;
 };
 
-commentsRouter.get('/', async (req, res) => {
-  const q = req.query;
-  let comments;
-  if ('id' in q && 'filter' in q) {
-    comments = await getIdFilter(q);
-  } else if ('filter' in q) {
-    comments = await getCommentFilter(q);
-  } else {
-    comments = await Comment.find({});
-  }
-  if (q.filter === 'mostPopular') {
-    return res.json(comments);
-  }
-  res.json(comments.map((c) => c.toJSON()));
-});
-
-commentsRouter.get('/feed', async (req, res) => {
-  const q = req.query;
-
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  } else if (!'start' in q || !'total' in q || !'filter' in q) {
-    return res.status(401).json({
-      error: 'query is missing',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-  if (!user) {
-    return res.status(400).json({
-      error: 'Could not find user',
-    });
-  }
-
-  let comments = await getCommentFeed(q, user);
-  if (q.filter === 'mostPopular') {
-    return res.json(comments);
-  }
-  res.json(comments.map((c) => c.toJSON()));
-});
-
 commentsRouter.get('/total', async (req, res) => {
   const q = req.query;
   let total =
@@ -135,6 +92,57 @@ commentsRouter.get('/feed/total', async (req, res) => {
   res.json({
     total,
   });
+});
+
+commentsRouter.get('/feed', async (req, res) => {
+  const q = req.query;
+
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  } else if (!'start' in q || !'total' in q || !'filter' in q) {
+    return res.status(401).json({
+      error: 'query is missing',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  if (!user) {
+    return res.status(400).json({
+      error: 'Could not find user',
+    });
+  }
+
+  let comments = await getCommentFeed(q, user);
+  if (q.filter === 'mostPopular') {
+    return res.json(comments);
+  }
+  res.json(comments.map((c) => c.toJSON()));
+});
+
+commentsRouter.get('/', async (req, res) => {
+  const q = req.query;
+  let comments;
+  if ('id' in q && 'filter' in q) {
+    comments = await getIdFilter(q);
+  } else if ('filter' in q) {
+    comments = await getCommentFilter(q);
+  } else if ('id' in q) {
+    const comment = await Comment.findById(q.id);
+    if (comment) {
+      return res.json(comment.toJSON());
+    }
+    return res.status(400).json({
+      error: 'comment not found',
+    });
+  } else {
+    comments = await Comment.find({});
+  }
+  if (q.filter === 'mostPopular') {
+    return res.json(comments);
+  }
+  res.json(comments.map((c) => c.toJSON()));
 });
 
 commentsRouter.post('/', async (req, res) => {

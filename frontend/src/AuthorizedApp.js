@@ -15,18 +15,10 @@ import AllComments from './components/AllComments/AllComments';
 import { Switch, Route } from 'react-router-dom';
 import Feed from './components/Feed/Feed';
 import Following from './components/Following/Following';
-const HomeContainer = () => {
-  return (
-    <Switch>
-      <Route exact path="/">
-        {/* <All /> */}
-
-        <Home />
-      </Route>
-    </Switch>
-  );
-};
-
+import Admin from './components/Admin/Admin';
+import useAdmin from './components/Admin/useAdmin';
+import ControlTips from './components/Admin/ControlTips';
+import ControlReports from './components/Admin/ControlReports';
 const DefaultContainer = () => {
   return (
     <div>
@@ -69,13 +61,13 @@ const DefaultContainer = () => {
   );
 };
 
-function AuthorizedApp() {
+const AuthorizedUser = () => {
   return (
     <div>
       <Switch>
         <Route exact path="/">
           <Nav />
-          <HomeContainer />
+          <Home />
         </Route>
         <Route>
           <Nav search />
@@ -84,6 +76,39 @@ function AuthorizedApp() {
       </Switch>
     </div>
   );
+};
+
+const AuthorizedAdmin = () => {
+  return (
+    <div>
+      <Switch>
+        <Route exact path="/">
+          <Nav admin />
+          <Home />
+        </Route>
+
+        <Route>
+          <Nav search admin />
+
+          <Route path="/admin/tips">
+            <ControlTips />
+          </Route>
+          <Route path="/admin/reports">
+            <ControlReports />
+          </Route>
+          <Route exact path="/admin">
+            <Admin />
+          </Route>
+          <DefaultContainer />
+        </Route>
+      </Switch>
+    </div>
+  );
+};
+
+function AuthorizedApp() {
+  const isAdmin = useAdmin();
+  return !isAdmin ? <AuthorizedUser /> : <AuthorizedAdmin />;
 }
 
 export default AuthorizedApp;

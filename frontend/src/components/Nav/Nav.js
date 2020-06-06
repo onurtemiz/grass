@@ -18,7 +18,7 @@ import { NavSearch, BlueLabel, GreenLabel } from './NavTheme';
 import { useSelector } from 'react-redux';
 import Search from '../Search/Search';
 
-const Nav = ({ search }) => {
+const Nav = ({ search, admin }) => {
   const user = useSelector((state) => state.user);
   const [active, setActive] = useState('');
   const match = useRouteMatch('/:path');
@@ -46,6 +46,8 @@ const Nav = ({ search }) => {
     }
     setActive('');
   }, [location]);
+
+
 
   return (
     <Menu style={{ marginBottom: '0' }} pointing secondary color="blue">
@@ -80,6 +82,18 @@ const Nav = ({ search }) => {
         <Icon name="comments" color="blue" />
         <BlueLabel>Tüm Yorumlar</BlueLabel>
       </Menu.Item>
+      {admin ? (
+        <Menu.Item
+          as={Link}
+          to={`/admin`}
+          active={active === 'admin'}
+          onClick={() => setActive('admin')}
+          header
+        >
+          <Icon name="user secret" color="blue" />
+          <BlueLabel>Admin</BlueLabel>
+        </Menu.Item>
+      ) : null}
       {search ? (
         <Menu.Item style={{ padding: 0 }}>
           <NavSearch>
@@ -87,6 +101,7 @@ const Nav = ({ search }) => {
           </NavSearch>
         </Menu.Item>
       ) : null}
+
       <Menu.Menu position="right">
         <Menu.Item
           as={Link}

@@ -139,6 +139,25 @@ usersRouter.put('/', async (req, res) => {
   });
 });
 
+usersRouter.get('/admin', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  if (typeof user.isAdmin !== 'undefined' && user.isAdmin == true) {
+    res.json({
+      isAdmin: true,
+    });
+  } else {
+    res.json({
+      isAdmin: false,
+    });
+  }
+});
+
 usersRouter.get('/:username', async (req, res) => {
   const user = await User.findOne({ username: req.params.username }).populate({
     path: 'comments',
@@ -165,14 +184,22 @@ usersRouter.get('/:username', async (req, res) => {
 });
 
 usersRouter.get('/', async (req, res) => {
-  const key = process.env.API_KEY;
-  if (!('key' in req.query) || key !== req.query.key) {
-    return res.status(400).json({
-      error: 'key must be present and right',
+  const q = req.query;
+
+  if (!q.id) {
+    return res.json({
+      error: 'id must present',
     });
   }
-  const users = await User.find({}).populate('comments');
-  res.json(users.map((u) => u.toJSON()));
+  const user = await User.findById(q.id);
+
+  if (!user) {
+    return res.json({
+      error: 'user not found',
+    });
+  }
+
+  res.json(user.toJSON());
 });
 
 module.exports = usersRouter;

@@ -11,6 +11,8 @@ const teachersRouter = require('./controllers/teachers');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const allRouter = require('./controllers/all');
+const reportsRouter = require('./controllers/reports');
+const tipsRouter = require('./controllers/tips');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
 
@@ -47,6 +49,8 @@ app.use('/api/lessons', lessonsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/comments', commentsRouter);
+app.use('/api/tips', tipsRouter);
+app.use('/api/reports', reportsRouter);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

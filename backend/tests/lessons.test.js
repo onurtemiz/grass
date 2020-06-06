@@ -100,7 +100,7 @@ describe('when get lesson(s)', () => {
     expect(b.areaCode).toEqual(lessonJson.areaCode);
     expect(b.digitCode).toEqual(lessonJson.digitCode);
     expect(b.comments.length).toEqual(lessonJson.comments.length);
-    expect(b.teacher).toEqual(lessonJson.teacher.toString());
+    expect(b.teacher.id).toEqual(lessonJson.teacher.toString());
   });
 });
 

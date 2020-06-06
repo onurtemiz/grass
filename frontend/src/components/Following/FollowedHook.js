@@ -13,7 +13,7 @@ export const useFollowed = () => {
       user.following.map((id) => {
         all.map((l) => {
           if (l.id === id) {
-            temp.push(l);
+            temp = temp.concat(l);
           }
         });
       });
@@ -29,5 +29,6 @@ export const useFollowed = () => {
     };
     getAllLessons();
   }, [all, user]);
+
   return lessons;
 };

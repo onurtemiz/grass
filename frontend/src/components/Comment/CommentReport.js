@@ -11,12 +11,17 @@ import {
   Divider,
   Loader,
 } from 'semantic-ui-react';
-import { GreenLabel, BlueLabel } from '../Nav/NavTheme';
+import { Label } from '../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import reportsService from '../../services/reports';
 import { useDispatch, useSelector } from 'react-redux';
 
-const CommentReport = ({ comment, setIsReportOpen, isReportOpen }) => {
+const CommentReport = ({
+  comment,
+  setIsReportOpen,
+  isReportOpen,
+  setIsReported,
+}) => {
   const [raporTypes, setRaporTypes] = useState({
     isSpam: false,
     isHate: false,
@@ -26,7 +31,6 @@ const CommentReport = ({ comment, setIsReportOpen, isReportOpen }) => {
     reportedUser: comment.user.username,
     reportedCommentId: comment.id,
     reportedComment: comment.comment,
-
     reportedCommentLikes: comment.likes,
     reportedCommentDate: comment.date,
     teacherId: comment.teacher,
@@ -36,22 +40,27 @@ const CommentReport = ({ comment, setIsReportOpen, isReportOpen }) => {
 
   const handleAction = () => {
     // setIsLoading(true);
-    reportsService.postReport(raporTypes, setIsLoading, setIsReportOpen);
+    reportsService.postReport(
+      raporTypes,
+      setIsLoading,
+      setIsReportOpen,
+      setIsReported
+    );
   };
 
   return (
     <Modal open={isReportOpen}>
       <Modal.Header>
-        <BlueLabel>
-          <GreenLabel> {comment.user.username}</GreenLabel> kullanıcısını
-          raporlayın.
-        </BlueLabel>
+        <Label color="blue">
+          <Label color="green"> {comment.user.username}</Label> kullanıcısını
+          ısırın.
+        </Label>
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>
           <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
             <Header>
-              <GreenLabel>Raporlama Sebebi:</GreenLabel>
+              <Label color="green">Isırma Sebebi:</Label>
             </Header>
             <Checkbox
               label="Spam"
@@ -92,7 +101,7 @@ const CommentReport = ({ comment, setIsReportOpen, isReportOpen }) => {
                 setRaporTypes({ ...raporTypes, extra: e.target.value })
               }
               style={{ width: '30vw', height: '4rem' }}
-              placeholder="İsterseniz raporlama sebebizi yazın."
+              placeholder="İsterseniz ısırma sebebizi yazın."
             />
           </Form>
         </Modal.Description>

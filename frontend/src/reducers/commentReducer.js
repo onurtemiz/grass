@@ -161,7 +161,7 @@ export const addInfCommentAll = (start, count, filter) => {
       total: total.total,
       count: count,
     };
-    if (total.total === 0 || total.total < count + start) {
+    if (total.total === 0 || total.total < start) {
       data.hasMore = false;
       data.start = 0;
     }

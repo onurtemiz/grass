@@ -11,7 +11,7 @@ import {
   Divider,
   Loader,
 } from 'semantic-ui-react';
-import { GreenLabel, BlueLabel } from '../Nav/NavTheme';
+import { Label } from '../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import tipsService from '../../services/tips';
 
@@ -31,17 +31,20 @@ const Tips = () => {
 
   return (
     <>
-      <BlueLabel
+      <Label
+        color="blue"
+        pointer
+        bold
         style={{ position: 'fixed', bottom: '3em', width: '100%' }}
         onClick={() => setIsOpen(true)}
       >
         Sizde tavsiye verin
-      </BlueLabel>
+      </Label>
       <Modal open={isOpen}>
         <Modal.Header>
-          <BlueLabel>
-            Tavsiyeniz <GreenLabel>150</GreenLabel> harften az olmalı.
-          </BlueLabel>
+          <Label color="blue">
+            Tavsiyeniz <Label color="green">150</Label> harften az olmalı.
+          </Label>
         </Modal.Header>
         <Modal.Content>
           <Modal.Description>

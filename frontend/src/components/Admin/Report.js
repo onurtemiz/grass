@@ -7,9 +7,14 @@ import { getCommentById } from '../../reducers/commentReducer';
 const Report = ({ r }) => {
   const [report, setReport] = useState(r);
 
-  const handleApprove = () => {
-    reportsService.approveReport(report.id);
-    setReport({ ...report, isApproved: !report.isApproved });
+  const handleDestroy = () => {
+    reportsService.destroyComment(report.id);
+    setReport({ ...report, isDestroyComment: !report.isDestroycomment });
+  };
+
+  const handleHide = () => {
+    reportsService.hideComment(report.id);
+    setReport({ ...report, isHideComment: !report.isHideComment });
   };
 
   const handleRemove = () => {
@@ -21,7 +26,7 @@ const Report = ({ r }) => {
   }
 
   return (
-    <Card color={report.isApproved ? 'green' : 'red'}>
+    <Card>
       <Card.Content>
         <Card.Header>
           {r.user} VS {r.reportedUser}
@@ -35,16 +40,24 @@ const Report = ({ r }) => {
         <Card.Description>{r.reportedComment}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <div className="ui two buttons">
+        <div className="ui three buttons">
           <Button
             basic
-            color={report.isApproved ? 'red' : 'green'}
-            onClick={() => handleApprove()}
+            size="small"
+            color={report.isDestroyComment ? 'red' : 'green'}
+            onClick={() => handleDestroy()}
           >
-            {report.isApproved ? 'Onay Kaldır' : 'Onayla'}
+            {report.isDestroyComment ? 'Geri Getir' : 'Yorumu Sil'}
+          </Button>
+          <Button
+            basic
+            color={report.isHideComment ? 'red' : 'green'}
+            onClick={() => handleHide()}
+          >
+            {report.isHideComment ? 'Yorumu Görünür Yap' : 'Yorumu Gizle'}
           </Button>
           <Button basic color="red" onClick={() => handleRemove()}>
-            Sil
+            Reportu Sil
           </Button>
         </div>
       </Card.Content>

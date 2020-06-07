@@ -16,8 +16,9 @@ import {
 import { Link, useRouteMatch } from 'react-router-dom';
 import { getLessonById } from '../../reducers/allReducer';
 import { LinearProgress } from '@material-ui/core';
-import { GreenLabel } from '../Nav/NavTheme';
+import { Label } from '../Nav/NavTheme';
 import CommentReport from './CommentReport';
+import HiddenComment from './HiddenComment';
 
 const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const users = useSelector((state) => state.users);
@@ -29,6 +30,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   const [isLessonPresent, setIsLessonPresent] = useState(false);
   const match = useRouteMatch('/users/:username/');
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isReported, setIsReported] = useState(false);
   useEffect(() => {
     comment.likes.includes(user.id) ? setLikeType(true) : setLikeType(false);
   }, []);
@@ -75,6 +77,18 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
     );
   }
   const commentLesson = all.find((l) => l.id === lessonId);
+
+  if (comment.isHidden == true) {
+    return (
+      <HiddenComment
+        comment={comment}
+        commentLesson={commentLesson}
+        showTeacher={showTeacher}
+        getDay={getDay}
+      />
+    );
+  }
+
   return (
     <Segment color="blue">
       <SComment.Group>
@@ -83,6 +97,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
             setIsReportOpen={setIsReportOpen}
             isReportOpen={isReportOpen}
             comment={comment}
+            setIsReported={setIsReported}
           />
           <SComment.Content>
             <SComment.Author>
@@ -96,22 +111,20 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
                   <Link
                     to={LESSON_PATH(commentLesson, commentLesson.teacher.name)}
                   >
-                    <GreenLabel>
+                    <Label color="green" pointer>
                       {commentLesson.fullName.toUpperCase()}
-                    </GreenLabel>
+                    </Label>
                   </Link>
                 ) : null}
               </SComment.Metadata>
             </SComment.Author>
             <SComment.Text>{comment.comment}</SComment.Text>
             <SComment.Actions>
-              <SComment.Action
-                onClick={handleLike}
-                active={likeType}
-                style={{ color: likeType === true ? '#0E6EB8' : '#21bb45' }}
-              >
-                <Icon name="paw" />
-                {likeType === true ? 'Patiledin' : 'Patile'}
+              <SComment.Action onClick={handleLike} active={likeType}>
+                <Icon name="paw" color={likeType ? 'blue' : 'green'} />
+                <Label bold pointer color={likeType ? 'blue' : 'green'}>
+                  {likeType === true ? 'Patiledin' : 'Patile'}
+                </Label>
               </SComment.Action>
               {user.id !== comment.user.id ? (
                 <SComment.Action
@@ -119,26 +132,26 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
                   style={{ color: '#db2828' }}
                 >
                   <Icon name="bug" />
-                  Raporla
+                  <Label bold pointer color="red">
+                    {isReported ? 'Isırdın' : 'Isır'}
+                  </Label>
                 </SComment.Action>
               ) : null}
               {user.id === comment.user.id ? (
-                <SComment.Action
-                  onClick={handleUpdate}
-                  style={{ color: '#21bb45' }}
-                >
-                  <Icon name="edit outline" />
-                  Değiştir
+                <SComment.Action onClick={handleUpdate}>
+                  <Icon name="edit outline" color="green" />
+                  <Label bold pointer color="green">
+                    Düzenle
+                  </Label>
                 </SComment.Action>
               ) : null}
               {user.id === comment.user.id ? (
                 <>
-                  <SComment.Action
-                    onClick={() => setIsRemovePanel(true)}
-                    style={{ color: '#db2828' }}
-                  >
+                  <SComment.Action onClick={() => setIsRemovePanel(true)}>
                     <Icon name="delete" color="red" />
-                    Sil
+                    <Label bold pointer color="red">
+                      Sil
+                    </Label>
                   </SComment.Action>
                   <Confirm
                     open={isRemovePanel}

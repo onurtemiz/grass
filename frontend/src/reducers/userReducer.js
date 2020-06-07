@@ -5,16 +5,20 @@ import userService from '../services/user';
 import { setToken } from '../utils/token';
 const userReducer = (state = null, action) => {
   switch (action.type) {
+    case 'SET_MAIN_USER':
+      return { ...state, ...action.data };
     case 'SET_USER':
       return action.data;
     case 'UPDATE_USER':
+      console.log('state', state);
+      console.log('action.data', action.data);
       const updatedUser = { ...state, ...action.data };
+      console.log('ipdatedState', updatedUser);
+      console.log('state===updatedUser', state === updatedUser);
       return updatedUser;
     case 'FOLLOW_LESSON':
       const followedLessons = [...state.following, action.data];
-
       const followedState = { ...state, following: followedLessons };
-      console.log('followedState===state', followedState === state);
       return followedState;
     case 'UNFOLLOW_LESSON':
       const unfollowed = state.following.filter((id) => id !== action.data);
@@ -57,6 +61,7 @@ export const updateUser = (u, setEdited, setCurrentPasswordError) => {
       setCurrentPasswordError(user.error);
       return;
     }
+    console.log('user', user);
     window.localStorage.setItem('grassUser', JSON.stringify(user));
     setToken(user.token);
 
@@ -98,6 +103,16 @@ export const loginUser = (userInfo, setEmailError) => {
     setToken(user.token);
     dispatch({
       type: 'SET_USER',
+      data: user,
+    });
+  };
+};
+
+export const getPopulatedUser = (username) => {
+  return async (dispatch) => {
+    const user = await userService.getPopulatedUser(username);
+    dispatch({
+      type: 'SET_MAIN_USER',
       data: user,
     });
   };

@@ -9,7 +9,7 @@ import {
 } from 'semantic-ui-react';
 import { HomeSearch, HomeHeader, HomeGrid } from './HomeTheme';
 import Search from '../Search/Search';
-import { GreenLabel, BlueLabel } from '../Nav/NavTheme';
+import { Label } from '../Nav/NavTheme';
 import CommentForm from '../CommentForm/CommentForm';
 import { useLocation } from 'react-router-dom';
 import Tips from './Tips';
@@ -40,9 +40,9 @@ const Home = () => {
             <HomeHeader as="h1">
               <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
             </HomeHeader>
-            <GreenLabel style={{ fontWeight: 'bold' }}>
+            <Label color="green" style={{ fontWeight: 'bold' }}>
               {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor: {tip.tip}
-            </GreenLabel>
+            </Label>
             <br />
             <HomeSearch>
               <Search />

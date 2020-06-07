@@ -88,7 +88,6 @@ commentsRouter.get('/feed/total', async (req, res) => {
   const total = await Comment.find({
     lesson: { $in: user.following },
   }).countDocuments();
-  console.log('total', total);
   res.json({
     total,
   });
@@ -115,6 +114,11 @@ commentsRouter.get('/feed', async (req, res) => {
   }
 
   let comments = await getCommentFeed(q, user);
+  comments.map((c) => {
+    if (c.isHidden == true) {
+      c.comment = 'hidden';
+    }
+  });
   if (q.filter === 'mostPopular') {
     return res.json(comments);
   }
@@ -129,8 +133,11 @@ commentsRouter.get('/', async (req, res) => {
   } else if ('filter' in q) {
     comments = await getCommentFilter(q);
   } else if ('id' in q) {
-    const comment = await Comment.findById(q.id);
+    let comment = await Comment.findById(q.id);
     if (comment) {
+      if (comment.isHidden) {
+        comment.comment = 'hidden';
+      }
       return res.json(comment.toJSON());
     }
     return res.status(400).json({
@@ -139,6 +146,12 @@ commentsRouter.get('/', async (req, res) => {
   } else {
     comments = await Comment.find({});
   }
+  comments.map((c) => {
+    if (c.isHidden == true) {
+      c.comment = 'hidden';
+    }
+  });
+
   if (q.filter === 'mostPopular') {
     return res.json(comments);
   }

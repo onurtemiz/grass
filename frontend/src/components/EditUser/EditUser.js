@@ -19,19 +19,16 @@ import {
   Label,
   Divider,
 } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
-const EditUser = () => {
+import useField from './useField';
+const EditUser = ({ setActiveIndex }) => {
+  const password = useField();
+  const samePassword = useField();
+  const currentPassword = useField();
+  const username = useField();
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [edited, setEdited] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const [usernameError, setUsernameError] = useState(null);
-  const [samePasswordError, setSamePasswordError] = useState(null);
-  const [currentPasswordError, setCurrentPasswordError] = useState(null);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [samePassword, setSamePassword] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
 
   function equalTo(ref, msg) {
     return this.test({
@@ -50,65 +47,51 @@ const EditUser = () => {
   Yup.addMethod(Yup.string, 'equalTo', equalTo);
 
   const validationSchema = Yup.object({
-    username: Yup.string().max(username.length === 0 ? 0 : 15, 'username'),
-    password: Yup.string().min(password.length === 0 ? 0 : 8, 'password'),
+    username: Yup.string().max(
+      username.field.length === 0 ? 0 : 15,
+      'username'
+    ),
+    password: Yup.string().min(password.field.length === 0 ? 0 : 8, 'password'),
     samePassword: Yup.string().equalTo(Yup.ref('password'), 'samePassword'),
     currentPassword: Yup.string().min(8, 'currentPassword'),
   });
-
-  const usernameSet = (value) => {
-    setUsernameError(null);
-    setUsername(value);
-  };
-  const passwordSet = (value) => {
-    setPasswordError(null);
-    setPassword(value);
-  };
-
-  const samePasswordSet = (value) => {
-    setSamePasswordError(null);
-    setSamePassword(value);
-  };
-
-  const currentPasswordSet = (value) => {
-    setCurrentPasswordError(null);
-    setCurrentPassword(value);
-  };
 
   const handleSubmit = async () => {
     validationSchema
       .validate(
         {
-          password,
-          username,
-          samePassword,
-          currentPassword,
+          password: password.field,
+          username: username.field,
+          samePassword: samePassword.field,
+          currentPassword: currentPassword.field,
         },
         { abortEarly: false }
       )
       .then((values) => {
         setEdited('started');
-        dispatch(updateUser(values, setEdited, setCurrentPasswordError));
+        dispatch(updateUser(values, setEdited, currentPassword.setFieldError));
       })
       .catch((e) => {
         e.errors.forEach((q) => {
           switch (q) {
             case 'password':
-              setPasswordError('Şifre en az 8 karakterden oluşmalı');
+              password.setFieldError('Şifre en az 8 karakterden oluşmalı');
               break;
             case 'username':
-              setUsernameError('Kullanıcı adı 15 harf veya daha az olmalı');
+              username.setFieldError(
+                'Kullanıcı adı 15 harf veya daha az olmalı'
+              );
               break;
             case 'samePassword':
-              setSamePasswordError('Şifreler aynı değil');
+              samePassword.setFieldError('Şifreler aynı değil');
               break;
             case 'currentPassword':
-              setCurrentPasswordError(
+              currentPassword.setFieldError(
                 'Şu anki şifreniz 8 karakterden küçük olamaz'
               );
               break;
             default:
-              setCurrentPasswordError(
+              currentPassword.setFieldError(
                 'Şu anki şifreniz 8 karakterden küçük olamaz'
               );
           }
@@ -120,7 +103,7 @@ const EditUser = () => {
   }
 
   if (edited === 'finished') {
-    return <Redirect to="/user" />;
+    setActiveIndex(0);
   }
 
   return (
@@ -159,11 +142,11 @@ const EditUser = () => {
                 iconPosition="left"
                 placeholder="Şu anki şifrenizi girin"
                 type="password"
-                onChange={(e) => currentPasswordSet(e.target.value)}
+                onChange={(e) => currentPassword.fieldSet(e.target.value)}
               />
-              {currentPasswordError && (
+              {currentPassword.fieldError && (
                 <Label basic color="red" pointing="above">
-                  {currentPasswordError}
+                  {currentPassword.fieldError}
                 </Label>
               )}
             </Form.Field>
@@ -174,12 +157,12 @@ const EditUser = () => {
               iconPosition="left"
               type="text"
               placeholder={`Yeni kullanıcı adı (${user.username})`}
-              onChange={(e) => usernameSet(e.target.value)}
+              onChange={(e) => username.fieldSet(e.target.value)}
             />
 
-            {usernameError && (
+            {username.fieldError && (
               <Label basic color="red" pointing="above">
-                {usernameError}
+                {username.fieldError}
               </Label>
             )}
             <Form.Field inline>
@@ -190,11 +173,11 @@ const EditUser = () => {
                 iconPosition="left"
                 placeholder="Yeni şifre"
                 type="password"
-                onChange={(e) => passwordSet(e.target.value)}
+                onChange={(e) => password.fieldSet(e.target.value)}
               />
-              {passwordError && (
+              {password.fieldError && (
                 <Label basic color="red" pointing="above">
-                  {passwordError}
+                  {password.fieldError}
                 </Label>
               )}
             </Form.Field>
@@ -205,11 +188,11 @@ const EditUser = () => {
                 iconPosition="left"
                 placeholder="Yeni şifrenizi tekrar girin"
                 type="password"
-                onChange={(e) => samePasswordSet(e.target.value)}
+                onChange={(e) => samePassword.fieldSet(e.target.value)}
               />
-              {samePasswordError && (
+              {samePassword.fieldError && (
                 <Label basic color="red" pointing="above">
-                  {samePasswordError}
+                  {samePassword.fieldError}
                 </Label>
               )}
             </Form.Field>

@@ -36,7 +36,7 @@ const Comments = ({
     } else if (type === 'feed') {
       dispatch(addInfCommentFeed(0, count, filter));
     }
-  }, []);
+  }, [filter]);
 
   useEffect(() => {
     setCurrentComments(
@@ -104,7 +104,7 @@ const Comments = ({
     return leftovers;
   };
 
-  if (getLeftOverLessons().length !== 0) {
+  if (getLeftOverLessons().length !== 0 || currentComments.length === 0) {
     return <Loading />;
   }
   return (

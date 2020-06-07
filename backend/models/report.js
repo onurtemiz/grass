@@ -48,8 +48,8 @@ const reportSchema = new mongoose.Schema({
     },
   ],
   reportedCommentDate: { type: Date, required: true, default: Date.now },
-  isApproved: { type: Boolean, required: true, default: false },
-
+  isHideComment: { type: Boolean, required: true, default: false },
+  isDestroyComment: { type: Boolean, required: true, default: false },
   isHate: { type: Boolean, required: true, default: false },
   isSpam: { type: Boolean, required: true, default: false },
   isCurse: { type: Boolean, required: true, default: false },

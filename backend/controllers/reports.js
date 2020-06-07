@@ -95,7 +95,7 @@ reportsRouter.get('/all', async (req, res) => {
   res.json(reports.map((t) => t.toJSON()));
 });
 
-reportsRouter.put('/approve', async (req, res) => {
+reportsRouter.put('/hide', async (req, res) => {
   const q = req.query;
   if (!q.id) {
     return res.status(400).json({
@@ -108,7 +108,37 @@ reportsRouter.put('/approve', async (req, res) => {
       error: 'no report',
     });
   }
-  if (report.isApproved == true) {
+  if (report.isHideComment) {
+    await Comment.findByIdAndUpdate(report.reportedCommentId, {
+      isHidden: false,
+    });
+    report.isHideComment = false;
+    await report.save();
+  } else {
+    await Comment.findByIdAndUpdate(report.reportedCommentId, {
+      isHidden: true,
+    });
+    report.isHideComment = true;
+    await report.save();
+  }
+
+  res.status(200).end();
+});
+
+reportsRouter.put('/destroy', async (req, res) => {
+  const q = req.query;
+  if (!q.id) {
+    return res.status(400).json({
+      error: 'no id',
+    });
+  }
+  const report = await Report.findById(q.id);
+  if (!report) {
+    return res.status(400).json({
+      error: 'no report',
+    });
+  }
+  if (report.isDestroyComment == true) {
     const teacher = await Teacher.findById(report.teacherId);
     const lesson = await Lesson.findById(report.lessonId);
     const user = await User.findById(report.reportedUserId);
@@ -148,7 +178,7 @@ reportsRouter.put('/approve', async (req, res) => {
     );
   }
 
-  report.isApproved = !report.isApproved;
+  report.isDestroyComment = !report.isDestroyComment;
   await report.save();
   res.status(200).end();
 });
@@ -160,7 +190,6 @@ reportsRouter.delete('/remove', async (req, res) => {
       error: 'no id',
     });
   }
-
   await Report.findByIdAndDelete(q.id);
   res.status(204).end();
 });

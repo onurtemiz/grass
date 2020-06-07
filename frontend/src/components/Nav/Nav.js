@@ -14,7 +14,7 @@ import {
   Header,
   Tab,
 } from 'semantic-ui-react';
-import { NavSearch, BlueLabel, GreenLabel } from './NavTheme';
+import { NavSearch, Label } from './NavTheme';
 import { useSelector } from 'react-redux';
 import Search from '../Search/Search';
 
@@ -23,7 +23,7 @@ const Nav = ({ search, admin }) => {
   const [active, setActive] = useState('');
   const match = useRouteMatch('/:path');
   const homeMatch = useRouteMatch('/');
-  const userMatch = useRouteMatch(`/users/${user.username}`);
+  const userMatch = useRouteMatch(`/user`);
   const location = useLocation();
 
   useEffect(() => {
@@ -47,10 +47,8 @@ const Nav = ({ search, admin }) => {
     setActive('');
   }, [location]);
 
-
-
   return (
-    <Menu style={{ marginBottom: '0' }} pointing secondary color="blue">
+    <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
       <Menu.Item
         as={Link}
         to="/"
@@ -59,7 +57,12 @@ const Nav = ({ search, admin }) => {
         header
       >
         <label>
-          <BlueLabel>BOUN </BlueLabel> <GreenLabel>ÇİM</GreenLabel>
+          <Label color="blue" pointer>
+            BOUN
+          </Label>{' '}
+          <Label pointer color="green">
+            ÇİM
+          </Label>
         </label>
       </Menu.Item>
       <Menu.Item
@@ -69,8 +72,10 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('feed')}
         header
       >
-        <Icon name="favorite" color="blue" />
-        <BlueLabel>Takip Ettiklerim</BlueLabel>
+        <Icon name="favorite" color={active === 'feed' ? 'green' : 'blue'} />
+        <Label color={active === 'feed' ? 'green' : 'blue'} pointer>
+          Takip Ettiklerim
+        </Label>
       </Menu.Item>
       <Menu.Item
         as={Link}
@@ -79,8 +84,13 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('comments')}
         header
       >
-        <Icon name="comments" color="blue" />
-        <BlueLabel>Tüm Yorumlar</BlueLabel>
+        <Icon
+          name="comments"
+          color={active === 'comments' ? 'green' : 'blue'}
+        />
+        <Label color={active === 'comments' ? 'green' : 'blue'} pointer>
+          Tüm Yorumlar
+        </Label>
       </Menu.Item>
       {admin ? (
         <Menu.Item
@@ -91,7 +101,9 @@ const Nav = ({ search, admin }) => {
           header
         >
           <Icon name="user secret" color="blue" />
-          <BlueLabel>Admin</BlueLabel>
+          <Label color="blue" pointer>
+            Admin
+          </Label>
         </Menu.Item>
       ) : null}
       {search ? (
@@ -103,15 +115,23 @@ const Nav = ({ search, admin }) => {
       ) : null}
 
       <Menu.Menu position="right">
+        <Menu.Item>
+          <Icon name="bell" color="blue" />{' '}
+          <Label color="blue" pointer bold>
+            Bildirimler
+          </Label>
+        </Menu.Item>
         <Menu.Item
           as={Link}
-          to={`/users/${user.username}`}
+          to={`/user`}
           active={active === 'user'}
           onClick={() => setActive('user')}
           header
         >
-          <Icon name="user" color="blue" />
-          <BlueLabel>Hesabım</BlueLabel>
+          <Icon name="user" color={active === 'user' ? 'green' : 'blue'} />
+          <Label color={active === 'user' ? 'green' : 'blue'} pointer>
+            Hesabım
+          </Label>
         </Menu.Item>
 
         <Logout />

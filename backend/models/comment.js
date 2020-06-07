@@ -27,6 +27,7 @@ const commentSchema = new mongoose.Schema({
     },
   ],
   date: { type: Date, required: true, default: Date.now },
+  isHidden: { type: Boolean, required: true, default: false },
 });
 
 commentSchema.set(uniqueValidator);
@@ -50,6 +51,7 @@ commentSchema.statics.getMostPopularFeed = async function (
         comment: 1,
         likes: 1,
         date: 1,
+        isHidden: 1,
         length: { $size: '$likes' },
       },
     },
@@ -100,6 +102,7 @@ commentSchema.statics.getMostPopularById = async function (
         comment: 1,
         likes: 1,
         date: 1,
+        isHidden: 1,
         length: { $size: '$likes' },
       },
     },
@@ -140,6 +143,7 @@ commentSchema.statics.getMostPopular = async function (
         comment: 1,
         likes: 1,
         date: 1,
+        isHidden: 1,
         length: { $size: '$likes' },
       },
     },

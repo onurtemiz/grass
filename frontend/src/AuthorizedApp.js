@@ -19,6 +19,7 @@ import Admin from './components/Admin/Admin';
 import useAdmin from './components/Admin/useAdmin';
 import ControlTips from './components/Admin/ControlTips';
 import ControlReports from './components/Admin/ControlReports';
+import MainUser from './components/User/MainUser';
 const DefaultContainer = () => {
   return (
     <div>
@@ -43,12 +44,15 @@ const DefaultContainer = () => {
         </Route>
         <Route path="/contribution">
           <Contribution />
+          <Route path="/user/edit">
+            <EditUser />
+          </Route>
+          <Route path="/user/following">
+            <Following />
+          </Route>
         </Route>
-        <Route path="/user/edit">
-          <EditUser />
-        </Route>
-        <Route path="/user/following">
-          <Following />
+        <Route path="/user">
+          <MainUser />
         </Route>
         <Route path="/users/:username">
           <User />

@@ -13,12 +13,25 @@ export const NavSearch = styled.div`
   }
 `;
 
-export const BlueLabel = styled.label`
-  color: #2185d0;
-  cursor: pointer;
+export const Label = styled.label`
+  color: ${(props) =>
+    props.color === 'green'
+      ? '#21ba45'
+      : props.color === 'blue'
+      ? '#2185d0'
+      : props.color === 'red'
+      ? '#db2828'
+      : '#333'};
+  cursor: ${(props) => (props.pointer ? 'pointer' : 'auto')};
+  font-weight: ${(props) => (props.bold ? 'bold' : 'auto')};
 `;
 
 export const GreenLabel = styled.label`
+  color: #21ba45;
+  cursor: pointer;
+`;
+
+export const BlueLabel = styled.label`
   color: #21ba45;
   cursor: pointer;
 `;

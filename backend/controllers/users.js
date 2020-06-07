@@ -91,7 +91,7 @@ usersRouter.put('/', async (req, res) => {
       error: 'new password or username must be present',
     });
   }
-  const user = await User.findById(decodedToken.id);
+  let user = await User.findById(decodedToken.id);
   const isPassSame = await bcrypt.compare(
     body.currentPassword,
     user.passwordHash
@@ -124,6 +124,7 @@ usersRouter.put('/', async (req, res) => {
       passwordHash: passwordHash,
     });
   }
+  user = await User.findById(decodedToken.id);
 
   const userForToken = {
     email: user.email,

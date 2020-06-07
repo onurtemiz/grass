@@ -11,8 +11,12 @@ const getAllReports = async () => {
   return req.data;
 };
 
-const approveReport = async (id) => {
-  await axios.put(`${baseUrl}/approve?id=${id}`, null, config);
+const destroyComment = async (id) => {
+  await axios.put(`${baseUrl}/destroy?id=${id}`, null, config);
+};
+
+const hideComment = async (id) => {
+  await axios.put(`${baseUrl}/hide?id=${id}`, null, config);
 };
 
 const deleteReport = async (id) => {
@@ -20,16 +24,18 @@ const deleteReport = async (id) => {
   return res.data;
 };
 
-const postReport = async (report, setIsLoading, setIsOpen) => {
+const postReport = async (report, setIsLoading, setIsOpen, setIsReported) => {
   const req = await axios.post(`${baseUrl}`, report, config);
   setIsLoading(false);
   setIsOpen(false);
+  setIsReported(true);
   return req.data;
 };
 
 export default {
   getAllReports,
   deleteReport,
-  approveReport,
+  destroyComment,
   postReport,
+  hideComment,
 };

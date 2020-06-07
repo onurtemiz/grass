@@ -4,6 +4,7 @@ const Teacher = require('../models/teacher');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 const jwt = require('jsonwebtoken');
+const Connect = require('../models/connect');
 
 const getCommentFilter = async (q) => {
   let comments;
@@ -261,6 +262,12 @@ commentsRouter.put('/:id', async (req, res) => {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
     } else {
       comment.likes = comment.likes.concat(user._id);
+      const connections = await Connect.find({ userId: comment.user });
+      connections.map((c) => {
+        req.io
+          .to(c.socketId)
+          .emit('likedUser', `${user.username} yorumunu beğendi.`);
+      });
     }
   }
   await comment.save();

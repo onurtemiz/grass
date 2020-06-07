@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from './components/Footer/Footer';
 import Nav from './components/Nav/Nav';
 import Lesson from './components/Lesson/Lesson';
@@ -20,9 +20,38 @@ import useAdmin from './components/Admin/useAdmin';
 import ControlTips from './components/Admin/ControlTips';
 import ControlReports from './components/Admin/ControlReports';
 import MainUser from './components/User/MainUser';
+import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const DefaultContainer = () => {
+  const user = useSelector((state) => state.user);
+  const notify = (msg) => toast.success(`${msg}`);
+  useEffect(() => {
+    const socket = io.connect('http://localhost:3001');
+    console.log('hessy');
+    socket.on('connect', () => {
+      socket.emit('connected', user.id);
+    });
+    socket.on('likedUser', (msg) => {
+      console.log('msg', msg);
+      notify(msg);
+    });
+  }, []);
+
   return (
     <div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Switch>
         <Route path="/teachers/:name">
           <Teacher />

@@ -15,6 +15,7 @@ const reportsRouter = require('./controllers/reports');
 const tipsRouter = require('./controllers/tips');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
+const Connect = require('./models/connect');
 
 const mongoUri = async () => {
   let mongoUri;
@@ -42,6 +43,33 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());
 app.use(middleware.tokenExtractor);
+
+var io = require('socket.io').listen(app.listen(3001));
+
+io.on('connection', (socket) => {
+  socket.on('connected', async (userId) => {
+    await Connect.findOneAndRemove({ userId: userId });
+    const c = new Connect({
+      socketId: socket.id,
+      userId: userId,
+    });
+    c.save();
+  });
+
+  socket.on('likedUser', (msg) => {
+    console.log('msg', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('het');
+    Connect.findOneAndRemove({ socketId: socket.id });
+  });
+});
+
+app.use(function (req, res, next) {
+  req.io = io;
+  next();
+});
 
 app.use('/api/all', allRouter);
 app.use('/api/teachers', teachersRouter);

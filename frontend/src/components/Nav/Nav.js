@@ -26,6 +26,8 @@ const Nav = ({ search, admin }) => {
   const userMatch = useRouteMatch(`/user`);
   const location = useLocation();
 
+ 
+
   useEffect(() => {
     if (match) {
       if (match.params.path === 'feed') {
@@ -48,6 +50,7 @@ const Nav = ({ search, admin }) => {
   }, [location]);
 
   return (
+    
     <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
       <Menu.Item
         as={Link}

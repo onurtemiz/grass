@@ -28,7 +28,10 @@ const DefaultContainer = () => {
   const user = useSelector((state) => state.user);
   const notify = (msg) => toast.success(`${msg}`);
   useEffect(() => {
-    const socket = io.connect('http://localhost:3001');
+    const socket =
+      !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+        ? io.connect('http://localhost:3001')
+        : io();
     console.log('hessy');
     socket.on('connect', () => {
       socket.emit('connected', user.id);

@@ -1,8 +1,8 @@
 const app = require('./app');
 const http = require('http');
 const config = require('./utils/config');
-// const server = http.createServer(app);
-// const socketio = require('socket.io');
+// const server = http.createServer(app.app);
+// app.io.listen(server);
 
 // const PORT = config.PORT || 3001;
 // server.listen(PORT, () => {

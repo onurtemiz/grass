@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 app.use(middleware.tokenExtractor);
 
-var io = require('socket.io').listen(app.listen(3001));
+var io = require('socket.io').listen(app.listen(config.PORT || 3001));
 
 io.on('connection', (socket) => {
   socket.on('connected', async (userId) => {
@@ -85,4 +85,4 @@ app.get('/*', (req, res) => {
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-module.exports = app;
+module.exports = { app, io };

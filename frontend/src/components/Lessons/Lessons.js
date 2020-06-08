@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfLesson } from '../../reducers/lessonReducer';
-import SubLesson from './SubLesson';
-const Lessons = () => {
+import SubLesson from '../Teachers/SubLesson';
+const Lessons = ({ main }) => {
   const count = useSelector((state) => state.lessons.count);
   const start = useSelector((state) => state.lessons.start);
   const hasMore = useSelector((state) => state.lessons.hasMore);
@@ -41,7 +41,7 @@ const Lessons = () => {
             l.fullName.toUpperCase().includes(filter.toUpperCase())
           )
           .map((l) => (
-            <SubLesson key={l.id} lesson={l} />
+            <SubLesson key={l.id} lesson={l} main={main} />
           ))}
       </InfiniteScroll>
     </div>

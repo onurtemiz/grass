@@ -26,8 +26,8 @@ teacherSchema.statics.getFilteredInf = function (search, start, total) {
   })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('teacher')
-    .populate('comments');
+    .populate('lessons')
+    .populate('comment');
 };
 
 teacherSchema.set('toJSON', {

@@ -10,14 +10,7 @@ import Comment from '../Comment/Comment';
 import { Placeholder } from 'semantic-ui-react';
 import { getLessonById } from '../../reducers/allReducer';
 
-const Comments = ({
-  type,
-  typeId,
-  height,
-  showTeacher,
-  lessonId,
-  skeletonLength,
-}) => {
+const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
@@ -52,6 +45,8 @@ const Comments = ({
             return true;
           } else if (type === 'feed') {
             return user.following.includes(c.lesson);
+          } else if (type === 'club') {
+            return c.club === typeId;
           }
         })
         .sort((a, b) => {
@@ -103,15 +98,18 @@ const Comments = ({
     );
     return leftovers;
   };
-
-  if (getLeftOverLessons().length !== 0 || currentComments.length === 0) {
+  if (
+    (commentType === 'lesson' || commentType === 'mix') &&
+    getLeftOverLessons().length !== 0
+  ) {
     return <Loading />;
   }
+
   return (
     <div
       style={{
         height: height ? height : '50vh',
-        width: '100vw',
+        // width: '100vw',
         // overflow: 'auto',
       }}
     >
@@ -127,7 +125,8 @@ const Comments = ({
             key={c.id}
             comment={c}
             showTeacher={showTeacher}
-            lessonId={c.lesson}
+            typeId={c.commentType === 'lesson' ? c.lesson : c.club}
+            commentType={c.commentType}
           />
         ))}
       </InfiniteScroll>

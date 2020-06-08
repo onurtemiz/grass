@@ -39,7 +39,12 @@ const User = () => {
         </>
       ) : null}
 
-      <Comments type="user" typeId={user.id} showTeacher={true} />
+      <Comments
+        type="user"
+        typeId={user.id}
+        showTeacher={true}
+        commentType="mix"
+      />
     </div>
   );
 };

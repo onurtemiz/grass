@@ -11,6 +11,13 @@ tipsRouter.all('*', async (req, res, next) => {
       error: 'token missing or invalid',
     });
   }
+  const user = await User.findById(decodedToken.id);
+
+  if (user == undefined) {
+    return res.status(401).json({
+      error: 'user not found',
+    });
+  }
 
   req.user = decodedToken.id;
 

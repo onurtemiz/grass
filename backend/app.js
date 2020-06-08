@@ -16,7 +16,7 @@ const tipsRouter = require('./controllers/tips');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
 const Connect = require('./models/connect');
-
+const clubsRouter = require('./controllers/clubs');
 const mongoUri = async () => {
   let mongoUri;
   if (process.env.NODE_ENV === 'test') {
@@ -70,7 +70,7 @@ app.use(function (req, res, next) {
   req.io = io;
   next();
 });
-
+app.use('/api/clubs', clubsRouter);
 app.use('/api/all', allRouter);
 app.use('/api/teachers', teachersRouter);
 app.use('/api/lessons', lessonsRouter);

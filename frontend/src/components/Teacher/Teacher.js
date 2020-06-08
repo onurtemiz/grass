@@ -9,7 +9,6 @@ import { LinearProgress } from '@material-ui/core';
 import {
   Icon,
   Button,
-  Label,
   Divider,
   Header,
   Container,
@@ -18,6 +17,7 @@ import {
 import CommentSort from '../CommentSort/CommentSort';
 import Follow from '../Follow/Follow';
 import commentsService from '../../services/comments';
+import { Label } from '../Nav/NavTheme';
 
 const Teacher = () => {
   const dispatch = useDispatch();
@@ -35,29 +35,27 @@ const Teacher = () => {
 
   return (
     <div>
-      <Header color="blue" size="huge">
-        <Icon name="student" />
+      <Label color="green" bold style={{ fontSize: '2em' }}>
         {teacher.name}
-      </Header>
+      </Label>
+
       {
-        <ul style={{ listStyle: 'none' }}>
+        <ul style={{ listStyle: 'none', fontSize: '1.5em', paddingLeft: '0' }}>
           {teacher.lessons.map((l) => (
-            <li key={l.id} style={{ padding: '0.5em' }}>
-              <Header size="huge" color="green">
+            <li key={l.id} style={{ paddingTop: '0.5em' }}>
+              <Label color="blue" bold>
                 <Link to={LESSON_PATH(l, teacher.name)}>
-                  <Icon name="book" />
                   {l.fullName.toUpperCase()}
-                </Link>
-                <Follow idToFollow={l.id} user={user} />
-              </Header>
+                </Link>{' '}
+                · <Follow idToFollow={l.id} user={user} />
+              </Label>
             </li>
           ))}
         </ul>
       }
 
-      <h2>Comments</h2>
       <CommentSort />
-      <Comments typeId={teacher.id} type="teacher" showTeacher={true} />
+      <Comments typeId={teacher.id} type="teacher" showTeacher={true} commentType='lesson' />
     </div>
   );
 };

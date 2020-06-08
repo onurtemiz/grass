@@ -76,7 +76,7 @@ reportsRouter.post('/', async (req, res) => {
   res.status(201).end();
 });
 
-reportsRouter.all('/admin/*', async (req, res, next) => {
+reportsRouter.all('*', async (req, res, next) => {
   const user = await User.findById(req.user);
   if (
     !user ||

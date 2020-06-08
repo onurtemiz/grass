@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Label } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { followLesson, unfollowLesson } from '../../reducers/userReducer';
+import { Label } from '../Nav/NavTheme';
+import { Icon } from 'semantic-ui-react';
 const Follow = ({ user, idToFollow }) => {
   const [following, setFollowing] = useState(false);
   const dispatch = useDispatch();
@@ -22,9 +23,20 @@ const Follow = ({ user, idToFollow }) => {
     }
   };
   return (
-    <Label onClick={() => handleFollow()} as="a">
-      {following ? 'Takibi Bırak' : 'Takip Et'}
-    </Label>
+    <>
+      <Icon name="podcast" color={following ? 'green' : 'blue'} />
+
+      <Label
+        color={following ? 'green' : 'blue'}
+        bold
+        pointer
+        style={{ boder: '1px solid green' }}
+      >
+        <span onClick={() => handleFollow()}>
+          {following ? 'Takibi Bırak' : 'Takip Et'}
+        </span>
+      </Label>
+    </>
   );
 };
 export default Follow;

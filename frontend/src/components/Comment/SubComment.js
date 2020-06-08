@@ -20,7 +20,13 @@ import { Label } from '../Nav/NavTheme';
 import CommentReport from './CommentReport';
 import HiddenComment from './HiddenComment';
 
-const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
+const Comment = ({
+  comment,
+  setIsUpdate,
+  showTeacher,
+  typeId,
+  commentType,
+}) => {
   const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.user);
   const all = useSelector((state) => state.all.all);
@@ -40,7 +46,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   };
 
   const getLesson = () => {
-    return all.find((l) => l.id === lessonId);
+    return all.find((l) => l.id === typeId);
   };
 
   const handleRemove = () => {
@@ -57,12 +63,12 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
   };
 
   useEffect(() => {
-    if (!getLesson()) {
-      dispatch(getLessonById(lessonId));
+    if (commentType === 'lesson' && !getLesson()) {
+      dispatch(getLessonById(typeId));
     }
   }, []);
 
-  if (!getLesson()) {
+  if (commentType === 'lesson' && !getLesson()) {
     return (
       <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }}>
         <Placeholder.Paragraph>
@@ -76,7 +82,7 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
       </Placeholder>
     );
   }
-  const commentLesson = all.find((l) => l.id === lessonId);
+  const commentLesson = all.find((l) => l.id === typeId);
 
   if (comment.isHidden == true) {
     return (
@@ -100,24 +106,14 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
             setIsReported={setIsReported}
           />
           <SComment.Content>
-            <SComment.Author>
-              <Link to={`/users/${comment.user.username}`}>
-                {comment.user.username}
-              </Link>
-              <SComment.Metadata>
-                {comment.likes.length} Pati · {getDay(new Date(comment.date))}
-                {!!showTeacher ? ' · ' : null}
-                {!!showTeacher ? (
-                  <Link
-                    to={LESSON_PATH(commentLesson, commentLesson.teacher.name)}
-                  >
-                    <Label color="green" pointer>
-                      {commentLesson.fullName.toUpperCase()}
-                    </Label>
-                  </Link>
-                ) : null}
-              </SComment.Metadata>
-            </SComment.Author>
+            {commentType === 'lesson' ? (
+              <LessonType
+                comment={comment}
+                commentLesson={commentLesson}
+                showTeacher={showTeacher}
+              />
+            ) : null}
+
             <SComment.Text>{comment.comment}</SComment.Text>
             <SComment.Actions>
               <SComment.Action onClick={handleLike} active={likeType}>
@@ -170,6 +166,27 @@ const Comment = ({ comment, setIsUpdate, showTeacher, lessonId }) => {
         {/* <Divider /> */}
       </SComment.Group>
     </Segment>
+  );
+};
+
+const LessonType = ({ comment, commentLesson, showTeacher }) => {
+  return (
+    <SComment.Author>
+      <Link to={`/users/${comment.user.username}`}>
+        {comment.user.username}
+      </Link>
+      <SComment.Metadata>
+        {comment.likes.length} Pati · {getDay(new Date(comment.date))}
+        {!!showTeacher ? ' · ' : null}
+        {!!showTeacher ? (
+          <Link to={LESSON_PATH(commentLesson, commentLesson.teacher.name)}>
+            <Label color="green" pointer>
+              {commentLesson.fullName.toUpperCase()}
+            </Label>
+          </Link>
+        ) : null}
+      </SComment.Metadata>
+    </SComment.Author>
   );
 };
 

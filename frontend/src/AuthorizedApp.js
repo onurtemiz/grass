@@ -24,6 +24,8 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MainComponent from './components/MainComponent/MainComponent';
+import AddClub from './components/Admin/AddClub';
 const DefaultContainer = () => {
   const user = useSelector((state) => state.user);
   const notify = (msg) => toast.success(`${msg}`);
@@ -56,18 +58,20 @@ const DefaultContainer = () => {
         pauseOnHover
       />
       <Switch>
+        <Route path="/control" component={MainComponent} />
+
         <Route path="/teachers/:name">
-          <Teacher />
+          <MainComponent />
         </Route>
-        {/* <Route path="/teachers">
-          <Teachers />
-        </Route> */}
+        <Route path="/teachers">
+          <MainComponent />
+        </Route>
         <Route path="/lessons/:areaCode/:digitCode/:teacherName">
-          <Lesson />
+          <MainComponent />
         </Route>
-        {/* <Route path="/lessons">
-          <Lessons />
-        </Route> */}
+        <Route path="/lessons">
+          <MainComponent />
+        </Route>
         <Route path="/feed">
           <Feed />
         </Route>
@@ -106,7 +110,7 @@ const AuthorizedUser = () => {
           <Home />
         </Route>
         <Route>
-          <Nav search />
+          <Nav />
           <DefaultContainer />
         </Route>
       </Switch>
@@ -124,13 +128,16 @@ const AuthorizedAdmin = () => {
         </Route>
 
         <Route>
-          <Nav search admin />
+          <Nav admin />
 
           <Route path="/admin/tips">
             <ControlTips />
           </Route>
           <Route path="/admin/reports">
             <ControlReports />
+          </Route>
+          <Route path="/admin/clubs/add">
+            <AddClub />
           </Route>
           <Route exact path="/admin">
             <Admin />

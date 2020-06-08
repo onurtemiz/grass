@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedUser } from '../../reducers/userReducer';
@@ -15,6 +16,16 @@ const User = () => {
   useEffect(() => {
     dispatch(getPopulatedUser(user.username));
   }, []);
+
+  useEffect(() => {
+    if (activeIndex === 0) {
+      history.pushState(null, 'Hesabım - BOUN ÇIM', '/user');
+    } else if (activeIndex === 1) {
+      history.pushState(null, 'Takip Ettiklerim - BOUN ÇIM', '/user/follows');
+    } else if (activeIndex === 2) {
+      history.pushState(null, 'Hesabımı Düzenle - BOUN ÇIM', '/user/edit');
+    }
+  }, [activeIndex]);
 
   if (typeof user.comments == 'undefined') {
     return null;

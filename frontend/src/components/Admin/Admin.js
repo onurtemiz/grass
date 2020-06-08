@@ -18,6 +18,12 @@ const Admin = () => {
           REPORTS
         </Label>
       </Header>
+      <br />
+      <Header as={Link} to="admin/clubs/add">
+        <Label color="blue" pointer>
+          CLUB ADD
+        </Label>
+      </Header>
     </div>
   );
 };

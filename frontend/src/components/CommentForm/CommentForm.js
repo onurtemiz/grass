@@ -6,12 +6,12 @@ import { Form, Button, Loader, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 
 const CommentForm = ({
-  lessonId,
+  typeId,
   teacherId,
   comment,
   setIsUpdate,
   isUpdate,
-  enqueueSnackbar,
+  commentType,
 }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
@@ -41,11 +41,23 @@ const CommentForm = ({
       setCommentError('4000 harften çok olamaz.');
       return;
     }
-    const values = {
-      comment: value,
-      lessonId,
-      teacherId,
-    };
+    let values;
+    console.log('commentType', commentType);
+    if (commentType === 'lesson') {
+      values = {
+        comment: value,
+        lessonId: typeId,
+        teacherId,
+        commentType,
+      };
+    } else if (commentType === 'club') {
+      values = {
+        comment: value,
+        clubId: typeId,
+        commentType,
+      };
+    }
+
     setIsLoading(true);
     if (comment) {
       dispatch(

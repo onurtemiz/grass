@@ -5,7 +5,7 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 const jwt = require('jsonwebtoken');
 const Connect = require('../models/connect');
-
+const Club = require('../models/club');
 const getCommentFilter = async (q) => {
   let comments;
   if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
@@ -167,64 +167,117 @@ commentsRouter.post('/', async (req, res) => {
     return res.status(400).json({
       error: 'Comment must be present',
     });
-  } else if (!body.teacherId) {
-    return res.status(400).json({
-      error: 'TeacherId must be present',
-    });
-  } else if (!body.lessonId) {
-    return res.status(400).json({
-      error: 'LessonId must be present',
-    });
   } else if (!req.token || !decodedToken.id) {
     return res.status(401).json({
       error: 'token missing or invalid',
     });
+  } else if (
+    !body.commentType ||
+    (body.commentType !== 'lesson' && body.commentType !== 'club')
+  ) {
+    return res.status(401).json({
+      error: 'need valid commentType',
+    });
   }
-  const teacher = await Teacher.findById(body.teacherId);
-  const lesson = await Lesson.findById(body.lessonId);
+
+  if (body.commentType === 'lesson') {
+    if (!body.teacherId) {
+      return res.status(400).json({
+        error: 'TeacherId must be present',
+      });
+    } else if (!body.lessonId) {
+      return res.status(400).json({
+        error: 'LessonId must be present',
+      });
+    }
+  } else if (body.commentType === 'club') {
+    if (!body.clubId) {
+      return res.status(400).json({
+        error: 'clubId must be present',
+      });
+    }
+  }
   const user = await User.findById(decodedToken.id);
-  const isTeacherRight = lesson.teacher.equals(teacher._id);
+  let comment;
+  if (body.commentType === 'lesson') {
+    const teacher = await Teacher.findById(body.teacherId);
+    const lesson = await Lesson.findById(body.lessonId);
+    const isTeacherRight = lesson.teacher.equals(teacher._id);
 
-  if (!teacher || !lesson || !user) {
-    return res.status(400).json({
-      error: 'Could not find the teacher,lesson,user',
+    if (!teacher || !lesson || !user) {
+      return res.status(400).json({
+        error: 'Could not find the teacher,lesson,user',
+      });
+    }
+    // ONLY ONE COMMENT PER LESSON
+    // const isDuplicate = await Comment.findOne({
+    //   teacher: body.teacherId,
+    //   lesson: body.lessonId,
+    //   user: user._id,
+    // });
+    // if (isDuplicate !== null) {
+    //   return res.status(400).json({
+    //     error: 'you have already commented',
+    //   });
+    // }
+    if (!isTeacherRight) {
+      return res.status(400).json({
+        error: 'teacher and lesson dont match.',
+      });
+    }
+
+    comment = new Comment({
+      teacher: body.teacherId,
+      lesson: body.lessonId,
+      user: user._id,
+      comment: body.comment,
+      date: new Date(),
+      likes: [user._id],
+      commentType: 'lesson',
     });
-  }
-  // ONLY ONE COMMENT PER LESSON
-  // const isDuplicate = await Comment.findOne({
-  //   teacher: body.teacherId,
-  //   lesson: body.lessonId,
-  //   user: user._id,
-  // });
-  // if (isDuplicate !== null) {
-  //   return res.status(400).json({
-  //     error: 'you have already commented',
-  //   });
-  // }
-  if (!isTeacherRight) {
-    return res.status(400).json({
-      error: 'teacher and lesson dont match.',
+    await comment.save();
+    user.comments = user.comments.concat(comment._id);
+    teacher.comments = teacher.comments.concat(comment._id);
+    lesson.comments = lesson.comments.concat(comment._id);
+    await user.save();
+    await teacher.save();
+    await lesson.save();
+  } else if (body.commentType === 'club') {
+    const club = await Club.findById(body.clubId);
+
+    if (!club || !user) {
+      return res.status(400).json({
+        error: 'Could not find the teacher,lesson,user',
+      });
+    }
+    // ONLY ONE COMMENT PER LESSON
+    // const isDuplicate = await Comment.findOne({
+    //   teacher: body.teacherId,
+    //   lesson: body.lessonId,
+    //   user: user._id,
+    // });
+    // if (isDuplicate !== null) {
+    //   return res.status(400).json({
+    //     error: 'you have already commented',
+    //   });
+    // }
+
+    comment = new Comment({
+      club: body.clubId,
+      user: user._id,
+      comment: body.comment,
+      date: new Date(),
+      likes: [user._id],
+      commentType: 'club',
     });
+    await comment.save();
+    user.comments = user.comments.concat(comment._id);
+    club.comments = club.comments.concat(comment._id);
+    await user.save();
+    await club.save();
   }
 
-  const comment = new Comment({
-    teacher: body.teacherId,
-    lesson: body.lessonId,
-    user: user._id,
-    comment: body.comment,
-    date: new Date(),
-    likes: [user._id],
-  });
-  await comment.save();
-  user.comments = user.comments.concat(comment._id);
-  teacher.comments = teacher.comments.concat(comment._id);
-  lesson.comments = lesson.comments.concat(comment._id);
-  await user.save();
-  await teacher.save();
-  await lesson.save();
   const opts = [{ path: 'user' }];
-  // await person.populate('stories').execPopulate();
-
   Comment.populate(comment, opts, function (err, comment) {
     res.status(201).json(comment.toJSON());
   });
@@ -296,25 +349,34 @@ commentsRouter.delete('/:id', async (req, res) => {
       error: 'you have no right',
     });
   }
-  await Comment.findByIdAndRemove(req.params.id);
 
-  await Teacher.findOneAndUpdate(
-    { comments: { $in: req.params.id } },
-    { $pull: { comments: req.params.id } }
-  );
-  await Lesson.findOneAndUpdate(
-    {
-      comments: { $in: req.params.id },
-    },
-    { $pull: { comments: req.params.id } }
-  );
+  if (comment.commentType === 'lesson') {
+    await Teacher.findOneAndUpdate(
+      { comments: { $in: req.params.id } },
+      { $pull: { comments: req.params.id } }
+    );
+    await Lesson.findOneAndUpdate(
+      {
+        comments: { $in: req.params.id },
+      },
+      { $pull: { comments: req.params.id } }
+    );
+  } else if (comment.commentType === 'club') {
+    await Club.findOneAndUpdate(
+      {
+        comments: { $in: req.params.id },
+      },
+      { $pull: { comments: req.params.id } }
+    );
+  }
+
+  await Comment.findByIdAndRemove(req.params.id);
   await User.findOneAndUpdate(
     {
       comments: { $in: req.params.id },
     },
     { $pull: { comments: req.params.id } }
   );
-
   res.status(204).end();
 });
 

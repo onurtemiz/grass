@@ -26,8 +26,6 @@ const Nav = ({ search, admin }) => {
   const userMatch = useRouteMatch(`/user`);
   const location = useLocation();
 
- 
-
   useEffect(() => {
     if (match) {
       if (match.params.path === 'feed') {
@@ -37,6 +35,15 @@ const Nav = ({ search, admin }) => {
         setActive('comments');
         return;
       }
+    }
+    if (
+      location.pathname.includes('control') ||
+      location.pathname.includes('users') ||
+      location.pathname.includes('lessons') ||
+      location.pathname.includes('teachers')
+    ) {
+      setActive('control');
+      return;
     }
     if (userMatch && userMatch.isExact) {
       setActive('user');
@@ -50,7 +57,6 @@ const Nav = ({ search, admin }) => {
   }, [location]);
 
   return (
-    
     <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
       <Menu.Item
         as={Link}
@@ -70,14 +76,26 @@ const Nav = ({ search, admin }) => {
       </Menu.Item>
       <Menu.Item
         as={Link}
+        to={`/control`}
+        active={active === 'control'}
+        onClick={() => setActive('control')}
+        header
+      >
+        <Icon name="eye" color={active === 'control' ? 'green' : 'blue'} />
+        <Label color={active === 'control' ? 'green' : 'blue'} pointer>
+          Manzara
+        </Label>
+      </Menu.Item>
+      <Menu.Item
+        as={Link}
         to={`/feed`}
         active={active === 'feed'}
         onClick={() => setActive('feed')}
         header
       >
-        <Icon name="favorite" color={active === 'feed' ? 'green' : 'blue'} />
+        <Icon name="hockey puck" color={active === 'feed' ? 'green' : 'blue'} />
         <Label color={active === 'feed' ? 'green' : 'blue'} pointer>
-          Takip Ettiklerim
+          Mama Kabım
         </Label>
       </Menu.Item>
       <Menu.Item
@@ -107,13 +125,6 @@ const Nav = ({ search, admin }) => {
           <Label color="blue" pointer>
             Admin
           </Label>
-        </Menu.Item>
-      ) : null}
-      {search ? (
-        <Menu.Item style={{ padding: 0 }}>
-          <NavSearch>
-            <Search size="small" />
-          </NavSearch>
         </Menu.Item>
       ) : null}
 

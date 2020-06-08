@@ -10,6 +10,7 @@ import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
 
 import Follow from '../Follow/Follow';
+import { Label } from '../Nav/NavTheme';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -43,27 +44,33 @@ const Lesson = () => {
 
   return (
     <div>
-      <Header
-        as={Link}
-        to={`/teachers/${lesson.teacher.name}`}
-        color="blue"
-        size="huge"
-      >
-        <Icon name="student" />
-        {lesson.teacher.name}
-      </Header>
-      <Header size="huge" color="green">
-        <Icon name="book" />
-        {lesson.fullName.toUpperCase()}
+      <div style={{ fontSize: '2em' }}>
+        <Label color="blue" bold>
+          {lesson.fullName.toUpperCase()} ·
+        </Label>
+
+        <Link to={`/teachers/${lesson.teacher.name}`}>
+          <Label color="green" bold>
+            {' '}
+            {lesson.teacher.name}
+          </Label>{' '}
+          <Label color="blue" bold>
+            {' '}
+            ·{' '}
+          </Label>
+        </Link>
         <Follow idToFollow={lesson.id} user={user} />
-      </Header>
-      <Header as="h1" color="green">
-        Yorumlar
-      </Header>
+      </div>
+      <br />
+      <CommentForm
+        typeId={lesson.id}
+        teacherId={lesson.teacher.id}
+        commentType="lesson"
+      />
+
       <Divider />
-      <CommentForm lessonId={lesson.id} teacherId={lesson.teacher.id} />
       <CommentSort />
-      <Comments typeId={lesson.id} type="lesson" />
+      <Comments typeId={lesson.id} type="lesson" commentType="lesson" />
     </div>
   );
 };

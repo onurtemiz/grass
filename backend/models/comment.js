@@ -6,17 +6,19 @@ const commentSchema = new mongoose.Schema({
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
-    required: true,
   },
   lesson: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Lesson',
-    required: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  club: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Club',
   },
   comment: { type: String, required: true, maxlength: 4000 },
   likes: [
@@ -28,6 +30,7 @@ const commentSchema = new mongoose.Schema({
   ],
   date: { type: Date, required: true, default: Date.now },
   isHidden: { type: Boolean, required: true, default: false },
+  commentType: { type: String, required: true },
 });
 
 commentSchema.set(uniqueValidator);
@@ -53,6 +56,8 @@ commentSchema.statics.getMostPopularFeed = async function (
         date: 1,
         isHidden: 1,
         length: { $size: '$likes' },
+        commentType: 1,
+        club: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -91,6 +96,7 @@ commentSchema.statics.getMostPopularById = async function (
           { teacher: new mongoose.Types.ObjectId(id) },
           { lesson: new mongoose.Types.ObjectId(id) },
           { user: new mongoose.Types.ObjectId(id) },
+          { club: new mongoose.Types.ObjectId(id) },
         ],
       },
     },
@@ -104,6 +110,8 @@ commentSchema.statics.getMostPopularById = async function (
         date: 1,
         isHidden: 1,
         length: { $size: '$likes' },
+        commentType: 1,
+        club: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -145,6 +153,8 @@ commentSchema.statics.getMostPopular = async function (
         date: 1,
         isHidden: 1,
         length: { $size: '$likes' },
+        commentType: 1,
+        club: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -205,7 +215,7 @@ commentSchema.statics.getRecentPastById = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
-    $or: [{ teacher: id }, { lesson: id }, { user: id }],
+    $or: [{ teacher: id }, { lesson: id }, { user: id }, { club: id }],
   })
     .sort({ _id: sort })
     .skip(Number(start))

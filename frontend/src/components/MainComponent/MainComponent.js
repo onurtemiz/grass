@@ -12,6 +12,8 @@ import Teachers from '../Teachers/Teachers';
 import Teacher from '../Teacher/Teacher';
 import Lesson from '../Lesson/Lesson';
 import Lessons from '../Lessons/Lessons';
+import Clubs from '../Clubs/Clubs';
+import Club from '../Club/Club';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ const MainComponent = () => {
   const lessonPageMatch = useRouteMatch(
     '/lessons/:areaCode/:digitCode/:teacherName'
   );
+  const clubPageMatch = useRouteMatch('/clubs/:name');
   const history = useHistory();
   const location = useLocation();
 
@@ -28,6 +31,8 @@ const MainComponent = () => {
       setActiveIndex(0);
     } else if (location.pathname.includes('lessons')) {
       setActiveIndex(1);
+    } else if (location.pathname.includes('clubs')) {
+      setActiveIndex(2);
     }
   }, [location]);
 
@@ -41,6 +46,8 @@ const MainComponent = () => {
       history.push('/teachers');
     } else if (data.activeIndex === 1) {
       history.push('/lessons');
+    } else if (data.activeIndex === 2) {
+      history.push('/clubs');
     }
   };
 
@@ -97,9 +104,9 @@ const MainComponent = () => {
         color: 'green',
       },
       render: () => (
-        <Tab.Pane>
-          <EditUser setActiveIndex={setActiveIndex} />
-        </Tab.Pane>
+        <Segment basic={clubPageMatch && clubPageMatch.isExact ? true : false}>
+          {clubPageMatch && clubPageMatch.isExact ? <Club /> : <Clubs main />}
+        </Segment>
       ),
     },
     {

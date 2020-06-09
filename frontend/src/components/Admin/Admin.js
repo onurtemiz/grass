@@ -19,7 +19,7 @@ const Admin = () => {
         </Label>
       </Header>
       <br />
-      <Header as={Link} to="admin/clubs/add">
+      <Header as={Link} to="admin/clubs">
         <Label color="blue" pointer>
           CLUB ADD
         </Label>

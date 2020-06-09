@@ -25,7 +25,7 @@ import io from 'socket.io-client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MainComponent from './components/MainComponent/MainComponent';
-import AddClub from './components/Admin/AddClub';
+import ControlClub from './components/Admin/ControlClub';
 const DefaultContainer = () => {
   const user = useSelector((state) => state.user);
   const notify = (msg) => toast.success(`${msg}`);
@@ -59,7 +59,8 @@ const DefaultContainer = () => {
       />
       <Switch>
         <Route path="/control" component={MainComponent} />
-
+        <Route path="/clubs/:name" component={MainComponent} />
+        <Route path="/clubs" component={MainComponent} />
         <Route path="/teachers/:name">
           <MainComponent />
         </Route>
@@ -136,8 +137,8 @@ const AuthorizedAdmin = () => {
           <Route path="/admin/reports">
             <ControlReports />
           </Route>
-          <Route path="/admin/clubs/add">
-            <AddClub />
+          <Route path="/admin/clubs">
+            <ControlClub />
           </Route>
           <Route exact path="/admin">
             <Admin />

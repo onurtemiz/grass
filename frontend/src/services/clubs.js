@@ -6,30 +6,40 @@ const baseUrl =
     ? 'http://localhost:3001/api/clubs'
     : '/api/clubs';
 
-const getClub = async () => {
-  const req = await axios.get(`${baseUrl}`, config);
+const getTotal = async (filter) => {
+  const req = await axios.get(`${baseUrl}/total?search=${filter}`, config);
   return req.data;
 };
 
-const getAllClubs = async () => {
-  const req = await axios.get(`${baseUrl}/all`, config);
+const getClubPageByName = async (shortName) => {
+  const req = await axios.get(`${baseUrl}/${shortName}`, config);
   return req.data;
 };
 
-const deleteClub = async (id) => {
-  const res = await axios.delete(`${baseUrl}/remove?id=${id}`, config);
-  return res.data;
+const addInf = async (start, count, filter) => {
+  const req = await axios.get(
+    `${baseUrl}?start=${start}&total=${count}&search=${filter}`,
+    config
+  );
+  return req.data;
 };
 
-const postClub = async (values, setIsLoading) => {
+const postClub = async (values) => {
   const req = await axios.post(`${baseUrl}`, values, config);
-  setIsLoading(false);
+  return req.data;
+};
+
+const editClub = async (club) => {
+  console.log('club', club);
+  const req = await axios.put(`${baseUrl}/${club.id}`, club, config);
+
   return req.data;
 };
 
 export default {
-  getClub,
+  getTotal,
   postClub,
-  getAllClubs,
-  deleteClub,
+  addInf,
+  getClubPageByName,
+  editClub,
 };

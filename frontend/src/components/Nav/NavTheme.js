@@ -21,6 +21,8 @@ export const Label = styled.label`
       ? '#2185d0'
       : props.color === 'red'
       ? '#db2828'
+      : props.color === 'hot red'
+      ? '#F44336'
       : '#333'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'auto')};
   font-weight: ${(props) => (props.bold ? 'bold' : 'auto')};

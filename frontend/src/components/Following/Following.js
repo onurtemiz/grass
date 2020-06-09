@@ -6,16 +6,15 @@ import { Placeholder, Header, Icon } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { getLessonById } from '../../reducers/allReducer';
 import Follow from '../Follow/Follow';
-import { LESSON_PATH } from '../../utils/config';
+import { LESSON_PATH, CLUB_PATH } from '../../utils/config';
 import { useFollowed } from './FollowedHook';
+import { Label } from '../Nav/NavTheme';
 
 const Following = () => {
   const user = useSelector((state) => state.user);
-  const all = useSelector((state) => state.all.all);
-  const dispatch = useDispatch();
-  const lessons = useFollowed();
+  const followings = useFollowed();
 
-  if (lessons.length !== user.following.length) {
+  if (followings.length !== user.following.length) {
     return [...Array(2)].map((e, i) => (
       <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
         <Placeholder.Paragraph>
@@ -29,26 +28,46 @@ const Following = () => {
       </Placeholder>
     ));
   }
-
+  console.log('followings', followings);
   return (
     <div>
       <Header color="green" as="h1">
-        Takip Ettiğin Dersler
+        Takip Ettiklerin
       </Header>
       <ul style={{ listStyle: 'none' }}>
-        {lessons.map((l) => (
-          <li key={l.id} style={{ padding: '0.5em' }}>
-            <Header size="huge" color="green">
-              <Link to={LESSON_PATH(l, l.teacher.name)}>
-                <Icon name="book" />
-                {l.fullName.toUpperCase()}
-              </Link>
-              <Follow idToFollow={l.id} user={user} />
-            </Header>
-          </li>
-        ))}
+        {followings.map((f) =>
+          f.teacher ? (
+            <FollowingLesson f={f} user={user} key={f.id} />
+          ) : (
+            <FollowingClub f={f} user={user} key={f.id} />
+          )
+        )}
       </ul>
     </div>
+  );
+};
+
+const FollowingLesson = ({ f, user }) => {
+  return (
+    <li style={{ padding: '0.5em' }}>
+      <Label color="blue" bold style={{ fontSize: '2em' }}>
+        <Link to={LESSON_PATH(f, f.teacher.name)}>
+          {f.fullName.toUpperCase()}
+        </Link>{' '}
+        · <Follow idToFollow={f.id} user={user} />
+      </Label>
+    </li>
+  );
+};
+
+const FollowingClub = ({ f, user }) => {
+  return (
+    <li style={{ padding: '0.5em' }}>
+      <Label color="blue" bold style={{ fontSize: '2em' }}>
+        <Link to={CLUB_PATH(f)}>{f.shortName.toUpperCase()}</Link> ·{' '}
+        <Follow idToFollow={f.id} user={user} />
+      </Label>
+    </li>
   );
 };
 

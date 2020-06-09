@@ -90,6 +90,7 @@ const User = () => {
         panes={panes}
         onTabChange={(event, data) => setActiveIndex(data.activeIndex)}
         activeIndex={activeIndex}
+        style={{ marginTop: '1em' }}
       />
     </div>
   );
@@ -105,7 +106,7 @@ const UserPage = ({ user }) => {
         {user.totalLikes}
       </Header>
 
-      <Comments type="user" typeId={user.id} showTeacher />
+      <Comments type="user" typeId={user.id} showSource={true} />
     </div>
   );
 };

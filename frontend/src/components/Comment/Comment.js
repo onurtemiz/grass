@@ -10,7 +10,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import CommentForm from '../CommentForm/CommentForm';
 import SubComment from './SubComment';
 
-const Comment = ({ comment, showTeacher, typeId, commentType }) => {
+const Comment = ({ comment, showSource, typeId }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   if (!isUpdate) {
     return (
@@ -24,9 +24,7 @@ const Comment = ({ comment, showTeacher, typeId, commentType }) => {
         <SubComment
           comment={comment}
           setIsUpdate={setIsUpdate}
-          showTeacher={showTeacher}
-          typeId={typeId}
-          commentType={commentType}
+          showSource={showSource}
         />
       </div>
     );
@@ -41,8 +39,7 @@ const Comment = ({ comment, showTeacher, typeId, commentType }) => {
       >
         <CommentForm
           typeId={typeId}
-          teacherId={comment.teacher}
-          commentType={commentType}
+          commentType={comment.commentType}
           comment={comment}
           setIsUpdate={setIsUpdate}
           isUpdate={true}

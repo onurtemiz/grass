@@ -58,6 +58,7 @@ const getIdFilter = async (q) => {
         ? await Comment.getMostPopularById(q.id, q.start, q.total)
         : await Comment.getMostPopularById(q.id);
   }
+
   return comments;
 };
 
@@ -185,15 +186,15 @@ commentsRouter.post('/', async (req, res) => {
       return res.status(400).json({
         error: 'TeacherId must be present',
       });
-    } else if (!body.lessonId) {
+    } else if (!body.typeId) {
       return res.status(400).json({
-        error: 'LessonId must be present',
+        error: 'typeId must be present',
       });
     }
   } else if (body.commentType === 'club') {
-    if (!body.clubId) {
+    if (!body.typeId) {
       return res.status(400).json({
-        error: 'clubId must be present',
+        error: 'typeId must be present',
       });
     }
   }
@@ -201,7 +202,7 @@ commentsRouter.post('/', async (req, res) => {
   let comment;
   if (body.commentType === 'lesson') {
     const teacher = await Teacher.findById(body.teacherId);
-    const lesson = await Lesson.findById(body.lessonId);
+    const lesson = await Lesson.findById(body.typeId);
     const isTeacherRight = lesson.teacher.equals(teacher._id);
 
     if (!teacher || !lesson || !user) {
@@ -228,7 +229,7 @@ commentsRouter.post('/', async (req, res) => {
 
     comment = new Comment({
       teacher: body.teacherId,
-      lesson: body.lessonId,
+      lesson: body.typeId,
       user: user._id,
       comment: body.comment,
       date: new Date(),
@@ -243,7 +244,7 @@ commentsRouter.post('/', async (req, res) => {
     await teacher.save();
     await lesson.save();
   } else if (body.commentType === 'club') {
-    const club = await Club.findById(body.clubId);
+    const club = await Club.findById(body.typeId);
 
     if (!club || !user) {
       return res.status(400).json({
@@ -263,7 +264,7 @@ commentsRouter.post('/', async (req, res) => {
     // }
 
     comment = new Comment({
-      club: body.clubId,
+      club: body.typeId,
       user: user._id,
       comment: body.comment,
       date: new Date(),
@@ -277,10 +278,12 @@ commentsRouter.post('/', async (req, res) => {
     await club.save();
   }
 
-  const opts = [{ path: 'user' }];
-  Comment.populate(comment, opts, function (err, comment) {
-    res.status(201).json(comment.toJSON());
-  });
+  const populatedComment = await Comment.findById(comment._id)
+    .populate('user')
+    .populate('teacher')
+    .populate('lesson')
+    .populate('club');
+  res.json(populatedComment.toJSON());
 });
 
 commentsRouter.put('/:id', async (req, res) => {
@@ -324,10 +327,12 @@ commentsRouter.put('/:id', async (req, res) => {
     }
   }
   await comment.save();
-  const opts = [{ path: 'user' }];
-  Comment.populate(comment, opts, function (err, comment) {
-    res.json(comment.toJSON());
-  });
+  const populatedComment = await Comment.findById(comment._id)
+    .populate('user')
+    .populate('teacher')
+    .populate('lesson')
+    .populate('club');
+  res.json(populatedComment.toJSON());
 });
 
 commentsRouter.delete('/:id', async (req, res) => {

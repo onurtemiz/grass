@@ -29,7 +29,7 @@ const SubTeacher = ({ teacher }) => {
         }}
       >
         <Card.Header style={{ display: 'inline' }}>
-          <Header as="h2" color="green">
+          <Header as="h2" color="blue">
             <Header.Content>{teacher.name.toUpperCase()}</Header.Content>
           </Header>
         </Card.Header>
@@ -37,7 +37,7 @@ const SubTeacher = ({ teacher }) => {
         <Card.Description>
           {teacher.lessons.map((l, i) => (
             <Label
-              color="blue"
+              color="green"
               bold
               pointer
               key={`${teacher.name}${l.fullName}`}

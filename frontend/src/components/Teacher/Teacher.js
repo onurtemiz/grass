@@ -35,7 +35,7 @@ const Teacher = () => {
 
   return (
     <div>
-      <Label color="green" bold style={{ fontSize: '2em' }}>
+      <Label color="blue" bold style={{ fontSize: '2em' }}>
         {teacher.name}
       </Label>
 
@@ -43,19 +43,25 @@ const Teacher = () => {
         <ul style={{ listStyle: 'none', fontSize: '1.5em', paddingLeft: '0' }}>
           {teacher.lessons.map((l) => (
             <li key={l.id} style={{ paddingTop: '0.5em' }}>
-              <Label color="blue" bold>
-                <Link to={LESSON_PATH(l, teacher.name)}>
-                  {l.fullName.toUpperCase()}
-                </Link>{' '}
-                · <Follow idToFollow={l.id} user={user} />
-              </Label>
+              <Link to={LESSON_PATH(l, teacher.name)}>
+                <Label color="green" bold>
+                  {' '}
+                  {l.fullName.toUpperCase()} ·
+                </Label>
+              </Link>{' '}
+              <Follow idToFollow={l.id} user={user} />
             </li>
           ))}
         </ul>
       }
 
       <CommentSort />
-      <Comments typeId={teacher.id} type="teacher" showTeacher={true} commentType='lesson' />
+      <Comments
+        typeId={teacher.id}
+        type="teacher"
+        showSource={true}
+        commentType="lesson"
+      />
     </div>
   );
 };

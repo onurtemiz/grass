@@ -5,6 +5,7 @@ const config = require('../utils/config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Lesson = require('../models/lesson');
+const Club = require('../models/club');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -39,16 +40,41 @@ usersRouter.post('/signup', async (req, res) => {
   res.status(201).json(user.toJSON());
 });
 
+usersRouter.get('/following', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+  if (!user) {
+    return res.status(401).json({
+      error: 'user not found',
+    });
+  }
+  console.log('user.following', user.following);
+  const clubs = await Club.find({ _id: { $in: user.following } });
+  const lessons = await Lesson.find({ _id: { $in: user.following } }).populate(
+    'teacher'
+  );
+  const allFollowing = {
+    clubs: clubs.map((c) => c.toJSON()),
+    lessons: lessons.map((l) => l.toJSON()),
+  };
+  res.json(allFollowing);
+});
+
 usersRouter.put('/follow', async (req, res) => {
   const body = req.body;
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
   let isMalformatedId = false;
   try {
-    let lessonId = new mongoose.Types.ObjectId(body.id);
+    let typeId = new mongoose.Types.ObjectId(body.id);
   } catch (e) {
     isMalformatedId = true;
   }
-  const lesson = await Lesson.findById(body.id);
   if (!req.token || !decodedToken.id) {
     return res.status(401).json({
       error: 'token missing or invalid',
@@ -57,11 +83,8 @@ usersRouter.put('/follow', async (req, res) => {
     return res.status(400).json({
       error: 'id is missing or invalid',
     });
-  } else if (!lesson) {
-    return res.status(400).json({
-      error: 'lesson not found',
-    });
   }
+
   const user = await User.findById(decodedToken.id);
   let isUserFollows = user.following.find((id) => id.toString() === body.id);
 

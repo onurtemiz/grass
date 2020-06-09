@@ -24,6 +24,11 @@ tipsRouter.all('*', async (req, res, next) => {
   next();
 });
 
+tipsRouter.get('/total', async (req, res) => {
+  const total = await Tip.find().countDocuments();
+  res.json({ total: total });
+});
+
 tipsRouter.put('/approve', async (req, res) => {
   const q = req.query;
   const user = await User.findById(req.user);
@@ -114,7 +119,7 @@ tipsRouter.get('/all', async (req, res) => {
   res.json(tips.map((t) => t.toJSON()));
 });
 
-tipsRouter.get('/', async (req, res) => {
+tipsRouter.get('/random', async (req, res) => {
   const totalTips = await Tip.find({ isApproved: true }).countDocuments();
 
   const randTip = await Tip.findOne({ isApproved: true }).skip(
@@ -135,6 +140,34 @@ tipsRouter.get('/', async (req, res) => {
       user: user.username,
     });
   }
+});
+
+tipsRouter.get('/', async (req, res) => {
+  const q = req.query;
+  if (!q.start || !q.total) {
+    return res.status(400).json({
+      error: 'missing count or start',
+    });
+  }
+  const tips = await Tip.find().skip(Number(q.start)).limit(Number(q.total));
+  const jsonedTips = tips.map((t) => t.toJSON());
+  let filteredTips = [];
+  for (let i = 0; i < jsonedTips.length; i++) {
+    if (jsonedTips[i].isAnonim) {
+      filteredTips.push({
+        tip: jsonedTips[i].tip,
+        isAnonim: true,
+      });
+    } else {
+      const user = await User.findById(jsonedTips[i].user);
+      filteredTips.push({
+        tip: jsonedTips[i].tip,
+        isAnonim: false,
+        user: user.username,
+      });
+    }
+  }
+  res.json(filteredTips);
 });
 
 module.exports = tipsRouter;

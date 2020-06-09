@@ -33,7 +33,7 @@ const Feed = () => {
       <Comments
         type="feed"
         height="90vh"
-        showTeacher={true}
+        showSource={true}
         skeletonLength={2}
       />
     </div>

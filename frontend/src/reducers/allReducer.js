@@ -34,6 +34,16 @@ const allReducer = (state = initialState, action) => {
     case 'TOTAL_ALL':
       const totalc = action.data;
       return { ...state, total: totalc };
+    case 'GET_FOLLOWING':
+      const uniqfollowing = lodash.uniqBy(
+        [...state.all, ...action.data.lessons],
+        'id'
+      );
+      const followingState = {
+        ...state,
+        all: uniqfollowing,
+      };
+      return followingState;
     default:
       return state;
   }

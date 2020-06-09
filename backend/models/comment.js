@@ -43,7 +43,7 @@ commentSchema.statics.getMostPopularFeed = async function (
   let comments = await this.aggregate([
     {
       $match: {
-        lesson: { $in: ids },
+        $or: [{ lesson: { $in: ids } }, { club: { $in: ids } }],
       },
     },
     {
@@ -71,16 +71,33 @@ commentSchema.statics.getMostPopularFeed = async function (
         as: 'user',
       },
     },
+    {
+      $lookup: {
+        from: 'lessons',
+        localField: 'lesson',
+        foreignField: '_id',
+        as: 'lesson',
+      },
+    },
+    {
+      $lookup: {
+        from: 'teachers',
+        localField: 'teacher',
+        foreignField: '_id',
+        as: 'teacher',
+      },
+    },
+    {
+      $lookup: {
+        from: 'clubs',
+        localField: 'club',
+        foreignField: '_id',
+        as: 'club',
+      },
+    },
   ]);
-  comments.map((c) => {
-    c.user = {
-      username: c.user[0].username,
-      id: c.user[0]._id,
-    };
-    c.id = c._id.toString();
-    delete c._id;
-    delete c.__v;
-  });
+  comments = jsonComments(comments);
+
   return comments;
 };
 
@@ -125,16 +142,33 @@ commentSchema.statics.getMostPopularById = async function (
         as: 'user',
       },
     },
+    {
+      $lookup: {
+        from: 'lessons',
+        localField: 'lesson',
+        foreignField: '_id',
+        as: 'lesson',
+      },
+    },
+    {
+      $lookup: {
+        from: 'teachers',
+        localField: 'teacher',
+        foreignField: '_id',
+        as: 'teacher',
+      },
+    },
+    {
+      $lookup: {
+        from: 'clubs',
+        localField: 'club',
+        foreignField: '_id',
+        as: 'club',
+      },
+    },
   ]);
-  comments.map((c) => {
-    c.user = {
-      username: c.user[0].username,
-      id: c.user[0]._id,
-    };
-    c.id = c._id.toString();
-    delete c._id;
-    delete c.__v;
-  });
+  comments = jsonComments(comments);
+
   return comments;
 };
 
@@ -168,12 +202,59 @@ commentSchema.statics.getMostPopular = async function (
         as: 'user',
       },
     },
+    {
+      $lookup: {
+        from: `lessons`,
+        localField: 'lesson',
+        foreignField: '_id',
+        as: 'lesson',
+      },
+    },
+    {
+      $lookup: {
+        from: 'teachers',
+        localField: 'teacher',
+        foreignField: '_id',
+        as: 'teacher',
+      },
+    },
+    {
+      $lookup: {
+        from: 'clubs',
+        localField: 'club',
+        foreignField: '_id',
+        as: 'club',
+      },
+    },
   ]);
+  comments = jsonComments(comments);
+  return comments;
+};
+
+const jsonComments = (comments) => {
   comments.map((c) => {
     c.user = {
       username: c.user[0].username,
       id: c.user[0]._id,
     };
+    if (c.commentType === 'lesson') {
+      c.lesson = {
+        areaCode: c.lesson[0].areaCode,
+        digitCode: c.lesson[0].digitCode,
+        fullName: c.lesson[0].fullName,
+        id: c.lesson[0]._id,
+      };
+      c.teacher = {
+        name: c.teacher[0].name,
+        id: c.teacher[0]._id,
+      };
+    } else if (c.commentType === 'club') {
+      c.club = {
+        fullName: c.club[0].fullName,
+        id: c.club[0]._id,
+        shortName: c.club[0].shortName,
+      };
+    }
     c.id = c._id.toString();
     delete c._id;
     delete c.__v;
@@ -190,7 +271,10 @@ commentSchema.statics.getRecentPast = function (
     .sort({ _id: sort })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('user');
+    .populate('user')
+    .populate('lesson')
+    .populate('club')
+    .populate('teacher');
 };
 
 commentSchema.statics.getRecentPastFeed = function (
@@ -200,12 +284,15 @@ commentSchema.statics.getRecentPastFeed = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
-    lesson: { $in: ids },
+    $or: [{ lesson: { $in: ids } }, { club: { $in: ids } }],
   })
     .sort({ _id: sort })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('user');
+    .populate('user')
+    .populate('lesson')
+    .populate('club')
+    .populate('teacher');
 };
 
 commentSchema.statics.getRecentPastById = function (
@@ -220,7 +307,10 @@ commentSchema.statics.getRecentPastById = function (
     .sort({ _id: sort })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('user');
+    .populate('user')
+    .populate('lesson')
+    .populate('club')
+    .populate('teacher');
 };
 
 commentSchema.set('toJSON', {

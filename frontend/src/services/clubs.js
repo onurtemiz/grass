@@ -24,8 +24,11 @@ const addInf = async (start, count, filter) => {
   return req.data;
 };
 
-const postClub = async (values) => {
+const postClub = async (values, setShortName, setFullName, setIsLoading) => {
   const req = await axios.post(`${baseUrl}`, values, config);
+  setShortName('');
+  setFullName('');
+  setIsLoading('');
   return req.data;
 };
 

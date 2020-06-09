@@ -3,7 +3,7 @@ import { removeComment, likeComment } from '../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { getDay } from '../../utils/dateCalc';
-import { LESSON_PATH } from '../../utils/config';
+import { LESSON_PATH, CLUB_PATH } from '../../utils/config';
 
 import {
   Comment as SComment,
@@ -20,21 +20,11 @@ import { Label } from '../Nav/NavTheme';
 import CommentReport from './CommentReport';
 import HiddenComment from './HiddenComment';
 
-const Comment = ({
-  comment,
-  setIsUpdate,
-  showTeacher,
-  typeId,
-  commentType,
-}) => {
-  const users = useSelector((state) => state.users);
+const Comment = ({ comment, setIsUpdate, showSource }) => {
   const user = useSelector((state) => state.user);
-  const all = useSelector((state) => state.all.all);
   const dispatch = useDispatch();
   const [likeType, setLikeType] = useState(false);
   const [isRemovePanel, setIsRemovePanel] = useState(false);
-  const [isLessonPresent, setIsLessonPresent] = useState(false);
-  const match = useRouteMatch('/users/:username/');
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReported, setIsReported] = useState(false);
   useEffect(() => {
@@ -43,10 +33,6 @@ const Comment = ({
   const handleLike = () => {
     dispatch(likeComment(comment.id));
     likeType === false ? setLikeType(true) : setLikeType(false);
-  };
-
-  const getLesson = () => {
-    return all.find((l) => l.id === typeId);
   };
 
   const handleRemove = () => {
@@ -62,37 +48,8 @@ const Comment = ({
     setIsReportOpen(true);
   };
 
-  useEffect(() => {
-    if (commentType === 'lesson' && !getLesson()) {
-      dispatch(getLessonById(typeId));
-    }
-  }, []);
-
-  if (commentType === 'lesson' && !getLesson()) {
-    return (
-      <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }}>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder>
-    );
-  }
-  const commentLesson = all.find((l) => l.id === typeId);
-
   if (comment.isHidden == true) {
-    return (
-      <HiddenComment
-        comment={comment}
-        commentLesson={commentLesson}
-        showTeacher={showTeacher}
-        getDay={getDay}
-      />
-    );
+    return <HiddenComment comment={comment} showSource={showSource} />;
   }
 
   return (
@@ -106,12 +63,11 @@ const Comment = ({
             setIsReported={setIsReported}
           />
           <SComment.Content>
-            {commentType === 'lesson' ? (
-              <LessonType
-                comment={comment}
-                commentLesson={commentLesson}
-                showTeacher={showTeacher}
-              />
+            {comment.commentType === 'lesson' ? (
+              <LessonType comment={comment} showSource={showSource} />
+            ) : null}
+            {comment.commentType === 'club' ? (
+              <ClubType comment={comment} showSource={showSource} />
             ) : null}
 
             <SComment.Text>{comment.comment}</SComment.Text>
@@ -169,7 +125,7 @@ const Comment = ({
   );
 };
 
-const LessonType = ({ comment, commentLesson, showTeacher }) => {
+export const LessonType = ({ comment, showSource }) => {
   return (
     <SComment.Author>
       <Link to={`/users/${comment.user.username}`}>
@@ -177,11 +133,32 @@ const LessonType = ({ comment, commentLesson, showTeacher }) => {
       </Link>
       <SComment.Metadata>
         {comment.likes.length} Pati · {getDay(new Date(comment.date))}
-        {!!showTeacher ? ' · ' : null}
-        {!!showTeacher ? (
-          <Link to={LESSON_PATH(commentLesson, commentLesson.teacher.name)}>
-            <Label color="green" pointer>
-              {commentLesson.fullName.toUpperCase()}
+        {!!showSource ? ' · ' : null}
+        {!!showSource ? (
+          <Link to={LESSON_PATH(comment.lesson, comment.teacher.name)}>
+            <Label color="blue" pointer>
+              {comment.lesson.fullName.toUpperCase()}
+            </Label>
+          </Link>
+        ) : null}
+      </SComment.Metadata>
+    </SComment.Author>
+  );
+};
+
+export const ClubType = ({ comment, showSource }) => {
+  return (
+    <SComment.Author>
+      <Link to={`/users/${comment.user.username}`}>
+        {comment.user.username}
+      </Link>
+      <SComment.Metadata>
+        {comment.likes.length} Pati · {getDay(new Date(comment.date))}
+        {!!showSource ? ' · ' : null}
+        {!!showSource ? (
+          <Link to={CLUB_PATH(comment.club)}>
+            <Label color="blue" pointer>
+              {comment.club.shortName.toUpperCase()}
             </Label>
           </Link>
         ) : null}

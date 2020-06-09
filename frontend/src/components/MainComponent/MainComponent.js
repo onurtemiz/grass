@@ -14,6 +14,12 @@ import Lesson from '../Lesson/Lesson';
 import Lessons from '../Lessons/Lessons';
 import Clubs from '../Clubs/Clubs';
 import Club from '../Club/Club';
+import AllTips from '../AllTips/AllTips';
+import Campuses from '../Campuses/Campuses';
+import Campus from '../Campus/Campus';
+import Dorm from '../Dorm/Dorm';
+import Dorms from '../Dorms/Dorms';
+import SubDorm from '../Dorms/SubDorm';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
@@ -23,9 +29,10 @@ const MainComponent = () => {
     '/lessons/:areaCode/:digitCode/:teacherName'
   );
   const clubPageMatch = useRouteMatch('/clubs/:name');
+  const campusPageMatch = useRouteMatch('/campuses/:name');
+  const dormitoryPageMatch = useRouteMatch('/dorms/:name');
   const history = useHistory();
   const location = useLocation();
-
   useEffect(() => {
     if (location.pathname.includes('teachers')) {
       setActiveIndex(0);
@@ -33,6 +40,12 @@ const MainComponent = () => {
       setActiveIndex(1);
     } else if (location.pathname.includes('clubs')) {
       setActiveIndex(2);
+    } else if (location.pathname.includes('campuses')) {
+      setActiveIndex(3);
+    } else if (location.pathname.includes('dorms')) {
+      setActiveIndex(4);
+    } else if (location.pathname.includes('tips')) {
+      setActiveIndex(5);
     }
   }, [location]);
 
@@ -48,6 +61,12 @@ const MainComponent = () => {
       history.push('/lessons');
     } else if (data.activeIndex === 2) {
       history.push('/clubs');
+    } else if (data.activeIndex === 3) {
+      history.push('/campuses');
+    } else if (data.activeIndex === 4) {
+      history.push('/dorms');
+    } else if (data.activeIndex === 5) {
+      history.push('/tips');
     }
   };
 
@@ -112,46 +131,60 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(2)}>
-            Tavsiyeler
-          </Label>
-        ),
-        color: 'green',
-      },
-      render: () => (
-        <Tab.Pane>
-          <EditUser setActiveIndex={setActiveIndex} />
-        </Tab.Pane>
-      ),
-    },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(2)}>
+          <Label bold pointer color={getColor(3)}>
             Kampüsler
           </Label>
         ),
         color: 'green',
       },
       render: () => (
-        <Tab.Pane>
-          <EditUser setActiveIndex={setActiveIndex} />
-        </Tab.Pane>
+        <Segment
+          basic={campusPageMatch && campusPageMatch.isExact ? true : false}
+        >
+          {campusPageMatch && campusPageMatch.isExact ? (
+            <Campus />
+          ) : (
+            <Campuses main />
+          )}
+        </Segment>
       ),
     },
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(2)}>
-            Kullanıcılar
+          <Label bold pointer color={getColor(4)}>
+            Yurtlar
           </Label>
         ),
         color: 'green',
       },
       render: () => (
-        <Tab.Pane>
-          <EditUser setActiveIndex={setActiveIndex} />
-        </Tab.Pane>
+        <Segment
+          basic={
+            dormitoryPageMatch && dormitoryPageMatch.isExact ? true : false
+          }
+        >
+          {dormitoryPageMatch && dormitoryPageMatch.isExact ? (
+            <Dorm />
+          ) : (
+            <Dorms main />
+          )}
+        </Segment>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(5)}>
+            Tavsiyeler
+          </Label>
+        ),
+        color: 'green',
+      },
+      render: () => (
+        <Segment basic>
+          <AllTips />
+        </Segment>
       ),
     },
   ];

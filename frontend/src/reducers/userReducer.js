@@ -83,6 +83,16 @@ export const logoutUser = () => {
   };
 };
 
+export const getFollowing = () => {
+  return async (dispatch) => {
+    const data = await userService.getFollowing();
+    dispatch({
+      type: 'GET_FOLLOWING',
+      data: data,
+    });
+  };
+};
+
 export const setUser = (user) => {
   return (dispatch) => {
     dispatch({

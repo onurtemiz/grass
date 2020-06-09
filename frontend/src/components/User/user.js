@@ -42,7 +42,7 @@ const User = () => {
       <Comments
         type="user"
         typeId={user.id}
-        showTeacher={true}
+        showSource={true}
         commentType="mix"
       />
     </div>

@@ -43,6 +43,16 @@ const clubReducer = (state = initialState, action) => {
     case 'TOTAL_CLUBS':
       const totalc = action.data;
       return { ...state, total: totalc };
+    case 'GET_FOLLOWING':
+      const uniqfollowing = lodash.uniqBy(
+        [...state.clubs, ...action.data.clubs],
+        'id'
+      );
+      const followingState = {
+        ...state,
+        clubs: uniqfollowing,
+      };
+      return followingState;
     default:
       return state;
   }

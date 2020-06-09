@@ -154,6 +154,7 @@ export const addInfCommentAll = (start, count, filter) => {
       filter
     );
     const total = await commentsService.getTotalCommentsAll(filter);
+    console.log('comments,total', comments, total);
     let data = {
       hasMore: true,
       start: start + count,
@@ -174,6 +175,7 @@ export const addInfCommentAll = (start, count, filter) => {
 
 export const addInfCommentById = (start, count, id, filter) => {
   return async (dispatch) => {
+    console.log('heby');
     const comments = await commentsService.addInfCommentsById(
       start,
       count,
@@ -216,7 +218,7 @@ export const addInfCommentFeed = (start, count, filter) => {
       count,
       filter
     );
-    const total = await commentsService.getTotalCommentsById();
+    const total = await commentsService.getTotalCommentsFeed();
     let data = {
       hasMore: true,
       start: start + count,

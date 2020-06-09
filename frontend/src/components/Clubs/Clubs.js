@@ -43,7 +43,7 @@ const Clubs = ({ admin }) => {
   return (
     <div
       style={{
-        height: '90vh',
+        height: '400px',
         overflow: 'auto',
       }}
     >

@@ -7,11 +7,11 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 const CommentForm = ({
   typeId,
-  teacherId,
   comment,
   setIsUpdate,
   isUpdate,
   commentType,
+  teacherId,
 }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
@@ -41,22 +41,17 @@ const CommentForm = ({
       setCommentError('4000 harften çok olamaz.');
       return;
     }
-    let values;
-    console.log('commentType', commentType);
-    if (commentType === 'lesson') {
-      values = {
-        comment: value,
-        lessonId: typeId,
-        teacherId,
-        commentType,
-      };
-    } else if (commentType === 'club') {
-      values = {
-        comment: value,
-        clubId: typeId,
-        commentType,
-      };
-    }
+
+    let values = {
+      comment: value,
+      typeId,
+      teacherId: teacherId
+        ? teacherId
+        : comment && comment.commentType === 'lesson'
+        ? comment.teacher.id
+        : null,
+      commentType,
+    };
 
     setIsLoading(true);
     if (comment) {

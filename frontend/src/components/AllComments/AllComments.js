@@ -9,7 +9,7 @@ const AllComments = () => {
       <Comments
         type="allComments"
         height="90vh"
-        showTeacher={true}
+        showSource={true}
         skeletonLength={2}
       />
     </div>

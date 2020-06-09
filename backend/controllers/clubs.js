@@ -90,7 +90,7 @@ clubsRouter.put('/:id', async (req, res) => {
 
 clubsRouter.post('/', async (req, res) => {
   const body = req.body;
-  if (!body || !body.shortName || !body.fullName || !body.description) {
+  if (!body || !body.shortName || !body.fullName) {
     return res.json({
       error: 'missing information',
     });

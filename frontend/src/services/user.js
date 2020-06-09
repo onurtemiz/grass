@@ -32,6 +32,11 @@ const getUserById = async (id) => {
   return res.data;
 };
 
+const getFollowing = async () => {
+  const res = await axios.get(`${baseUrl}/following`, config);
+  return res.data;
+};
+
 const unfollowLesson = async (id) => {
   const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
   return res.data;
@@ -48,4 +53,5 @@ export default {
   unfollowLesson,
   checkAdmin,
   getUserById,
+  getFollowing,
 };

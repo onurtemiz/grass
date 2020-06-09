@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CLUB_PATH } from '../../utils/config';
-import { Card, Header } from 'semantic-ui-react';
+import { Card, Header, Segment } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import { ClubForm } from '../Admin/ControlClub';
 
@@ -26,8 +26,12 @@ export const SubClub = ({ club, main }) => {
         }
       >
         <Card.Header style={{ display: 'inline' }}>
-          <Header as="h2" color="blue">
-            <Header.Content>{club.shortName.toUpperCase()}</Header.Content>
+          <Header as="h2">
+            <Header.Content>
+              <Label color="blue" bold pointer>
+                {club.shortName.toUpperCase()}
+              </Label>
+            </Header.Content>
           </Header>
         </Card.Header>
         <Card.Description>
@@ -62,7 +66,7 @@ export const SubClubAdmin = ({ club }) => {
         onClick={() => handleEdit()}
       >
         <Card.Header style={{ display: 'inline' }}>
-          <Header as="h2" color="blue">
+          <Header as="h2">
             <Header.Content>
               <Label color="blue" bold pointer>
                 {club.shortName.toUpperCase()}

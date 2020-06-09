@@ -7,12 +7,25 @@ const baseUrl =
     : '/api/tips';
 
 const getTip = async () => {
-  const req = await axios.get(`${baseUrl}`, config);
+  const req = await axios.get(`${baseUrl}/random`, config);
   return req.data;
 };
 
 const getAllTips = async () => {
   const req = await axios.get(`${baseUrl}/all`, config);
+  return req.data;
+};
+
+const addInf = async (start, count) => {
+  const req = await axios.get(
+    `${baseUrl}?start=${start}&total=${count}`,
+    config
+  );
+  return req.data;
+};
+
+const getTotalTip = async () => {
+  const req = await axios.get(`${baseUrl}/total`, config);
   return req.data;
 };
 
@@ -34,6 +47,8 @@ const postTip = async (tip, setIsLoading, setIsOpen) => {
 
 export default {
   getTip,
+  addInf,
+  getTotalTip,
   postTip,
   getAllTips,
   approveTip,

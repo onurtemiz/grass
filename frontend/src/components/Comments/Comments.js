@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import {
@@ -10,13 +10,12 @@ import Comment from '../Comment/Comment';
 import { Placeholder } from 'semantic-ui-react';
 import { getLessonById } from '../../reducers/allReducer';
 
-const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
+const Comments = ({ type, typeId, height, showSource }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
-  const all = useSelector((state) => state.all.all);
   const user = useSelector((state) => state.user);
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
@@ -30,23 +29,26 @@ const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
       dispatch(addInfCommentFeed(0, count, filter));
     }
   }, [filter]);
-
   useEffect(() => {
     setCurrentComments(
       comments
         .filter((c) => {
-          if (type === 'teacher') {
-            return c.teacher === typeId;
-          } else if (type === 'lesson') {
-            return c.lesson === typeId;
+          if (type === 'teacher' && c.commentType === 'lesson') {
+            return c.teacher.id === typeId;
+          } else if (type === 'lesson' && c.commentType === 'lesson') {
+            return c.lesson.id === typeId;
+          } else if (type === 'club' && c.commentType === 'club') {
+            return c.club.id === typeId;
           } else if (type === 'user') {
             return c.user.id === typeId;
           } else if (type === 'allComments') {
             return true;
           } else if (type === 'feed') {
-            return user.following.includes(c.lesson);
-          } else if (type === 'club') {
-            return c.club === typeId;
+            if (c.commentType === 'lesson') {
+              return user.following.includes(c.lesson.id);
+            } else if (c.commentType === 'club') {
+              return user.following.includes(c.club.id);
+            }
           }
         })
         .sort((a, b) => {
@@ -71,40 +73,6 @@ const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
     }
   };
 
-  useEffect(() => {
-    if (currentComments.length !== 0) {
-      let leftovers = getLeftOverLessons();
-      if (leftovers.length !== 0) {
-        leftovers.map((id) => {
-          dispatch(getLessonById(id));
-        });
-      }
-    }
-  }, [currentComments]);
-
-  const getLeftOverLessons = () => {
-    let temp = [];
-    const commentLessons = [...new Set(currentComments.map((c) => c.lesson))];
-
-    commentLessons.map((id) => {
-      all.map((l) => {
-        if (l.id === id) {
-          temp.push(l);
-        }
-      });
-    });
-    let leftovers = commentLessons.filter(
-      (id) => !temp.map((l) => l.id).includes(id)
-    );
-    return leftovers;
-  };
-  if (
-    (commentType === 'lesson' || commentType === 'mix') &&
-    getLeftOverLessons().length !== 0
-  ) {
-    return <Loading />;
-  }
-
   return (
     <div
       style={{
@@ -124,8 +92,8 @@ const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
           <Comment
             key={c.id}
             comment={c}
-            showTeacher={showTeacher}
-            typeId={c.commentType === 'lesson' ? c.lesson : c.club}
+            showSource={showSource}
+            typeId={c.commentType === 'lesson' ? c.lesson.id : c.club.id}
             commentType={c.commentType}
           />
         ))}
@@ -134,7 +102,7 @@ const Comments = ({ type, typeId, height, showTeacher, commentType }) => {
   );
 };
 
-const Loading = ({ skeletonLength }) => {
+export const Loading = ({ skeletonLength }) => {
   return [...Array(skeletonLength ? skeletonLength : 2)].map((e, i) => (
     <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
       <Placeholder.Paragraph>

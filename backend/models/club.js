@@ -5,7 +5,7 @@ mongoose.set('useFindAndModify', false);
 const clubSchema = new mongoose.Schema({
   shortName: { type: String, unique: true, required: true },
   fullName: { type: String, unique: true, required: true },
-  description: { type: String, required: true },
+  description: { type: String, default: '' },
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,

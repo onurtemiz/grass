@@ -3,27 +3,39 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedUser } from '../../reducers/userReducer';
 import { LinearProgress } from '@material-ui/core';
-import Comments from '../Comments/Comments';
+import Comments from '../Comments/IdComments';
 import { Header, Tab, Menu, Icon } from 'semantic-ui-react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 import Following from '../Following/Following';
 import { Label } from '../Nav/NavTheme';
 const User = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState();
+  const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
     dispatch(getPopulatedUser(user.username));
   }, []);
 
   useEffect(() => {
-    if (activeIndex === 0) {
-      history.pushState(null, 'Hesabım - BOUN ÇIM', '/user');
-    } else if (activeIndex === 1) {
-      history.pushState(null, 'Takip Ettiklerim - BOUN ÇIM', '/user/follows');
+    if (location.pathname.includes('follows')) {
+      setActiveIndex(1);
+    } else if (location.pathname.includes('edit')) {
+      setActiveIndex(2);
+    } else {
+      setActiveIndex(0);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (activeIndex === 1) {
+      history.push('/user/follows');
     } else if (activeIndex === 2) {
-      history.pushState(null, 'Hesabımı Düzenle - BOUN ÇIM', '/user/edit');
+      history.push('/user/edit');
+    } else if (activeIndex === 0) {
+      history.push('/user');
     }
   }, [activeIndex]);
 
@@ -106,7 +118,7 @@ const UserPage = ({ user }) => {
         {user.totalLikes}
       </Header>
 
-      <Comments type="user" typeId={user.id} showSource={true} />
+      <Comments type="user" typeId={user.id} />
     </div>
   );
 };

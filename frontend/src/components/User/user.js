@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedUser } from '../../reducers/usersReducer';
 import { LinearProgress } from '@material-ui/core';
-import Comments from '../Comments/Comments';
+import Comments from '../Comments/IdComments';
 import { Header, Label } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';
 const User = () => {

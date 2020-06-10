@@ -17,7 +17,7 @@ const SubTeacher = ({ teacher }) => {
   };
 
   return (
-    <div style={{ marginLeft: '1em' }}>
+    <div style={{ marginLeft: '1em' , marginRight: '1em'}}>
       <Card
         as={Link}
         to={TEACHER_PATH(teacher)}

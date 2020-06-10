@@ -6,6 +6,10 @@ const Comment = require('../models/comment');
 const jwt = require('jsonwebtoken');
 const Connect = require('../models/connect');
 const Club = require('../models/club');
+const Campus = require('../models/campus');
+const Dorm = require('../models/dorm');
+const Question = require('../models/question');
+
 const getCommentFilter = async (q) => {
   let comments;
   if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
@@ -67,7 +71,15 @@ commentsRouter.get('/total', async (req, res) => {
   let total =
     'id' in q
       ? await Comment.find({
-          $or: [{ teacher: q.id }, { lesson: q.id }, { user: q.id }],
+          $or: [
+            { teacher: q.id },
+            { lesson: q.id },
+            { user: q.id },
+            { club: q.id },
+            { dorm: q.id },
+            { campus: q.id },
+            { question: q.id },
+          ],
         }).countDocuments()
       : await Comment.find().countDocuments();
   res.json({ total });
@@ -88,7 +100,14 @@ commentsRouter.get('/feed/total', async (req, res) => {
     });
   }
   const total = await Comment.find({
-    lesson: { $in: user.following },
+    $or: [
+      { lesson: { $in: user.following } },
+      { user: { $in: user.following } },
+      { club: { $in: user.following } },
+      { dorm: { $in: user.following } },
+      { campus: { $in: user.following } },
+      { question: { $in: user.following } },
+    ],
   }).countDocuments();
   res.json({
     total,
@@ -174,7 +193,11 @@ commentsRouter.post('/', async (req, res) => {
     });
   } else if (
     !body.commentType ||
-    (body.commentType !== 'lesson' && body.commentType !== 'club')
+    (body.commentType !== 'lesson' &&
+      body.commentType !== 'club' &&
+      body.commentType !== 'dorm' &&
+      body.commentType !== 'campus' &&
+      body.commentType !== 'question')
   ) {
     return res.status(401).json({
       error: 'need valid commentType',
@@ -251,18 +274,6 @@ commentsRouter.post('/', async (req, res) => {
         error: 'Could not find the teacher,lesson,user',
       });
     }
-    // ONLY ONE COMMENT PER LESSON
-    // const isDuplicate = await Comment.findOne({
-    //   teacher: body.teacherId,
-    //   lesson: body.lessonId,
-    //   user: user._id,
-    // });
-    // if (isDuplicate !== null) {
-    //   return res.status(400).json({
-    //     error: 'you have already commented',
-    //   });
-    // }
-
     comment = new Comment({
       club: body.typeId,
       user: user._id,
@@ -276,13 +287,80 @@ commentsRouter.post('/', async (req, res) => {
     club.comments = club.comments.concat(comment._id);
     await user.save();
     await club.save();
+  } else if (body.commentType === 'campus') {
+    const campus = await Campus.findById(body.typeId);
+
+    if (!campus || !user) {
+      return res.status(400).json({
+        error: 'Could not find the teacher,lesson,user',
+      });
+    }
+    comment = new Comment({
+      campus: body.typeId,
+      user: user._id,
+      comment: body.comment,
+      date: new Date(),
+      likes: [user._id],
+      commentType: 'campus',
+    });
+    await comment.save();
+    user.comments = user.comments.concat(comment._id);
+    campus.comments = campus.comments.concat(comment._id);
+    await user.save();
+    await campus.save();
+  } else if (body.commentType === 'dorm') {
+    const dorm = await Dorm.findById(body.typeId);
+
+    if (!dorm || !user) {
+      return res.status(400).json({
+        error: 'Could not find the teacher,lesson,user',
+      });
+    }
+    comment = new Comment({
+      dorm: body.typeId,
+      user: user._id,
+      comment: body.comment,
+      date: new Date(),
+      likes: [user._id],
+      commentType: 'dorm',
+    });
+    await comment.save();
+    user.comments = user.comments.concat(comment._id);
+    dorm.comments = dorm.comments.concat(comment._id);
+    await user.save();
+    await dorm.save();
+  } else if (body.commentType === 'question') {
+    const question = await Question.findById(body.typeId);
+
+    if (!question || !user) {
+      return res.status(400).json({
+        error: 'Could not find the teacher,lesson,user',
+      });
+    }
+    comment = new Comment({
+      question: body.typeId,
+      user: user._id,
+      comment: body.comment,
+      date: new Date(),
+      likes: [user._id],
+      commentType: 'question',
+    });
+    await comment.save();
+    user.comments = user.comments.concat(comment._id);
+    question.comments = question.comments.concat(comment._id);
+    await user.save();
+    await question.save();
   }
 
   const populatedComment = await Comment.findById(comment._id)
     .populate('user')
     .populate('teacher')
     .populate('lesson')
-    .populate('club');
+    .populate('club')
+    .populate('dorm')
+    .populate('campus')
+    .populate('question');
+
   res.json(populatedComment.toJSON());
 });
 
@@ -331,7 +409,11 @@ commentsRouter.put('/:id', async (req, res) => {
     .populate('user')
     .populate('teacher')
     .populate('lesson')
-    .populate('club');
+    .populate('club')
+    .populate('dorm')
+    .populate('campus')
+    .populate('question');
+
   res.json(populatedComment.toJSON());
 });
 
@@ -368,6 +450,27 @@ commentsRouter.delete('/:id', async (req, res) => {
     );
   } else if (comment.commentType === 'club') {
     await Club.findOneAndUpdate(
+      {
+        comments: { $in: req.params.id },
+      },
+      { $pull: { comments: req.params.id } }
+    );
+  } else if (comment.commentType === 'dorm') {
+    await Dorm.findOneAndUpdate(
+      {
+        comments: { $in: req.params.id },
+      },
+      { $pull: { comments: req.params.id } }
+    );
+  } else if (comment.commentType === 'campus') {
+    await Campus.findOneAndUpdate(
+      {
+        comments: { $in: req.params.id },
+      },
+      { $pull: { comments: req.params.id } }
+    );
+  } else if (comment.commentType === 'question') {
+    await Question.findOneAndUpdate(
       {
         comments: { $in: req.params.id },
       },

@@ -64,6 +64,7 @@ const DefaultContainer = () => {
         <Route path="/tips" component={MainComponent} />
         <Route path="/campuses" component={MainComponent} />
         <Route path="/dorms" component={MainComponent} />
+        <Route path="/questions" component={MainComponent} />
 
         <Route path="/teachers/:name">
           <MainComponent />

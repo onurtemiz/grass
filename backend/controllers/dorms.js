@@ -69,6 +69,13 @@ dormsRouter.all('*', async (req, res, next) => {
 //   res.end();
 // });
 
+dormsRouter.get('/:name', async (req, res) => {
+  const dorm = await Dorm.findOne({ name: req.params.name }).populate(
+    'comments'
+  );
+  return res.json(dorm.toJSON());
+});
+
 dormsRouter.get('/', async (req, res) => {
   const dorms = await Dorm.find();
   return res.json(dorms.map((d) => d.toJSON()));

@@ -5,6 +5,7 @@ import { addInfClubs } from '../../reducers/clubReducer';
 import { LinearProgress } from '@material-ui/core';
 import { Card } from 'semantic-ui-react';
 import { SubClub, SubClubAdmin } from './SubClub';
+import CommentsLoading from '../Comments/CommentsLoading';
 const Clubs = ({ admin }) => {
   const count = useSelector((state) => state.clubs.count);
   const start = useSelector((state) => state.clubs.start);
@@ -39,11 +40,11 @@ const Clubs = ({ admin }) => {
   if (clubs.length === 0) {
     return <LinearProgress />;
   }
-
   return (
     <div
       style={{
-        height: '400px',
+        minHeight: '300px',
+        maxHeight: '500px',
         overflow: 'auto',
       }}
     >
@@ -53,7 +54,7 @@ const Clubs = ({ admin }) => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            <LinearProgress variant="query" />
+            <CommentsLoading skeletonLength={1} />
           </div>
         }
         useWindow={false}

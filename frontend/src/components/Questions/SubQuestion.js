@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DORM_PATH } from '../../utils/config';
+import { QUESTION_PATH } from '../../utils/config';
 import { Card, Header, Segment } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 
-export const SubDorm = ({ dorm, main }) => {
+const SubQuestion = ({ question, main }) => {
   return (
     <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
       <Card
         as={Link}
-        to={DORM_PATH(dorm)}
+        to={QUESTION_PATH(question)}
         fluid
         style={
           main
             ? {
                 marginTop: '1em',
-                marginBottom: '0.6em',
                 paddingLeft: '0.5em',
                 paddingTop: '0.5em',
                 paddingBottom: '0.2em',
@@ -30,7 +29,7 @@ export const SubDorm = ({ dorm, main }) => {
           <Header as="h2">
             <Header.Content>
               <Label color="blue" bold pointer>
-                {dorm.name.toLocaleUpperCase('TR')}
+                {question.question}
               </Label>
             </Header.Content>
           </Header>
@@ -39,4 +38,5 @@ export const SubDorm = ({ dorm, main }) => {
     </div>
   );
 };
-export default SubDorm;
+
+export default SubQuestion;

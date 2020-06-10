@@ -7,7 +7,7 @@ import { ClubForm } from '../Admin/ControlClub';
 
 export const SubClub = ({ club, main }) => {
   return (
-    <div style={main ? { marginLeft: '1em' } : null}>
+    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
       <Card
         as={Link}
         to={CLUB_PATH(club)}
@@ -60,8 +60,11 @@ export const SubClubAdmin = ({ club }) => {
       <Card
         fluid
         style={{
+          marginTop: '1em',
+          marginBottom: '0.6em',
           paddingLeft: '0.5em',
           paddingTop: '0.5em',
+          paddingBottom: '0.2em',
         }}
         onClick={() => handleEdit()}
       >

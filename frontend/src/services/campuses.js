@@ -8,10 +8,15 @@ const baseUrl =
 
 const getAll = async (setCampuses) => {
   const res = await axios.get(`${baseUrl}/`, config);
-  console.log('res', res);
   setCampuses(res.data);
+};
+
+const getCampusByName = async (name, setCampus) => {
+  const res = await axios.get(`${baseUrl}/${name}`, config);
+  setCampus(res.data);
 };
 
 export default {
   getAll,
+  getCampusByName,
 };

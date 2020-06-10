@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../reducers/teacherReducer';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../utils/config';
-import Comments from '../Comments/Comments';
+import IdComments from '../Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import {
   Icon,
@@ -44,7 +44,7 @@ const Teacher = () => {
           {teacher.lessons.map((l) => (
             <li key={l.id} style={{ paddingTop: '0.5em' }}>
               <Link to={LESSON_PATH(l, teacher.name)}>
-                <Label color="green" bold>
+                <Label color="green" bold pointer>
                   {' '}
                   {l.fullName.toUpperCase()} ·
                 </Label>
@@ -54,14 +54,9 @@ const Teacher = () => {
           ))}
         </ul>
       }
-
+      <Divider />
       <CommentSort />
-      <Comments
-        typeId={teacher.id}
-        type="teacher"
-        showSource={true}
-        commentType="lesson"
-      />
+      <IdComments typeId={teacher.id} type="teacher" commentType="lesson" />
     </div>
   );
 };

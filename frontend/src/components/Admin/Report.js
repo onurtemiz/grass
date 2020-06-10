@@ -9,7 +9,7 @@ const Report = ({ r }) => {
 
   const handleDestroy = () => {
     reportsService.destroyComment(report.id);
-    setReport({ ...report, isDestroyComment: !report.isDestroycomment });
+    setReport({ ...report, isDestroyComment: !report.isDestroyComment });
   };
 
   const handleHide = () => {

@@ -44,6 +44,12 @@ campusesRouter.all('*', async (req, res, next) => {
 
 //   res.end();
 // });
+campusesRouter.get('/:name', async (req, res) => {
+  const campus = await Campus.findOne({ name: req.params.name }).populate(
+    'comments'
+  );
+  return res.json(campus.toJSON());
+});
 
 campusesRouter.get('/', async (req, res) => {
   const campuses = await Campus.find();

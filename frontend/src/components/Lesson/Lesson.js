@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getLessonPageByName } from '../../reducers/allReducer';
 import { sortComment } from '../../reducers/commentReducer';
 import CommentForm from '../CommentForm/CommentForm';
-import Comments from '../Comments/Comments';
+import IdComments from '../Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../CommentSort/CommentSort';
@@ -50,7 +50,7 @@ const Lesson = () => {
         </Label>
 
         <Link to={`/teachers/${lesson.teacher.name}`}>
-          <Label color="green" bold>
+          <Label color="green" bold pointer>
             {' '}
             {lesson.teacher.name}
           </Label>{' '}
@@ -70,7 +70,7 @@ const Lesson = () => {
 
       <Divider />
       <CommentSort />
-      <Comments typeId={lesson.id} type="lesson" commentType="lesson" />
+      <IdComments typeId={lesson.id} type="lesson" />
     </div>
   );
 };

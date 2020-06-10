@@ -6,7 +6,7 @@ import { Label } from '../Nav/NavTheme';
 
 export const SubCampus = ({ campus, main }) => {
   return (
-    <div style={main ? { marginLeft: '1em' } : null}>
+    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
       <Card
         as={Link}
         to={CAMPUS_PATH(campus)}
@@ -17,6 +17,7 @@ export const SubCampus = ({ campus, main }) => {
                 marginTop: '1em',
                 paddingLeft: '0.5em',
                 paddingTop: '0.5em',
+                paddingBottom: '0.2em',
               }
             : {
                 paddingLeft: '0.5em',

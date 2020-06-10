@@ -1,17 +1,13 @@
 import React from 'react';
-import Comments from '../Comments/Comments';
+import Comments from '../Comments/IdComments';
 import CommentSort from '../CommentSort/CommentSort';
+import SquareComments from '../Comments/SquareComments';
 
 const AllComments = () => {
   return (
     <div>
       <CommentSort />
-      <Comments
-        type="allComments"
-        height="90vh"
-        showSource={true}
-        skeletonLength={2}
-      />
+      <SquareComments height="90vh" />
     </div>
   );
 };

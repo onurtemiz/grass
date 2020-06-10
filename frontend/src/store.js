@@ -11,6 +11,8 @@ import allReducer from './reducers/allReducer';
 import usersReducer from './reducers/usersReducer';
 import clubReducer from './reducers/clubReducer';
 import tipReducer from './reducers/tipReduer';
+import questionReducer from './reducers/questionReducer';
+
 const reducer = combineReducers({
   teachers: teacherReducer,
   lessons: lessonReducer,
@@ -21,6 +23,7 @@ const reducer = combineReducers({
   users: usersReducer,
   clubs: clubReducer,
   tips: tipReducer,
+  questions: questionReducer,
 });
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));

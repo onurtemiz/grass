@@ -33,11 +33,14 @@ const reportSchema = new mongoose.Schema({
   teacherId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
-    required: true,
   },
-  lessonId: {
+  typeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Lesson',
+    required: true,
+  },
+  reportedCommentType: {
+    type: String,
     required: true,
   },
   reportedCommentLikes: [

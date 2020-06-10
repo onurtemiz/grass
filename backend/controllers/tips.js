@@ -25,7 +25,7 @@ tipsRouter.all('*', async (req, res, next) => {
 });
 
 tipsRouter.get('/total', async (req, res) => {
-  const total = await Tip.find().countDocuments();
+  const total = await Tip.find({ isApproved: true }).countDocuments();
   res.json({ total: total });
 });
 
@@ -149,7 +149,9 @@ tipsRouter.get('/', async (req, res) => {
       error: 'missing count or start',
     });
   }
-  const tips = await Tip.find().skip(Number(q.start)).limit(Number(q.total));
+  const tips = await Tip.find({ isApproved: true })
+    .skip(Number(q.start))
+    .limit(Number(q.total));
   const jsonedTips = tips.map((t) => t.toJSON());
   let filteredTips = [];
   for (let i = 0; i < jsonedTips.length; i++) {

@@ -20,6 +20,18 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Club',
   },
+  campus: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Campus',
+  },
+  dorm: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Dorm',
+  },
+  question: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Question',
+  },
   comment: { type: String, required: true, maxlength: 4000 },
   likes: [
     {
@@ -29,7 +41,7 @@ const commentSchema = new mongoose.Schema({
     },
   ],
   date: { type: Date, required: true, default: Date.now },
-  isHidden: { type: Boolean, required: true, default: false },
+  isHidden: { type: Boolean, default: false },
   commentType: { type: String, required: true },
 });
 
@@ -43,7 +55,13 @@ commentSchema.statics.getMostPopularFeed = async function (
   let comments = await this.aggregate([
     {
       $match: {
-        $or: [{ lesson: { $in: ids } }, { club: { $in: ids } }],
+        $or: [
+          { lesson: { $in: ids } },
+          { club: { $in: ids } },
+          { campus: { $in: ids } },
+          { dorm: { $in: ids } },
+          { question: { $in: ids } },
+        ],
       },
     },
     {
@@ -58,6 +76,9 @@ commentSchema.statics.getMostPopularFeed = async function (
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
+        campus: 1,
+        dorm: 1,
+        question: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -93,6 +114,30 @@ commentSchema.statics.getMostPopularFeed = async function (
         localField: 'club',
         foreignField: '_id',
         as: 'club',
+      },
+    },
+    {
+      $lookup: {
+        from: 'campus',
+        localField: 'campus',
+        foreignField: '_id',
+        as: 'campus',
+      },
+    },
+    {
+      $lookup: {
+        from: 'dorms',
+        localField: 'dorm',
+        foreignField: '_id',
+        as: 'dorm',
+      },
+    },
+    {
+      $lookup: {
+        from: 'questions',
+        localField: 'question',
+        foreignField: '_id',
+        as: 'question',
       },
     },
   ]);
@@ -114,6 +159,9 @@ commentSchema.statics.getMostPopularById = async function (
           { lesson: new mongoose.Types.ObjectId(id) },
           { user: new mongoose.Types.ObjectId(id) },
           { club: new mongoose.Types.ObjectId(id) },
+          { dorm: new mongoose.Types.ObjectId(id) },
+          { campus: new mongoose.Types.ObjectId(id) },
+          { question: new mongoose.Types.ObjectId(id) },
         ],
       },
     },
@@ -129,6 +177,9 @@ commentSchema.statics.getMostPopularById = async function (
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
+        dorm: 1,
+        campus: 1,
+        question: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -164,6 +215,31 @@ commentSchema.statics.getMostPopularById = async function (
         localField: 'club',
         foreignField: '_id',
         as: 'club',
+      },
+    },
+    {
+      $lookup: {
+        from: 'campus',
+        localField: 'campus',
+        foreignField: '_id',
+        as: 'campus',
+      },
+    },
+    {
+      $lookup: {
+        from: 'dorms',
+        localField: 'dorm',
+        foreignField: '_id',
+        as: 'dorm',
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'questions',
+        localField: 'question',
+        foreignField: '_id',
+        as: 'question',
       },
     },
   ]);
@@ -189,6 +265,9 @@ commentSchema.statics.getMostPopular = async function (
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
+        dorm: 1,
+        campus: 1,
+        question: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -226,6 +305,31 @@ commentSchema.statics.getMostPopular = async function (
         as: 'club',
       },
     },
+    {
+      $lookup: {
+        from: 'campus',
+        localField: 'campus',
+        foreignField: '_id',
+        as: 'campus',
+      },
+    },
+    {
+      $lookup: {
+        from: 'dorms',
+        localField: 'dorm',
+        foreignField: '_id',
+        as: 'dorm',
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'questions',
+        localField: 'question',
+        foreignField: '_id',
+        as: 'question',
+      },
+    },
   ]);
   comments = jsonComments(comments);
   return comments;
@@ -254,11 +358,28 @@ const jsonComments = (comments) => {
         id: c.club[0]._id,
         shortName: c.club[0].shortName,
       };
+    } else if (c.commentType === 'dorm') {
+      c.dorm = {
+        name: c.dorm[0].name,
+        id: c.dorm[0]._id,
+      };
+    } else if (c.commentType === 'campus') {
+      c.campus = {
+        name: c.campus[0].name,
+        id: c.campus[0]._id,
+      };
+    } else if (c.commentType === 'question') {
+      c.question = {
+        question: c.question[0].question,
+        description: c.question[0].description,
+        id: c.question[0]._id,
+      };
     }
     c.id = c._id.toString();
     delete c._id;
     delete c.__v;
   });
+
   return comments;
 };
 
@@ -274,7 +395,10 @@ commentSchema.statics.getRecentPast = function (
     .populate('user')
     .populate('lesson')
     .populate('club')
-    .populate('teacher');
+    .populate('teacher')
+    .populate('campus')
+    .populate('dorm')
+    .populate('question');
 };
 
 commentSchema.statics.getRecentPastFeed = function (
@@ -284,7 +408,13 @@ commentSchema.statics.getRecentPastFeed = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
-    $or: [{ lesson: { $in: ids } }, { club: { $in: ids } }],
+    $or: [
+      { lesson: { $in: ids } },
+      { club: { $in: ids } },
+      { campus: { $in: ids } },
+      { dorm: { $in: ids } },
+      { question: { $in: ids } },
+    ],
   })
     .sort({ _id: sort })
     .skip(Number(start))
@@ -292,7 +422,10 @@ commentSchema.statics.getRecentPastFeed = function (
     .populate('user')
     .populate('lesson')
     .populate('club')
-    .populate('teacher');
+    .populate('teacher')
+    .populate('campus')
+    .populate('dorm')
+    .populate('question');
 };
 
 commentSchema.statics.getRecentPastById = function (
@@ -302,7 +435,15 @@ commentSchema.statics.getRecentPastById = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
-    $or: [{ teacher: id }, { lesson: id }, { user: id }, { club: id }],
+    $or: [
+      { teacher: id },
+      { lesson: id },
+      { user: id },
+      { club: id },
+      { campus: id },
+      { dorm: id },
+      { question: id },
+    ],
   })
     .sort({ _id: sort })
     .skip(Number(start))
@@ -310,7 +451,10 @@ commentSchema.statics.getRecentPastById = function (
     .populate('user')
     .populate('lesson')
     .populate('club')
-    .populate('teacher');
+    .populate('teacher')
+    .populate('campus')
+    .populate('dorm')
+    .populate('question');
 };
 
 commentSchema.set('toJSON', {

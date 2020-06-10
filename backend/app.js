@@ -19,7 +19,7 @@ const Connect = require('./models/connect');
 const clubsRouter = require('./controllers/clubs');
 const campusesRouter = require('./controllers/campuses');
 const dormsRouter = require('./controllers/dorms');
-
+const questionsRouter = require('./controllers/questions');
 const mongoUri = async () => {
   let mongoUri;
   if (process.env.NODE_ENV === 'test') {
@@ -73,7 +73,7 @@ app.use(function (req, res, next) {
   req.io = io;
   next();
 });
-
+app.use('/api/questions', questionsRouter);
 app.use('/api/dorms', dormsRouter);
 app.use('/api/campuses', campusesRouter);
 app.use('/api/clubs', clubsRouter);

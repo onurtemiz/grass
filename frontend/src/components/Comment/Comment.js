@@ -9,9 +9,11 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import CommentForm from '../CommentForm/CommentForm';
 import SubComment from './SubComment';
+import EditComment from './EditComment';
 
-const Comment = ({ comment, showSource, typeId }) => {
+const Comment = ({ comment, showSource }) => {
   const [isUpdate, setIsUpdate] = useState(false);
+
   if (!isUpdate) {
     return (
       <div
@@ -37,13 +39,7 @@ const Comment = ({ comment, showSource, typeId }) => {
           marginTop: '1rem',
         }}
       >
-        <CommentForm
-          typeId={typeId}
-          commentType={comment.commentType}
-          comment={comment}
-          setIsUpdate={setIsUpdate}
-          isUpdate={true}
-        />
+        <EditComment comment={comment} setIsUpdate={setIsUpdate} />
       </div>
     );
   }

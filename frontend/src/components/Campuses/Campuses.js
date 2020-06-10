@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import campusesService from '../../services/campuses';
-import { Loading } from '../Comments/Comments';
+import CommentsLoading from '../Comments/CommentsLoading';
 import InfiniteScroll from 'react-infinite-scroller';
 import SubCampus from './SubCampus';
 
@@ -11,13 +11,15 @@ const Campuses = ({ main }) => {
     campusesService.getAll(setCampuses);
   }, []);
   if (campuses.length === 0) {
-    return <Loading />;
+    return <CommentsLoading />;
   }
 
   return (
     <div
       style={{
-        height: '50vh',
+        // height: '50vh',
+        minHeight: '300px',
+        maxHeight: '500px',
         // width: '100vw',
         // overflow: 'auto',
       }}
@@ -27,7 +29,7 @@ const Campuses = ({ main }) => {
         // loadMore={loadFunc}
         useWindow={true}
         hasMore={false}
-        loader={<Loading />}
+        loader={<CommentsLoading />}
       >
         {campuses.map((c) => (
           <SubCampus key={c.id} campus={c} main={main ? true : false} />

@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Lesson = require('../models/lesson');
 const Club = require('../models/club');
+const Question = require('../models/question');
+const Dorm = require('../models/dorm');
+const Campus = require('../models/campus');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -54,13 +57,18 @@ usersRouter.get('/following', async (req, res) => {
       error: 'user not found',
     });
   }
-  console.log('user.following', user.following);
   const clubs = await Club.find({ _id: { $in: user.following } });
+  const questions = await Question.find({ _id: { $in: user.following } });
+  const dorms = await Dorm.find({ _id: { $in: user.following } });
+  const campuses = await Campus.find({ _id: { $in: user.following } });
   const lessons = await Lesson.find({ _id: { $in: user.following } }).populate(
     'teacher'
   );
   const allFollowing = {
     clubs: clubs.map((c) => c.toJSON()),
+    questions: questions.map((c) => c.toJSON()),
+    dorms: dorms.map((c) => c.toJSON()),
+    campuses: campuses.map((c) => c.toJSON()),
     lessons: lessons.map((l) => l.toJSON()),
   };
   res.json(allFollowing);

@@ -11,6 +11,11 @@ const getAll = async (setDorms) => {
   setDorms(res.data);
 };
 
+const getDormByName = async (name, setDorm) => {
+  const res = await axios.get(`${baseUrl}/${name}`, config);
+  setDorm(res.data);
+};
 export default {
   getAll,
+  getDormByName,
 };

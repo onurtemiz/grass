@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dormsService from '../../services/dorms';
-import { Loading } from '../Comments/Comments';
+import CommentsLoading from '../Comments/CommentsLoading';
 import InfiniteScroll from 'react-infinite-scroller';
 import SubDorm from './SubDorm';
 
@@ -11,13 +11,14 @@ const Dorms = ({ main }) => {
     dormsService.getAll(setDorms);
   }, []);
   if (dorms.length === 0) {
-    return <Loading />;
+    return <CommentsLoading />;
   }
 
   return (
     <div
       style={{
-        height: '50vh',
+        minHeight: '300px',
+        maxHeight: '500px',
         // width: '100vw',
         overflow: 'auto',
       }}
@@ -27,7 +28,7 @@ const Dorms = ({ main }) => {
         // loadMore={loadFunc}
         useWindow={true}
         hasMore={false}
-        loader={<Loading />}
+        loader={<CommentsLoading />}
       >
         {dorms.map((d) => (
           <SubDorm key={d.id} dorm={d} main={main ? true : false} />

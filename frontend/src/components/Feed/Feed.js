@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import Comments from '../Comments/Comments';
 import CommentSort from '../CommentSort/CommentSort';
-import { useSelector } from 'react-redux';
 import NoFeed from './NoFeed';
 import { useFollowed } from '../Following/FollowedHook';
+import FeedComments from '../Comments/FeedComments';
+import userService from '../../services/user';
+
 const Feed = () => {
-  const lessons = useFollowed();
   const [blocking, setBlocking] = useState(null);
+  const [following, setFollowing] = useState();
   useEffect(() => {
-    if (lessons.length === 0) {
-      setBlocking('noLesson');
-    } else {
-      const comments = lessons.reduce(
-        (total, l) => total + l.comments.length,
-        0
-      );
-      if (comments === 0) {
-        setBlocking('noComment');
-      } else {
-        setBlocking(null);
-      }
+    userService.getFollowing(setFollowing);
+  }, []);
+
+  const getLength = (following) => {
+    if (following != undefined) {
+      let total = 0;
+      total += following.clubs.length;
+      total += following.lessons.length;
+      total += following.questions.length;
+      total += following.campuses.length;
+      total += following.dorms.length;
+      return total;
     }
-  }, [lessons]);
+    return 0;
+  };
+
+  useEffect(() => {
+    if (getLength(following).length === 0) {
+      setBlocking('noLesson');
+    }
+  }, [following]);
 
   if (blocking) {
     return <NoFeed blocking={blocking} />;
@@ -30,12 +38,7 @@ const Feed = () => {
   return (
     <div>
       <CommentSort />
-      <Comments
-        type="feed"
-        height="90vh"
-        showSource={true}
-        skeletonLength={2}
-      />
+      <FeedComments height="90vh" />
     </div>
   );
 };

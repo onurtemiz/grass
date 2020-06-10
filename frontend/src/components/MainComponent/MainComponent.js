@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedUser } from '../../reducers/userReducer';
 import { LinearProgress } from '@material-ui/core';
-import Comments from '../Comments/Comments';
+import Comments from '../Comments/IdComments';
 import { Header, Tab, Menu, Icon, Segment } from 'semantic-ui-react';
 import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
@@ -20,6 +20,8 @@ import Campus from '../Campus/Campus';
 import Dorm from '../Dorm/Dorm';
 import Dorms from '../Dorms/Dorms';
 import SubDorm from '../Dorms/SubDorm';
+import Question from '../Question/Question';
+import Questions from '../Questions/Questions';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ const MainComponent = () => {
   const clubPageMatch = useRouteMatch('/clubs/:name');
   const campusPageMatch = useRouteMatch('/campuses/:name');
   const dormitoryPageMatch = useRouteMatch('/dorms/:name');
+  const questionPageMatch = useRouteMatch('/questions/:id');
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
@@ -40,12 +43,14 @@ const MainComponent = () => {
       setActiveIndex(1);
     } else if (location.pathname.includes('clubs')) {
       setActiveIndex(2);
-    } else if (location.pathname.includes('campuses')) {
+    } else if (location.pathname.includes('questions')) {
       setActiveIndex(3);
-    } else if (location.pathname.includes('dorms')) {
+    } else if (location.pathname.includes('campuses')) {
       setActiveIndex(4);
-    } else if (location.pathname.includes('tips')) {
+    } else if (location.pathname.includes('dorms')) {
       setActiveIndex(5);
+    } else if (location.pathname.includes('tips')) {
+      setActiveIndex(6);
     }
   }, [location]);
 
@@ -62,10 +67,12 @@ const MainComponent = () => {
     } else if (data.activeIndex === 2) {
       history.push('/clubs');
     } else if (data.activeIndex === 3) {
-      history.push('/campuses');
+      history.push('/questions');
     } else if (data.activeIndex === 4) {
-      history.push('/dorms');
+      history.push('/campuses');
     } else if (data.activeIndex === 5) {
+      history.push('/dorms');
+    } else if (data.activeIndex === 6) {
       history.push('/tips');
     }
   };
@@ -83,6 +90,7 @@ const MainComponent = () => {
       render: () => (
         <Segment
           basic={teacherPageMatch && teacherPageMatch.isExact ? true : false}
+          style={{ marginRight: '0.5em' }}
         >
           {teacherPageMatch && teacherPageMatch.isExact ? (
             <Teacher />
@@ -104,6 +112,7 @@ const MainComponent = () => {
       render: () => (
         <Segment
           basic={lessonPageMatch && lessonPageMatch.isExact ? true : false}
+          style={{ marginRight: '0.5em' }}
         >
           {lessonPageMatch && lessonPageMatch.isExact ? (
             <Lesson />
@@ -123,7 +132,10 @@ const MainComponent = () => {
         color: 'green',
       },
       render: () => (
-        <Segment basic={clubPageMatch && clubPageMatch.isExact ? true : false}>
+        <Segment
+          basic={clubPageMatch && clubPageMatch.isExact ? true : false}
+          style={{ marginRight: '0.5em' }}
+        >
           {clubPageMatch && clubPageMatch.isExact ? <Club /> : <Clubs main />}
         </Segment>
       ),
@@ -132,6 +144,28 @@ const MainComponent = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(3)}>
+            Sorular
+          </Label>
+        ),
+        color: 'green',
+      },
+      render: () => (
+        <Segment
+          basic={questionPageMatch && questionPageMatch.isExact ? true : false}
+          style={{ marginRight: '0.5em' }}
+        >
+          {questionPageMatch && questionPageMatch.isExact ? (
+            <Question />
+          ) : (
+            <Questions main />
+          )}
+        </Segment>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(4)}>
             Kampüsler
           </Label>
         ),
@@ -140,6 +174,7 @@ const MainComponent = () => {
       render: () => (
         <Segment
           basic={campusPageMatch && campusPageMatch.isExact ? true : false}
+          style={{ marginRight: '0.5em' }}
         >
           {campusPageMatch && campusPageMatch.isExact ? (
             <Campus />
@@ -152,7 +187,7 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(4)}>
+          <Label bold pointer color={getColor(5)}>
             Yurtlar
           </Label>
         ),
@@ -163,6 +198,7 @@ const MainComponent = () => {
           basic={
             dormitoryPageMatch && dormitoryPageMatch.isExact ? true : false
           }
+          style={{ marginRight: '0.5em' }}
         >
           {dormitoryPageMatch && dormitoryPageMatch.isExact ? (
             <Dorm />
@@ -175,7 +211,7 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(5)}>
+          <Label bold pointer color={getColor(6)}>
             Tavsiyeler
           </Label>
         ),

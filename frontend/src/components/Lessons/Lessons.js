@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfLesson } from '../../reducers/lessonReducer';
 import SubLesson from '../Teachers/SubLesson';
+import CommentsLoading from '../Comments/CommentsLoading';
 const Lessons = ({ main }) => {
   const count = useSelector((state) => state.lessons.count);
   const start = useSelector((state) => state.lessons.start);
@@ -19,7 +20,8 @@ const Lessons = ({ main }) => {
     dispatch(addInfLesson(start, count, filter));
   };
   const windowStyle = {
-    height: 400,
+    minHeight: '300px',
+    maxHeight: '500px',
     overflow: 'auto',
   };
 
@@ -31,7 +33,7 @@ const Lessons = ({ main }) => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            Loading ...
+            <CommentsLoading skeletonLength={1} />
           </div>
         }
         useWindow={false}

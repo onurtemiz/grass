@@ -5,6 +5,7 @@ import { addInfTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 import { LinearProgress } from '@material-ui/core';
 import { Card } from 'semantic-ui-react';
+import CommentsLoading from '../Comments/CommentsLoading';
 
 const Teachers = () => {
   const count = useSelector((state) => state.teachers.count);
@@ -22,10 +23,10 @@ const Teachers = () => {
     dispatch(addInfTeacher(start, count, filter));
   };
   const windowStyle = {
-    height: 400,
+    minHeight: '300px',
+    maxHeight: '500px',
     overflow: 'auto',
   };
-
   if (teachers.length === 0) {
     return <LinearProgress />;
   }
@@ -37,7 +38,7 @@ const Teachers = () => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            <LinearProgress />
+            <CommentsLoading skeletonLength={1} />
           </div>
         }
         useWindow={false}

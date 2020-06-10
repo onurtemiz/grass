@@ -73,7 +73,7 @@ const Nav = ({ search, admin }) => {
             ÇİM
           </Label>{' '}
           <Label pointer color="blue">
-            ALPHA v0.8
+            ALPHA v0.9
           </Label>
         </label>
       </Menu.Item>
@@ -108,12 +108,9 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('comments')}
         header
       >
-        <Icon
-          name="comments"
-          color={active === 'comments' ? 'green' : 'blue'}
-        />
+        <Icon name="users" color={active === 'comments' ? 'green' : 'blue'} />
         <Label color={active === 'comments' ? 'green' : 'blue'} pointer>
-          Tüm Yorumlar
+          Meydan
         </Label>
       </Menu.Item>
       {admin ? (

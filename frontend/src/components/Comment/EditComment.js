@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { postComment } from '../../reducers/commentReducer';
+import React, { useState, useEffect } from 'react';
+import { updateComment } from '../../reducers/commentReducer';
 import { useDispatch } from 'react-redux';
 import { Form, Button, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 
-const CommentForm = ({ typeId, commentType, teacherId }) => {
+const EditComment = ({ comment, setIsUpdate }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [commentError, setCommentError] = useState('');
   const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setValue(comment.comment);
+    setTools(true);
+  }, []);
 
   const handleCommentChange = (e) => {
     setValue(e.target.value);
@@ -21,26 +26,13 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
       setCommentError('4000 harften çok olamaz.');
       return;
     }
-
-    let values = {
-      comment: value,
-      typeId,
-      teacherId: teacherId ? teacherId : null,
-      commentType,
-    };
-
     setIsLoading(true);
-    dispatch(postComment(values, setValue, setIsLoading));
+    dispatch(updateComment(value, comment.id, setIsUpdate, setIsLoading));
   };
 
   return (
-    <Segment
-      compact
-      basic
-      loading={isLoading}
-      style={{ paddingLeft: '0', marginLeft: '0' }}
-    >
-      <Form reply style={{ marginBottom: '1em' }}>
+    <Segment compact basic loading={isLoading}>
+      <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
         <TextareaAutosize
           rows={4}
           value={value}
@@ -59,7 +51,7 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
             )}
             <Button
               style={{ marginTop: '1em' }}
-              content={'Yorum Yazın'}
+              content={'Yorumu Düzenleyin'}
               labelPosition="left"
               icon="edit"
               color="green"
@@ -85,4 +77,4 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
   );
 };
 
-export default CommentForm;
+export default EditComment;

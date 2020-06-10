@@ -11,6 +11,7 @@
     "axios": "^0.19.2",
     "formik": "^2.1.4",
     "lodash": "^4.17.15",
+    "moment": "^2.26.0",
     "notistack": "^0.9.14",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",

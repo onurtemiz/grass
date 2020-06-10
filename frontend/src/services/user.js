@@ -32,9 +32,10 @@ const getUserById = async (id) => {
   return res.data;
 };
 
-const getFollowing = async () => {
+const getFollowing = async (setFollowing) => {
   const res = await axios.get(`${baseUrl}/following`, config);
-  return res.data;
+  console.log('res.data', res.data);
+  setFollowing(res.data);
 };
 
 const unfollowLesson = async (id) => {

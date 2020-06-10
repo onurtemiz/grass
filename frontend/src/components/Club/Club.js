@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClubPageByName } from '../../reducers/clubReducer';
 import { Link } from 'react-router-dom';
-import Comments from '../Comments/Comments';
+import IdComments from '../Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import {
   Icon,
@@ -43,13 +43,9 @@ const Club = () => {
         {club.fullName}
       </Label>
       <CommentForm typeId={club.id} commentType="club" />
+      <Divider />
       <CommentSort />
-      <Comments
-        typeId={club.id}
-        type="club"
-        showClub={true}
-        commentType="club"
-      />
+      <IdComments typeId={club.id} type="club" />
     </div>
   );
 };

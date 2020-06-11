@@ -9,6 +9,8 @@ const Club = require('../models/club');
 const Question = require('../models/question');
 const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
+const Notification = require('../models/notification');
+const Comment = require('../models/comment');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -103,6 +105,59 @@ usersRouter.put('/follow', async (req, res) => {
   }
   await user.save();
   res.status(200).end();
+});
+
+usersRouter.all('*', async (req, res, next) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({
+      error: 'token missing or invalid',
+    });
+  }
+  const user = await User.findById(decodedToken.id);
+
+  if (user == undefined) {
+    return res.status(401).json({
+      error: 'user not found',
+    });
+  }
+
+  req.user = decodedToken.id;
+
+  next();
+});
+
+usersRouter.get('/notifications', async (req, res) => {
+  const notifications = await Notification.find({ target: req.user })
+    .populate({ path: 'responsible', select: 'username' })
+    .populate({
+      path: 'tool',
+      populate: {
+        path: 'lesson',
+        select: ['digitCode', 'areaCode'],
+        populate: { path: 'teacher', select: 'name' },
+      },
+    })
+    .populate({
+      path: 'tool',
+      populate: { path: 'club', select: 'shortName' },
+    })
+    .populate({
+      path: 'tool',
+      populate: { path: 'dorm', select: 'name' },
+    })
+    .populate({
+      path: 'tool',
+      populate: { path: 'campus', select: 'name' },
+    });
+
+  res.json(notifications.map((n) => n.toJSON()));
+});
+
+usersRouter.delete('/notifications', async (req, res) => {
+  await Notification.deleteMany({ target: req.user });
+  res.status(204).end();
 });
 
 usersRouter.put('/', async (req, res) => {

@@ -4,21 +4,30 @@ import { getPopulatedUser } from '../../reducers/usersReducer';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../Comments/IdComments';
 import { Header, Label } from 'semantic-ui-react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 const User = () => {
   const dispatch = useDispatch();
-  const match = useRouteMatch('/users/:username/').params;
+  const match = useRouteMatch('/users/:username/');
   const users = useSelector((state) => state.users);
   const currentUser = useSelector((state) => state.user);
-
+  const [user, setUser] = useState(null);
+  const location = useLocation;
   useEffect(() => {
-    dispatch(getPopulatedUser(match.username));
+    dispatch(getPopulatedUser(match.params.username));
   }, []);
 
-  if (users.find((u) => u.username === match.username) === undefined) {
+  useEffect(() => {
+    let foundUser = users.find((u) => u.username === match.params.username);
+    setUser(foundUser);
+  }, [users, location, match]);
+
+  if (match.params.username === currentUser.username) {
+    return <Redirect to="/user" />;
+  }
+  if (user == null) {
     return <LinearProgress />;
   }
-  const user = users.find((u) => u.username === match.username);
+
   return (
     <div style={{ height: '90vh' }}>
       <Header as="h1" color="green">

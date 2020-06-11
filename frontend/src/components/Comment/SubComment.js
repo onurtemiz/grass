@@ -64,12 +64,14 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
             <UserAndMeta comment={comment} showSource={showSource} />
             <SComment.Text>{comment.comment}</SComment.Text>
             <SComment.Actions>
-              <SComment.Action onClick={handleLike} active={likeType}>
-                <Icon name="paw" color={likeType ? 'blue' : 'green'} />
-                <Label bold pointer color={likeType ? 'blue' : 'green'}>
-                  {likeType === true ? 'Patiledin' : 'Patile'}
-                </Label>
-              </SComment.Action>
+              {user.id !== comment.user.id ? (
+                <SComment.Action onClick={handleLike} active={likeType}>
+                  <Icon name="paw" color={likeType ? 'blue' : 'green'} />
+                  <Label bold pointer color={likeType ? 'blue' : 'green'}>
+                    {likeType === true ? 'Patiledin' : 'Patile'}
+                  </Label>
+                </SComment.Action>
+              ) : null}
               {user.id !== comment.user.id ? (
                 <SComment.Action
                   onClick={handleReport}
@@ -155,7 +157,7 @@ const LessonType = ({ comment }) => {
   return (
     <Link to={LESSON_PATH(comment.lesson, comment.teacher.name)}>
       <Label color="blue" pointer>
-        {comment.lesson.fullName.toUpperCase()}
+        {`${comment.lesson.fullName.toUpperCase()} · ${comment.teacher.name}`}
       </Label>
     </Link>
   );

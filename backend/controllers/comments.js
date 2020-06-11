@@ -9,6 +9,7 @@ const Club = require('../models/club');
 const Campus = require('../models/campus');
 const Dorm = require('../models/dorm');
 const Question = require('../models/question');
+const Notification = require('../models/notification');
 
 const getCommentFilter = async (q) => {
   let comments;
@@ -361,6 +362,19 @@ commentsRouter.post('/', async (req, res) => {
     .populate('campus')
     .populate('question');
 
+  const followers = await User.find({ following: { $in: [body.typeId] } });
+  for (let i = 0; i < followers.length; i++) {
+    if (!followers[i].equals(user._id)) {
+      let userCommentNotify = new Notification({
+        target: followers[i]._id,
+        notificationType: 'newComment',
+        tool: populatedComment._id,
+        responsible: user._id,
+      });
+      await userCommentNotify.save();
+    }
+  }
+
   res.json(populatedComment.toJSON());
 });
 
@@ -394,14 +408,24 @@ commentsRouter.put('/:id', async (req, res) => {
 
     if (isLiked) {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
+      await Notification.findOneAndRemove({
+        tool: comment._id,
+        responsible: user._id,
+        target: comment.user,
+        notificationType: 'like',
+      });
     } else {
       comment.likes = comment.likes.concat(user._id);
-      const connections = await Connect.find({ userId: comment.user });
-      connections.map((c) => {
-        req.io
-          .to(c.socketId)
-          .emit('likedUser', `${user.username} yorumunu beğendi.`);
-      });
+      let notify = await Notification.findOne({ tool: comment._id });
+      if (!notify) {
+        notify = new Notification({
+          tool: comment._id,
+          responsible: user._id,
+          target: comment.user,
+          notificationType: 'like',
+        });
+        await notify.save();
+      }
     }
   }
   await comment.save();

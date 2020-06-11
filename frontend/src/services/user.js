@@ -28,7 +28,7 @@ const checkAdmin = async (setIsAdmin) => {
 };
 
 const getUserById = async (id) => {
-  const res = await axios.get(`${baseUrl}?id=${id}`);
+  const res = await axios.get(`${baseUrl}?id=${id}`, config);
   return res.data;
 };
 
@@ -38,12 +38,24 @@ const getFollowing = async (setFollowing) => {
   setFollowing(res.data);
 };
 
+const getNotifications = async (setNotifications, setLoading) => {
+  const res = await axios.get(`${baseUrl}/notifications`, config);
+  console.log('notifyyy', res.data);
+
+  setNotifications(res.data);
+  setLoading(false);
+};
+
+const deleteNotifications = async () => {
+  await axios.delete(`${baseUrl}/notifications`, config);
+};
+
 const unfollowLesson = async (id) => {
   const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
   return res.data;
 };
 const getPopulatedUser = async (username) => {
-  const res = await axios.get(`${baseUrl}/${username}`);
+  const res = await axios.get(`${baseUrl}/${username}`, config);
   return res.data;
 };
 
@@ -55,4 +67,6 @@ export default {
   checkAdmin,
   getUserById,
   getFollowing,
+  getNotifications,
+  deleteNotifications,
 };

@@ -71,6 +71,7 @@ const IdComments = ({ type, typeId, height }) => {
         {currentComments.map((c) => (
           <Comment
             key={c.id}
+            id={c.id}
             comment={c}
             showSource={type === 'teacher' || type === 'user' ? true : false}
           />

@@ -21,42 +21,13 @@ import ControlTips from './components/Admin/ControlTips';
 import ControlReports from './components/Admin/ControlReports';
 import MainUser from './components/User/MainUser';
 import { useSelector } from 'react-redux';
-import io from 'socket.io-client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MainComponent from './components/MainComponent/MainComponent';
 import ControlClub from './components/Admin/ControlClub';
 const DefaultContainer = () => {
-  const user = useSelector((state) => state.user);
-  const notify = (msg) => toast.success(`${msg}`);
-  useEffect(() => {
-    const socket =
-      !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-        ? io.connect('http://localhost:3001')
-        : io();
-    console.log('hessy');
-    socket.on('connect', () => {
-      socket.emit('connected', user.id);
-    });
-    socket.on('likedUser', (msg) => {
-      console.log('msg', msg);
-      notify(msg);
-    });
-  }, []);
-
   return (
     <div>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <Switch>
         <Route path="/control" component={MainComponent} />
         <Route path="/clubs/:name" component={MainComponent} />

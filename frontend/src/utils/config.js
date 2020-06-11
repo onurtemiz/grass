@@ -7,6 +7,10 @@ export const TEACHER_PATH = (teacher) => {
   return `/teachers/${teacher.name}`;
 };
 
+export const USER_PATH = (user) => {
+  return `/users/${user.username ? user.username : user}`;
+};
+
 export const CLUB_PATH = (club) => {
   return `/clubs/${club.shortName ? club.shortName : club}`;
 };

@@ -3,7 +3,6 @@ const express = require('express');
 require('express-async-errors');
 const app = express();
 const path = require('path');
-
 const cors = require('cors');
 const mongoose = require('mongoose');
 const lessonsRouter = require('./controllers/lessons');
@@ -46,33 +45,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());
 app.use(middleware.tokenExtractor);
+app.use('/api/login', loginRouter);
 
-var io = require('socket.io').listen(app.listen(config.PORT || 3001));
-
-io.on('connection', (socket) => {
-  socket.on('connected', async (userId) => {
-    await Connect.findOneAndRemove({ userId: userId });
-    const c = new Connect({
-      socketId: socket.id,
-      userId: userId,
-    });
-    c.save();
-  });
-
-  socket.on('likedUser', (msg) => {
-    console.log('msg', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('het');
-    Connect.findOneAndRemove({ socketId: socket.id });
-  });
-});
-
-app.use(function (req, res, next) {
-  req.io = io;
-  next();
-});
 app.use('/api/questions', questionsRouter);
 app.use('/api/dorms', dormsRouter);
 app.use('/api/campuses', campusesRouter);
@@ -81,7 +55,6 @@ app.use('/api/all', allRouter);
 app.use('/api/teachers', teachersRouter);
 app.use('/api/lessons', lessonsRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/login', loginRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/tips', tipsRouter);
 app.use('/api/reports', reportsRouter);
@@ -91,4 +64,4 @@ app.get('/*', (req, res) => {
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-module.exports = { app, io };
+module.exports = app;

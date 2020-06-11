@@ -15,13 +15,14 @@ import {
 } from '../../utils/config';
 import { Label } from '../Nav/NavTheme';
 import userService from '../../services/user';
+import NoFollowingUser from './NoFollowingUser';
 const Following = () => {
   const user = useSelector((state) => state.user);
   const [following, setFollowing] = useState();
 
   useEffect(() => {
     userService.getFollowing(setFollowing);
-  }, []);
+  }, [user]);
 
   const getLength = (following) => {
     if (following != undefined) {
@@ -35,6 +36,10 @@ const Following = () => {
     }
     return 0;
   };
+
+  if (user.following.length === 0) {
+    return <NoFollowingUser />;
+  }
 
   if (getLength(following) !== user.following.length) {
     return [...Array(2)].map((e, i) => (

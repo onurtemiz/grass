@@ -4,6 +4,7 @@ import usersService from '../../services/user';
 import useAdmin from './useAdmin';
 import { Label } from '../Nav/NavTheme';
 import { Header } from 'semantic-ui-react';
+
 const Admin = () => {
   return (
     <div>

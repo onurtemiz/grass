@@ -17,6 +17,7 @@ import {
 import { NavSearch, Label } from './NavTheme';
 import { useSelector } from 'react-redux';
 import Search from '../Search/Search';
+import Notifications from '../Notifications/Notifications';
 
 const Nav = ({ search, admin }) => {
   const user = useSelector((state) => state.user);
@@ -130,10 +131,7 @@ const Nav = ({ search, admin }) => {
 
       <Menu.Menu position="right">
         <Menu.Item>
-          <Icon name="bell" color="blue" />{' '}
-          <Label color="blue" pointer bold>
-            Bildirimler
-          </Label>
+          <Notifications />
         </Menu.Item>
         <Menu.Item
           as={Link}

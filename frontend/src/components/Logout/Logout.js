@@ -11,7 +11,7 @@ const Logout = () => {
   return (
     <Menu.Item onClick={handleLogout} header color="blue">
       <Icon name="log out" color="blue" />
-      <Label color="blue" pinter>
+      <Label color="blue" pointer>
         Çıkış Yap
       </Label>
     </Menu.Item>

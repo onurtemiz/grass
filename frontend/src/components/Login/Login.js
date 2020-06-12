@@ -1,73 +1,54 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { useEffect } from 'react';
 import { loginUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Button,
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   Icon,
   Label,
   Divider,
-  Container,
 } from 'semantic-ui-react';
+import { useForm } from 'react-hook-form';
+
 const Login = () => {
+  const { register, handleSubmit, errors, setValue } = useForm();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const [password, setPassword] = useState('');
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .required('Required')
-      .matches(/^[A-Z0-9._%+-]+@boun\.edu\.tr$/i, 'email'),
-    password: Yup.string().required('Required').min(8, 'password'),
-  });
+  const history = useHistory();
+  const onSubmit = async (data) => {
+    dispatch(loginUser(data));
+  };
 
-  const handleSubmit = async () => {
-    validationSchema
-      .validate(
-        {
-          password,
-          email,
+  useEffect(() => {
+    history.push('/login');
+  }, []);
+
+  useEffect(() => {
+    register(
+      { name: 'email' },
+      {
+        required: 'Lütfen boun eposta adresinizi girin.',
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@boun\.edu\.tr$/i,
+          message: 'Epostanız @boun.edu.tr ile bitiyor olmalı.',
         },
-        { abortEarly: false }
-      )
-      .then((values) => {
-        dispatch(loginUser(values, setEmailError));
-      })
-      .catch((e) => {
-        e.errors.forEach((q) => {
-          switch (q) {
-            case 'password':
-              setPasswordError('Şifre en az 8 karakterden oluşmalı');
-              break;
-            case 'email':
-              setEmailError('Lütfen @boun.edu.tr emaili giriniz.');
-              break;
-
-            default:
-              return;
-          }
-        });
-      });
-  };
-
-  const emailSet = (value) => {
-    setEmailError(null);
-    setEmail(value);
-  };
-
-  const passwordSet = (value) => {
-    setPasswordError(null);
-    setPassword(value);
-  };
+      }
+    );
+    register(
+      { name: 'password' },
+      {
+        required: 'Lütfen şifrenizi girin.',
+        minLength: {
+          value: 8,
+          message: 'Şifreniz en az 8 karakterden oluşmalı.',
+        },
+      }
+    );
+  }, []);
 
   return (
     <Grid
@@ -86,22 +67,25 @@ const Login = () => {
           <Label color="blue" style={{ padding: 5 }}>
             @boun.edu.tr
           </Label>{' '}
-          emaili olanlar kayıt olabilir.
+          emaili olanlar giriş yapabilir.
         </Message>
-        <Form size="large">
+        <Form size="large" onSubmit={handleSubmit(onSubmit)}>
           <Segment>
-            <Form.Input
-              fluid
-              icon={<Icon color="green" name="mail" />}
-              iconPosition="left"
-              placeholder="Eposta Adresi"
-              onChange={(e) => emailSet(e.target.value)}
-            />
-            {emailError && (
-              <Label basic color="red" pointing="above">
-                {emailError}
-              </Label>
-            )}
+            <Form.Field inline>
+              <Form.Input
+                fluid
+                onChange={(e, { name, value }) => setValue(name, value)}
+                icon={<Icon color="green" name="mail" />}
+                iconPosition="left"
+                placeholder="Eposta Adresi"
+                name="email"
+              />
+              {errors.email && (
+                <Label basic color="red" pointing="above">
+                  {errors.email.message}
+                </Label>
+              )}
+            </Form.Field>
             <Form.Field inline>
               <Form.Input
                 fluid
@@ -109,26 +93,29 @@ const Login = () => {
                 iconPosition="left"
                 placeholder="Şifre"
                 type="password"
-                onChange={(e) => passwordSet(e.target.value)}
+                name="password"
+                onChange={(e, { name, value }) => setValue(name, value)}
               />
-              {passwordError && (
+              {errors.password && (
                 <Label basic color="red" pointing="above">
-                  {passwordError}
+                  {errors.password.message}
                 </Label>
               )}
             </Form.Field>
             <Divider />
-            <Button fluid size="large" primary onClick={handleSubmit}>
+            <Button fluid size="large" primary type="submit">
               Giriş Yap
             </Button>
           </Segment>
         </Form>
         <Message info>
-          <Link to="/signup">Hesap Oluştur</Link>
+          <Link to="/signup">
+            <b>Hesap Oluştur</b>
+          </Link>
         </Message>
         <Message error>
           <Link to="/signup" style={{ color: '#f53131' }}>
-            Şifremi Unuttum
+            <b>Şifremi Unuttum</b>
           </Link>
         </Message>
       </Grid.Column>

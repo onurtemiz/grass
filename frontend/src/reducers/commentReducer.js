@@ -92,14 +92,15 @@ export const sortComment = (option) => {
   };
 };
 
-export const postComment = (c, setValue, setIsLoading) => {
+export const postComment = (c, reset, setTools, setIsLoading) => {
   return async (dispatch) => {
     const comment = await commentsService.postComment(c);
     dispatch({
       type: 'ADD_COMMENT',
       data: comment,
     });
-    setValue('');
+    reset();
+    setTools(false);
     setIsLoading(false);
   };
 };

@@ -3,34 +3,23 @@ import { postComment } from '../../reducers/commentReducer';
 import { useDispatch } from 'react-redux';
 import { Form, Button, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useForm } from 'react-hook-form';
 
 const CommentForm = ({ typeId, commentType, teacherId }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
-  const [commentError, setCommentError] = useState('');
-  const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { register, handleSubmit, errors, reset } = useForm();
 
-  const handleCommentChange = (e) => {
-    setValue(e.target.value);
-    setCommentError('');
-  };
-
-  const handleComment = async () => {
-    if (value.length > 4000) {
-      setCommentError('4000 harften çok olamaz.');
-      return;
-    }
-
+  const handleComment = async (data) => {
     let values = {
-      comment: value,
+      comment: data.comment,
       typeId,
       teacherId: teacherId ? teacherId : null,
       commentType,
     };
-
     setIsLoading(true);
-    dispatch(postComment(values, setValue, setIsLoading));
+    dispatch(postComment(values, reset, setTools, setIsLoading));
   };
 
   return (
@@ -41,31 +30,40 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
       style={{ paddingLeft: '0', marginLeft: '0' }}
     >
       <Form reply style={{ marginBottom: '1em' }}>
-        <TextareaAutosize
-          rows={4}
-          value={value}
-          onChange={(e) => handleCommentChange(e)}
-          style={{ width: '30vw', height: '4rem' }}
-          placeholder="Nasıldır?"
-          onFocus={() => setTools(true)}
-        />
+        <Form.Field inline>
+          <TextareaAutosize
+            rows={4}
+            style={{ width: '30vw', height: '4rem' }}
+            placeholder="Nasıldır?"
+            name="comment"
+            ref={register({
+              required: 'Lütfen yorumunuzu yazın',
+              maxLength: {
+                value: 4000,
+                message: 'Yorumunuz 4000 karakterden az olmalı.',
+              },
+            })}
+            onFocus={() => setTools(true)}
+          />
 
+          {errors.comment && (
+            <>
+              <br />
+              <Label basic color="red" pointing="above">
+                {errors.comment.message}
+              </Label>
+            </>
+          )}
+        </Form.Field>
         {tools ? (
           <div>
-            {commentError && (
-              <Label basic color="red" pointing="above">
-                {commentError}
-              </Label>
-            )}
             <Button
               style={{ marginTop: '1em' }}
               content={'Yorum Yazın'}
               labelPosition="left"
               icon="edit"
               color="green"
-              onClick={() => {
-                handleComment();
-              }}
+              onClick={handleSubmit(handleComment)}
             />
             <Button
               style={{ marginTop: '1em' }}
@@ -75,7 +73,7 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
               color="red"
               onClick={() => {
                 setTools(false);
-                setValue('');
+                reset();
               }}
             />
           </div>

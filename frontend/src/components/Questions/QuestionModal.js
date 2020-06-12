@@ -5,26 +5,23 @@ import {
   Header,
   Form,
   Checkbox,
+  Label as ErrorLabel,
   Popup,
   Divider,
 } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import questionsService from '../../services/questions';
+import { useForm } from 'react-hook-form';
+
 const QuestionModal = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [question, setQuestion] = useState('');
-  const [description, setDescription] = useState('');
+  const { register, handleSubmit, errors, reset } = useForm();
 
-  const handleAction = async () => {
-    // setIsLoadıng(true)
-    await questionsService.postQuestion(
-      { question, description },
-      setQuestion,
-      setDescription,
-      setLoading
-    );
+  const handleAction = async (data) => {
+    setLoading(true);
+    await questionsService.postQuestion(data, reset, setLoading, setOpen);
   };
 
   return (
@@ -42,37 +39,68 @@ const QuestionModal = () => {
               <Header>
                 <Label color="green">Başlık</Label>
               </Header>
-
-              <Popup
-                trigger={
-                  <input
-                    value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
-                    placeholder="Sorunuzu yazın..."
-                    style={{ width: '30vw' }}
-                  />
-                }
-                content="Sorunuz 42 harf ya da daha az olmalı."
-                position="right center"
-              />
+              <Form.Field inline>
+                <Popup
+                  trigger={
+                    <input
+                      placeholder="Sorunuzu yazın..."
+                      style={{ width: '30vw' }}
+                      name="question"
+                      ref={register({
+                        required: 'Lütfen sorunuzu yazın',
+                        maxLength: {
+                          value: 42,
+                          message: 'Sorunuz 42 karakter veya daha az olmalı.',
+                        },
+                      })}
+                    />
+                  }
+                  content="Sorunuz 42 harf ya da daha az olmalı."
+                  position="right center"
+                />
+                {errors.question && (
+                  <>
+                    <br />
+                    <ErrorLabel basic color="red" pointing="above">
+                      {errors.question.message}
+                    </ErrorLabel>
+                  </>
+                )}
+              </Form.Field>
               <Divider />
               <Header>
                 <Label color="green">Açıklama</Label>
               </Header>
-              <Popup
-                trigger={
-                  <TextareaAutosize
-                    disabled={loading}
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    style={{ width: '30vw' }}
-                    placeholder="Sorunuzu detaylandırın..."
-                  />
-                }
-                content="1000 harf sayısını aşmayın."
-                position="right center"
-              />
+              <Form.Field inline>
+                <Popup
+                  trigger={
+                    <TextareaAutosize
+                      disabled={loading}
+                      rows={4}
+                      style={{ width: '30vw' }}
+                      placeholder="Sorunuzu detaylandırın..."
+                      name="description"
+                      ref={register({
+                        required: 'Lütfen sorunuzu detaylandırın.',
+                        maxLength: {
+                          value: 1000,
+                          message: 'Açıklamanız 1000 karakterden az olmalı.',
+                        },
+                      })}
+                    />
+                  }
+                  content="Açıklamanız 1000 karakter ya da daha az olmalı."
+                  position="right center"
+                />
+                {errors.description && (
+                  <>
+                    <br />
+                    <ErrorLabel basic color="red" pointing="above">
+                      {errors.description.message}
+                    </ErrorLabel>
+                  </>
+                )}
+              </Form.Field>
             </Form>
           </Modal.Description>
         </Modal.Content>
@@ -82,16 +110,16 @@ const QuestionModal = () => {
             negative
             content="İptal"
             icon="cancel"
-            labelPosition="right"
+            labelPosition="left"
             onClick={() => setOpen(false)}
           />
           <Button
             disabled={loading}
             positive
-            labelPosition="right"
+            labelPosition="left"
             icon="checkmark"
             content="Yolla"
-            onClick={() => handleAction()}
+            onClick={handleSubmit(handleAction)}
           />
         </Modal.Actions>
       </Modal>

@@ -80,7 +80,6 @@ tipsRouter.delete('/remove', async (req, res) => {
 tipsRouter.post('/', async (req, res) => {
   const body = req.body;
   const user = await User.findById(req.user);
-
   if (
     !body ||
     !body.tip ||

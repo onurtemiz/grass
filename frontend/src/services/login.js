@@ -5,12 +5,8 @@ const baseUrl =
     : '/api/login';
 
 const login = async (user) => {
-  try {
-    const req = await axios.post(baseUrl, user);
-    return req.data;
-  } catch (e) {
-    return { error: 'Şifre veya Eposta hatalı cem.' };
-  }
+  const req = await axios.post(baseUrl, user);
+  return req.data;
 };
 
 export default {

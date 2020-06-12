@@ -83,13 +83,13 @@ const CommentReportModal = ({
           negative
           content="İptal"
           icon="cancel"
-          labelPosition="right"
+          labelPosition="left"
           onClick={() => setIsReportOpen(false)}
         />
         <Button
           disabled={isLoading}
           positive
-          labelPosition="right"
+          labelPosition="left"
           icon="checkmark"
           content="Yolla"
           onClick={() => handleAction()}

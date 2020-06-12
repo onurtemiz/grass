@@ -10,23 +10,22 @@ import {
   Checkbox,
   Divider,
   Loader,
+  Label as ErrorLabel,
 } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import tipsService from '../../services/tips';
+import { useForm } from 'react-hook-form';
 
 const Tips = () => {
-  const [value, setValue] = useState('');
-  const [isAnonim, setIsAnonim] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const handleAction = () => {
+  const { register, handleSubmit, errors } = useForm();
+  const [isAnonim, setIsAnonim] = useState(false);
+
+  const onSubmit = (data) => {
     setIsLoading(true);
-    tipsService.postTip(
-      { tip: value, isAnonim: isAnonim },
-      setIsLoading,
-      setIsOpen
-    );
+    tipsService.postTip({ ...data, isAnonim }, setIsLoading, setIsOpen);
   };
 
   return (
@@ -49,22 +48,37 @@ const Tips = () => {
         <Modal.Content>
           <Modal.Description>
             <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
-              <Checkbox
-                label="Kullanıcı adım gözükmesin"
-                checked={isAnonim}
-                onClick={() => setIsAnonim(!isAnonim)}
-                disabled={isLoading}
-              />
+              <Form.Field>
+                <Checkbox
+                  label="Kullanıcı adım gözükmesin"
+                  disabled={isLoading}
+                  value={isAnonim}
+                  onChange={() => setIsAnonim(!isAnonim)}
+                />
+              </Form.Field>
               <br />
               <Divider />
-              <TextareaAutosize
-                disabled={isLoading}
-                rows={4}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                style={{ width: '30vw', height: '4rem' }}
-                placeholder="Tavsiyen Nedir?"
-              />
+              <Form.Field inline>
+                <TextareaAutosize
+                  disabled={isLoading}
+                  rows={4}
+                  style={{ width: '30vw', height: '4rem' }}
+                  placeholder="Tavsiyen Nedir?"
+                  ref={register({
+                    required: 'Lütfen tavsiyenizi yazın',
+                    maxLength: {
+                      value: 150,
+                      message: 'Tavsiyeniz 150 karakterden daha az olmalı.',
+                    },
+                  })}
+                  name="tip"
+                />
+                {errors.tip && (
+                  <ErrorLabel basic color="red" pointing="left">
+                    {errors.tip.message}
+                  </ErrorLabel>
+                )}
+              </Form.Field>
             </Form>
           </Modal.Description>
         </Modal.Content>
@@ -81,10 +95,11 @@ const Tips = () => {
             disabled={isLoading}
             positive
             labelPosition="right"
+            primary
             icon="checkmark"
             content="Yolla"
-            onClick={() => handleAction()}
-          />
+            onClick={handleSubmit(onSubmit)}
+          />{' '}
         </Modal.Actions>
       </Modal>
     </>

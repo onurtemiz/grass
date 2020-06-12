@@ -3,61 +3,65 @@ import { updateComment } from '../../reducers/commentReducer';
 import { useDispatch } from 'react-redux';
 import { Form, Button, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useForm } from 'react-hook-form';
 
 const EditComment = ({ comment, setIsUpdate }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
-  const [commentError, setCommentError] = useState('');
-  const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { register, handleSubmit, errors } = useForm({
+    defaultValues: {
+      comment: comment.comment,
+    },
+  });
 
   useEffect(() => {
-    setValue(comment.comment);
     setTools(true);
   }, []);
 
-  const handleCommentChange = (e) => {
-    setValue(e.target.value);
-    setCommentError('');
-  };
-
-  const handleComment = async () => {
-    if (value.length > 4000) {
-      setCommentError('4000 harften çok olamaz.');
-      return;
-    }
+  const handleComment = async (data) => {
     setIsLoading(true);
-    dispatch(updateComment(value, comment.id, setIsUpdate, setIsLoading));
+    dispatch(
+      updateComment(data.comment, comment.id, setIsUpdate, setIsLoading)
+    );
   };
 
   return (
     <Segment compact basic loading={isLoading}>
       <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
-        <TextareaAutosize
-          rows={4}
-          value={value}
-          onChange={(e) => handleCommentChange(e)}
-          style={{ width: '30vw', height: '4rem' }}
-          placeholder="Nasıldır?"
-          onFocus={() => setTools(true)}
-        />
-
+        <Form.Field inline>
+          <TextareaAutosize
+            rows={4}
+            style={{ width: '30vw', height: '4rem' }}
+            placeholder="Nasıldır?"
+            name="comment"
+            ref={register({
+              required: 'Lütfen yeni yorumunuzu yazın',
+              maxLength: {
+                value: 4000,
+                message: 'Yeni yorumunuz 4000 karakterden az olmalı.',
+              },
+            })}
+            onFocus={() => setTools(true)}
+          />
+          {errors.comment && (
+            <>
+              <br />
+              <Label basic color="red" pointing="above">
+                {errors.comment.message}
+              </Label>
+            </>
+          )}
+        </Form.Field>
         {tools ? (
           <div>
-            {commentError && (
-              <Label basic color="red" pointing="above">
-                {commentError}
-              </Label>
-            )}
             <Button
               style={{ marginTop: '1em' }}
               content={'Yorumu Düzenleyin'}
               labelPosition="left"
               icon="edit"
               color="green"
-              onClick={() => {
-                handleComment();
-              }}
+              onClick={handleSubmit(handleComment)}
             />
             <Button
               style={{ marginTop: '1em' }}
@@ -66,8 +70,7 @@ const EditComment = ({ comment, setIsUpdate }) => {
               icon="cancel"
               color="red"
               onClick={() => {
-                setTools(false);
-                setValue('');
+                setIsUpdate(false);
               }}
             />
           </div>

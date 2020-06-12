@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { config } from '../utils/token';
+import { reset } from 'redux-form';
 
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
@@ -19,16 +20,11 @@ const addInf = async (start, count, filter) => {
   return req.data;
 };
 
-const postQuestion = async (
-  values,
-  setQuestion,
-  setDescription,
-  setLoading
-) => {
+const postQuestion = async (values, reset, setLoading, setOpen) => {
   await axios.post(`${baseUrl}`, values, config);
-  setQuestion('');
-  setDescription('');
+  reset();
   setLoading(false);
+  setOpen(false);
 };
 
 const approveQuestion = async (id) => {

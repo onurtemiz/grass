@@ -12,7 +12,7 @@ import Home from './components/Home/Home';
 import EditUser from './components/EditUser/EditUser';
 import User from './components/User/User';
 import AllComments from './components/AllComments/AllComments';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Feed from './components/Feed/Feed';
 import Following from './components/Following/Following';
 import Admin from './components/Admin/Admin';
@@ -73,6 +73,9 @@ const DefaultContainer = () => {
         <Route path="/comments">
           <AllComments />
         </Route>
+        <Route path="/">
+          <Redirect to="/" />
+        </Route>
       </Switch>
     </div>
   );
@@ -98,29 +101,14 @@ const AuthorizedUser = () => {
 const AuthorizedAdmin = () => {
   return (
     <div>
+      <Nav admin />
       <Switch>
-        <Route exact path="/">
-          <Nav admin />
-          <Home />
-        </Route>
-
-        <Route>
-          <Nav admin />
-
-          <Route path="/admin/tips">
-            <ControlTips />
-          </Route>
-          <Route path="/admin/reports">
-            <ControlReports />
-          </Route>
-          <Route path="/admin/clubs">
-            <ControlClub />
-          </Route>
-          <Route exact path="/admin">
-            <Admin />
-          </Route>
-          <DefaultContainer />
-        </Route>
+        <Route exact path="/" component={Home} />
+        <Route path="/admin/tips" component={ControlTips} />
+        <Route path="/admin/reports" component={ControlReports} />
+        <Route path="/admin/clubs" component={ControlClub} />
+        <Route path="/admin" component={Admin} />
+        <Route path="/" component={DefaultContainer} />
       </Switch>
     </div>
   );

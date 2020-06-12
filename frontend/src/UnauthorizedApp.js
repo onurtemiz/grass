@@ -17,7 +17,6 @@ const UnauthorizedApp = () => {
           <Login />
         </Route>
       </Switch>
-      <Footer />
     </div>
   );
 };

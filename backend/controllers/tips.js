@@ -1,46 +1,16 @@
 const tipsRouter = require('express').Router();
 const User = require('../models/user');
 const Tip = require('../models/tip');
-const jwt = require('jsonwebtoken');
-
-tipsRouter.all('*', async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-
-  if (user == undefined) {
-    return res.status(401).json({
-      error: 'user not found',
-    });
-  }
-
-  req.user = decodedToken.id;
-
-  next();
-});
+const middleware = require('../utils/middleware');
 
 tipsRouter.get('/total', async (req, res) => {
   const total = await Tip.find({ isApproved: true }).countDocuments();
   res.json({ total: total });
 });
 
-tipsRouter.put('/approve', async (req, res) => {
+tipsRouter.put('/approve', middleware.authAdmin, async (req, res) => {
   const q = req.query;
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  } else if (!q.id) {
+  if (!q.id) {
     return res.status(400).json({
       error: 'no id',
     });
@@ -56,18 +26,9 @@ tipsRouter.put('/approve', async (req, res) => {
   res.status(200).end();
 });
 
-tipsRouter.delete('/remove', async (req, res) => {
+tipsRouter.delete('/remove', middleware.authAdmin, async (req, res) => {
   const q = req.query;
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  } else if (!q.id) {
+  if (!q.id) {
     return res.status(400).json({
       error: 'no id',
     });
@@ -79,7 +40,7 @@ tipsRouter.delete('/remove', async (req, res) => {
 
 tipsRouter.post('/', async (req, res) => {
   const body = req.body;
-  const user = await User.findById(req.user);
+  const user = req.user;
   if (
     !body ||
     !body.tip ||
@@ -103,17 +64,7 @@ tipsRouter.post('/', async (req, res) => {
   res.status(201).json(tip.toJSON());
 });
 
-tipsRouter.get('/all', async (req, res) => {
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  }
+tipsRouter.get('/all', middleware.authAdmin, async (req, res) => {
   const tips = await Tip.find();
   res.json(tips.map((t) => t.toJSON()));
 });

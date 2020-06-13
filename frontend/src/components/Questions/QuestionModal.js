@@ -26,7 +26,13 @@ const QuestionModal = () => {
 
   return (
     <>
-      <Label color="blue" bold pointer onClick={() => setOpen(true)}>
+      <Label
+        color="blue"
+        bold
+        pointer
+        onClick={() => setOpen(true)}
+        style={{ paddingLeft: '1em' }}
+      >
         Sizde soru sorun
       </Label>
       <Modal open={open}>
@@ -52,6 +58,9 @@ const QuestionModal = () => {
                           value: 42,
                           message: 'Sorunuz 42 karakter veya daha az olmalı.',
                         },
+                        validate: (comment) =>
+                          comment.trim().length !== 0 ||
+                          'Sorunuz sadece boşluklardan oluşamaz.',
                       })}
                     />
                   }
@@ -86,6 +95,9 @@ const QuestionModal = () => {
                           value: 1000,
                           message: 'Açıklamanız 1000 karakterden az olmalı.',
                         },
+                        validate: (comment) =>
+                          comment.trim().length !== 0 ||
+                          'Açıklamanız sadece boşluklardan oluşamaz.',
                       })}
                     />
                   }

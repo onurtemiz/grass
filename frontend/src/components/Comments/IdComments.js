@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfCommentById } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import CommentsLoading from './CommentsLoading';
+import NoComments from './NoComments';
 
 const IdComments = ({ type, typeId, height }) => {
   const count = useSelector((state) => state.comments.count);
@@ -13,9 +14,10 @@ const IdComments = ({ type, typeId, height }) => {
   const filter = useSelector((state) => state.comments.filter);
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
-
+  const first = useRef(false);
+  const fetching = useRef(false);
   useEffect(() => {
-    dispatch(addInfCommentById(0, count, typeId, filter));
+    dispatch(addInfCommentById(0, count, typeId, filter, first, fetching));
   }, [filter]);
   useEffect(() => {
     setCurrentComments(
@@ -50,9 +52,21 @@ const IdComments = ({ type, typeId, height }) => {
   }, [filter, start, comments]);
 
   const loadFunc = () => {
-    dispatch(addInfCommentById(start, count, typeId, filter));
+    if (!fetching.current) {
+      dispatch(
+        addInfCommentById(start, count, typeId, filter, first, fetching)
+      );
+    }
   };
 
+  if (!first.current) {
+    return <CommentsLoading />;
+  }
+  if (currentComments.length === 0) {
+    return <NoComments />;
+  }
+  console.log('first', first);
+  console.log('fetching', fetching);
   return (
     <div
       style={{

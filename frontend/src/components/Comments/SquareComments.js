@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfCommentAll } from '../../reducers/commentReducer';
@@ -13,9 +13,10 @@ const SquareComments = ({ height }) => {
   const filter = useSelector((state) => state.comments.filter);
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
-
+  const first = useRef(false);
+  const fetching = useRef(false);
   useEffect(() => {
-    dispatch(addInfCommentAll(0, count, filter));
+    dispatch(addInfCommentAll(0, count, filter, first, fetching));
   }, [filter]);
 
   useEffect(() => {
@@ -33,8 +34,15 @@ const SquareComments = ({ height }) => {
   }, [filter, start, comments]);
 
   const loadFunc = () => {
-    dispatch(addInfCommentAll(start, count, filter));
+    if (!fetching.current) {
+      dispatch(addInfCommentAll(start, count, filter, first, fetching));
+    }
   };
+
+  if (!first.current) {
+    return <CommentsLoading />;
+  }
+
   return (
     <div
       style={{

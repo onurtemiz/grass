@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Card, Header, Icon } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 
-const SubTeacher = ({ teacher }) => {
+const SubTeacher = ({ teacher, main }) => {
   const getLessonString = (lesson, i) => {
     if (teacher.lessons.length === 1) {
       return `${lesson.toUpperCase()}`;
@@ -17,16 +17,23 @@ const SubTeacher = ({ teacher }) => {
   };
 
   return (
-    <div style={{ marginLeft: '1em' , marginRight: '1em'}}>
+    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
       <Card
         as={Link}
         to={TEACHER_PATH(teacher)}
         fluid
-        style={{
-          marginTop: '1em',
-          paddingLeft: '0.5em',
-          paddingTop: '0.5em',
-        }}
+        style={
+          main
+            ? {
+                marginTop: '1em',
+                paddingLeft: '0.5em',
+                paddingTop: '0.5em',
+              }
+            : {
+                paddingLeft: '0.5em',
+                paddingTop: '0.5em',
+              }
+        }
       >
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2" color="blue">

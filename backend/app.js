@@ -46,7 +46,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 app.use(middleware.tokenExtractor);
 app.use('/api/login', loginRouter);
-
+app.use('/api/users', usersRouter);
+app.use(middleware.authUser);
 app.use('/api/questions', questionsRouter);
 app.use('/api/dorms', dormsRouter);
 app.use('/api/campuses', campusesRouter);
@@ -54,7 +55,6 @@ app.use('/api/clubs', clubsRouter);
 app.use('/api/all', allRouter);
 app.use('/api/teachers', teachersRouter);
 app.use('/api/lessons', lessonsRouter);
-app.use('/api/users', usersRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/tips', tipsRouter);
 app.use('/api/reports', reportsRouter);

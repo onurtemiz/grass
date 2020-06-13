@@ -34,14 +34,11 @@ const getUserById = async (id) => {
 
 const getFollowing = async (setFollowing) => {
   const res = await axios.get(`${baseUrl}/following`, config);
-  console.log('res.data', res.data);
   setFollowing(res.data);
 };
 
 const getNotifications = async (setNotifications, setLoading) => {
   const res = await axios.get(`${baseUrl}/notifications`, config);
-  console.log('notifyyy', res.data);
-
   setNotifications(res.data);
   setLoading(false);
 };

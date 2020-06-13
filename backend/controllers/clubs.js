@@ -1,29 +1,6 @@
 const clubsRouter = require('express').Router();
-const User = require('../models/user');
 const Club = require('../models/club');
-const jwt = require('jsonwebtoken');
-
-clubsRouter.all('*', async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-
-  if (user == undefined) {
-    return res.status(401).json({
-      error: 'user not found',
-    });
-  }
-
-  req.user = decodedToken.id;
-
-  next();
-});
-
+const middleware = require('../utils/middleware');
 clubsRouter.get('/total', async (req, res) => {
   const q = req.query;
   const total = await Club.getFilteredInf(
@@ -52,20 +29,7 @@ clubsRouter.get('/', async (req, res) => {
   res.json(clubs.map((c) => c.toJSON()));
 });
 
-clubsRouter.all('*', async (req, res, next) => {
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  }
-
-  next();
-});
+clubsRouter.use(middleware.authAdmin);
 
 clubsRouter.put('/:id', async (req, res) => {
   const body = req.body;

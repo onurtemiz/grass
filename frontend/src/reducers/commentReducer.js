@@ -147,7 +147,8 @@ export const totalCommentById = (id) => {
   };
 };
 
-export const addInfCommentAll = (start, count, filter) => {
+export const addInfCommentAll = (start, count, filter, first, fetching) => {
+  fetching.current = true;
   return async (dispatch) => {
     const comments = await commentsService.addInfCommentsAll(
       start,
@@ -155,7 +156,6 @@ export const addInfCommentAll = (start, count, filter) => {
       filter
     );
     const total = await commentsService.getTotalCommentsAll(filter);
-    console.log('comments,total', comments, total);
     let data = {
       hasMore: true,
       start: start + count,
@@ -171,12 +171,23 @@ export const addInfCommentAll = (start, count, filter) => {
       type: 'ADD_INF_COMMENT',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 
-export const addInfCommentById = (start, count, id, filter) => {
+export const addInfCommentById = (
+  start,
+  count,
+  id,
+  filter,
+  first,
+  fetching
+) => {
   return async (dispatch) => {
-    console.log('heby');
+    fetching.current = true;
     const comments = await commentsService.addInfCommentsById(
       start,
       count,
@@ -199,6 +210,10 @@ export const addInfCommentById = (start, count, id, filter) => {
       type: 'ADD_INF_COMMENT',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 
@@ -212,7 +227,9 @@ export const getCommentById = (id) => {
   };
 };
 
-export const addInfCommentFeed = (start, count, filter) => {
+export const addInfCommentFeed = (start, count, filter, first, fetching) => {
+  fetching.current = true;
+
   return async (dispatch) => {
     const comments = await commentsService.addInfCommentsFeed(
       start,
@@ -235,6 +252,10 @@ export const addInfCommentFeed = (start, count, filter) => {
       type: 'ADD_INF_COMMENT',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

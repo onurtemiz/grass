@@ -25,6 +25,12 @@ const Admin = () => {
           CLUB ADD
         </Label>
       </Header>
+      <br />
+      <Header as={Link} to="admin/questions">
+        <Label color="blue" pointer>
+          QUESTION
+        </Label>
+      </Header>
     </div>
   );
 };

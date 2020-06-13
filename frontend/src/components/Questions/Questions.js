@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfQuestions } from '../../reducers/questionReducer';
@@ -7,6 +7,7 @@ import SubQuestion from './SubQuestion';
 import QuestionModal from './QuestionModal';
 import { Divider } from 'semantic-ui-react';
 import CommentsLoading from '../Comments/CommentsLoading';
+import Filter from '../Filter/Filter';
 
 const Questions = ({ main }) => {
   const count = useSelector((state) => state.questions.count);
@@ -16,9 +17,10 @@ const Questions = ({ main }) => {
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
   const [currentQuestions, setCurrentQuestions] = useState([]);
-
+  const first = useRef(false);
+  const fetching = useRef(false);
   useEffect(() => {
-    dispatch(addInfQuestions(0, count, filter));
+    dispatch(addInfQuestions(0, count, filter, first, fetching));
   }, [filter]);
 
   useEffect(() => {
@@ -28,19 +30,18 @@ const Questions = ({ main }) => {
       })
     );
   }, [questions]);
+
   const loadFunc = () => {
-    dispatch(addInfQuestions(start, count, filter));
+    if (!fetching.current) {
+      dispatch(addInfQuestions(start, count, filter, first, fetching));
+    }
   };
-  if (currentQuestions.length === 0) {
-    return (
-      <>
-        <QuestionModal />
-        <LinearProgress />
-      </>
-    );
+  if (currentQuestions.length === 0 || !first.current) {
+    return <LinearProgress />;
   }
   return (
     <>
+      <Filter target="Soru" />
       <QuestionModal />
       <Divider />
       <div

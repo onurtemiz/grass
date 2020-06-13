@@ -1,13 +1,7 @@
-import React, { useEffect } from 'react';
-import Footer from './components/Footer/Footer';
+import React from 'react';
 import Nav from './components/Nav/Nav';
-import Lesson from './components/Lesson/Lesson';
-import Lessons from './components/Lessons/Lessons';
-import Teacher from './components/Teacher/Teacher';
-import Teachers from './components/Teachers/Teachers';
 import Contribution from './components/Contribution/Contribution';
 import About from './components/About/About';
-import All from './components/All/All';
 import Home from './components/Home/Home';
 import EditUser from './components/EditUser/EditUser';
 import User from './components/User/User';
@@ -25,92 +19,65 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MainComponent from './components/MainComponent/MainComponent';
 import ControlClub from './components/Admin/ControlClub';
+import ControlQuestions from './components/Admin/ControlQuestions';
 const DefaultContainer = () => {
   return (
-    <div>
+    <>
       <Switch>
-        <Route path="/control" component={MainComponent} />
-        <Route path="/clubs/:name" component={MainComponent} />
-        <Route path="/clubs" component={MainComponent} />
-        <Route path="/tips" component={MainComponent} />
-        <Route path="/campuses" component={MainComponent} />
-        <Route path="/dorms" component={MainComponent} />
-        <Route path="/questions" component={MainComponent} />
-
-        <Route path="/teachers/:name">
-          <MainComponent />
-        </Route>
-        <Route path="/teachers">
-          <MainComponent />
-        </Route>
-        <Route path="/lessons/:areaCode/:digitCode/:teacherName">
-          <MainComponent />
-        </Route>
-        <Route path="/lessons">
-          <MainComponent />
-        </Route>
-        <Route path="/feed">
-          <Feed />
-        </Route>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/contribution">
-          <Contribution />
-          <Route path="/user/edit">
-            <EditUser />
-          </Route>
-          <Route path="/user/following">
-            <Following />
-          </Route>
-        </Route>
-        <Route path="/user">
-          <MainUser />
-        </Route>
-        <Route path="/users/:username">
-          <User />
-        </Route>
-        <Route path="/comments">
-          <AllComments />
-        </Route>
+        <Route
+          path={[
+            '/control',
+            '/clubs',
+            '/tips',
+            '/campuses',
+            '/dorms',
+            '/questions',
+            '/teachers',
+            '/lessons',
+          ]}
+          component={MainComponent}
+        />
+        <Route path="/feed" component={Feed} />
+        <Route path="/about" component={About} />
+        <Route path="/contribution" component={Contribution} />
+        <Route path="/user" component={MainUser} />
+        <Route path="/users/:username" component={User} />
+        <Route path="/comments" component={AllComments} />
         <Route path="/">
           <Redirect to="/" />
         </Route>
       </Switch>
-    </div>
+    </>
   );
 };
 
 const AuthorizedUser = () => {
   return (
-    <div>
+    <>
+      <Nav />
       <Switch>
-        <Route exact path="/">
-          <Nav />
-          <Home />
-        </Route>
-        <Route>
-          <Nav />
-          <DefaultContainer />
-        </Route>
+        <Route exact path="/" component={Home} />
+        <Route path="/" component={DefaultContainer} />
       </Switch>
-    </div>
+    </>
   );
 };
 
 const AuthorizedAdmin = () => {
   return (
-    <div>
+    <>
       <Nav admin />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/admin/tips" component={ControlTips} />
         <Route path="/admin/reports" component={ControlReports} />
         <Route path="/admin/clubs" component={ControlClub} />
+        <Route path="/admin/questions" component={ControlQuestions} />
+
         <Route path="/admin" component={Admin} />
         <Route path="/" component={DefaultContainer} />
       </Switch>
-    </div>
+    </>
   );
 };
 

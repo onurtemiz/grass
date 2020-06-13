@@ -24,5 +24,11 @@ export const DORM_PATH = (dorm) => {
 };
 
 export const QUESTION_PATH = (question) => {
-  return `/questions/${question.id ? question.id : question}`;
+  return `/questions/${
+    question.questionId
+      ? question.questionId
+      : question.id
+      ? question.id
+      : question
+  }`;
 };

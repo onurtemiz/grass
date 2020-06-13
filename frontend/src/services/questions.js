@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { config } from '../utils/token';
-import { reset } from 'redux-form';
 
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
@@ -20,6 +19,24 @@ const addInf = async (start, count, filter) => {
   return req.data;
 };
 
+const getAllQuestions = async () => {
+  const res = await axios.get(`${baseUrl}/all`, config);
+  return res.data;
+};
+
+const approveQuestion = async (id) => {
+  await axios.put(`${baseUrl}/${id}`, null, config);
+};
+
+const removeQuestion = async (id) => {
+  await axios.delete(`${baseUrl}/${id}`, config);
+};
+
+const editApproveQuestion = async (question) => {
+  const res = await axios.put(`${baseUrl}/ea/${question.id}`, question, config);
+  return res.data;
+};
+
 const postQuestion = async (values, reset, setLoading, setOpen) => {
   await axios.post(`${baseUrl}`, values, config);
   reset();
@@ -27,13 +44,12 @@ const postQuestion = async (values, reset, setLoading, setOpen) => {
   setOpen(false);
 };
 
-const approveQuestion = async (id) => {
-  await axios.put(`${baseUrl}/${id}`, null, config);
-};
-
 export default {
   getQuestionById,
   postQuestion,
+  removeQuestion,
+  editApproveQuestion,
   addInf,
   approveQuestion,
+  getAllQuestions,
 };

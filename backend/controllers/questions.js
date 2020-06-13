@@ -1,28 +1,6 @@
 const questionsRouter = require('express').Router();
 const Question = require('../models/question');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-
-questionsRouter.all('*', async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-
-  if (user == undefined) {
-    return res.status(401).json({
-      error: 'user not found',
-    });
-  }
-
-  req.user = decodedToken.id;
-
-  next();
-});
+const middleware = require('../utils/middleware');
 
 questionsRouter.post('/', async (req, res) => {
   const body = req.body;
@@ -45,6 +23,11 @@ questionsRouter.post('/', async (req, res) => {
   res.json(question.toJSON());
 });
 
+questionsRouter.get('/all', middleware.authAdmin, async (req, res) => {
+  const questions = await Question.find();
+  return res.json(questions.map((q) => q.toJSON()));
+});
+
 questionsRouter.get('/:id', async (req, res) => {
   const question = await Question.findById(req.params.id).populate('comments');
   return res.json(question.toJSON());
@@ -65,27 +48,24 @@ questionsRouter.get('/', async (req, res) => {
     ],
   });
   const jsonQuestions = questions.map((q) => q.toJSON());
-  console.log('jsonQuestions.length', jsonQuestions.length);
   res.json({ questions: jsonQuestions, total: jsonQuestions.length });
 });
 
-questionsRouter.all('*', async (req, res, next) => {
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  }
-  next();
-});
+questionsRouter.use(middleware.authAdmin);
 
 questionsRouter.get('/all', async (req, res) => {
   const questions = await Question.find();
   res.json(questions.map((q) => q.toJSON()));
+});
+
+questionsRouter.put('/ea/:id', async (req, res) => {
+  const body = req.body;
+  const question = await Question.findById(req.params.id);
+  question.question = body.question;
+  question.description = body.description;
+  question.isApproved = true;
+  await question.save();
+  res.json(question.toJSON());
 });
 
 questionsRouter.put('/:id', async (req, res) => {

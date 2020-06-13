@@ -49,7 +49,10 @@ const clubReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfClubs = (start, count, filter) => {
+export const addInfClubs = (start, count, filter, first, fetching) => {
+  console.log('hey');
+
+  fetching.current = true;
   return async (dispatch) => {
     const total = await clubsService.getTotal(filter);
     const clubs = await clubsService.addInf(start, count, filter);
@@ -69,6 +72,12 @@ export const addInfClubs = (start, count, filter) => {
       type: 'ADD_INF_CLUBS',
       data: data,
     });
+    if (start === 0) {
+      console.log('start');
+
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

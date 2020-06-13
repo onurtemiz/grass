@@ -4,8 +4,9 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTeacher } from '../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
 import { LinearProgress } from '@material-ui/core';
-import { Card } from 'semantic-ui-react';
+import { Card, Divider } from 'semantic-ui-react';
 import CommentsLoading from '../Comments/CommentsLoading';
+import Filter from '../Filter/Filter';
 
 const Teachers = () => {
   const count = useSelector((state) => state.teachers.count);
@@ -14,10 +15,23 @@ const Teachers = () => {
   const teachers = useSelector((state) => state.teachers.teachers);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
+  const [currentTeachers, setCurrentTeachers] = useState([]);
 
   useEffect(() => {
     dispatch(addInfTeacher(0, count, filter));
   }, [filter]);
+
+  useEffect(() => {
+    setCurrentTeachers(
+      teachers
+        .filter((t) =>
+          t.name
+            .toLocaleUpperCase('tr-TR')
+            .includes(filter.toLocaleUpperCase('tr-TR'))
+        )
+        .sort((a, b) => b.name - a.name)
+    );
+  }, [teachers]);
 
   const loadFunc = () => {
     dispatch(addInfTeacher(start, count, filter));
@@ -32,6 +46,8 @@ const Teachers = () => {
   }
   return (
     <div style={windowStyle}>
+      <Filter target={'Hoca'} />
+      <Divider />
       <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}
@@ -43,16 +59,9 @@ const Teachers = () => {
         }
         useWindow={false}
       >
-        {teachers
-          .filter((t) =>
-            t.name
-              .toLocaleUpperCase('tr-TR')
-              .includes(filter.toLocaleUpperCase('tr-TR'))
-          )
-          .sort((a, b) => b.name - a.name)
-          .map((t) => (
-            <SubTeacher teacher={t} key={t.id} />
-          ))}
+        {currentTeachers.map((t) => (
+          <SubTeacher teacher={t} key={t.id} main />
+        ))}
       </InfiniteScroll>
     </div>
   );

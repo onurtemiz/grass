@@ -34,6 +34,18 @@ const SubQuestion = ({ question, main }) => {
             </Header.Content>
           </Header>
         </Card.Header>
+        <Card.Description
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100ch',
+          }}
+        >
+          <Label color="green" bold pointer>
+            {question.description}
+          </Label>
+        </Card.Description>
       </Card>
     </div>
   );

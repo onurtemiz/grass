@@ -87,19 +87,7 @@ commentsRouter.get('/total', async (req, res) => {
 });
 
 commentsRouter.get('/feed/total', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-  if (!user) {
-    return res.status(400).json({
-      error: 'Could not find user',
-    });
-  }
+  const user = req.user;
   const total = await Comment.find({
     $or: [
       { lesson: { $in: user.following } },
@@ -118,22 +106,12 @@ commentsRouter.get('/feed/total', async (req, res) => {
 commentsRouter.get('/feed', async (req, res) => {
   const q = req.query;
 
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  } else if (!'start' in q || !'total' in q || !'filter' in q) {
+  if (!'start' in q || !'total' in q || !'filter' in q) {
     return res.status(401).json({
       error: 'query is missing',
     });
   }
-  const user = await User.findById(decodedToken.id);
-  if (!user) {
-    return res.status(400).json({
-      error: 'Could not find user',
-    });
-  }
+  const user = req.user;
 
   let comments = await getCommentFeed(q, user);
   comments.map((c) => {
@@ -182,15 +160,10 @@ commentsRouter.get('/', async (req, res) => {
 
 commentsRouter.post('/', async (req, res) => {
   const body = req.body;
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
   if (!body.comment) {
     return res.status(400).json({
       error: 'Comment must be present',
-    });
-  } else if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
     });
   } else if (
     !body.commentType ||
@@ -222,14 +195,14 @@ commentsRouter.post('/', async (req, res) => {
       });
     }
   }
-  const user = await User.findById(decodedToken.id);
+  const user = req.user;
   let comment;
   if (body.commentType === 'lesson') {
     const teacher = await Teacher.findById(body.teacherId);
     const lesson = await Lesson.findById(body.typeId);
     const isTeacherRight = lesson.teacher.equals(teacher._id);
 
-    if (!teacher || !lesson || !user) {
+    if (!teacher || !lesson) {
       return res.status(400).json({
         error: 'Could not find the teacher,lesson,user',
       });
@@ -380,17 +353,11 @@ commentsRouter.post('/', async (req, res) => {
 
 commentsRouter.put('/:id', async (req, res) => {
   const body = req.body;
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
   const comment = await Comment.findById(req.params.id);
-  // User.update({ _id: decodedToken.id }, { $set: { totalLikes: 0 } });
 
-  const user = await User.findById(decodedToken.id);
+  const user = req.user;
 
-  if (!req.token || !decodedToken.id) {
-    return response.status(401).json({
-      error: 'token missing or invalid',
-    });
-  } else if (!comment || !user) {
+  if (!comment) {
     return res.status(400).json({
       error: 'comment or user not found.',
     });
@@ -442,16 +409,10 @@ commentsRouter.put('/:id', async (req, res) => {
 });
 
 commentsRouter.delete('/:id', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
   const comment = await Comment.findById(req.params.id);
-  const user = await User.findById(decodedToken.id);
+  const user = req.user;
   const isUserHave = user.comments.some((c) => c.equals(req.params.id));
-  if (!req.token || !decodedToken.id) {
-    return response.status(401)({
-      error: 'token missing or invalid',
-    });
-  } else if (!comment || !user) {
+  if (!comment) {
     return res.status(400).json({
       error: 'comment or user not found.',
     });

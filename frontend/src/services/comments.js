@@ -25,12 +25,12 @@ const postComment = async (comment) => {
 };
 
 const getTotalCommentsById = async (id) => {
-  const req = await axios.get(`${baseUrl}/total?userId=${id}`);
+  const req = await axios.get(`${baseUrl}/total?id=${id}`, config);
   return req.data;
 };
 
 const getTotalCommentsAll = async () => {
-  const req = await axios.get(`${baseUrl}/total`);
+  const req = await axios.get(`${baseUrl}/total`, config);
   return req.data;
 };
 
@@ -48,27 +48,28 @@ const addInfCommentsFeed = async (start, count, filter) => {
 };
 
 const addInfCommentsAll = async (start, count, filter) => {
-  console.log(`${baseUrl}?start=${start}&total=${count}&filter=${filter}`);
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&filter=${filter}`
+    `${baseUrl}?start=${start}&total=${count}&filter=${filter}`,
+    config
   );
   return req.data;
 };
 
 const getCommentById = async (id) => {
-  const res = await axios.get(`${baseUrl}?id=${id}`);
+  const res = await axios.get(`${baseUrl}?id=${id}`, config);
   return res.data;
 };
 
 const addInfCommentsById = async (start, count, id, filter) => {
   const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&id=${id}&filter=${filter}`
+    `${baseUrl}?start=${start}&total=${count}&id=${id}&filter=${filter}`,
+    config
   );
   return req.data;
 };
 
 const allComments = async () => {
-  const req = await axios.get(baseUrl);
+  const req = await axios.get(baseUrl, config);
   return req.data;
 };
 

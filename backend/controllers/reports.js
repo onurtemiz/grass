@@ -6,25 +6,11 @@ const Teacher = require('../models/teacher');
 const Club = require('../models/club');
 const mongoose = require('mongoose');
 const Report = require('../models/report');
-
-const jwt = require('jsonwebtoken');
-
-reportsRouter.all('*', async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  req.user = decodedToken.id;
-  next();
-});
+const middleware = require('../utils/middleware');
 
 reportsRouter.post('/', async (req, res) => {
   const body = req.body;
-  const user = await User.findById(req.user);
   if (
-    !user ||
     !body ||
     typeof body.isCurse !== 'boolean' ||
     typeof body.isSpam !== 'boolean' ||
@@ -74,25 +60,13 @@ reportsRouter.post('/', async (req, res) => {
     teacherId: body.teacherId ? body.teacherId : null,
     typeId: body.typeId,
     user: user.username,
-    userId: req.user,
+    userId: req.user._id,
   });
   await report.save();
   res.status(201).end();
 });
 
-reportsRouter.all('*', async (req, res, next) => {
-  const user = await User.findById(req.user);
-  if (
-    !user ||
-    user.isAdmin != true ||
-    user.email !== 'onur.temiz@boun.edu.tr'
-  ) {
-    return res.status(401).json({
-      error: 'not admin',
-    });
-  }
-  next();
-});
+reportsRouter.use(middleware.authAdmin);
 
 reportsRouter.get('/all', async (req, res) => {
   const reports = await Report.find();

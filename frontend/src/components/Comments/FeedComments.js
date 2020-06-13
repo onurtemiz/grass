@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfCommentFeed } from '../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import CommentsLoading from './CommentsLoading';
+import NoFeed from '../Feed/NoFeed';
 
 const FeedComments = ({ height }) => {
   const count = useSelector((state) => state.comments.count);
@@ -14,9 +15,10 @@ const FeedComments = ({ height }) => {
   const user = useSelector((state) => state.user);
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
-
+  const first = useRef(false);
+  const fetching = useRef(false);
   useEffect(() => {
-    dispatch(addInfCommentFeed(0, count, filter));
+    dispatch(addInfCommentFeed(0, count, filter, first, fetching));
   }, [filter]);
   useEffect(() => {
     setCurrentComments(
@@ -47,8 +49,18 @@ const FeedComments = ({ height }) => {
   }, [filter, start, comments]);
 
   const loadFunc = () => {
-    dispatch(addInfCommentFeed(start, count, filter));
+    if (!fetching.current) {
+      dispatch(addInfCommentFeed(start, count, filter, first, fetching));
+    }
   };
+
+  if (!first.current) {
+    return <CommentsLoading />;
+  }
+  if (currentComments.length === 0) {
+    return <NoFeed />;
+  }
+
   return (
     <div
       style={{

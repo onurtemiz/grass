@@ -1,13 +1,7 @@
 import React from 'react';
 import { Icon, Header, Container, Grid } from 'semantic-ui-react';
 const NoFeed = ({ blocking }) => {
-  console.log('blocking', blocking);
-  const message =
-    blocking === 'noLesson'
-      ? 'Henüz hiçbir dersi takip etmiyorsun.'
-      : 'Henüz kimse takip etttiğin derslere yorum yapmamış.';
-
-  const icon = blocking === 'noLesson' ? 'podcast' : 'comment';
+  const icon = blocking === 'noLesson' ? 'hockey puck' : 'comment';
   return (
     <Container fluid>
       <Grid
@@ -21,7 +15,8 @@ const NoFeed = ({ blocking }) => {
           <Grid.Column textAlign="center">
             <Header as="h1" color="green">
               <Icon name={icon} size="massive" />
-              {message}
+              Henüz takip ettiğin kimse yok ya da takip ettiklerine yorum
+              yapılmamış.
             </Header>
           </Grid.Column>
         </Grid.Row>

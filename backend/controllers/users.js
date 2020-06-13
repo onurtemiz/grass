@@ -11,6 +11,7 @@ const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
 const Notification = require('../models/notification');
 const Comment = require('../models/comment');
+const middleware = require('../utils/middleware');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -45,20 +46,10 @@ usersRouter.post('/signup', async (req, res) => {
   res.status(201).json(user.toJSON());
 });
 
-usersRouter.get('/following', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+usersRouter.use(middleware.authUser);
 
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-  if (!user) {
-    return res.status(401).json({
-      error: 'user not found',
-    });
-  }
+usersRouter.get('/following', async (req, res) => {
+  const user = req.user;
   const clubs = await Club.find({ _id: { $in: user.following } });
   const questions = await Question.find({ _id: { $in: user.following } });
   const dorms = await Dorm.find({ _id: { $in: user.following } });
@@ -78,24 +69,19 @@ usersRouter.get('/following', async (req, res) => {
 
 usersRouter.put('/follow', async (req, res) => {
   const body = req.body;
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
   let isMalformatedId = false;
   try {
     let typeId = new mongoose.Types.ObjectId(body.id);
   } catch (e) {
     isMalformatedId = true;
   }
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  } else if (!body.id || isMalformatedId) {
+  if (!body.id || isMalformatedId) {
     return res.status(400).json({
       error: 'id is missing or invalid',
     });
   }
 
-  const user = await User.findById(decodedToken.id);
+  const user = req.user;
   let isUserFollows = user.following.find((id) => id.toString() === body.id);
 
   if (isUserFollows) {
@@ -107,29 +93,8 @@ usersRouter.put('/follow', async (req, res) => {
   res.status(200).end();
 });
 
-usersRouter.all('*', async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
-
-  if (user == undefined) {
-    return res.status(401).json({
-      error: 'user not found',
-    });
-  }
-
-  req.user = decodedToken.id;
-
-  next();
-});
-
 usersRouter.get('/notifications', async (req, res) => {
-  const notifications = await Notification.find({ target: req.user })
+  const notifications = await Notification.find({ target: req.user._id })
     .populate({ path: 'responsible', select: 'username' })
     .populate({
       path: 'tool',
@@ -156,19 +121,14 @@ usersRouter.get('/notifications', async (req, res) => {
 });
 
 usersRouter.delete('/notifications', async (req, res) => {
-  await Notification.deleteMany({ target: req.user });
+  await Notification.deleteMany({ target: req.user._id });
   res.status(204).end();
 });
 
 usersRouter.put('/', async (req, res) => {
   const body = req.body;
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  } else if (!body.currentPassword) {
+  if (!body.currentPassword) {
     return res.status(401).json({
       error: 'current password must be present',
     });
@@ -177,7 +137,7 @@ usersRouter.put('/', async (req, res) => {
       error: 'new password or username must be present',
     });
   }
-  let user = await User.findById(decodedToken.id);
+  let user = req.user;
   const isPassSame = await bcrypt.compare(
     body.currentPassword,
     user.passwordHash
@@ -196,7 +156,7 @@ usersRouter.put('/', async (req, res) => {
         error: 'Username must be unique and less than 15 characters',
       });
     }
-    await User.findByIdAndUpdate(decodedToken.id, { username: body.username });
+    await User.findByIdAndUpdate(user._id, { username: body.username });
   }
   if (body.password) {
     if (body.password.length < 8) {
@@ -206,11 +166,11 @@ usersRouter.put('/', async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(body.password, 10);
-    await User.findByIdAndUpdate(decodedToken.id, {
+    await User.findByIdAndUpdate(user._id, {
       passwordHash: passwordHash,
     });
   }
-  user = await User.findById(decodedToken.id);
+  user = await User.findById(user._id);
 
   const userForToken = {
     email: user.email,
@@ -227,13 +187,7 @@ usersRouter.put('/', async (req, res) => {
 });
 
 usersRouter.get('/admin', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-  if (!req.token || !decodedToken.id) {
-    return res.status(401).json({
-      error: 'token missing or invalid',
-    });
-  }
-  const user = await User.findById(decodedToken.id);
+  const user = req.user;
   if (typeof user.isAdmin !== 'undefined' && user.isAdmin == true) {
     res.json({
       isAdmin: true,

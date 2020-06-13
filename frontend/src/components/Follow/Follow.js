@@ -24,7 +24,7 @@ const Follow = ({ user, idToFollow }) => {
   };
   return (
     <>
-      <Icon name="podcast" color={following ? 'green' : 'blue'} />
+      <Icon name="hockey puck" color={following ? 'green' : 'blue'} />
 
       <Label
         color={following ? 'green' : 'blue'}

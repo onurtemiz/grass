@@ -42,6 +42,9 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
                 value: 4000,
                 message: 'Yorumunuz 4000 karakterden az olmalı.',
               },
+              validate: (comment) =>
+                comment.trim().length !== 0 ||
+                'Yorumunuz sadece boşluklardan oluşamaz.',
             })}
             onFocus={() => setTools(true)}
           />

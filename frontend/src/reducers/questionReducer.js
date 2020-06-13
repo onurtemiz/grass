@@ -41,7 +41,8 @@ const questionReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfQuestions = (start, count, filter) => {
+export const addInfQuestions = (start, count, filter, first, fetching) => {
+  fetching.current = true;
   return async (dispatch) => {
     const questions = await questionsService.addInf(start, count, filter);
     let data = {
@@ -60,6 +61,10 @@ export const addInfQuestions = (start, count, filter) => {
       type: 'ADD_INF_QUESTIONS',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

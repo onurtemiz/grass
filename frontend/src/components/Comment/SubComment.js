@@ -62,7 +62,9 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
 
           <SComment.Content>
             <UserAndMeta comment={comment} showSource={showSource} />
-            <SComment.Text>{comment.comment}</SComment.Text>
+            <SComment.Text style={{ whiteSpace: 'pre-line' }}>
+              {comment.comment}
+            </SComment.Text>
             <SComment.Actions>
               {user.id !== comment.user.id ? (
                 <SComment.Action onClick={handleLike} active={likeType}>

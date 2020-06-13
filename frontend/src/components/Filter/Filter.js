@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { setFilter } from '../../reducers/filterReducer';
 import { useDispatch } from 'react-redux';
-import { Search } from 'semantic-ui-react';
-const Filter = () => {
+import { Input } from 'semantic-ui-react';
+import { useLocation } from 'react-router-dom';
+const Filter = ({ target }) => {
+  const location = useLocation();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
+    setLoading(true);
     dispatch(setFilter(e.target.value));
+    setTimeout(() => {
+      setLoading(false);
+    }, 600);
   };
-  const s = {
-    textTransform: 'uppercase',
-    width: '50%',
-  };
+  useEffect(() => {
+    dispatch(setFilter(''));
+  }, [location]);
+
   return (
-    <input
+    <Input
+      icon="search"
+      placeholder={`${target} Arayın...`}
+      onChange={(e) => handleChange(e)}
       lang="tr"
-      onInput={(e) => handleChange(e)}
-      style={s}
-      placeholder="Ders ya da hoca arayın"
+      loading={loading}
     />
   );
 };

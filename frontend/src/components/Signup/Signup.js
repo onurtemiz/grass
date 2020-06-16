@@ -38,6 +38,9 @@ const Signup = () => {
           value: 8,
           message: 'Şifreniz en az 8 karakterden oluşmalı.',
         },
+        validate: (comment) =>
+          comment.trim().length !== 0 ||
+          'Şifreniz sadece boşluklardan oluşamaz.',
       }
     );
     register(
@@ -60,6 +63,9 @@ const Signup = () => {
           value: 1,
           message: 'Kullanıcı adınız en az 1 harften oluşmalı',
         },
+        validate: (comment) =>
+          comment.trim().length !== 0 ||
+          'Kullanıcı adınız sadece boşluklardan oluşamaz.',
       }
     );
   }, []);

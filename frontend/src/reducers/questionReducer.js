@@ -1,5 +1,5 @@
 import questionsService from '../services/questions';
-
+import { toast } from 'react-toastify';
 import lodash from 'lodash';
 const initialState = {
   questions: [],
@@ -45,6 +45,18 @@ export const addInfQuestions = (start, count, filter, first, fetching) => {
   fetching.current = true;
   return async (dispatch) => {
     const questions = await questionsService.addInf(start, count, filter);
+    if (questions.error) {
+      toast.error(`${questions.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     let data = {
       hasMore: true,
       start: start + count,
@@ -71,6 +83,18 @@ export const addInfQuestions = (start, count, filter, first, fetching) => {
 export const getQuestionById = (id) => {
   return async (dispatch) => {
     const question = await questionsService.getQuestionById(id);
+    if (question.error) {
+      toast.error(`${question.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_QUESTION_PAGE',
       data: question,

@@ -108,7 +108,7 @@ commentsRouter.get('/feed', async (req, res) => {
 
   if (!'start' in q || !'total' in q || !'filter' in q) {
     return res.status(401).json({
-      error: 'query is missing',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 4',
     });
   }
   const user = req.user;
@@ -141,7 +141,7 @@ commentsRouter.get('/', async (req, res) => {
       return res.json(comment.toJSON());
     }
     return res.status(400).json({
-      error: 'comment not found',
+      error: 'Yorum bulunamadı',
     });
   } else {
     comments = await Comment.find({});
@@ -183,18 +183,14 @@ commentsRouter.post('/', async (req, res) => {
       return res.status(400).json({
         error: 'TeacherId must be present',
       });
-    } else if (!body.typeId) {
-      return res.status(400).json({
-        error: 'typeId must be present',
-      });
-    }
-  } else if (body.commentType === 'club') {
-    if (!body.typeId) {
-      return res.status(400).json({
-        error: 'typeId must be present',
-      });
     }
   }
+  if (!body.typeId) {
+    return res.status(400).json({
+      error: 'typeId must be present',
+    });
+  }
+
   const user = req.user;
   let comment;
   if (body.commentType === 'lesson') {
@@ -359,14 +355,14 @@ commentsRouter.put('/:id', async (req, res) => {
 
   if (!comment) {
     return res.status(400).json({
-      error: 'comment or user not found.',
+      error: 'Yorum bulunamadı.',
     });
   }
   if ('comment' in body) {
     const isUserHave = user.comments.some((c) => c.equals(req.params.id));
     if (!isUserHave) {
       return res.status(400).json({
-        error: 'you have no right',
+        error: 'Yorumu düzenlemeye hakkınız yok.',
       });
     }
     comment.comment = body.comment;
@@ -414,11 +410,11 @@ commentsRouter.delete('/:id', async (req, res) => {
   const isUserHave = user.comments.some((c) => c.equals(req.params.id));
   if (!comment) {
     return res.status(400).json({
-      error: 'comment or user not found.',
+      error: 'Yorum bulunamadı.',
     });
   } else if (!isUserHave) {
     return res.status(401).json({
-      error: 'you have no right',
+      error: 'Yorumu silmeye hakkınız yok.',
     });
   }
 

@@ -50,7 +50,7 @@ tipsRouter.post('/', async (req, res) => {
     body.tip.length > 150
   ) {
     return res.status(400).json({
-      error: 'invalid post',
+      error: 'Geçersiz tavsiye. Hata kodu 13',
     });
   }
 
@@ -96,7 +96,7 @@ tipsRouter.get('/', async (req, res) => {
   const q = req.query;
   if (!q.start || !q.total) {
     return res.status(400).json({
-      error: 'missing count or start',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 14',
     });
   }
   const tips = await Tip.find({ isApproved: true })

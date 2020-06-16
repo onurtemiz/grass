@@ -18,13 +18,13 @@ const authUser = async (req, res, next) => {
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
   if (!req.token || !decodedToken.id) {
     return res.status(401).json({
-      error: 'token missing or invalid',
+      error: 'Kullaınıcı bulunamadı. Gir çık yapmayı deneyin. Hata kodu 5',
     });
   }
   const user = await User.findById(decodedToken.id);
   if (!user.equals(decodedToken.id)) {
     return res.status(401).json({
-      error: 'user not found',
+      error: 'Kullanıcı bulunamadı. Gir çık yapmayı deneyin. Hata kodu 6',
     });
   }
   req.user = user;
@@ -47,24 +47,28 @@ const authAdmin = (req, res, next) => {
 
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' });
+    return response
+      .status(400)
+      .send({ error: 'Onur bir şeyleri batırdı. Hata kodu 7' });
   }
   if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message });
+    return response
+      .status(400)
+      .json({ error: 'Onur bir şeyleri batırdı. Hata kodu 8' });
   }
   if (error.name === 'TypeError') {
     return response.status(400).json({
-      error: error.message,
+      error: 'Onur bir şeyleri batırdı. Hata kodu 9',
     });
   }
   if (error.name === 'SyntaxError') {
     return response.status(400).json({
-      error: error.message,
+      error: 'Onur bir şeyleri batırdı. Hata kodu 10',
     });
   }
   if (error.name === 'JsonWebTokenError') {
     return response.status(401).json({
-      error: 'invalid token',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 11',
     });
   }
 

@@ -96,6 +96,7 @@ const Search = ({ size }) => {
       size={size ? size : 'massive'}
       noResultsMessage="Aradığınız kritere uygun bir şey bulunamadı."
       resultRenderer={resRender}
+      autoFocus
     ></S>
   );
 };

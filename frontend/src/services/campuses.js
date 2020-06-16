@@ -7,13 +7,25 @@ const baseUrl =
     : '/api/campuses';
 
 const getAll = async (setCampuses) => {
-  const res = await axios.get(`${baseUrl}/`, config);
-  setCampuses(res.data);
+  try {
+    const res = await axios.get(`${baseUrl}/`, config);
+    setCampuses(res.data);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getCampusByName = async (name, setCampus) => {
-  const res = await axios.get(`${baseUrl}/${name}`, config);
-  setCampus(res.data);
+  try {
+    const res = await axios.get(`${baseUrl}/${name}`, config);
+    setCampus(res.data);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

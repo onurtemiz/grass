@@ -1,6 +1,6 @@
 import allService from '../services/all';
 import lessonsService from '../services/lessons';
-
+import { toast } from 'react-toastify';
 import lodash from 'lodash';
 const initialState = {
   all: [],
@@ -42,9 +42,20 @@ const allReducer = (state = initialState, action) => {
 
 export const addInfAll = (start, count, filter) => {
   return async (dispatch) => {
-    console.log('hey');
     const total = await allService.getTotal(filter);
     const all = await allService.addInf(start, count, filter);
+    if (all.error) {
+      toast.error(`${all.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     let data = {
       hasMore: true,
       start: start + count,
@@ -64,16 +75,6 @@ export const addInfAll = (start, count, filter) => {
   };
 };
 
-export const totalAll = (filter) => {
-  return async (dispatch) => {
-    const total = await allService.getTotal(filter);
-    dispatch({
-      type: 'TOTAL_ALL',
-      data: total.total,
-    });
-  };
-};
-
 export const getLessonPageByName = (areaCode, digitCode, teacherName) => {
   return async (dispatch) => {
     const lesson = await lessonsService.getLessonPageByName(
@@ -81,6 +82,18 @@ export const getLessonPageByName = (areaCode, digitCode, teacherName) => {
       digitCode,
       teacherName
     );
+    if (lesson.error) {
+      toast.error(`${lesson.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_LESSON_PAGE',
       data: lesson,
@@ -95,6 +108,18 @@ export const getLessonPageById = (areaCode, digitCode, teacherId) => {
       digitCode,
       teacherId
     );
+    if (lesson.error) {
+      toast.error(`${lesson.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_LESSON_PAGE',
       data: lesson,
@@ -105,6 +130,18 @@ export const getLessonPageById = (areaCode, digitCode, teacherId) => {
 export const getLessonById = (id) => {
   return async (dispatch) => {
     const lesson = await lessonsService.getLessonById(id);
+    if (lesson.error) {
+      toast.error(`${lesson.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_LESSON_PAGE',
       data: lesson,

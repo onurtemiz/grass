@@ -25,11 +25,19 @@ const deleteReport = async (id) => {
 };
 
 const postReport = async (report, setIsLoading, setIsOpen, setIsReported) => {
-  const req = await axios.post(`${baseUrl}`, report, config);
-  setIsLoading(false);
-  setIsOpen(false);
-  setIsReported(true);
-  return req.data;
+  try {
+    const req = await axios.post(`${baseUrl}`, report, config);
+    setIsOpen(false);
+    setIsReported(true);
+    setIsLoading(false);
+
+    return req.data;
+  } catch (e) {
+    setIsLoading(false);
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

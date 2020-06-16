@@ -1,5 +1,5 @@
 import clubsService from '../services/clubs';
-
+import { toast } from 'react-toastify';
 import lodash from 'lodash';
 const initialState = {
   clubs: [],
@@ -50,12 +50,23 @@ const clubReducer = (state = initialState, action) => {
 };
 
 export const addInfClubs = (start, count, filter, first, fetching) => {
-  console.log('hey');
-
-  fetching.current = true;
   return async (dispatch) => {
+    fetching.current = true;
     const total = await clubsService.getTotal(filter);
+
     const clubs = await clubsService.addInf(start, count, filter);
+    if (clubs.error) {
+      toast.error(`${clubs.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     let data = {
       hasMore: true,
       start: start + count,
@@ -96,6 +107,18 @@ export const editClub = (c, setIsLoading, setIsEdit) => {
 export const getClubPageByName = (shortName) => {
   return async (dispatch) => {
     const club = await clubsService.getClubPageByName(shortName);
+    if (club.error) {
+      toast.error(`${club.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_CLUB_PAGE',
       data: club,

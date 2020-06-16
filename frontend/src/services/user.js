@@ -11,49 +11,93 @@ const updateUser = async (user) => {
     const res = await axios.put(baseUrl, user, config);
     return res.data;
   } catch (e) {
-    return { error: 'Şu anki şifre yanlış' };
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
   }
 };
 
 const followLesson = async (id) => {
-  const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+  try {
+    const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
 
-  return res.data;
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const checkAdmin = async (setIsAdmin) => {
   const res = await axios.get(`${baseUrl}/admin`, config);
-  console.log('res.data', res.data);
   setIsAdmin(res.data.isAdmin);
 };
 
 const getUserById = async (id) => {
-  const res = await axios.get(`${baseUrl}?id=${id}`, config);
-  return res.data;
+  try {
+    const res = await axios.get(`${baseUrl}?id=${id}`, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getFollowing = async (setFollowing) => {
-  const res = await axios.get(`${baseUrl}/following`, config);
-  setFollowing(res.data);
+  try {
+    const res = await axios.get(`${baseUrl}/following`, config);
+    setFollowing(res.data);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getNotifications = async (setNotifications, setLoading) => {
-  const res = await axios.get(`${baseUrl}/notifications`, config);
-  setNotifications(res.data);
-  setLoading(false);
+  try {
+    const res = await axios.get(`${baseUrl}/notifications`, config);
+    setNotifications(res.data);
+    setLoading(false);
+  } catch (e) {
+    setLoading(false);
+    return e.response
+      ? e.response.data
+      : 'Onur bir şeyleri batırdı. Hata kodu 42';
+  }
 };
 
 const deleteNotifications = async () => {
-  await axios.delete(`${baseUrl}/notifications`, config);
+  try {
+    await axios.delete(`${baseUrl}/notifications`, config);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const unfollowLesson = async (id) => {
-  const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
-  return res.data;
+  try {
+    const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 const getPopulatedUser = async (username) => {
-  const res = await axios.get(`${baseUrl}/${username}`, config);
-  return res.data;
+  try {
+    const res = await axios.get(`${baseUrl}/${username}`, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

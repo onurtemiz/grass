@@ -7,38 +7,67 @@ const baseUrl =
     : '/api/lessons';
 
 const addInf = async (start, count, filter) => {
-  const url =
-    filter === ''
-      ? `${baseUrl}?start=${start}&total=${count}`
-      : `${baseUrl}?start=${start}&total=${count}&search=${filter}`;
-  const req = await axios.get(url, config);
-  return req.data;
+  try {
+    const req = await axios.get(
+      `${baseUrl}?start=${start}&total=${count}&search=${filter}`,
+      config
+    );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getLessonPageByName = async (areaCode, digitCode, teacherName) => {
-  const req = await axios.get(
-    `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherName=${teacherName}`,
-    config
-  );
-  return req.data;
+  try {
+    const req = await axios.get(
+      `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherName=${teacherName}`,
+      config
+    );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getLessonById = async (id) => {
-  const req = await axios.get(`${baseUrl}/${id}`, config);
-  return req.data;
+  try {
+    const req = await axios.get(`${baseUrl}/${id}`, config);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getLessonPageById = async (areaCode, digitCode, teacherId) => {
-  const req = await axios.get(
-    `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherId=${teacherId}`,
-    config
-  );
-  return req.data;
+  try {
+    const req = await axios.get(
+      `${baseUrl}?areaCode=${areaCode}&digitCode=${digitCode}&teacherId=${teacherId}`,
+      config
+    );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getTotalLesson = async (filter) => {
-  const req = await axios.get(`${baseUrl}/total?search=${filter}`, config);
-  return req.data;
+  try {
+    const req = await axios.get(`${baseUrl}/total?search=${filter}`, config);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

@@ -1,6 +1,7 @@
 /* eslint-disable default-case */
 import tipsService from '../services/tips';
 import lodash from 'lodash';
+import {toast} from 'react-toastify'
 const initialState = {
   tips: [],
   total: 0,
@@ -31,6 +32,18 @@ const tipReducer = (state = initialState, action) => {
 export const addInfTip = (start, count) => {
   return async (dispatch) => {
     const tips = await tipsService.addInf(start, count);
+    if (tips.error) {
+      toast.error(`${tips.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await tipsService.getTotalTip();
     const data = {
       hasMore: true,

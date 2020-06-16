@@ -26,7 +26,7 @@ reportsRouter.post('/', async (req, res) => {
     !body.reportedCommentLikes
   ) {
     return res.status(400).json({
-      error: 'missing information',
+      error: 'Eksik bilgi',
     });
   }
 
@@ -35,13 +35,13 @@ reportsRouter.post('/', async (req, res) => {
 
   if (!reportedUser || !reportedComment) {
     return res.status(400).json({
-      error: 'user or comment not found',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 12',
     });
   }
 
   if (body.extra && body.extra.length > 1000) {
     return res.status(400).json({
-      error: 'must be less than 1000',
+      error: 'Açıklama 1000 karakter veya daha az olmalı.',
     });
   }
 

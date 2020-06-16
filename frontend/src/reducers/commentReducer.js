@@ -1,6 +1,6 @@
 import commentsService from '../services/comments';
 import lodash from 'lodash';
-
+import { toast } from 'react-toastify';
 const initialState = {
   comments: [],
   total: 0,
@@ -95,6 +95,18 @@ export const sortComment = (option) => {
 export const postComment = (c, reset, setTools, setIsLoading) => {
   return async (dispatch) => {
     const comment = await commentsService.postComment(c);
+    if (comment.error) {
+      toast.error(`${comment.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'ADD_COMMENT',
       data: comment,
@@ -108,6 +120,18 @@ export const postComment = (c, reset, setTools, setIsLoading) => {
 export const updateComment = (c, id, setIsUpdate, setIsLoading) => {
   return async (dispatch) => {
     const comment = await commentsService.updateComment(c, id);
+    if (comment.error) {
+      toast.error(`${comment.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'UPDATE_COMMENT',
       data: comment,
@@ -120,6 +144,18 @@ export const updateComment = (c, id, setIsUpdate, setIsLoading) => {
 export const likeComment = (id) => {
   return async (dispatch) => {
     const comment = await commentsService.likeComment(id);
+    if (comment.error) {
+      toast.error(`${comment.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'LIKE_COMMENT',
       data: comment,
@@ -129,20 +165,22 @@ export const likeComment = (id) => {
 
 export const removeComment = (id) => {
   return async (dispatch) => {
-    await commentsService.removeComment(id);
+    const res = await commentsService.removeComment(id);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'REMOVE_COMMENT',
       data: id,
-    });
-  };
-};
-
-export const totalCommentById = (id) => {
-  return async (dispatch) => {
-    const total = await commentsService.getTotalCommentsById(id);
-    dispatch({
-      type: 'TOTAL_COMMENT',
-      data: total.total,
     });
   };
 };
@@ -155,6 +193,18 @@ export const addInfCommentAll = (start, count, filter, first, fetching) => {
       count,
       filter
     );
+    if (comments.error) {
+      toast.error(`${comments.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await commentsService.getTotalCommentsAll(filter);
     let data = {
       hasMore: true,
@@ -194,6 +244,18 @@ export const addInfCommentById = (
       id,
       filter
     );
+    if (comments.error) {
+      toast.error(`${comments.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await commentsService.getTotalCommentsById(id, filter);
     let data = {
       hasMore: true,
@@ -220,6 +282,18 @@ export const addInfCommentById = (
 export const getCommentById = (id) => {
   return async (dispatch) => {
     const comment = await commentsService.getCommentById(id);
+    if (comment.error) {
+      toast.error(`${comment.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_COMMENT_BY_ID',
       data: comment,
@@ -228,14 +302,25 @@ export const getCommentById = (id) => {
 };
 
 export const addInfCommentFeed = (start, count, filter, first, fetching) => {
-  fetching.current = true;
-
   return async (dispatch) => {
+    fetching.current = true;
     const comments = await commentsService.addInfCommentsFeed(
       start,
       count,
       filter
     );
+    if (comments.error) {
+      toast.error(`${comments.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await commentsService.getTotalCommentsFeed();
     let data = {
       hasMore: true,

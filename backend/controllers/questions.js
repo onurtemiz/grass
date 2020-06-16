@@ -6,12 +6,18 @@ questionsRouter.post('/', async (req, res) => {
   const body = req.body;
   if (!body || !body.description || !body.question) {
     return res.status(400).json({
-      error: 'missing information',
+      error: 'Eksik bilgi girildi.',
     });
   }
-  if (body.description.length > 1000 || body.question.length > 42) {
+  if (body.question.length > 42) {
     return res.status(400).json({
-      error: 'overlimit',
+      error: 'Sorunuz 42 karakterden çok',
+    });
+  }
+
+  if (body.description.length > 1000) {
+    return res.status(400).json({
+      error: 'Açıklamanız 1000 karakterden çok',
     });
   }
 
@@ -37,7 +43,7 @@ questionsRouter.get('/', async (req, res) => {
   const q = req.query;
   if (!('start' in q) && !('total' in q)) {
     res.status(400).json({
-      error: 'need start or total',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 3',
     });
   }
   const search = q.search ? q.search : '';
@@ -71,7 +77,7 @@ questionsRouter.put('/ea/:id', async (req, res) => {
 questionsRouter.put('/:id', async (req, res) => {
   if (!req.params.id) {
     res.status(400).json({
-      error: 'no id',
+      error: 'Aradığınız soru bulunamadı.',
     });
   }
   const question = await Question.findById(req.params.id);
@@ -83,7 +89,7 @@ questionsRouter.put('/:id', async (req, res) => {
 questionsRouter.delete('/:id', async (req, res) => {
   if (!req.params.id) {
     res.status(400).json({
-      error: 'no id',
+      error: 'Sileceğiniz soru idsi eksik',
     });
   }
   await Question.findByIdAndDelete(req.params.id);

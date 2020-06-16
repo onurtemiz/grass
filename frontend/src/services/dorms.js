@@ -7,13 +7,25 @@ const baseUrl =
     : '/api/dorms';
 
 const getAll = async (setDorms) => {
-  const res = await axios.get(`${baseUrl}/`, config);
-  setDorms(res.data);
+  try {
+    const res = await axios.get(`${baseUrl}/`, config);
+    setDorms(res.data);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getDormByName = async (name, setDorm) => {
-  const res = await axios.get(`${baseUrl}/${name}`, config);
-  setDorm(res.data);
+  try {
+    const res = await axios.get(`${baseUrl}/${name}`, config);
+    setDorm(res.data);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 export default {
   getAll,

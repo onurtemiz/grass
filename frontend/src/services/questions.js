@@ -7,16 +7,28 @@ const baseUrl =
     : '/api/questions';
 
 const getQuestionById = async (id) => {
-  const req = await axios.get(`${baseUrl}/${id}`, config);
-  return req.data;
+  try {
+    const req = await axios.get(`${baseUrl}/${id}`, config);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const addInf = async (start, count, filter) => {
-  const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}&search=${filter}`,
-    config
-  );
-  return req.data;
+  try {
+    const req = await axios.get(
+      `${baseUrl}?start=${start}&total=${count}&search=${filter}`,
+      config
+    );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getAllQuestions = async () => {
@@ -38,10 +50,17 @@ const editApproveQuestion = async (question) => {
 };
 
 const postQuestion = async (values, reset, setLoading, setOpen) => {
-  await axios.post(`${baseUrl}`, values, config);
-  reset();
-  setLoading(false);
-  setOpen(false);
+  try {
+    await axios.post(`${baseUrl}`, values, config);
+    reset();
+    setLoading(false);
+    setOpen(false);
+  } catch (e) {
+    setLoading(false);
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

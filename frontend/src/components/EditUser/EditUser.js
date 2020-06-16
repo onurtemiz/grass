@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { updateUser } from '../../reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,84 +20,71 @@ import {
   Divider,
 } from 'semantic-ui-react';
 import useField from './useField';
-const EditUser = ({ setActiveIndex }) => {
-  const password = useField();
-  const samePassword = useField();
-  const currentPassword = useField();
-  const username = useField();
+import { useForm } from 'react-hook-form';
 
+const EditUser = ({ setActiveIndex }) => {
+  const { register, handleSubmit, errors, setValue, watch } = useForm();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [edited, setEdited] = useState(null);
 
-  function equalTo(ref, msg) {
-    return this.test({
-      name: 'equalTo',
-      exclusive: false,
-      message: msg,
-      params: {
-        reference: ref.path,
-      },
-      test: function (value) {
-        return value === this.resolve(ref);
-      },
-    });
-  }
-
-  Yup.addMethod(Yup.string, 'equalTo', equalTo);
-
-  const validationSchema = Yup.object({
-    username: Yup.string().max(
-      username.field.length === 0 ? 0 : 15,
-      'username'
-    ),
-    password: Yup.string().min(password.field.length === 0 ? 0 : 8, 'password'),
-    samePassword: Yup.string().equalTo(Yup.ref('password'), 'samePassword'),
-    currentPassword: Yup.string().min(8, 'currentPassword'),
-  });
-
-  const handleSubmit = async () => {
-    validationSchema
-      .validate(
-        {
-          password: password.field,
-          username: username.field,
-          samePassword: samePassword.field,
-          currentPassword: currentPassword.field,
+  useEffect(() => {
+    register(
+      { name: 'currentPassword' },
+      {
+        required: 'Lütfen şu anki şifrenizi girin.',
+        minLength: {
+          value: 8,
+          message: 'Şu anki şifreniz en az 8 karakterden oluşmalı.',
         },
-        { abortEarly: false }
-      )
-      .then((values) => {
-        setEdited('started');
-        dispatch(updateUser(values, setEdited, currentPassword.setFieldError));
-      })
-      .catch((e) => {
-        e.errors.forEach((q) => {
-          switch (q) {
-            case 'password':
-              password.setFieldError('Şifre en az 8 karakterden oluşmalı');
-              break;
-            case 'username':
-              username.setFieldError(
-                'Kullanıcı adı 15 harf veya daha az olmalı'
-              );
-              break;
-            case 'samePassword':
-              samePassword.setFieldError('Şifreler aynı değil');
-              break;
-            case 'currentPassword':
-              currentPassword.setFieldError(
-                'Şu anki şifreniz 8 karakterden küçük olamaz'
-              );
-              break;
-            default:
-              currentPassword.setFieldError(
-                'Şu anki şifreniz 8 karakterden küçük olamaz'
-              );
-          }
-        });
-      });
+      }
+    );
+    register(
+      { name: 'password' },
+      {
+        minLength: {
+          value: 8,
+          message: 'Yeni şifreniz en az 8 karakterden oluşmalı.',
+        },
+        validate: (comment) =>
+          comment
+            ? (comment && comment.trim().length !== 0) ||
+              'Yeni şifreniz sadece boşluklardan oluşamaz.'
+            : true,
+      }
+    );
+    register(
+      { name: 'samePassword' },
+      {
+        validate: (value) =>
+          value === watch('password') || 'Şifreleriniz uyuşmuyor.',
+      }
+    );
+    register(
+      { name: 'username' },
+      {
+        maxLength: {
+          value: 15,
+          message: 'Yeni kullanıcı adınız 15 veya daha az harften oluşmalı.',
+        },
+        minLength: {
+          value: 1,
+          message: 'yeni kullanıcı adınız en az 1 harften oluşmalı',
+        },
+        validate: (comment) =>
+          comment
+            ? comment.trim().length !== 0 ||
+              'Yeni kullanıcı adınız sadece boşluklardan oluşamaz.'
+            : true,
+      }
+    );
+  }, []);
+
+  const onSubmit = async (data) => {
+    setEdited('started');
+    dispatch(updateUser(data, setEdited));
   };
+
   if (edited === 'started') {
     return <LinearProgress />;
   }
@@ -142,11 +129,12 @@ const EditUser = ({ setActiveIndex }) => {
                 iconPosition="left"
                 placeholder="Şu anki şifrenizi girin"
                 type="password"
-                onChange={(e) => currentPassword.fieldSet(e.target.value)}
+                onChange={(e, { name, value }) => setValue(name, value)}
+                name="currentPassword"
               />
-              {currentPassword.fieldError && (
+              {errors.currentPassword && (
                 <Label basic color="red" pointing="above">
-                  {currentPassword.fieldError}
+                  {errors.currentPassword.message}
                 </Label>
               )}
             </Form.Field>
@@ -157,12 +145,13 @@ const EditUser = ({ setActiveIndex }) => {
               iconPosition="left"
               type="text"
               placeholder={`Yeni kullanıcı adı (${user.username})`}
-              onChange={(e) => username.fieldSet(e.target.value)}
+              onChange={(e, { name, value }) => setValue(name, value)}
+              name="username"
             />
 
-            {username.fieldError && (
+            {errors.username && (
               <Label basic color="red" pointing="above">
-                {username.fieldError}
+                {errors.username.message}
               </Label>
             )}
             <Form.Field inline>
@@ -173,11 +162,12 @@ const EditUser = ({ setActiveIndex }) => {
                 iconPosition="left"
                 placeholder="Yeni şifre"
                 type="password"
-                onChange={(e) => password.fieldSet(e.target.value)}
+                onChange={(e, { name, value }) => setValue(name, value)}
+                name="password"
               />
-              {password.fieldError && (
+              {errors.password && (
                 <Label basic color="red" pointing="above">
-                  {password.fieldError}
+                  {errors.password.message}
                 </Label>
               )}
             </Form.Field>
@@ -188,16 +178,18 @@ const EditUser = ({ setActiveIndex }) => {
                 iconPosition="left"
                 placeholder="Yeni şifrenizi tekrar girin"
                 type="password"
-                onChange={(e) => samePassword.fieldSet(e.target.value)}
+                onChange={(e, { name, value }) => setValue(name, value)}
+                name="samePassword"
               />
-              {samePassword.fieldError && (
+
+              {errors.samePassword && (
                 <Label basic color="red" pointing="above">
-                  {samePassword.fieldError}
+                  {errors.samePassword.message}
                 </Label>
               )}
             </Form.Field>
             <Divider />
-            <Button fluid size="large" primary onClick={handleSubmit}>
+            <Button fluid size="large" primary onClick={handleSubmit(onSubmit)}>
               Güncelle
             </Button>
           </Segment>

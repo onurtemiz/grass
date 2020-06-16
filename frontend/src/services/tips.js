@@ -7,21 +7,39 @@ const baseUrl =
     : '/api/tips';
 
 const getTip = async () => {
-  const req = await axios.get(`${baseUrl}/random`, config);
-  return req.data;
+  try {
+    const req = await axios.get(`${baseUrl}/random`, config);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getAllTips = async () => {
-  const req = await axios.get(`${baseUrl}/all`, config);
-  return req.data;
+  try {
+    const req = await axios.get(`${baseUrl}/all`, config);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const addInf = async (start, count) => {
-  const req = await axios.get(
-    `${baseUrl}?start=${start}&total=${count}`,
-    config
-  );
-  return req.data;
+  try {
+    const req = await axios.get(
+      `${baseUrl}?start=${start}&total=${count}`,
+      config
+    );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 const getTotalTip = async () => {
@@ -39,10 +57,18 @@ const deleteTip = async (id) => {
 };
 
 const postTip = async (tip, setIsLoading, setIsOpen) => {
-  const req = await axios.post(`${baseUrl}`, tip, config);
-  setIsLoading(false);
-  setIsOpen(false);
-  return req.data;
+  try {
+    const req = await axios.post(`${baseUrl}`, tip, config);
+    setIsOpen(false);
+    setIsLoading(false);
+
+    return req.data;
+  } catch (e) {
+    setIsLoading(false);
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

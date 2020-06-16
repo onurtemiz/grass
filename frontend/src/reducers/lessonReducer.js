@@ -1,5 +1,6 @@
 import lessonsService from '../services/lessons';
 import lodash from 'lodash';
+import { toast } from 'react-toastify';
 const initialState = {
   lessons: [],
   total: 0,
@@ -24,7 +25,7 @@ const lessonReducer = (state = initialState, action) => {
 
         lessons: uniqLessons,
       };
-      return currentState
+      return currentState;
     case 'TOTAL_LESSON':
       const totalc = action.data;
       return { ...state, total: totalc };
@@ -38,6 +39,18 @@ const lessonReducer = (state = initialState, action) => {
 export const addInfLesson = (start, count, filter) => {
   return async (dispatch) => {
     const lessons = await lessonsService.addInf(start, count, filter);
+    if (lessons.error) {
+      toast.error(`${lessons.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await lessonsService.getTotalLesson(filter);
     let data = {
       hasMore: true,
@@ -54,24 +67,6 @@ export const addInfLesson = (start, count, filter) => {
     dispatch({
       type: 'ADD_INF_LESSON',
       data: data,
-    });
-  };
-};
-
-export const totalLesson = (filter) => {
-  return async (dispatch) => {
-    const total = await lessonsService.getTotalLesson(filter);
-    dispatch({
-      type: 'TOTAL_LESSON',
-      data: total.total,
-    });
-  };
-};
-
-export const resetLessons = () => {
-  return (dispatch) => {
-    dispatch({
-      type: 'RESET_LESSONS',
     });
   };
 };

@@ -6,8 +6,14 @@ const baseUrl =
     : '/api/users/signup';
 
 const signup = async (user) => {
-  const req = await axios.post(baseUrl, user);
-  return req.data;
+  try {
+    const req = await axios.post(baseUrl, user);
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
 };
 
 export default {

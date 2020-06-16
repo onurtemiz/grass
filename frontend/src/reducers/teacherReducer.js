@@ -1,6 +1,7 @@
 /* eslint-disable default-case */
 import teachersService from '../services/teachers';
 import lessonsService from '../services/lessons';
+import { toast } from 'react-toastify';
 import lodash from 'lodash';
 const initialState = {
   teachers: [],
@@ -51,6 +52,18 @@ const teacherReducer = (state = initialState, action) => {
 export const addInfTeacher = (start, count, filter) => {
   return async (dispatch) => {
     const teachers = await teachersService.addInf(start, count, filter);
+    if (teachers.error) {
+      toast.error(`${teachers.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const total = await teachersService.getTotalTeacher(filter);
     const data = {
       hasMore: true,
@@ -71,31 +84,24 @@ export const addInfTeacher = (start, count, filter) => {
   };
 };
 
-export const totalTeacher = (filter) => {
-  return async (dispatch) => {
-    const total = await teachersService.getTotalTeacher(filter);
-    dispatch({
-      type: 'TOTAL_TEACHER',
-      data: total.total,
-    });
-  };
-};
-
 export const getTeacherPage = (name) => {
   return async (dispatch) => {
     const teacher = await teachersService.getTeacherPage(name);
-
+    if (teacher.error) {
+      toast.error(`${teacher.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'GET_TEACHER_PAGE',
       data: teacher,
-    });
-  };
-};
-
-export const resetTeachers = () => {
-  return (dispatch) => {
-    dispatch({
-      type: 'RESET_TEACHERS',
     });
   };
 };

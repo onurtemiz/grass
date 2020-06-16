@@ -3,6 +3,8 @@ import signupService from '../services/signup';
 import commentsService from '../services/comments';
 import userService from '../services/user';
 import { setToken } from '../utils/token';
+import { toast } from 'react-toastify';
+
 const userReducer = (state = null, action) => {
   switch (action.type) {
     case 'SET_MAIN_USER':
@@ -31,7 +33,19 @@ const userReducer = (state = null, action) => {
 
 export const followLesson = (user, id) => {
   return async (dispatch) => {
-    await userService.followLesson(id);
+    const res = await userService.followLesson(id);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'FOLLOW_LESSON',
       data: id,
@@ -43,7 +57,19 @@ export const followLesson = (user, id) => {
 
 export const unfollowLesson = (user, id) => {
   return async (dispatch) => {
-    await userService.unfollowLesson(id);
+    const res = await userService.unfollowLesson(id);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'UNFOLLOW_LESSON',
       data: id,
@@ -53,12 +79,20 @@ export const unfollowLesson = (user, id) => {
   };
 };
 
-export const updateUser = (u, setEdited, setCurrentPasswordError) => {
+export const updateUser = (u, setEdited) => {
   return async (dispatch) => {
     const user = await userService.updateUser(u);
     if (user.error) {
       setEdited(null);
-      setCurrentPasswordError(user.error);
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
     console.log('user', user);
@@ -92,11 +126,19 @@ export const setUser = (user) => {
   };
 };
 
-export const loginUser = (userInfo, setEmailError) => {
+export const loginUser = (userInfo) => {
   return async (dispatch) => {
     const user = await loginService.login(userInfo);
     if (user.error) {
-      setEmailError(user.error);
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
     window.localStorage.setItem('grassUser', JSON.stringify(user));
@@ -111,6 +153,18 @@ export const loginUser = (userInfo, setEmailError) => {
 export const getPopulatedUser = (username) => {
   return async (dispatch) => {
     const user = await userService.getPopulatedUser(username);
+    if (user.error) {
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     dispatch({
       type: 'SET_MAIN_USER',
       data: user,
@@ -120,11 +174,35 @@ export const getPopulatedUser = (username) => {
 
 export const signupUser = (userInfo) => {
   return async (dispatch) => {
-    await signupService.signup(userInfo);
+    const res = await signupService.signup(userInfo);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const user = await loginService.login({
       email: userInfo.email,
       password: userInfo.password,
     });
+    if (user.error) {
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     window.localStorage.setItem('grassUser', JSON.stringify(user));
     setToken(user.token);
 

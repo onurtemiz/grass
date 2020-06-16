@@ -14,7 +14,6 @@ import {
   Divider,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
-
 const Login = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
   const dispatch = useDispatch();
@@ -79,9 +78,16 @@ const Login = () => {
                 iconPosition="left"
                 placeholder="Eposta Adresi"
                 name="email"
+                autoFocus
+                className="email-input"
               />
               {errors.email && (
-                <Label basic color="red" pointing="above">
+                <Label
+                  basic
+                  color="red"
+                  pointing="above"
+                  className="email-error"
+                >
                   {errors.email.message}
                 </Label>
               )}
@@ -94,16 +100,28 @@ const Login = () => {
                 placeholder="Şifre"
                 type="password"
                 name="password"
+                className="password-input"
                 onChange={(e, { name, value }) => setValue(name, value)}
               />
               {errors.password && (
-                <Label basic color="red" pointing="above">
+                <Label
+                  basic
+                  color="red"
+                  pointing="above"
+                  className="password-error"
+                >
                   {errors.password.message}
                 </Label>
               )}
             </Form.Field>
             <Divider />
-            <Button fluid size="large" primary type="submit">
+            <Button
+              fluid
+              size="large"
+              primary
+              type="submit"
+              className="login-button"
+            >
               Giriş Yap
             </Button>
           </Segment>

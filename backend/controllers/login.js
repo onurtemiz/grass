@@ -8,11 +8,11 @@ loginRouter.post('/', async (request, response) => {
   const isEmailBoun = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
   if (!body.email || isEmailBoun === null) {
     return response.status(400).json({
-      error: 'Must have boun email',
+      error: 'Boğaziçi uzantılı eposta adresinizi girmelisiniz.',
     });
   } else if (!body.password || body.password.length < 8) {
     return response.status(400).json({
-      error: 'Password must be present and 8 characters or more ',
+      error: 'Şifreniz 8 veya daha çok karakterden oluşmalı.',
     });
   }
 
@@ -24,7 +24,7 @@ loginRouter.post('/', async (request, response) => {
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({
-      error: 'invalid username or password',
+      error: 'Epostanız ya da şifreniz geçersiz.',
     });
   }
 

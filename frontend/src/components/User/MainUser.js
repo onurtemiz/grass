@@ -17,7 +17,7 @@ const User = () => {
   const location = useLocation();
   useEffect(() => {
     dispatch(getPopulatedUser(user.username));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (location.pathname.includes('follows')) {

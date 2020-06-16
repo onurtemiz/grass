@@ -20,19 +20,23 @@ usersRouter.post('/signup', async (req, res) => {
   const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
   if (!body.email || reResult === null) {
     return res.status(400).json({
-      error: 'Must have boun email',
+      error: 'Eposta adresi boun uzantılı olmalı.',
     });
   } else if (isEmailDuplicate != null) {
     return res.status(400).json({
-      error: 'User is already signin',
+      error: 'Bu eposta adresi siteye kayıtlı.',
     });
-  } else if (!body.username || body.username.length > 15 || isUserDuplicate) {
+  } else if (!body.username || body.username.length > 15) {
     return res.status(400).json({
-      error: 'Username must be present, unique and less than 15 characters',
+      error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
+    });
+  } else if (isUserDuplicate) {
+    return res.status(400).json({
+      error: 'Bu kullanıcı adı alınmış.',
     });
   } else if (!body.password || body.password.length < 8) {
     return res.status(400).json({
-      error: 'Password must be present and 8 characters or more ',
+      error: 'Şifre 8 veya daha fazla karakterden oluşmalı.',
     });
   }
 
@@ -77,7 +81,7 @@ usersRouter.put('/follow', async (req, res) => {
   }
   if (!body.id || isMalformatedId) {
     return res.status(400).json({
-      error: 'id is missing or invalid',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 1',
     });
   }
 
@@ -130,11 +134,11 @@ usersRouter.put('/', async (req, res) => {
 
   if (!body.currentPassword) {
     return res.status(401).json({
-      error: 'current password must be present',
+      error: 'Şu anki şifrenizi girmelisiniz.',
     });
   } else if (!body.password && !body.username) {
     return res.status(401).json({
-      error: 'new password or username must be present',
+      error: 'Yeni bir şifre veya bir kullanıcı adı girmelisiniz.',
     });
   }
   let user = req.user;
@@ -145,15 +149,20 @@ usersRouter.put('/', async (req, res) => {
 
   if (!isPassSame) {
     return res.status(401).json({
-      error: 'current password is wrong.',
+      error: 'Şu anki şifrenizi yanlış girdiniz.',
     });
   }
 
   if (body.username) {
     const isUserDuplicate = await User.findOne({ username: body.username });
-    if (body.username.length > 15 || isUserDuplicate) {
+    if (isUserDuplicate) {
       return res.status(401).json({
-        error: 'Username must be unique and less than 15 characters',
+        error: 'Yeni kullanıcı adınız başkası tarafından alınmış.',
+      });
+    }
+    if (body.username.length > 15) {
+      return res.status(401).json({
+        error: 'Yeni kullanıcı adınız 15 karakter veya daha az olmalı.',
       });
     }
     await User.findByIdAndUpdate(user._id, { username: body.username });
@@ -161,7 +170,7 @@ usersRouter.put('/', async (req, res) => {
   if (body.password) {
     if (body.password.length < 8) {
       return res.status(401).json({
-        error: 'password must be 8 or more characters',
+        error: 'Yeni şifreniz 8 veya daha çok karakterden oluşmalı.',
       });
     }
 
@@ -183,6 +192,7 @@ usersRouter.put('/', async (req, res) => {
     id: user._id,
     email: user.email,
     username: user.username,
+    following: user.following,
   });
 });
 
@@ -229,14 +239,14 @@ usersRouter.get('/', async (req, res) => {
 
   if (!q.id) {
     return res.json({
-      error: 'id must present',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 2',
     });
   }
   const user = await User.findById(q.id);
 
   if (!user) {
     return res.json({
-      error: 'user not found',
+      error: 'Aradığınız kullanıcı bulunamadı.',
     });
   }
 

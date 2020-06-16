@@ -22,7 +22,7 @@ clubsRouter.get('/', async (req, res) => {
   const q = req.query;
   if (!('start' in q) || !('total' in q)) {
     res.status(400).json({
-      error: 'should have start or total',
+      error: 'Onur bir şeyleri batırdı. Hata kodu 15',
     });
   }
   const clubs = await Club.getFilteredInf(q.search, q.start, q.total);

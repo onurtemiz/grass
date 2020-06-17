@@ -117,8 +117,8 @@ reportsRouter.put('/destroy', async (req, res) => {
     });
   }
   if (report.isDestroyComment == true) {
-    let user = await User.findById(report.reportedUserId);
     if (report.reportedCommentType === 'lesson') {
+      let user = await User.findById(report.reportedUserId);
       const teacher = await Teacher.findById(report.teacherId);
       const lesson = await Lesson.findById(report.typeId);
       const comment = new Comment({
@@ -139,117 +139,28 @@ reportsRouter.put('/destroy', async (req, res) => {
       await teacher.save();
       await lesson.save();
     } else if (report.reportedCommentType === 'club') {
-      const club = await Club.findById(report.typeId);
-      const comment = new Comment({
-        _id: new mongoose.Types.ObjectId(report.reportedCommentId),
-        club: report.typeId,
-        user: report.reportedUserId,
-        comment: report.reportedComment,
-        date: report.reportedCommentDate,
-        likes: report.reportedCommentLikes,
-        commentType: report.reportedCommentType,
-      });
-      await comment.save();
-      user.comments = user.comments.concat(comment._id);
-      club.comments = club.comments.concat(comment._id);
-      await user.save();
-      await club.save();
+      await addCommentTo(Club, report);
     } else if (report.reportedCommentType === 'dorm') {
-      const dorm = await Dorm.findById(report.typeId);
-      const comment = new Comment({
-        _id: new mongoose.Types.ObjectId(report.reportedCommentId),
-        dorm: report.typeId,
-        user: report.reportedUserId,
-        comment: report.reportedComment,
-        date: report.reportedCommentDate,
-        likes: report.reportedCommentLikes,
-        commentType: report.reportedCommentType,
-      });
-      await comment.save();
-      user.comments = user.comments.concat(comment._id);
-      dorm.comments = dorm.comments.concat(comment._id);
-      await user.save();
-      await dorm.save();
+      await addCommentTo(Dorm, report);
     } else if (report.reportedCommentType === 'campus') {
-      const campus = await Campus.findById(report.typeId);
-      const comment = new Comment({
-        _id: new mongoose.Types.ObjectId(report.reportedCommentId),
-        campus: report.typeId,
-        user: report.reportedUserId,
-        comment: report.reportedComment,
-        date: report.reportedCommentDate,
-        likes: report.reportedCommentLikes,
-        commentType: report.reportedCommentType,
-      });
-      await comment.save();
-      user.comments = user.comments.concat(comment._id);
-      campus.comments = campus.comments.concat(comment._id);
-      await user.save();
-      await campus.save();
+      await addCommentTo(Campus, report);
     } else if (report.reportedCommentType === 'question') {
-      const question = await Question.findById(report.typeId);
-      const comment = new Comment({
-        _id: new mongoose.Types.ObjectId(report.reportedCommentId),
-        question: report.typeId,
-        user: report.reportedUserId,
-        comment: report.reportedComment,
-        date: report.reportedCommentDate,
-        likes: report.reportedCommentLikes,
-        commentType: report.reportedCommentType,
-      });
-      await comment.save();
-      user.comments = user.comments.concat(comment._id);
-      question.comments = question.comments.concat(comment._id);
-      await user.save();
-      await question.save();
+      await addCommentTo(Question, report);
     }
   } else {
     await Comment.findByIdAndRemove(report.reportedCommentId);
-    await User.findOneAndUpdate(
-      {
-        comments: { $in: report.reportedCommentId },
-      },
-      { $pull: { comments: report.reportedCommentId } }
-    );
+    removeCommentFrom(User, report);
     if (report.reportedCommentType === 'lesson') {
-      await Teacher.findOneAndUpdate(
-        { comments: { $in: report.reportedCommentId } },
-        { $pull: { comments: report.reportedCommentId } }
-      );
-      await Lesson.findOneAndUpdate(
-        {
-          comments: { $in: report.reportedCommentId },
-        },
-        { $pull: { comments: report.reportedCommentId } }
-      );
+      await removeCommentFrom(Lesson, report);
+      await removeCommentFrom(Teacher, report);
     } else if (report.reportedCommentType === 'club') {
-      await Club.findOneAndUpdate(
-        {
-          comments: { $in: report.reportedCommentId },
-        },
-        { $pull: { comments: report.reportedCommentId } }
-      );
+      await removeCommentFrom(Club, report);
     } else if (report.reportedCommentType === 'campus') {
-      await Campus.findOneAndUpdate(
-        {
-          comments: { $in: report.reportedCommentId },
-        },
-        { $pull: { comments: report.reportedCommentId } }
-      );
+      await removeCommentFrom(Campus, report);
     } else if (report.reportedCommentType === 'dorm') {
-      await Dorm.findOneAndUpdate(
-        {
-          comments: { $in: report.reportedCommentId },
-        },
-        { $pull: { comments: report.reportedCommentId } }
-      );
+      await removeCommentFrom(Dorm, report);
     } else if (report.reportedCommentType === 'question') {
-      await Question.findOneAndUpdate(
-        {
-          comments: { $in: report.reportedCommentId },
-        },
-        { $pull: { comments: report.reportedCommentId } }
-      );
+      await removeCommentFrom(Question, report);
     }
   }
 
@@ -257,6 +168,49 @@ reportsRouter.put('/destroy', async (req, res) => {
   await report.save();
   res.status(200).end();
 });
+
+const addCommentTo = async (doc, report) => {
+  let user = await User.findById(report.reportedUserId);
+  const type = await doc.findById(report.typeId);
+  let commentObj = new createReportedCommentFrom(report);
+  const comment = new Comment({
+    ...commentObj,
+  });
+  await comment.save();
+  user.comments = user.comments.concat(comment._id);
+  type.comments = type.comments.concat(comment._id);
+  await user.save();
+  await type.save();
+};
+
+function createReportedCommentFrom(report) {
+  if (report.reportedCommentType === 'question') {
+    this.question = report.typeId;
+  } else if (report.reportedCommentType === 'club') {
+    this.club = report.typeId;
+  } else if (report.reportedCommentType === 'lesson') {
+    this.lesson = report.typeId;
+  } else if (report.reportedCommentType === 'dorm') {
+    this.dorm = report.typeId;
+  } else if (report.reportedCommentType === 'campus') {
+    this.campus = report.typeId;
+  }
+  this._id = new mongoose.Types.ObjectId(report.reportedCommentId);
+  this.user = report.reportedUserId;
+  this.comment = report.reportedComment;
+  this.date = report.reportedCommentDate;
+  this.likes = report.reportedCommentLikes;
+  this.commentType = report.reportedCommentType;
+}
+
+const removeCommentFrom = async (doc, report) => {
+  await doc.findOneAndUpdate(
+    {
+      comments: { $in: report.reportedCommentId },
+    },
+    { $pull: { comments: report.reportedCommentId } }
+  );
+};
 
 reportsRouter.delete('/remove', async (req, res) => {
   const q = req.query;

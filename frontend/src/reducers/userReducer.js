@@ -129,8 +129,8 @@ export const setUser = (user) => {
 export const loginUser = (userInfo) => {
   return async (dispatch) => {
     const user = await loginService.login(userInfo);
-    if (user.error) {
-      toast.error(`${user.error}`, {
+    if (user.error || user.message) {
+      toast.error(`${user.error || user.message}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,

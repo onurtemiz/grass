@@ -2,6 +2,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
 const User = require('../models/user');
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 100 requests per windowMs
+  message: { error: 'Lütfen 15 dakika sonra tekrar deneyin.' },
+});
+
+loginRouter.use(limiter);
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body;

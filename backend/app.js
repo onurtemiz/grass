@@ -40,7 +40,12 @@ const mongoUri = async () => {
 
 mongoUri();
 
+if (process.env.NODE_ENV !== 'test' || process.env.NODE_ENV !== 'dev') {
+  app.set('trust proxy', 1);
+}
 app.use(cors());
+var helmet = require('helmet');
+app.use(helmet());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());

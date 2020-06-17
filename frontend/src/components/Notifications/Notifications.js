@@ -12,6 +12,7 @@ const Notifications = () => {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setLoading(true);
+    setOpen(false);
     userService.getNotifications(setNotifications, setLoading);
   }, [location]);
   return (

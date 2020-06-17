@@ -158,7 +158,15 @@ commentsRouter.get('/', async (req, res) => {
   res.json(comments.map((c) => c.toJSON()));
 });
 
-commentsRouter.post('/', async (req, res) => {
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 15, // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Çok kısa sürede çok yorum. Lütfen 15 dakika sonra tekrar deneyin.',
+  },
+});
+
+commentsRouter.post('/', limiter, async (req, res) => {
   const body = req.body;
 
   if (!body.comment) {

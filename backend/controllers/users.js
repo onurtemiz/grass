@@ -187,12 +187,10 @@ usersRouter.put('/', async (req, res) => {
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
+  const jsonUser = user.toJSON();
   res.status(200).send({
     token,
-    id: user._id,
-    email: user.email,
-    username: user.username,
-    following: user.following,
+    ...jsonUser,
   });
 });
 

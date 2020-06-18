@@ -10,6 +10,7 @@ const Campus = require('../models/campus');
 const Dorm = require('../models/dorm');
 const Question = require('../models/question');
 const Notification = require('../models/notification');
+const rateLimit = require('express-rate-limit');
 
 const getCommentFilter = async (q) => {
   let comments;

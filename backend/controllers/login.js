@@ -42,13 +42,10 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   };
   const token = jwt.sign(userForToken, process.env.SECRET);
-
+  const jsonedUser = user.toJSON();
   response.status(200).send({
     token,
-    id: user._id,
-    email: user.email,
-    username: user.username,
-    following: user.following,
+    ...jsonedUser,
   });
 });
 

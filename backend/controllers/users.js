@@ -15,28 +15,32 @@ const middleware = require('../utils/middleware');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
-  const isEmailDuplicate = await User.findOne({ email: body.email });
-  const isUserDuplicate = await User.findOne({ username: body.username });
   const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
+
   if (!body.email || reResult === null) {
     return res.status(400).json({
       error: 'Eposta adresi boun uzantılı olmalı.',
     });
-  } else if (isEmailDuplicate != null) {
+  } else if (!body.password || body.password.trim().length < 8) {
     return res.status(400).json({
-      error: 'Bu eposta adresi siteye kayıtlı.',
+      error: 'Şifre 8 veya daha fazla karakterden oluşmalı.',
     });
-  } else if (!body.username || body.username.length > 15) {
+  } else if (
+    !body.username ||
+    body.username.trim().length > 15 ||
+    body.username.trim().length === 0 ||
+    body.username.trim().length !== body.username.length
+  ) {
     return res.status(400).json({
       error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
     });
-  } else if (isUserDuplicate) {
+  }
+  const isEmailOrUsernameDuplicate = await User.findOne({
+    $or: [{ email: body.email }, { username: body.username }],
+  });
+  if (isEmailOrUsernameDuplicate) {
     return res.status(400).json({
-      error: 'Bu kullanıcı adı alınmış.',
-    });
-  } else if (!body.password || body.password.length < 8) {
-    return res.status(400).json({
-      error: 'Şifre 8 veya daha fazla karakterden oluşmalı.',
+      error: 'Bu kullanıcı adı ya da eposta daha önceden alınmış.',
     });
   }
 
@@ -133,11 +137,11 @@ usersRouter.put('/', async (req, res) => {
   const body = req.body;
 
   if (!body.currentPassword) {
-    return res.status(401).json({
+    return res.status(400).json({
       error: 'Şu anki şifrenizi girmelisiniz.',
     });
   } else if (!body.password && !body.username) {
-    return res.status(401).json({
+    return res.status(400).json({
       error: 'Yeni bir şifre veya bir kullanıcı adı girmelisiniz.',
     });
   }
@@ -156,20 +160,24 @@ usersRouter.put('/', async (req, res) => {
   if (body.username) {
     const isUserDuplicate = await User.findOne({ username: body.username });
     if (isUserDuplicate) {
-      return res.status(401).json({
+      return res.status(400).json({
         error: 'Yeni kullanıcı adınız başkası tarafından alınmış.',
       });
     }
-    if (body.username.length > 15) {
-      return res.status(401).json({
+    if (
+      body.username.length > 15 ||
+      body.username.trim().length === 0 ||
+      body.username.trim().length !== body.username.length
+    ) {
+      return res.status(400).json({
         error: 'Yeni kullanıcı adınız 15 karakter veya daha az olmalı.',
       });
     }
     await User.findByIdAndUpdate(user._id, { username: body.username });
   }
   if (body.password) {
-    if (body.password.length < 8) {
-      return res.status(401).json({
+    if (body.password.trim().length < 8) {
+      return res.status(400).json({
         error: 'Yeni şifreniz 8 veya daha çok karakterden oluşmalı.',
       });
     }
@@ -188,7 +196,7 @@ usersRouter.put('/', async (req, res) => {
 
   const token = jwt.sign(userForToken, process.env.SECRET);
   const jsonUser = user.toJSON();
-  res.status(200).send({
+  res.status(200).json({
     token,
     ...jsonUser,
   });

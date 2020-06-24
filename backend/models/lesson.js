@@ -16,18 +16,18 @@ const lessonSchema = new mongoose.Schema({
   areaCode: { type: String, required: true },
   digitCode: { type: String, required: true },
   sectionCode: [{ type: String }],
-  fullName: { type: String, required: true },
+  name: { type: String, required: true },
+  parentName: { type: String, required: true },
 });
 
 lessonSchema.set(uniqueValidator);
 
 lessonSchema.statics.getFilteredInf = function (search, start, total) {
   return this.find({
-    fullName: { $regex: search, $options: 'i' },
+    name: { $regex: search, $options: 'i' },
   })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('teacher')
     .populate('comments');
 };
 
@@ -40,13 +40,12 @@ lessonSchema.statics.getFilteredAllInf = function (
   try {
     return this.find({
       $or: [
-        { fullName: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
         { teacher: { $in: teachersId } },
       ],
     })
       .skip(Number(start))
-      .limit(Number(total))
-      .populate('teacher');
+      .limit(Number(total));
   } catch (e) {
     console.log('e', e);
   }

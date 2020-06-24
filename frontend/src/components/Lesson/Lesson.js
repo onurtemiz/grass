@@ -30,7 +30,7 @@ const Lesson = () => {
   useEffect(() => {
     const lesson = lessons.find(
       (l) =>
-        l.fullName === `${match.areaCode}${match.digitCode}` &&
+        l.name === `${match.areaCode}${match.digitCode}` &&
         l.teacher.name === decodeURI(match.teacherName)
     );
     if (lesson !== undefined) {
@@ -46,7 +46,7 @@ const Lesson = () => {
     <div>
       <div style={{ fontSize: '2em' }}>
         <Label color="blue" bold>
-          {lesson.fullName.toUpperCase()} ·
+          {lesson.name.toUpperCase()} ·
         </Label>
 
         <Link to={`/teachers/${lesson.teacher.name}`}>

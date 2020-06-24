@@ -21,12 +21,12 @@ const All = () => {
 
   const filterLessons = (lessons) => {
     const onlyTeacherNames = lessons.filter((l) =>
-      l.teacher.name
+      l.parentName
         .toLocaleUpperCase('tr-TR')
         .includes(filter.toLocaleUpperCase('tr-TR'))
     );
     const onlyLessonNames = lessons.filter((l) => {
-      return !!l.fullName.toUpperCase().includes(filter.toUpperCase());
+      return !!l.name.toUpperCase().includes(filter.toUpperCase());
     });
     const q = lodash.union(onlyLessonNames, onlyTeacherNames);
     return q;
@@ -58,7 +58,7 @@ const All = () => {
         useWindow={false}
       >
         {filterLessons(lessons)
-          .sort((a, b) => a.fullName - b.fullName)
+          .sort((a, b) => a.name - b.name)
           .map((l) => (
             <SubLesson lesson={l} key={l.id} />
           ))}

@@ -32,16 +32,6 @@ const OtherCommentReport = ({
     reportedUser: comment.user.username,
     reportedCommentId: comment.id,
     reportedComment: comment.comment,
-    reportedCommentLikes: comment.likes,
-    reportedCommentDate: comment.date,
-    typeId: comment.club
-      ? comment.club.id
-      : comment.dorm
-      ? comment.dorm.id
-      : comment.campus
-      ? comment.campus.id
-      : comment.question.id,
-    reportedCommentType: comment.commentType,
   });
   const [isLoading, setIsLoading] = useState(false);
 

@@ -7,10 +7,10 @@ const SubLesson = ({ lesson, main }) => {
   const header = () => {};
 
   return (
-    <div style={main ? { marginLeft: '1em' , marginRight: '1em'} : null}>
+    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
       <Card
         as={Link}
-        to={LESSON_PATH(lesson, lesson.teacher.name)}
+        to={LESSON_PATH(lesson)}
         fluid
         style={
           main
@@ -27,7 +27,7 @@ const SubLesson = ({ lesson, main }) => {
       >
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2" color="blue">
-            <Header.Content>{lesson.fullName.toUpperCase()}</Header.Content>
+            <Header.Content>{lesson.name.toUpperCase()}</Header.Content>
           </Header>
         </Card.Header>
         <Card.Description>
@@ -35,9 +35,9 @@ const SubLesson = ({ lesson, main }) => {
             color="green"
             bold
             pointer
-            key={`${lesson.teacher.name}${lesson.fullName}`}
+            key={`${lesson.parentName}${lesson.name}`}
           >
-            {lesson.teacher.name}
+            {lesson.parentName}
           </Label>
         </Card.Description>
       </Card>

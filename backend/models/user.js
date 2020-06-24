@@ -17,8 +17,7 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
     },
   ],
-  isAdmin: { type: Boolean, required: true, default: false },
-  
+  userStatus: { type: String, default: 'user' },
 });
 
 userSchema.set(uniqueValidator);

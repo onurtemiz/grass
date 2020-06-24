@@ -1,6 +1,7 @@
 const lessonsRouter = require('express').Router();
 const Lesson = require('../models/lesson');
 const Teacher = require('../models/teacher');
+const lesson = require('../models/lesson');
 // const jsonData = require('../2018-2019-2.json');
 
 // lessonsRouter.get('/loadjson/', async (req, res) => {
@@ -52,7 +53,7 @@ const Teacher = require('../models/teacher');
 lessonsRouter.get('/total', async (req, res) => {
   const search = req.query.search ? req.query.search : '';
   const total = await Lesson.find({
-    fullName: { $regex: search, $options: 'i' },
+    name: { $regex: search, $options: 'i' },
   }).countDocuments();
   res.json({ total: total });
 });
@@ -123,7 +124,7 @@ lessonsRouter.post('/', async (req, res) => {
     lesson = new Lesson({
       areaCode: body.areaCode,
       digitCode: body.digitCode,
-      fullName: `${body.areaCode}${body.digitCode}`,
+      name: `${body.areaCode}${body.digitCode}`,
       teacher: teacher._id,
     });
   }

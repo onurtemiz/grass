@@ -63,7 +63,7 @@ const getType = (comment) => {
 
 const getCommentLink = (comment) => {
   if (comment.commentType === 'lesson') {
-    return LESSON_PATH(comment.lesson, comment.teacher.name);
+    return LESSON_PATH(comment.lesson);
   } else if (comment.commentType === 'club') {
     return CLUB_PATH(comment.club);
   } else if (comment.commentType === 'dorm') {

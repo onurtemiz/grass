@@ -56,11 +56,11 @@ const Search = ({ size }) => {
             .includes(value.toLocaleUpperCase('tr-TR'));
         } else if (m.searchType === 'club') {
           return m.fullName.toUpperCase().includes(value.toUpperCase()) ||
-            m.shortName.toUpperCase().includes(value.toUpperCase())
+            m.name.toUpperCase().includes(value.toUpperCase())
             ? true
             : false;
         } else if (m.searchType === 'lesson') {
-          return m.fullName.toUpperCase().includes(value.toUpperCase());
+          return m.name.toUpperCase().includes(value.toUpperCase());
         } else if (m.searchType === 'question') {
           return m.question.toUpperCase().includes(value.toUpperCase());
         }

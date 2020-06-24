@@ -12,7 +12,7 @@ clubsRouter.get('/total', async (req, res) => {
 });
 
 clubsRouter.get('/:name', async (req, res) => {
-  const club = await Club.findOne({ shortName: req.params.name }).populate(
+  const club = await Club.findOne({ name: req.params.name }).populate(
     'comments'
   );
   res.json(club.toJSON());
@@ -39,8 +39,8 @@ clubsRouter.put('/:id', async (req, res) => {
     });
   }
   const club = await Club.findById(req.params.id);
-  if (body.shortName) {
-    club.shortName = body.shortName;
+  if (body.name) {
+    club.name = body.name;
   }
   if (body.fullName) {
     club.fullName = body.fullName;
@@ -54,13 +54,13 @@ clubsRouter.put('/:id', async (req, res) => {
 
 clubsRouter.post('/', async (req, res) => {
   const body = req.body;
-  if (!body || !body.shortName || !body.fullName) {
+  if (!body || !body.name || !body.fullName) {
     return res.json({
       error: 'missing information',
     });
   }
   const club = new Club({
-    shortName: body.shortName,
+    name: body.name,
     fullName: body.fullName,
     description: body.description,
   });

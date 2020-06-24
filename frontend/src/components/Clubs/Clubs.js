@@ -26,7 +26,7 @@ const Clubs = ({ admin }) => {
       clubs.filter((c) => {
         if (
           c.fullName.toUpperCase().includes(filter.toUpperCase()) ||
-          c.shortName.toUpperCase().includes(filter.toUpperCase())
+          c.name.toUpperCase().includes(filter.toUpperCase())
         ) {
           return true;
         } else {

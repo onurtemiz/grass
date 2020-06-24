@@ -41,7 +41,7 @@ const commentSchema = new mongoose.Schema({
     },
   ],
   date: { type: Date, required: true, default: Date.now },
-  isHidden: { type: Boolean, default: false },
+  commentStatus: { type: String, defaut: 'visible' },
   commentType: { type: String, required: true },
 });
 
@@ -345,7 +345,7 @@ const jsonComments = (comments) => {
       c.lesson = {
         areaCode: c.lesson[0].areaCode,
         digitCode: c.lesson[0].digitCode,
-        fullName: c.lesson[0].fullName,
+        name: c.lesson[0].name,
         id: c.lesson[0]._id,
       };
       c.teacher = {
@@ -356,7 +356,7 @@ const jsonComments = (comments) => {
       c.club = {
         fullName: c.club[0].fullName,
         id: c.club[0]._id,
-        shortName: c.club[0].shortName,
+        name: c.club[0].name,
       };
     } else if (c.commentType === 'dorm') {
       c.dorm = {

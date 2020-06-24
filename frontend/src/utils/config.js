@@ -1,7 +1,5 @@
-export const LESSON_PATH = (lesson, teacherName) => {
-  return lesson.teacher && lesson.teacher.name
-    ? `/lessons/${lesson.areaCode}/${lesson.digitCode}/${lesson.teacher.name}`
-    : `/lessons/${lesson.areaCode}/${lesson.digitCode}/${teacherName}`;
+export const LESSON_PATH = (lesson) => {
+  return `/lessons/${lesson.areaCode}/${lesson.digitCode}/${lesson.parentName}`;
 };
 export const TEACHER_PATH = (teacher) => {
   return `/teachers/${teacher.name}`;
@@ -12,7 +10,7 @@ export const USER_PATH = (user) => {
 };
 
 export const CLUB_PATH = (club) => {
-  return `/clubs/${club.shortName ? club.shortName : club}`;
+  return `/clubs/${club.name ? club.name : club}`;
 };
 
 export const CAMPUS_PATH = (campus) => {

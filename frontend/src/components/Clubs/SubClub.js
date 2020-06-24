@@ -29,13 +29,13 @@ export const SubClub = ({ club, main }) => {
           <Header as="h2">
             <Header.Content>
               <Label color="blue" bold pointer>
-                {club.shortName.toUpperCase()}
+                {club.name.toUpperCase()}
               </Label>
             </Header.Content>
           </Header>
         </Card.Header>
         <Card.Description>
-          <Label color="green" bold pointer key={`${club.shortName}`}>
+          <Label color="green" bold pointer key={`${club.name}`}>
             {club.fullName}
           </Label>
         </Card.Description>
@@ -72,13 +72,13 @@ export const SubClubAdmin = ({ club }) => {
           <Header as="h2">
             <Header.Content>
               <Label color="blue" bold pointer>
-                {club.shortName.toUpperCase()}
+                {club.name.toUpperCase()}
               </Label>
             </Header.Content>
           </Header>
         </Card.Header>
         <Card.Description>
-          <Label color="green" bold pointer key={`${club.shortName}`}>
+          <Label color="green" bold pointer key={`${club.name}`}>
             {club.fullName}
           </Label>
         </Card.Description>

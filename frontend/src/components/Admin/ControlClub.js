@@ -17,7 +17,7 @@ const ControlClub = () => {
 
 export const ClubForm = ({ setIsEdit, club }) => {
   const dispatch = useDispatch();
-  const [shortName, setShortName] = useState(club ? club.shortName : '');
+  const [name, setName] = useState(club ? club.name : '');
   const [fullName, setFullName] = useState(club ? club.fullName : '');
   const [description, setDescription] = useState(club ? club.description : '');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,16 +27,16 @@ export const ClubForm = ({ setIsEdit, club }) => {
     if (club) {
       dispatch(
         editClub(
-          { shortName, fullName, description, id: club.id },
+          { name, fullName, description, id: club.id },
           setIsLoading,
           setIsEdit
         )
       );
     } else {
       clubsService.postClub(
-        { shortName, fullName, description },
+        { name, fullName, description },
         setIsLoading,
-        setShortName,
+        setName,
         setFullName,
         setIsLoading
       );
@@ -57,8 +57,8 @@ export const ClubForm = ({ setIsEdit, club }) => {
           <label>Kulüp Kısaltması</label>
           <input
             placeholder="Kulüp Kısaltması"
-            value={shortName}
-            onChange={(e) => setShortName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </Form.Field>
         <Form.Field>

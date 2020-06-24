@@ -23,18 +23,10 @@ const IdComments = ({ type, typeId, height }) => {
     setCurrentComments(
       comments
         .filter((c) => {
-          if (type === 'teacher' && c.commentType === 'lesson') {
+          if (c.commentType === type) {
+            return c[`${type}`].id === typeId;
+          } else if (type === 'teacher' && c.commentType === 'lesson') {
             return c.teacher.id === typeId;
-          } else if (type === 'lesson' && c.commentType === 'lesson') {
-            return c.lesson.id === typeId;
-          } else if (type === 'club' && c.commentType === 'club') {
-            return c.club.id === typeId;
-          } else if (type === 'campus' && c.commentType === 'campus') {
-            return c.campus.id === typeId;
-          } else if (type === 'dorm' && c.commentType === 'dorm') {
-            return c.dorm.id === typeId;
-          } else if (type === 'question' && c.commentType === 'question') {
-            return c.question.id === typeId;
           } else if (type === 'user') {
             return c.user.id === typeId;
           }
@@ -65,8 +57,6 @@ const IdComments = ({ type, typeId, height }) => {
   if (currentComments.length === 0) {
     return <NoComments />;
   }
-  console.log('first', first);
-  console.log('fetching', fetching);
   return (
     <div
       style={{

@@ -24,17 +24,7 @@ const FeedComments = ({ height }) => {
     setCurrentComments(
       comments
         .filter((c) => {
-          if (c.commentType === 'lesson') {
-            return user.following.includes(c.lesson.id);
-          } else if (c.commentType === 'club') {
-            return user.following.includes(c.club.id);
-          } else if (c.commentType === 'campus') {
-            return user.following.includes(c.campus.id);
-          } else if (c.commentType === 'dorm') {
-            return user.following.includes(c.dorm.id);
-          } else if (c.commentType === 'question') {
-            return user.following.includes(c.question.id);
-          }
+          return user.following.includes(c[`${c.commentType}`].id);
         })
         .sort((a, b) => {
           if (filter === 'mostRecent') {

@@ -67,7 +67,6 @@ const getIdFilter = async (q) => {
 
   return comments;
 };
-
 commentsRouter.get('/total', async (req, res) => {
   const q = req.query;
   let total =

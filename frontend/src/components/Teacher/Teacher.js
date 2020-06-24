@@ -43,10 +43,10 @@ const Teacher = () => {
         <ul style={{ listStyle: 'none', fontSize: '1.5em', paddingLeft: '0' }}>
           {teacher.lessons.map((l) => (
             <li key={l.id} style={{ paddingTop: '0.5em' }}>
-              <Link to={LESSON_PATH(l, teacher.name)}>
+              <Link to={LESSON_PATH(l)}>
                 <Label color="green" bold pointer>
                   {' '}
-                  {l.fullName.toUpperCase()} ·
+                  {l.name.toUpperCase()} ·
                 </Label>
               </Link>{' '}
               <Follow idToFollow={l.id} user={user} />

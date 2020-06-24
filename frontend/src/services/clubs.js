@@ -17,9 +17,9 @@ const getTotal = async (filter) => {
   }
 };
 
-const getClubPageByName = async (shortName) => {
+const getClubPageByName = async (name) => {
   try {
-    const req = await axios.get(`${baseUrl}/${shortName}`, config);
+    const req = await axios.get(`${baseUrl}/${name}`, config);
     return req.data;
   } catch (e) {
     return e.response
@@ -42,9 +42,9 @@ const addInf = async (start, count, filter) => {
   }
 };
 
-const postClub = async (values, setShortName, setFullName, setIsLoading) => {
+const postClub = async (values, setName, setFullName, setIsLoading) => {
   const req = await axios.post(`${baseUrl}`, values, config);
-  setShortName('');
+  setName('');
   setFullName('');
   setIsLoading('');
   return req.data;

@@ -3,7 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false);
 
 const clubSchema = new mongoose.Schema({
-  shortName: { type: String, unique: true, required: true },
+  name: { type: String, unique: true },
+
   fullName: { type: String, unique: true, required: true },
   description: { type: String, default: '' },
   comments: [
@@ -25,7 +26,7 @@ clubSchema.statics.getFilteredInf = function (
     return this.find({
       $or: [
         { fullName: { $regex: search, $options: 'i' } },
-        { shortName: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
       ],
     })
       .skip(Number(start))

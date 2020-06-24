@@ -21,8 +21,8 @@ const Lessons = ({ main }) => {
   useEffect(() => {
     setCurrentLessons(
       lessons
-        .filter((l) => l.fullName.toUpperCase().includes(filter.toUpperCase()))
-        .sort((a, b) => b.fullName - a.fullName)
+        .filter((l) => l.name.toUpperCase().includes(filter.toUpperCase()))
+        .sort((a, b) => b.name - a.name)
     );
   }, [lessons]);
 

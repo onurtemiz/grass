@@ -114,7 +114,7 @@ usersRouter.get('/notifications', async (req, res) => {
     })
     .populate({
       path: 'tool',
-      populate: { path: 'club', select: 'shortName' },
+      populate: { path: 'club', select: 'name' },
     })
     .populate({
       path: 'tool',
@@ -204,7 +204,7 @@ usersRouter.put('/', async (req, res) => {
 
 usersRouter.get('/admin', async (req, res) => {
   const user = req.user;
-  if (typeof user.isAdmin !== 'undefined' && user.isAdmin == true) {
+  if (user.userStatus === 'admin') {
     res.json({
       isAdmin: true,
     });

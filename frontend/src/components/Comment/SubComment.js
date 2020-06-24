@@ -157,9 +157,9 @@ export const UserAndMeta = ({ comment, showSource }) => {
 
 const LessonType = ({ comment }) => {
   return (
-    <Link to={LESSON_PATH(comment.lesson, comment.teacher.name)}>
+    <Link to={LESSON_PATH(comment.lesson)}>
       <Label color="blue" pointer>
-        {`${comment.lesson.fullName.toUpperCase()} · ${comment.teacher.name}`}
+        {`${comment.lesson.name.toUpperCase()} · ${comment.teacher.name}`}
       </Label>
     </Link>
   );
@@ -169,7 +169,7 @@ const ClubType = ({ comment }) => {
   return (
     <Link to={CLUB_PATH(comment.club)}>
       <Label color="blue" pointer>
-        {comment.club.shortName.toUpperCase()}
+        {comment.club.name.toUpperCase()}
       </Label>
     </Link>
   );

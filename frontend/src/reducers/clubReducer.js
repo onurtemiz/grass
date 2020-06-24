@@ -104,9 +104,9 @@ export const editClub = (c, setIsLoading, setIsEdit) => {
   };
 };
 
-export const getClubPageByName = (shortName) => {
+export const getClubPageByName = (name) => {
   return async (dispatch) => {
-    const club = await clubsService.getClubPageByName(shortName);
+    const club = await clubsService.getClubPageByName(name);
     if (club.error) {
       toast.error(`${club.error}`, {
         position: 'bottom-left',

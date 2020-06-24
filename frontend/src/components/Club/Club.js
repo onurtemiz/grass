@@ -24,18 +24,22 @@ const Club = () => {
   const match = useRouteMatch('/clubs/:name');
   const clubs = useSelector((state) => state.clubs.clubs);
   const user = useSelector((state) => state.user);
+  const [club, setClub] = useState(null);
   useEffect(() => {
     dispatch(getClubPageByName(match.params.name));
   }, []);
 
-  if (clubs.find((c) => c.shortName === match.params.name) === undefined) {
+  useEffect(() => {
+    setClub(clubs.find((c) => c.name === match.params.name));
+  }, [clubs]);
+
+  if (club == undefined) {
     return <LinearProgress />;
   }
-  const club = clubs.find((c) => c.shortName === match.params.name);
   return (
     <div>
       <Label color="blue" bold style={{ fontSize: '2em' }}>
-        {club.shortName} · <Follow idToFollow={club.id} user={user} />
+        {club.name} · <Follow idToFollow={club.id} user={user} />
       </Label>
       <br />
       <br />

@@ -116,13 +116,11 @@ const FollowingList = ({ title, arr, path, user }) => {
           <li style={{ padding: '0.5em' }} key={f.id}>
             <Label color="blue" bold style={{ fontSize: '2em' }}>
               <Link to={path(f)}>
-                {f.shortName
-                  ? f.shortName.toUpperCase()
+                {f.name
+                  ? f.name.toUpperCase()
                   : f.question
                   ? f.question
-                  : f.fullName
-                  ? f.fullName.toUpperCase()
-                  : f.name}
+                  : f.fullName.toUpperCase()}
               </Link>{' '}
               · <Follow idToFollow={f.id} user={user} />
             </Label>

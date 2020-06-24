@@ -5,9 +5,7 @@ const SubLesson = ({ lesson }) => {
   return (
     <div>
       <div>
-        <Link to={LESSON_PATH(lesson, lesson.teacher.name)}>
-          {lesson.fullName.toUpperCase()}
-        </Link>
+        <Link to={LESSON_PATH(lesson)}>{lesson.name.toUpperCase()}</Link>
       </div>
       <div>
         <Link to={TEACHER_PATH(lesson.teacher)}>{lesson.teacher.name}</Link>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import CommentSort from '../../Comments/CommentSort/CommentSort';
 import NoFeed from './NoFeed';
-import { useFollowed } from '../../UserPage/Following/FollowedHook';
 import FeedComments from '../../Comments/Comments/FeedComments';
 import userService from '../../../services/user';
 
 const Feed = () => {
-  const [blocking, setBlocking] = useState(null);
+  const [blocking, setBlocking] = useState(false);
   const [following, setFollowing] = useState();
   useEffect(() => {
     userService.getFollowing(setFollowing);
@@ -26,13 +25,15 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    if (getLength(following).length === 0) {
-      setBlocking('noLesson');
+    if (getLength(following) === 0) {
+      setBlocking(true);
+    } else {
+      setBlocking(false);
     }
   }, [following]);
 
   if (blocking) {
-    return <NoFeed blocking={blocking} />;
+    return <NoFeed />;
   }
 
   return (

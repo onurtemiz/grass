@@ -25,6 +25,7 @@ const Campuses = ({ main }) => {
       <InfiniteScroll
         pageStart={0}
         useWindow={true}
+        loadMore={() => null}
         hasMore={false}
         loader={<CommentsLoading />}
       >

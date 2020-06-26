@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, Button, Divider } from 'semantic-ui-react';
 import reportsService from '../../../services/reports';
-import { useSelector, useDispatch } from 'react-redux';
-import { getUserById } from '../../../reducers/usersReducer';
-import { getCommentById } from '../../../reducers/commentReducer';
+import commentsServices from '../../../services/comments';
 const Report = ({ r }) => {
   const [report, setReport] = useState(r);
+  const [comment, setComment] = useState(null);
+
+  useEffect(() => {
+    commentsServices.getCommentById(report.reportedCommentId, setComment);
+  }, []);
 
   const handleDestroy = () => {
-    reportsService.destroyComment(report.id);
-    setReport({ ...report, isDestroyComment: !report.isDestroyComment });
+    reportsService.manageComment(comment.id, 'destroyed');
+    setComment({ ...comment, commentStatus: 'destroyed' });
   };
 
   const handleHide = () => {
-    reportsService.hideComment(report.id);
-    setReport({ ...report, isHideComment: !report.isHideComment });
+    reportsService.manageComment(comment.id, 'hidden');
+    setComment({ ...comment, commentStatus: 'hidden' });
+  };
+
+  const handleVisible = () => {
+    reportsService.manageComment(comment.id, 'visible');
+    setComment({ ...comment, commentStatus: 'visible' });
   };
 
   const handleRemove = () => {
     reportsService.deleteReport(report.id);
     setReport(null);
   };
-  if (report === null) {
+  if (report === null || comment == null) {
     return null;
   }
 
@@ -40,21 +48,28 @@ const Report = ({ r }) => {
         <Card.Description>{r.reportedComment}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <div className="ui three buttons">
+        <div className="ui four buttons">
           <Button
             basic
-            size="small"
-            color={report.isDestroyComment ? 'red' : 'green'}
-            onClick={() => handleDestroy()}
+            color={comment.commentStatus === 'visible' ? 'green' : 'red'}
+            onClick={() => handleVisible()}
           >
-            {report.isDestroyComment ? 'Geri Getir' : 'Yorumu Sil'}
+            {comment.commentStatus === 'visible' ? 'Visibled' : 'Visible'}
           </Button>
           <Button
             basic
-            color={report.isHideComment ? 'red' : 'green'}
+            size="small"
+            color={comment.commentStatus === 'destroyed' ? 'green' : 'red'}
+            onClick={() => handleDestroy()}
+          >
+            {comment.commentStatus === 'destroyed' ? 'Destroyed' : 'Destroy'}
+          </Button>
+          <Button
+            basic
+            color={comment.commentStatus === 'hidden' ? 'green' : 'red'}
             onClick={() => handleHide()}
           >
-            {report.isHideComment ? 'Yorumu Görünür Yap' : 'Yorumu Gizle'}
+            {comment.commentStatus === 'hidden' ? 'Hidden' : 'Hide'}
           </Button>
           <Button basic color="red" onClick={() => handleRemove()}>
             Reportu Sil

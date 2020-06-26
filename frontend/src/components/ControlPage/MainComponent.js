@@ -85,6 +85,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 1,
       },
       render: () => (
         <Segment
@@ -107,6 +108,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 2,
       },
       render: () => (
         <Segment
@@ -129,6 +131,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 3,
       },
       render: () => (
         <Segment
@@ -147,6 +150,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 4,
       },
       render: () => (
         <Segment
@@ -169,6 +173,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 5,
       },
       render: () => (
         <Segment
@@ -191,6 +196,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 6,
       },
       render: () => (
         <Segment
@@ -215,6 +221,7 @@ const MainComponent = () => {
           </Label>
         ),
         color: 'green',
+        key: 7,
       },
       render: () => (
         <Segment basic>

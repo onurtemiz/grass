@@ -109,9 +109,10 @@ const addInfCommentsAll = async (start, count, filter) => {
   }
 };
 
-const getCommentById = async (id) => {
+const getCommentById = async (id, setComment) => {
   try {
     const res = await axios.get(`${baseUrl}?id=${id}`, config);
+    setComment(res.data);
     return res.data;
   } catch (e) {
     return e.response

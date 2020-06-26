@@ -20,17 +20,7 @@ const SquareComments = ({ height }) => {
   }, [filter]);
 
   useEffect(() => {
-    setCurrentComments(
-      comments.sort((a, b) => {
-        if (filter === 'mostRecent') {
-          return new Date(b.date) - new Date(a.date);
-        } else if (filter === 'mostPast') {
-          return new Date(a.date) - new Date(b.date);
-        } else if (filter === 'mostPopular') {
-          return b.likes.length - a.likes.length;
-        }
-      })
-    );
+    setCurrentComments(sortComments(comments, filter));
   }, [filter, start, comments]);
 
   const loadFunc = () => {
@@ -47,8 +37,6 @@ const SquareComments = ({ height }) => {
     <div
       style={{
         height: height ? height : '50vh',
-        // width: '100vw',
-        // overflow: 'auto',
       }}
     >
       <InfiniteScroll
@@ -56,7 +44,7 @@ const SquareComments = ({ height }) => {
         loadMore={loadFunc}
         useWindow={true}
         hasMore={hasMore}
-        loader={<CommentsLoading />}
+        loader={<CommentsLoading key={1} />}
       >
         {currentComments.map((c) => (
           <Comment key={c.id} comment={c} showSource={true} />
@@ -67,3 +55,14 @@ const SquareComments = ({ height }) => {
 };
 
 export default SquareComments;
+function sortComments(comments, filter) {
+  return comments.sort((a, b) => {
+    if (filter === 'mostRecent') {
+      return new Date(b.date) - new Date(a.date);
+    } else if (filter === 'mostPast') {
+      return new Date(a.date) - new Date(b.date);
+    } else if (filter === 'mostPopular') {
+      return b.likes.length - a.likes.length;
+    }
+  });
+}

@@ -17,30 +17,12 @@ const IdComments = ({ type, typeId, height }) => {
   const first = useRef(false);
   const fetching = useRef(false);
   useEffect(() => {
+    first.current = false;
+    fetching.current = false;
     dispatch(addInfCommentById(0, count, typeId, filter, first, fetching));
   }, [filter]);
   useEffect(() => {
-    setCurrentComments(
-      comments
-        .filter((c) => {
-          if (c.commentType === type) {
-            return c[`${type}`].id === typeId;
-          } else if (type === 'teacher' && c.commentType === 'lesson') {
-            return c.teacher.id === typeId;
-          } else if (type === 'user') {
-            return c.user.id === typeId;
-          }
-        })
-        .sort((a, b) => {
-          if (filter === 'mostRecent') {
-            return new Date(b.date) - new Date(a.date);
-          } else if (filter === 'mostPast') {
-            return new Date(a.date) - new Date(b.date);
-          } else if (filter === 'mostPopular') {
-            return b.likes.length - a.likes.length;
-          }
-        })
-    );
+    setCurrentComments(filterComments(comments, type, typeId, filter));
   }, [filter, start, comments]);
 
   const loadFunc = () => {
@@ -54,15 +36,13 @@ const IdComments = ({ type, typeId, height }) => {
   if (!first.current) {
     return <CommentsLoading />;
   }
-  if (currentComments.length === 0) {
+  if (currentComments.length === 0 && first.current) {
     return <NoComments />;
   }
   return (
     <div
       style={{
         height: height ? height : '50vh',
-        // width: '100vw',
-        // overflow: 'auto',
       }}
     >
       <InfiniteScroll
@@ -70,7 +50,7 @@ const IdComments = ({ type, typeId, height }) => {
         loadMore={loadFunc}
         useWindow={true}
         hasMore={hasMore}
-        loader={<CommentsLoading />}
+        loader={<CommentsLoading key={1} />}
       >
         {currentComments.map((c) => (
           <Comment
@@ -86,3 +66,24 @@ const IdComments = ({ type, typeId, height }) => {
 };
 
 export default IdComments;
+function filterComments(comments, type, typeId, filter) {
+  return comments
+    .filter((c) => {
+      if (c.commentType === type) {
+        return c[`${type}`].id === typeId;
+      } else if (type === 'teacher' && c.commentType === 'lesson') {
+        return c.teacher.id === typeId;
+      } else if (type === 'user') {
+        return c.user.id === typeId;
+      }
+    })
+    .sort((a, b) => {
+      if (filter === 'mostRecent') {
+        return new Date(b.date) - new Date(a.date);
+      } else if (filter === 'mostPast') {
+        return new Date(a.date) - new Date(b.date);
+      } else if (filter === 'mostPopular') {
+        return b.likes.length - a.likes.length;
+      }
+    });
+}

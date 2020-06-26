@@ -55,6 +55,7 @@ commentSchema.statics.getMostPopularFeed = async function (
   let comments = await this.aggregate([
     {
       $match: {
+        commentStatus: { $ne: 'destroyed' },
         $or: [
           { lesson: { $in: ids } },
           { club: { $in: ids } },
@@ -72,13 +73,13 @@ commentSchema.statics.getMostPopularFeed = async function (
         comment: 1,
         likes: 1,
         date: 1,
-        isHidden: 1,
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
         campus: 1,
         dorm: 1,
         question: 1,
+        commentStatus: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -154,6 +155,7 @@ commentSchema.statics.getMostPopularById = async function (
   let comments = await this.aggregate([
     {
       $match: {
+        commentStatus: { $ne: 'destroyed' },
         $or: [
           { teacher: new mongoose.Types.ObjectId(id) },
           { lesson: new mongoose.Types.ObjectId(id) },
@@ -173,13 +175,13 @@ commentSchema.statics.getMostPopularById = async function (
         comment: 1,
         likes: 1,
         date: 1,
-        isHidden: 1,
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
         dorm: 1,
         campus: 1,
         question: 1,
+        commentStatus: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -254,6 +256,11 @@ commentSchema.statics.getMostPopular = async function (
 ) {
   let comments = await this.aggregate([
     {
+      $match: {
+        commentStatus: { $ne: 'destroyed' },
+      },
+    },
+    {
       $project: {
         teacher: 1,
         lesson: 1,
@@ -261,13 +268,13 @@ commentSchema.statics.getMostPopular = async function (
         comment: 1,
         likes: 1,
         date: 1,
-        isHidden: 1,
         length: { $size: '$likes' },
         commentType: 1,
         club: 1,
         dorm: 1,
         campus: 1,
         question: 1,
+        commentStatus: 1,
       },
     },
     { $sort: { length: -1 } },
@@ -346,6 +353,7 @@ const jsonComments = (comments) => {
         areaCode: c.lesson[0].areaCode,
         digitCode: c.lesson[0].digitCode,
         name: c.lesson[0].name,
+        parentName: c.lesson[0].parentName,
         id: c.lesson[0]._id,
       };
       c.teacher = {
@@ -388,7 +396,7 @@ commentSchema.statics.getRecentPast = function (
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
-  return this.find()
+  return this.find({ commentStatus: { $ne: 'destroyed' } })
     .sort({ _id: sort })
     .skip(Number(start))
     .limit(Number(total))
@@ -408,6 +416,7 @@ commentSchema.statics.getRecentPastFeed = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
+    commentStatus: { $ne: 'destroyed' },
     $or: [
       { lesson: { $in: ids } },
       { club: { $in: ids } },
@@ -435,6 +444,7 @@ commentSchema.statics.getRecentPastById = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({
+    commentStatus: { $ne: 'destroyed' },
     $or: [
       { teacher: id },
       { lesson: id },

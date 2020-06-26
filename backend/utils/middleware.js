@@ -35,7 +35,7 @@ const authAdmin = (req, res, next) => {
   const user = req.user;
   if (
     !user ||
-    user.isAdmin != true ||
+    user.userStatus != 'admin' ||
     user.email !== 'onur.temiz@boun.edu.tr'
   ) {
     return res.status(401).json({

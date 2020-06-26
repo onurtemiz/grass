@@ -9,7 +9,8 @@ import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 import Following from '../Following/Following';
 import { Label } from '../../Nav/NavTheme';
-const User = () => {
+import User from './User';
+const MainUser = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [activeIndex, setActiveIndex] = useState();
@@ -18,7 +19,6 @@ const User = () => {
   useEffect(() => {
     dispatch(getPopulatedUser(user.username));
   }, [user]);
-
   useEffect(() => {
     if (location.pathname.includes('follows')) {
       setActiveIndex(1);
@@ -56,10 +56,11 @@ const User = () => {
           </Label>
         ),
         color: 'green',
+        key: 1,
       },
       render: () => (
         <Tab.Pane>
-          <UserPage user={user} />
+          <User u={user} />
         </Tab.Pane>
       ),
     },
@@ -71,6 +72,7 @@ const User = () => {
           </Label>
         ),
         color: 'green',
+        key: 2,
       },
       render: () => (
         <Tab.Pane>
@@ -86,6 +88,7 @@ const User = () => {
           </Label>
         ),
         color: 'green',
+        key: 3,
       },
       render: () => (
         <Tab.Pane>
@@ -108,19 +111,19 @@ const User = () => {
   );
 };
 
-const UserPage = ({ user }) => {
-  return (
-    <div>
-      <Header as="h1" color="green">
-        {user.username}
-      </Header>
-      <Header as="h1" color="blue">
-        {user.totalLikes}
-      </Header>
+// const UserPage = ({ user }) => {
+//   return (
+//     <div>
+//       <Header as="h1" color="green">
+//         {user.username}
+//       </Header>
+//       <Header as="h1" color="blue">
+//         {user.totalLikes}
+//       </Header>
 
-      <Comments type="user" typeId={user.id} />
-    </div>
-  );
-};
+//       <Comments type="user" typeId={user.id} />
+//     </div>
+//   );
+// };
 
-export default User;
+export default MainUser;

@@ -2,51 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../../Comments/Comments/IdComments';
-import { Header, Label } from 'semantic-ui-react';
+import { Header, Label as SLabel, Icon } from 'semantic-ui-react';
 import { Link, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
-import { getPopulatedUser } from '../../../reducers/userReducer';
-const User = () => {
+import { getPopulatedUser } from '../../../reducers/usersReducer';
+import { Label } from '../../Nav/NavTheme';
+const User = ({ u }) => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:username/');
   const users = useSelector((state) => state.users);
   const currentUser = useSelector((state) => state.user);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(u);
   const location = useLocation;
   useEffect(() => {
-    dispatch(getPopulatedUser(match.params.username));
+    if (!u) dispatch(getPopulatedUser(match.params.username));
   }, []);
 
   useEffect(() => {
-    let foundUser = users.find((u) => u.username === match.params.username);
-    setUser(foundUser);
+    if (!u) {
+      let foundUser = users.find((u) => u.username === match.params.username);
+      setUser(foundUser);
+    }
   }, [users, location, match]);
 
-  if (match.params.username === currentUser.username) {
+  if (!u && match.params.username === currentUser.username) {
     return <Redirect to="/user" />;
   }
   if (user == null) {
     return <LinearProgress />;
   }
-
   return (
     <div style={{ height: '90vh' }}>
-      <Header as="h1" color="green">
-        {user.username}
+      <Header
+        as="h1"
+        style={
+          u ? { marginLeft: '1em' } : { marginLeft: '1em', marginTop: '1em' }
+        }
+      >
+        <Label color="green">{user.username} · </Label>
+        <Label color="blue">
+          {user.totalLikes} <Icon name="paw" color="blue" />
+        </Label>
       </Header>
-      <Header as="h1" color="blue">
-        {user.totalLikes}
-      </Header>
-      {user.id === currentUser.id ? (
-        <>
-          <Header as={Link} to="/user/edit">
-            Bilgilerini Güncelle
-          </Header>
-          <br />
-          <Header as={Link} to="/user/following">
-            Takip Ettiklerim <Label>{user.following.length}</Label>
-          </Header>
-        </>
-      ) : null}
 
       <Comments
         type="user"

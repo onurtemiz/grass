@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { setFilter } from '../../reducers/filterReducer';
 import { useDispatch } from 'react-redux';
 import { Input } from 'semantic-ui-react';
@@ -7,12 +7,20 @@ const Filter = ({ target }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [storedTimeout, setStoredTimeout] = useState(null);
+  const value = useRef('');
   const handleChange = (e) => {
-    setLoading(true);
-    dispatch(setFilter(e.target.value));
-    setTimeout(() => {
-      setLoading(false);
-    }, 600);
+    value.current = e.target.value;
+    if (storedTimeout) clearTimeout(storedTimeout);
+    setStoredTimeout(
+      setTimeout(() => {
+        setLoading(true);
+        dispatch(setFilter(value.current));
+        setTimeout(() => {
+          setLoading(false);
+        }, 600);
+      }, 100)
+    );
   };
   useEffect(() => {
     dispatch(setFilter(''));

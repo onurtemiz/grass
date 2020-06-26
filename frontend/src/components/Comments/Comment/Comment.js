@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  removeComment,
-  likeComment,
-  updateComment,
-} from '../../../reducers/commentReducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { confirmAlert } from 'react-confirm-alert';
+import React, { useState } from 'react';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import CommentForm from '../CommentForm/CommentForm';
 import SubComment from './SubComment';
 import EditComment from './EditComment';
 

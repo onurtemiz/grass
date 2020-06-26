@@ -10,7 +10,6 @@ import SubTeacher from '../ControlPage/TeachersPage/Teachers/SubTeacher';
 import SubQuestion from '../ControlPage/QuestionsPage/Questions/SubQuestion';
 import { SubClub } from '../ControlPage/ClubsPage/Clubs/SubClub';
 import { Search as S } from 'semantic-ui-react';
-import lodash from 'lodash';
 
 const Search = ({ size }) => {
   const dispatch = useDispatch();
@@ -19,7 +18,9 @@ const Search = ({ size }) => {
   const clubs = useSelector((state) => state.clubs.clubs);
   const teachers = useSelector((state) => state.teachers.teachers);
   const [isLoading, setIsLoading] = useState(false);
+  const [storedTimeout, setStoredTimeout] = useState(null);
   const [value, setValue] = useState('');
+  const refValue = useRef('');
   const first = useRef(false);
   const fetching = useRef(false);
   const [mix, setMix] = useState([]);
@@ -81,8 +82,14 @@ const Search = ({ size }) => {
   };
 
   const handleOnSearchChange = (e) => {
-    setIsLoading(true);
-    setValue(e.target.value);
+    refValue.current = e.target.value;
+    if (storedTimeout) clearTimeout(storedTimeout);
+    setStoredTimeout(
+      setTimeout(() => {
+        setIsLoading(true);
+        setValue(refValue.current);
+      }, 300)
+    );
   };
 
   return (
@@ -90,7 +97,7 @@ const Search = ({ size }) => {
       loading={isLoading}
       minCharacters={1}
       onSearchChange={(e) => handleOnSearchChange(e)}
-      value={value}
+      value={refValue.current}
       results={current}
       placeholder="Ders, Hoca, Kulüp ya da Soru Arayın."
       size={size ? size : 'massive'}

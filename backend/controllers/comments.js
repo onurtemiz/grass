@@ -135,7 +135,7 @@ commentsRouter.get('/', async (req, res) => {
   } else if ('id' in q) {
     let comment = await Comment.findById(q.id);
     if (comment) {
-      if (comment.isHidden) {
+      if (comment.commentStatus == 'hidden') {
         comment.comment = 'hidden';
       }
       return res.json(comment.toJSON());
@@ -147,7 +147,7 @@ commentsRouter.get('/', async (req, res) => {
     comments = await Comment.find({});
   }
   comments.map((c) => {
-    if (c.isHidden == true) {
+    if (c.commentStatus == 'hidden') {
       c.comment = 'hidden';
     }
   });

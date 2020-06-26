@@ -65,14 +65,14 @@ reportsRouter.put('/manage', async (req, res) => {
       error: 'no to or invalid',
     });
   }
-  const report = await Report.findById(q.id);
-  if (!report) {
+  const comment = await Comment.findById(q.id);
+  if (!comment) {
     return res.status(400).json({
-      error: 'no report',
+      error: 'no comment',
     });
   }
 
-  await Comment.findByIdAndUpdate(report.reportedCommentId, {
+  await Comment.findByIdAndUpdate(q.id, {
     commentStatus: q.to,
   });
 

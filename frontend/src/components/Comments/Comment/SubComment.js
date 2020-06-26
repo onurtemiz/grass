@@ -10,7 +10,7 @@ import {
   QUESTION_PATH,
 } from '../../../utils/config';
 import { Comment as SComment, Icon, Segment, Confirm } from 'semantic-ui-react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/tr';
 import HiddenComment from './HiddenComment';
@@ -45,7 +45,7 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
     setIsReportOpen(true);
   };
 
-  if (comment.isHidden == true) {
+  if (comment.commentStatus == 'hidden') {
     return <HiddenComment comment={comment} showSource={showSource} />;
   }
   return (
@@ -57,7 +57,6 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
             isReportOpen={isReportOpen}
             comment={comment}
             setIsReported={setIsReported}
-            lesson={comment.commentType === 'lesson' ? true : false}
           />
 
           <SComment.Content>

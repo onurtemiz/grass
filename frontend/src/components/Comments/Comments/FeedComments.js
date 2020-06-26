@@ -18,24 +18,12 @@ const FeedComments = ({ height }) => {
   const first = useRef(false);
   const fetching = useRef(false);
   useEffect(() => {
+    first.current = false;
+    fetching.current = false;
     dispatch(addInfCommentFeed(0, count, filter, first, fetching));
   }, [filter]);
   useEffect(() => {
-    setCurrentComments(
-      comments
-        .filter((c) => {
-          return user.following.includes(c[`${c.commentType}`].id);
-        })
-        .sort((a, b) => {
-          if (filter === 'mostRecent') {
-            return new Date(b.date) - new Date(a.date);
-          } else if (filter === 'mostPast') {
-            return new Date(a.date) - new Date(b.date);
-          } else if (filter === 'mostPopular') {
-            return b.likes.length - a.likes.length;
-          }
-        })
-    );
+    setCurrentComments(filterComments(comments, user, filter));
   }, [filter, start, comments]);
 
   const loadFunc = () => {
@@ -47,7 +35,7 @@ const FeedComments = ({ height }) => {
   if (!first.current) {
     return <CommentsLoading />;
   }
-  if (currentComments.length === 0) {
+  if (currentComments.length === 0 && first.current) {
     return <NoFeed />;
   }
 
@@ -55,8 +43,6 @@ const FeedComments = ({ height }) => {
     <div
       style={{
         height: height ? height : '50vh',
-        // width: '100vw',
-        // overflow: 'auto',
       }}
     >
       <InfiniteScroll
@@ -64,7 +50,7 @@ const FeedComments = ({ height }) => {
         loadMore={loadFunc}
         useWindow={true}
         hasMore={hasMore}
-        loader={<CommentsLoading />}
+        loader={<CommentsLoading key={1} />}
       >
         {currentComments.map((c) => (
           <Comment key={c.id} comment={c} showSource={true} />
@@ -75,3 +61,18 @@ const FeedComments = ({ height }) => {
 };
 
 export default FeedComments;
+function filterComments(comments, user, filter) {
+  return comments
+    .filter((c) => {
+      return user.following.includes(c[`${c.commentType}`].id);
+    })
+    .sort((a, b) => {
+      if (filter === 'mostRecent') {
+        return new Date(b.date) - new Date(a.date);
+      } else if (filter === 'mostPast') {
+        return new Date(a.date) - new Date(b.date);
+      } else if (filter === 'mostPopular') {
+        return b.likes.length - a.likes.length;
+      }
+    });
+}

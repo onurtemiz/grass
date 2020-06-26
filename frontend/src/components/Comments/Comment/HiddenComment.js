@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Segment, Comment as SComment } from 'semantic-ui-react';
 import { Label } from '../../Nav/NavTheme';
 import { UserAndMeta } from './SubComment';

@@ -49,9 +49,11 @@ const teacherReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfTeacher = (start, count, filter) => {
+export const addInfTeacher = (start, count, filter, first, fetching) => {
   return async (dispatch) => {
-    const teachers = await teachersService.addInf(start, count, filter);
+    fetching.current = true;
+
+    let teachers = await teachersService.addInf(start, count, filter);
     if (teachers.error) {
       toast.error(`${teachers.error}`, {
         position: 'bottom-left',
@@ -81,6 +83,10 @@ export const addInfTeacher = (start, count, filter) => {
       type: 'ADD_INF_TEACHER',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

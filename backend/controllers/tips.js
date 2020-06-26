@@ -100,6 +100,7 @@ tipsRouter.get('/', async (req, res) => {
     });
   }
   const tips = await Tip.find({ isApproved: true })
+    .sort({ date: -1 })
     .skip(Number(q.start))
     .limit(Number(q.total));
   const jsonedTips = tips.map((t) => t.toJSON());

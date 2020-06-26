@@ -26,6 +26,7 @@ lessonSchema.statics.getFilteredInf = function (search, start, total) {
   return this.find({
     name: { $regex: search, $options: 'i' },
   })
+    .sort({ name: 1 })
     .skip(Number(start))
     .limit(Number(total))
     .populate('comments');
@@ -44,11 +45,10 @@ lessonSchema.statics.getFilteredAllInf = function (
         { teacher: { $in: teachersId } },
       ],
     })
+      .sort({ name: 1 })
       .skip(Number(start))
       .limit(Number(total));
-  } catch (e) {
-    console.log('e', e);
-  }
+  } catch (e) {}
 };
 
 lessonSchema.set('toJSON', {

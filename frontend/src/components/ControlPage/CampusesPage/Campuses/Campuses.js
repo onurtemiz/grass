@@ -17,22 +17,19 @@ const Campuses = ({ main }) => {
   return (
     <div
       style={{
-        // height: '50vh',
         minHeight: '300px',
         maxHeight: '500px',
-        // width: '100vw',
-        // overflow: 'auto',
+        overflow: 'auto',
       }}
     >
       <InfiniteScroll
         pageStart={0}
-        // loadMore={loadFunc}
         useWindow={true}
         hasMore={false}
         loader={<CommentsLoading />}
       >
         {campuses.map((c) => (
-          <SubCampus key={c.id} campus={c} main={main ? true : false} />
+          <SubCampus key={c.id} campus={c} main />
         ))}
       </InfiniteScroll>
     </div>

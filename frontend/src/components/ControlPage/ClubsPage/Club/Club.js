@@ -2,20 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClubPageByName } from '../../../../reducers/clubReducer';
-import { Link } from 'react-router-dom';
 import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
-import {
-  Icon,
-  Button,
-  Divider,
-  Header,
-  Container,
-  Segment,
-} from 'semantic-ui-react';
+import { Divider } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import commentsService from '../../../../services/comments';
 import { Label } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
 
@@ -46,6 +37,13 @@ const Club = () => {
       <Label color="green" bold style={{ fontSize: '2em' }}>
         {club.fullName}
       </Label>
+      <br />
+      <br />
+      <>
+        {club.description.length === 0
+          ? 'Kulüp yöneticileri iletişime geçer ise kendileri buraya açıklama ekleyebilir.'
+          : club.description}
+      </>
       <CommentForm typeId={club.id} commentType="club" />
       <Divider />
       <CommentSort />

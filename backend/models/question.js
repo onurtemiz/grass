@@ -12,6 +12,7 @@ const questionSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
+  date: { type: Date, default: Date.now },
 });
 
 questionSchema.set(uniqueValidator);

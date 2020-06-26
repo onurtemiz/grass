@@ -11,6 +11,7 @@ const tipSchema = new mongoose.Schema({
   },
   isAnonim: { type: Boolean, required: true },
   isApproved: { type: Boolean, required: true, default: false },
+  date: { type: Date, default: Date.now },
 });
 
 tipSchema.set(uniqueValidator);

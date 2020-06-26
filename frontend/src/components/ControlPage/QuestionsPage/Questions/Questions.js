@@ -8,37 +8,16 @@ import QuestionModal from './QuestionModal';
 import { Divider } from 'semantic-ui-react';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';
+import { useInfinite } from '../../../../utils/utils';
+import NoSubResult from '../../../Search/NoSubResult';
 
 const Questions = ({ main }) => {
-  const count = useSelector((state) => state.questions.count);
-  const start = useSelector((state) => state.questions.start);
-  const hasMore = useSelector((state) => state.questions.hasMore);
-  const questions = useSelector((state) => state.questions.questions);
-  const filter = useSelector((state) => state.filter);
-  const dispatch = useDispatch();
-  const [currentQuestions, setCurrentQuestions] = useState([]);
-  const first = useRef(false);
-  const fetching = useRef(false);
-  useEffect(() => {
-    dispatch(addInfQuestions(0, count, filter, first, fetching));
-  }, [filter]);
+  const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
+    'questions',
+    addInfQuestions,
+    filterQuestions
+  );
 
-  useEffect(() => {
-    setCurrentQuestions(
-      questions.filter((q) => {
-        return q.question.toUpperCase().includes(filter.toUpperCase());
-      })
-    );
-  }, [questions]);
-
-  const loadFunc = () => {
-    if (!fetching.current) {
-      dispatch(addInfQuestions(start, count, filter, first, fetching));
-    }
-  };
-  if (currentQuestions.length === 0 || !first.current) {
-    return <LinearProgress />;
-  }
   return (
     <>
       <Filter target="Soru" />
@@ -46,28 +25,42 @@ const Questions = ({ main }) => {
       <Divider />
       <div
         style={{
-          height: '400px',
+          minHeight: '300px',
+          maxHeight: '500px',
           overflow: 'auto',
         }}
       >
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={loadFunc}
-          hasMore={hasMore}
-          loader={
-            <div className="loader" key={0}>
-              <CommentsLoading skeletonLength={1} />
-            </div>
-          }
-          useWindow={false}
-        >
-          {currentQuestions.map((q) => (
-            <SubQuestion question={q} key={q.id} main />
-          ))}
-        </InfiniteScroll>
+        {!ready ? (
+          <LinearProgress />
+        ) : noResult ? (
+          <NoSubResult />
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadFunc}
+            hasMore={hasMore}
+            loader={
+              <div className="loader" key={0}>
+                <CommentsLoading skeletonLength={1} />
+              </div>
+            }
+            useWindow={false}
+          >
+            {currentTarget.map((q) => (
+              <SubQuestion question={q} key={q.id} main />
+            ))}
+          </InfiniteScroll>
+        )}
       </div>
     </>
   );
 };
 
 export default Questions;
+function filterQuestions(questions, filter) {
+  return questions
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .filter((q) => {
+      return q.question.toUpperCase().includes(filter.toUpperCase());
+    });
+}

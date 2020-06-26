@@ -29,11 +29,6 @@ questionsRouter.post('/', async (req, res) => {
   res.json(question.toJSON());
 });
 
-questionsRouter.get('/all', middleware.authAdmin, async (req, res) => {
-  const questions = await Question.find();
-  return res.json(questions.map((q) => q.toJSON()));
-});
-
 questionsRouter.get('/:id', async (req, res) => {
   const question = await Question.findById(req.params.id).populate('comments');
   return res.json(question.toJSON());
@@ -52,7 +47,10 @@ questionsRouter.get('/', async (req, res) => {
       { isApproved: true },
       { question: { $regex: search, $options: 'i' } },
     ],
-  });
+  })
+    .sort({ date: -1 })
+    .skip(Number(q.start))
+    .limit(Number(q.total));
   const jsonQuestions = questions.map((q) => q.toJSON());
   res.json({ questions: jsonQuestions, total: jsonQuestions.length });
 });

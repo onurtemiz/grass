@@ -74,19 +74,21 @@ const getSingleLesson = async (req) => {
 
 lessonsRouter.get('/', async (req, res) => {
   const q = req.query;
+  let lessons;
   if ('areaCode' in q && 'digitCode' in q && 'teacherName' in q) {
     const jsonLesson = await getSingleLesson(req);
     return res.json(jsonLesson);
   } else if ('start' in q && 'total' in q) {
     const search = q.search ? q.search : '';
-    const lessons = await Lesson.getFilteredInf(search, q.start, q.total);
-    return res.json(lessons.map((l) => l.toJSON()));
+    lessons = await Lesson.getFilteredInf(search, q.start, q.total);
   } else {
-    const lessons = await Lesson.find({})
+    lessons = await Lesson.find({})
+      .sort({ name: 1 })
       .populate('teacher')
       .populate('comments');
-    res.json(lessons.map((l) => l.toJSON()));
   }
+  const jsonLessons = lessons.map((l) => l.toJSON());
+  res.json({ lessons: jsonLessons, total: jsonLessons.length });
 });
 
 lessonsRouter.get('/:id', async (req, res) => {

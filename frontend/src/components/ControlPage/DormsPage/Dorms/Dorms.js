@@ -19,19 +19,17 @@ const Dorms = ({ main }) => {
       style={{
         minHeight: '300px',
         maxHeight: '500px',
-        // width: '100vw',
         overflow: 'auto',
       }}
     >
       <InfiniteScroll
         pageStart={0}
-        // loadMore={loadFunc}
         useWindow={true}
         hasMore={false}
         loader={<CommentsLoading />}
       >
         {dorms.map((d) => (
-          <SubDorm key={d.id} dorm={d} main={main ? true : false} />
+          <SubDorm key={d.id} dorm={d} main />
         ))}
       </InfiniteScroll>
     </div>

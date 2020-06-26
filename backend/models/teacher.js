@@ -24,6 +24,7 @@ teacherSchema.statics.getFilteredInf = function (search, start, total) {
   return this.find({
     name: { $regex: search, $options: 'i' },
   })
+    .sort({ name: 1 })
     .skip(Number(start))
     .limit(Number(total))
     .populate('lessons')

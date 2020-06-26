@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CLUB_PATH } from '../../../../utils/config';
-import { Card, Header, Segment } from 'semantic-ui-react';
+import { Card, Header } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 import { ClubForm } from '../../../AdminPage/Admin/ControlClub';
 
 export const SubClub = ({ club, main }) => {
   return (
-    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
+    <div
+      style={
+        main
+          ? { marginLeft: '1em', marginRight: '1em', marginBottom: '1em' }
+          : null
+      }
+    >
       <Card
         as={Link}
         to={CLUB_PATH(club)}

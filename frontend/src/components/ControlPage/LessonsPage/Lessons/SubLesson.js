@@ -7,7 +7,13 @@ const SubLesson = ({ lesson, main }) => {
   const header = () => {};
 
   return (
-    <div style={main ? { marginLeft: '1em', marginRight: '1em' } : null}>
+    <div
+      style={
+        main
+          ? { marginLeft: '1em', marginRight: '1em', marginBottom: '1em' }
+          : null
+      }
+    >
       <Card
         as={Link}
         to={LESSON_PATH(lesson)}

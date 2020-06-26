@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { DORM_PATH } from '../../../../utils/config';
-import { Card, Header, Segment } from 'semantic-ui-react';
+import { Card, Header } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 
 export const SubDorm = ({ dorm, main }) => {

@@ -26,7 +26,10 @@ teachersRouter.get('/', async (req, res) => {
   const teachers =
     'start' in q && 'total' in q
       ? await Teacher.getFilteredInf(search, q.start, q.total)
-      : await Teacher.find({}).populate('lessons').populate('comments');
+      : await Teacher.find({})
+          .sort({ name: 1 })
+          .populate('lessons')
+          .populate('comments');
 
   res.json(teachers.map((t) => t.toJSON()));
 });

@@ -84,8 +84,6 @@ export const addInfClubs = (start, count, filter, first, fetching) => {
       data: data,
     });
     if (start === 0) {
-      console.log('start');
-
       first.current = true;
     }
     fetching.current = false;

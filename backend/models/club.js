@@ -29,6 +29,7 @@ clubSchema.statics.getFilteredInf = function (
         { name: { $regex: search, $options: 'i' } },
       ],
     })
+      .sort({ name: 1 })
       .skip(Number(start))
       .limit(Number(total));
   } catch (e) {

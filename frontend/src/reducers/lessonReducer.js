@@ -36,11 +36,13 @@ const lessonReducer = (state = initialState, action) => {
   }
 };
 
-export const addInfLesson = (start, count, filter) => {
+export const addInfLesson = (start, count, filter, first, fetching) => {
   return async (dispatch) => {
-    const lessons = await lessonsService.addInf(start, count, filter);
-    if (lessons.error) {
-      toast.error(`${lessons.error}`, {
+    fetching.current = true;
+
+    const res = await lessonsService.addInf(start, count, filter);
+    if (res.error) {
+      toast.error(`${res.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -51,7 +53,7 @@ export const addInfLesson = (start, count, filter) => {
       });
       return;
     }
-    const total = await lessonsService.getTotalLesson(filter);
+    let { lessons, total } = res;
     let data = {
       hasMore: true,
       start: start + count,
@@ -68,6 +70,10 @@ export const addInfLesson = (start, count, filter) => {
       type: 'ADD_INF_LESSON',
       data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

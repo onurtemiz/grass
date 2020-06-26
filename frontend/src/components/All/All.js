@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfAll } from '../../reducers/allReducer';
-import SubTeacher from '../Teachers/SubTeacher';
-import SubLesson from '../Teachers/SubLesson';
+import SubTeacher from '../ControlPage/TeachersPage/Teachers/SubTeacher';
+import SubLesson from '../ControlPage/LessonsPage/Lessons/SubLesson';
 import { LinearProgress } from '@material-ui/core';
 import { Card } from 'semantic-ui-react';
 

@@ -5,10 +5,10 @@ import { addInfQuestions } from '../../reducers/questionReducer';
 import { addInfClubs } from '../../reducers/clubReducer';
 import { addInfTeacher } from '../../reducers/teacherReducer';
 
-import SubLesson from '../Teachers/SubLesson';
-import SubTeacher from '../Teachers/SubTeacher';
-import SubQuestion from '../Questions/SubQuestion';
-import { SubClub } from '../Clubs/SubClub';
+import SubLesson from '../ControlPage/LessonsPage/Lessons/SubLesson';
+import SubTeacher from '../ControlPage/TeachersPage/Teachers/SubTeacher';
+import SubQuestion from '../ControlPage/QuestionsPage/Questions/SubQuestion';
+import { SubClub } from '../ControlPage/ClubsPage/Clubs/SubClub';
 import { Search as S } from 'semantic-ui-react';
 import lodash from 'lodash';
 

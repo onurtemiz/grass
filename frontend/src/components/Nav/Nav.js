@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Filter from '../Filter/Filter';
-import Logout from '../Logout/Logout';
 import { useRouteMatch, useLocation } from 'react-router-dom';
 
 import {
@@ -18,6 +17,8 @@ import { NavSearch, Label } from './NavTheme';
 import { useSelector } from 'react-redux';
 import Search from '../Search/Search';
 import Notifications from '../Notifications/Notifications';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../reducers/userReducer';
 
 const Nav = ({ search, admin }) => {
   const user = useSelector((state) => state.user);
@@ -149,6 +150,21 @@ const Nav = ({ search, admin }) => {
         <Logout />
       </Menu.Menu>
     </Menu>
+  );
+};
+
+const Logout = () => {
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+  return (
+    <Menu.Item onClick={handleLogout} header color="blue">
+      <Icon name="log out" color="blue" />
+      <Label color="blue" pointer>
+        Çıkış Yap
+      </Label>
+    </Menu.Item>
   );
 };
 

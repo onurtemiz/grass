@@ -1,25 +1,24 @@
 import React from 'react';
 import Nav from './components/Nav/Nav';
-import Contribution from './components/Contribution/Contribution';
-import About from './components/About/About';
-import Home from './components/Home/Home';
-import EditUser from './components/EditUser/EditUser';
-import User from './components/User/User';
-import AllComments from './components/AllComments/AllComments';
+import Contribution from './components/StaticPages/Contribution/Contribution';
+import About from './components/StaticPages/About/About';
+import Home from './components/HomePage/Home/Home';
+import User from './components/UserPage/User/User';
+import AllComments from './components/CommentsPage/AllComments/AllComments';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Feed from './components/Feed/Feed';
-import Following from './components/Following/Following';
-import Admin from './components/Admin/Admin';
-import useAdmin from './components/Admin/useAdmin';
-import ControlTips from './components/Admin/ControlTips';
-import ControlReports from './components/Admin/ControlReports';
-import MainUser from './components/User/MainUser';
+import Feed from './components/FeedPage/Feed/Feed';
+import Following from './components/UserPage/Following/Following';
+import Admin from './components/AdminPage/Admin/Admin';
+import useAdmin from './components/AdminPage/Admin/useAdmin';
+import ControlTips from './components/AdminPage/Admin/ControlTips';
+import ControlReports from './components/AdminPage/Admin/ControlReports';
+import MainUser from './components/UserPage/User/MainUser';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import MainComponent from './components/MainComponent/MainComponent';
-import ControlClub from './components/Admin/ControlClub';
-import ControlQuestions from './components/Admin/ControlQuestions';
+import MainComponent from './components/ControlPage/MainComponent';
+import ControlClub from './components/AdminPage/Admin/ControlClub';
+import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
 const DefaultContainer = () => {
   return (
     <>

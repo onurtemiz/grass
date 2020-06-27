@@ -34,17 +34,6 @@ const checkAdmin = async (setIsAdmin) => {
   setIsAdmin(res.data.isAdmin);
 };
 
-const getUserById = async (id) => {
-  try {
-    const res = await axios.get(`${baseUrl}?id=${id}`, config);
-    return res.data;
-  } catch (e) {
-    return e.response
-      ? e.response.data
-      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
-  }
-};
-
 const getFollowing = async (setFollowing) => {
   try {
     const res = await axios.get(`${baseUrl}/following`, config);
@@ -100,14 +89,41 @@ const getPopulatedUser = async (username) => {
   }
 };
 
+const getPopulatedMainUser = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/mainuser`, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const changeIcon = async (iconName) => {
+  try {
+    const res = await axios.put(
+      `${baseUrl}/icon?name=${iconName}`,
+      null,
+      config
+    );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
 export default {
   updateUser,
   getPopulatedUser,
   followLesson,
   unfollowLesson,
   checkAdmin,
-  getUserById,
   getFollowing,
   getNotifications,
   deleteNotifications,
+  getPopulatedMainUser,
+  changeIcon,
 };

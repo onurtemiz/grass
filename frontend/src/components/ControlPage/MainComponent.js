@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPopulatedUser } from '../../reducers/userReducer';
-import { LinearProgress } from '@material-ui/core';
-import Comments from '../Comments/Comments/IdComments';
 import { Header, Tab, Menu, Icon, Segment } from 'semantic-ui-react';
 import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
-import EditUser from '../UserPage/EditUser/EditUser';
-import Following from '../UserPage/Following/Following';
 import { Label } from '../Nav/NavTheme';
 import Teachers from './TeachersPage/Teachers/Teachers';
 import Teacher from './TeachersPage/Teacher/Teacher';

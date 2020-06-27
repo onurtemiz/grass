@@ -152,9 +152,6 @@ commentsRouter.get('/', async (req, res) => {
     }
   });
 
-  if (q.filter === 'mostPopular') {
-    return res.json(comments);
-  }
   res.json(comments.map((c) => c.toJSON()));
 });
 
@@ -235,6 +232,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likes: [user._id],
+      likesLength: 1,
       commentType: 'lesson',
     });
     await comment.save();
@@ -258,6 +256,8 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likes: [user._id],
+      likesLength: 1,
+
       commentType: 'club',
     });
     await comment.save();
@@ -279,6 +279,8 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likes: [user._id],
+      likesLength: 1,
+
       commentType: 'campus',
     });
     await comment.save();
@@ -300,6 +302,8 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likes: [user._id],
+      likesLength: 1,
+
       commentType: 'dorm',
     });
     await comment.save();
@@ -320,6 +324,8 @@ commentsRouter.post('/', limiter, async (req, res) => {
       user: user._id,
       comment: body.comment,
       date: new Date(),
+      likesLength: 1,
+
       likes: [user._id],
       commentType: 'question',
     });
@@ -379,6 +385,7 @@ commentsRouter.put('/:id', async (req, res) => {
 
     if (isLiked) {
       comment.likes = comment.likes.filter((u) => !u.equals(user._id));
+      comment.likesLength = comment.likesLength - 1;
       await Notification.findOneAndRemove({
         tool: comment._id,
         responsible: user._id,
@@ -388,6 +395,7 @@ commentsRouter.put('/:id', async (req, res) => {
     } else {
       comment.likes = comment.likes.concat(user._id);
       let notify = await Notification.findOne({ tool: comment._id });
+      comment.likesLength = comment.likesLength + 1;
       if (!notify) {
         notify = new Notification({
           tool: comment._id,

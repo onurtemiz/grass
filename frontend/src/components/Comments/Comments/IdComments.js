@@ -72,7 +72,7 @@ function filterComments(comments, type, typeId, filter) {
       if (c.commentType === type) {
         return c[`${type}`].id === typeId;
       } else if (type === 'teacher' && c.commentType === 'lesson') {
-        return c.teacher.id === typeId;
+        return c.teacher === typeId;
       } else if (type === 'user') {
         return c.user.id === typeId;
       }

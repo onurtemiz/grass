@@ -51,7 +51,7 @@ usersRouter.post('/signup', async (req, res) => {
     passwordHash: passwordHash,
   });
   await user.save();
-  res.status(201).json(user.toJSON());
+  res.status(201).json(user.toJSONMain());
 });
 
 usersRouter.use(middleware.authUser);
@@ -195,7 +195,7 @@ usersRouter.put('/', async (req, res) => {
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
-  const jsonUser = user.toJSON();
+  const jsonUser = user.toJSONMain();
   res.status(200).json({
     token,
     ...jsonUser,
@@ -215,28 +215,25 @@ usersRouter.get('/admin', async (req, res) => {
   }
 });
 
-usersRouter.get('/:username', async (req, res) => {
-  const user = await User.findOne({ username: req.params.username }).populate({
-    path: 'comments',
-    populate: [{ path: 'lesson' }],
-  });
-  const jsonedUser = user.toJSON();
-  const totalLikedUser = {
+usersRouter.get('/mainuser', async (req, res) => {
+  const totalLikedUser = await User.getTotalLike(req.user.username);
+  const jsonedUser = req.user.toJSON();
+  let user = {
     ...jsonedUser,
-    totalLikes:
-      jsonedUser.comments.length !== 0
-        ? jsonedUser.comments
-            .map((c) =>
-              c.likes.length !== 0
-                ? c.likes.reduce(
-                    (total, l) => (user.equals(l) ? total : (total += 1)),
-                    0
-                  )
-                : 0
-            )
-            .reduce((total, c) => total + c)
-        : 0,
+    ...totalLikedUser,
   };
+  res.json(user);
+});
+
+usersRouter.put('/icon', async (req, res) => {
+  req.user.iconName = req.query.name;
+  await req.user.save();
+  res.end();
+});
+
+usersRouter.get('/:username', async (req, res) => {
+  const totalLikedUser = await User.getTotalLike(req.params.username);
+
   res.json(totalLikedUser);
 });
 

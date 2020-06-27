@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPopulatedUser } from '../../../reducers/usersReducer';
 import Comments from '../../Comments/Comments/IdComments';
 import { Placeholder, Header, Icon, Divider } from 'semantic-ui-react';
 import { Link, useRouteMatch } from 'react-router-dom';

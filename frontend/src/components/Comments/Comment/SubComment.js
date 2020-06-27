@@ -9,13 +9,21 @@ import {
   DORM_PATH,
   QUESTION_PATH,
 } from '../../../utils/config';
-import { Comment as SComment, Icon, Segment, Confirm } from 'semantic-ui-react';
+import {
+  Comment as SComment,
+  Icon,
+  Segment,
+  Confirm,
+  Popup,
+  Label as SLabel,
+} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/tr';
 import HiddenComment from './HiddenComment';
 import CommentReport from './CommentReport';
 import { Label } from '../../Nav/NavTheme';
+import { ReactSVG } from 'react-svg';
 
 const Comment = ({ comment, setIsUpdate, showSource }) => {
   const user = useSelector((state) => state.user);
@@ -126,6 +134,9 @@ export const UserAndMeta = ({ comment, showSource }) => {
     <SComment.Author>
       <Link to={`/users/${comment.user.username}`}>
         {comment.user.username}
+        {comment.user.iconName.length > 0 ? (
+          <UserIcon user={comment.user} />
+        ) : null}
       </Link>
       <SComment.Metadata>
         {comment.likes.length} Pati · {moment(new Date(comment.date)).fromNow()}{' '}
@@ -158,7 +169,7 @@ const LessonType = ({ comment }) => {
   return (
     <Link to={LESSON_PATH(comment.lesson)}>
       <Label color="blue" pointer>
-        {`${comment.lesson.name.toUpperCase()} · ${comment.teacher.name}`}
+        {`${comment.lesson.name.toUpperCase()} · ${comment.lesson.parentName}`}
       </Label>
     </Link>
   );
@@ -202,6 +213,18 @@ const QuestionType = ({ comment }) => {
       </Label>
     </Link>
   );
+};
+
+const UserIcon = ({ user }) => {
+  // <ReactSVG
+  //   src="ciko2.svg"
+  //   wrapper="label"
+  //   beforeInjection={(svg) => {
+  //     svg.setAttribute('style', 'width: 1.1em; height: 1.1em');
+  //   }}
+  // />
+  console.log('hey');
+  return <Icon color="blue" name={user.iconName} />;
 };
 
 export default Comment;

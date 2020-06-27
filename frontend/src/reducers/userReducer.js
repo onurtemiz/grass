@@ -7,16 +7,12 @@ import { toast } from 'react-toastify';
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
-    case 'SET_MAIN_USER':
-      return { ...state, ...action.data };
+    case 'SET_LIKES':
+      return action.data;
     case 'SET_USER':
       return action.data;
     case 'UPDATE_USER':
-      console.log('state', state);
-      console.log('action.data', action.data);
       const updatedUser = { ...state, ...action.data };
-      console.log('ipdatedState', updatedUser);
-      console.log('state===updatedUser', state === updatedUser);
       return updatedUser;
     case 'FOLLOW_LESSON':
       const followedLessons = [...state.following, action.data];
@@ -26,6 +22,9 @@ const userReducer = (state = null, action) => {
       const unfollowed = state.following.filter((id) => id !== action.data);
 
       return { ...state, following: unfollowed };
+    case 'CHANGE_ICON':
+      const changedIconUser = { ...state, iconName: action.data };
+      return changedIconUser;
     default:
       return state;
   }
@@ -52,6 +51,28 @@ export const followLesson = (user, id) => {
     });
     user.following.push(id);
     window.localStorage.setItem('grassUser', JSON.stringify(user));
+  };
+};
+
+export const changeIcon = (iconName) => {
+  return async (dispatch) => {
+    const res = await userService.changeIcon(iconName);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: 'CHANGE_ICON',
+      data: iconName,
+    });
   };
 };
 
@@ -95,7 +116,6 @@ export const updateUser = (u, setEdited) => {
       });
       return;
     }
-    console.log('user', user);
     window.localStorage.setItem('grassUser', JSON.stringify(user));
     setToken(user.token);
 
@@ -150,9 +170,9 @@ export const loginUser = (userInfo) => {
   };
 };
 
-export const getPopulatedUser = (username) => {
+export const getPopulatedMainUser = () => {
   return async (dispatch) => {
-    const user = await userService.getPopulatedUser(username);
+    const user = await userService.getPopulatedMainUser();
     if (user.error) {
       toast.error(`${user.error}`, {
         position: 'bottom-left',
@@ -166,7 +186,7 @@ export const getPopulatedUser = (username) => {
       return;
     }
     dispatch({
-      type: 'SET_MAIN_USER',
+      type: 'SET_LIKES',
       data: user,
     });
   };

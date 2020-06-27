@@ -135,7 +135,10 @@ export const UserAndMeta = ({ comment, showSource }) => {
       <Link to={`/users/${comment.user.username}`}>
         {comment.user.username}
         {comment.user.iconName.length > 0 ? (
-          <UserIcon user={comment.user} />
+          <>
+            {' '}
+            <UserIcon user={comment.user} />
+          </>
         ) : null}
       </Link>
       <SComment.Metadata>

@@ -25,6 +25,9 @@ const userReducer = (state = null, action) => {
     case 'CHANGE_ICON':
       const changedIconUser = { ...state, iconName: action.data };
       return changedIconUser;
+    case 'CHECK_ACHIEVEMENT':
+      const changedAchievement = { ...state, achievements: action.data };
+      return changedAchievement;
     default:
       return state;
   }
@@ -54,9 +57,9 @@ export const followLesson = (user, id) => {
   };
 };
 
-export const changeIcon = (iconName) => {
+export const changeIcon = (iconName, iconCode) => {
   return async (dispatch) => {
-    const res = await userService.changeIcon(iconName);
+    const res = await userService.changeIcon(iconName, iconCode);
     if (res.error) {
       toast.error(`${res.error}`, {
         position: 'bottom-left',
@@ -73,6 +76,40 @@ export const changeIcon = (iconName) => {
       type: 'CHANGE_ICON',
       data: iconName,
     });
+    const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
+    window.localStorage.setItem(
+      'grassUser',
+      JSON.stringify({ ...jsonUser, iconName })
+    );
+  };
+};
+
+export const checkAchievement = (setLoading) => {
+  setLoading(true);
+  return async (dispatch) => {
+    const achievements = await userService.checkAchievement();
+    if (achievements.error) {
+      toast.error(`${achievements.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: 'CHECK_ACHIEVEMENT',
+      data: achievements,
+    });
+    setLoading(false);
+    const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
+    window.localStorage.setItem(
+      'grassUser',
+      JSON.stringify({ ...jsonUser, achievements })
+    );
   };
 };
 
@@ -189,6 +226,11 @@ export const getPopulatedMainUser = () => {
       type: 'SET_LIKES',
       data: user,
     });
+    const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
+    window.localStorage.setItem(
+      'grassUser',
+      JSON.stringify({ ...jsonUser, ...user })
+    );
   };
 };
 

@@ -11,6 +11,7 @@ const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
 const Notification = require('../models/notification');
 const Comment = require('../models/comment');
+const Tip = require('../models/tip');
 const middleware = require('../utils/middleware');
 
 usersRouter.post('/signup', async (req, res) => {
@@ -225,9 +226,65 @@ usersRouter.get('/mainuser', async (req, res) => {
   res.json(user);
 });
 
-usersRouter.put('/icon', async (req, res) => {
-  req.user.iconName = req.query.name;
+usersRouter.get('/achievement', async (req, res) => {
+  const totalLikedUser = await User.getTotalLike(req.user.username);
+  const likes = totalLikedUser.totalLikes;
+  const comments = req.user.comments.length;
+  const questions = await Question.find({
+    user: req.user._id,
+    isApproved: true,
+  }).countDocuments();
+  const tips = await Tip.find({
+    isApproved: true,
+    user: req.user._id,
+  }).countDocuments();
+  req.user.achievements = getAchievements(
+    req.user,
+    likes,
+    comments,
+    questions,
+    tips
+  );
   await req.user.save();
+  res.json(req.user.achievements);
+});
+
+const getAchievements = (user, likes, comments, questions, tips) => {
+  const achievements = {
+    comment1: false,
+    comment5: false,
+    comment10: false,
+    comment20: false,
+    comment50: false,
+    comment100: false,
+    pati1: false,
+    pati10: false,
+    pati50: false,
+    pati100: false,
+    pati200: false,
+    pati500: false,
+    pati1000: false,
+    tip1: false,
+    tip10: false,
+    question1: false,
+    question10: false,
+    betaTester: false,
+    mod: false,
+    admin: false,
+  };
+  handleTips(tips, achievements);
+  handleComments(comments, achievements);
+  handleQuestions(questions, achievements);
+  handlePatis(likes, achievements);
+  handleExtras(user, achievements);
+  return achievements;
+};
+
+usersRouter.put('/icon', async (req, res) => {
+  if (req.user.achievements[`${req.query.iconCode}`]) {
+    req.user.iconName = req.query.name;
+    await req.user.save();
+  }
   res.end();
 });
 
@@ -257,3 +314,101 @@ usersRouter.get('/', async (req, res) => {
 });
 
 module.exports = usersRouter;
+function handleExtras(user, achievements) {
+  if (user.userStatus === 'admin') {
+    achievements.admin = true;
+  } else if (user.userStatus === 'mod') {
+    achievements.mod = true;
+  }
+  if (user.extras) {
+    achievements.betaTester = true;
+  }
+}
+
+function handlePatis(likes, achievements) {
+  if (likes >= 1000) {
+    achievements.pati1000 = true;
+    achievements.pati500 = true;
+    achievements.pati200 = true;
+    achievements.pati100 = true;
+    achievements.pati50 = true;
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 500) {
+    achievements.pati500 = true;
+    achievements.pati200 = true;
+    achievements.pati100 = true;
+    achievements.pati50 = true;
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 200) {
+    achievements.pati200 = true;
+    achievements.pati100 = true;
+    achievements.pati50 = true;
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 100) {
+    achievements.pati100 = true;
+    achievements.pati50 = true;
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 50) {
+    achievements.pati50 = true;
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 10) {
+    achievements.pati10 = true;
+    achievements.pati1 = true;
+  } else if (likes >= 1) {
+    achievements.pati1 = true;
+  }
+}
+
+function handleQuestions(questions, achievements) {
+  if (questions >= 10) {
+    achievements.question10 = true;
+    achievements.question1 = true;
+  } else if (questions >= 1) {
+    achievements.question1 = true;
+  }
+}
+
+function handleComments(comments, achievements) {
+  if (comments >= 100) {
+    achievements.comment100 = true;
+    achievements.comment50 = true;
+    achievements.comment20 = true;
+    achievements.comment10 = true;
+    achievements.comment5 = true;
+    achievements.comment1 = true;
+  } else if (comments >= 50) {
+    achievements.comment50 = true;
+    achievements.comment20 = true;
+    achievements.comment10 = true;
+    achievements.comment5 = true;
+    achievements.comment1 = true;
+  } else if (comments >= 20) {
+    achievements.comment20 = true;
+    achievements.comment10 = true;
+    achievements.comment5 = true;
+    achievements.comment1 = true;
+  } else if (comments >= 10) {
+    achievements.comment10 = true;
+    achievements.comment5 = true;
+    achievements.comment1 = true;
+  } else if (comments >= 5) {
+    achievements.comment5 = true;
+    achievements.comment1 = true;
+  } else if (comments >= 1) {
+    achievements.comment1 = true;
+  }
+}
+
+function handleTips(tips, achievements) {
+  if (tips >= 10) {
+    achievements.tip10 = true;
+    achievements.tip1 = true;
+  } else if (tips >= 1) {
+    achievements.tip1 = true;
+  }
+}

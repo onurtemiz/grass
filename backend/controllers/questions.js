@@ -1,6 +1,7 @@
 const questionsRouter = require('express').Router();
 const Question = require('../models/question');
 const middleware = require('../utils/middleware');
+const User = require('../models/user');
 
 questionsRouter.post('/', async (req, res) => {
   const body = req.body;
@@ -24,9 +25,15 @@ questionsRouter.post('/', async (req, res) => {
   const question = new Question({
     question: body.question,
     description: body.description,
+    user: req.user._id,
   });
   await question.save();
   res.json(question.toJSON());
+});
+
+questionsRouter.get('/all', middleware.authAdmin, async (req, res) => {
+  const questions = await Question.find();
+  res.json(questions.map((q) => q.toJSON()));
 });
 
 questionsRouter.get('/:id', async (req, res) => {
@@ -56,11 +63,6 @@ questionsRouter.get('/', async (req, res) => {
 });
 
 questionsRouter.use(middleware.authAdmin);
-
-questionsRouter.get('/all', async (req, res) => {
-  const questions = await Question.find();
-  res.json(questions.map((q) => q.toJSON()));
-});
 
 questionsRouter.put('/ea/:id', async (req, res) => {
   const body = req.body;

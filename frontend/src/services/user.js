@@ -100,13 +100,24 @@ const getPopulatedMainUser = async () => {
   }
 };
 
-const changeIcon = async (iconName) => {
+const changeIcon = async (iconName, iconCode) => {
   try {
     const res = await axios.put(
-      `${baseUrl}/icon?name=${iconName}`,
+      `${baseUrl}/icon?name=${iconName}&iconCode=${iconCode}`,
       null,
       config
     );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const checkAchievement = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/achievement`, config);
     return res.data;
   } catch (e) {
     return e.response
@@ -126,4 +137,5 @@ export default {
   deleteNotifications,
   getPopulatedMainUser,
   changeIcon,
+  checkAchievement,
 };

@@ -13,6 +13,11 @@ const questionSchema = new mongoose.Schema({
     },
   ],
   date: { type: Date, default: Date.now },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 questionSchema.set(uniqueValidator);
@@ -21,6 +26,7 @@ questionSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // eslint-disable-next-line no-underscore-dangle
     returnedObject.id = returnedObject._id.toString();
+    delete returnedObject.user;
     delete returnedObject._id;
     delete returnedObject.__v;
   },

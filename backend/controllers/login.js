@@ -42,10 +42,13 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   };
   const token = jwt.sign(userForToken, process.env.SECRET);
-  const jsonedUser = user.toJSONMain();
+  const jsonedUser = user.toJSON();
+  const totalLikedUser = await User.getTotalLike(user.username);
+
   response.status(200).send({
     token,
     ...jsonedUser,
+    ...totalLikedUser,
   });
 });
 

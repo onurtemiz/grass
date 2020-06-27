@@ -19,6 +19,31 @@ const userSchema = new mongoose.Schema({
   ],
   userStatus: { type: String, default: 'user' },
   iconName: { type: String, default: '' },
+  achievements: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      comment1: false,
+      comment5: false,
+      comment10: false,
+      comment20: false,
+      comment50: false,
+      comment100: false,
+      pati1: false,
+      pati10: false,
+      pati50: false,
+      pati100: false,
+      pati200: false,
+      pati500: false,
+      pati1000: false,
+      tip1: false,
+      tip10: false,
+      question1: false,
+      question10: false,
+      betaTester: false,
+      mod: false,
+      admin: false,
+    },
+  },
 });
 
 userSchema.set(uniqueValidator);
@@ -29,20 +54,11 @@ userSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.email;
     delete returnedObject.passwordHash;
   },
 });
 
-userSchema.set('toJSONMain', {
-  transform: (document, returnedObject) => {
-    // eslint-disable-next-line no-underscore-dangle
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-    delete returnedObject.passwordHash;
-  },
-});
+
 
 userSchema.statics.getTotalLike = async function (username) {
   const user = await this.findOne({ username }).populate({

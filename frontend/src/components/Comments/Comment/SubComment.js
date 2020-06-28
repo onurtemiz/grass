@@ -219,14 +219,6 @@ const QuestionType = ({ comment }) => {
 };
 
 const UserIcon = ({ user }) => {
-  // <ReactSVG
-  //   src="ciko2.svg"
-  //   wrapper="label"
-  //   beforeInjection={(svg) => {
-  //     svg.setAttribute('style', 'width: 1.1em; height: 1.1em');
-  //   }}
-  // />
-  console.log('hey');
   return <Icon color="blue" name={user.iconName} />;
 };
 

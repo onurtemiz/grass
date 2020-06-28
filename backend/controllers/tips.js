@@ -26,6 +26,42 @@ tipsRouter.put('/approve', middleware.authAdmin, async (req, res) => {
   res.status(200).end();
 });
 
+tipsRouter.put('/like', async (req, res) => {
+  const tip = await Tip.findById(req.query.id);
+
+  const user = req.user;
+
+  if (!tip) {
+    return res.status(400).json({
+      error: 'Tavsiye bulunamadı.',
+    });
+  }
+
+  const isLiked = tip.likes.some((u) => u.equals(user._id));
+
+  if (isLiked) {
+    tip.likes = tip.likes.filter((u) => !u.equals(user._id));
+    tip.likesLength = tip.likesLength - 1;
+  } else {
+    tip.likes = tip.likes.concat(user._id);
+    tip.likesLength = tip.likesLength + 1;
+  }
+  await tip.save();
+  let jsonedTip;
+  if (tip.isAnonim) {
+    jsonedTip = tip.toJSON();
+  } else {
+    const user = await User.findById(tip.user);
+    jsonedTip = {
+      ...tip.toJSON(),
+      user: user.username,
+      userIcon: user.iconName,
+    };
+  }
+
+  res.json(jsonedTip);
+});
+
 tipsRouter.delete('/remove', middleware.authAdmin, async (req, res) => {
   const q = req.query;
   if (!q.id) {
@@ -78,15 +114,11 @@ tipsRouter.get('/random', async (req, res) => {
 
   const jsonTip = randTip.toJSON();
   if (jsonTip.isAnonim) {
-    return res.json({
-      tip: jsonTip.tip,
-      isAnonim: true,
-    });
+    return res.json(jsonTip);
   } else {
-    const user = await User.findById(jsonTip.user);
+    const user = await User.findById(randTip.user);
     return res.json({
-      tip: jsonTip.tip,
-      isAnonim: false,
+      ...jsonTip,
       user: user.username,
     });
   }
@@ -94,29 +126,33 @@ tipsRouter.get('/random', async (req, res) => {
 
 tipsRouter.get('/', async (req, res) => {
   const q = req.query;
-  if (!q.start || !q.total) {
+  if (!q.start || !q.total || !q.filter) {
     return res.status(400).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 14',
     });
   }
-  const tips = await Tip.find({ isApproved: true })
-    .sort({ date: -1 })
-    .skip(Number(q.start))
-    .limit(Number(q.total));
-  const jsonedTips = tips.map((t) => t.toJSON());
+
+  let popular = false;
+  let sort = -1;
+
+  if (q.filter === 'mostPopular') {
+    popular = true;
+  } else if (q.filter === 'mostPast') {
+    sort = 1;
+  }
+
+  const tips = await Tip.getFilteredInf({ popular, sort }, q.start, q.total);
   let filteredTips = [];
-  for (let i = 0; i < jsonedTips.length; i++) {
-    if (jsonedTips[i].isAnonim) {
-      filteredTips.push({
-        tip: jsonedTips[i].tip,
-        isAnonim: true,
-      });
+  for (let i = 0; i < tips.length; i++) {
+    let jsonedTip = tips[i].toJSON();
+    if (tips[i].isAnonim) {
+      filteredTips.push(jsonedTip);
     } else {
-      const user = await User.findById(jsonedTips[i].user);
+      const user = await User.findById(tips[i].user);
       filteredTips.push({
-        tip: jsonedTips[i].tip,
-        isAnonim: false,
+        ...jsonedTip,
         user: user.username,
+        userIcon: user.iconName,
       });
     }
   }

@@ -4,28 +4,35 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTip } from '../../../../reducers/tipReduer';
 import SubTip from './SubTip';
 import { LinearProgress } from '@material-ui/core';
+import NoComments from '../../../Comments/NoComments';
+import CommentsLoading from '../../../Comments/CommentsLoading';
 
 const AllTips = () => {
   const count = useSelector((state) => state.tips.count);
   const start = useSelector((state) => state.tips.start);
   const hasMore = useSelector((state) => state.tips.hasMore);
   const tips = useSelector((state) => state.tips.tips);
+  const filter = useSelector((state) => state.tips.filter);
+  const [currentTips, setCurrentTips] = useState([]);
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(addInfTip(0, count, filter));
+  }, [filter]);
 
   useEffect(() => {
-    dispatch(addInfTip(0, count));
-  }, []);
+    setCurrentTips(filterTips(tips, filter));
+  }, [filter, start, tips]);
 
   const loadFunc = () => {
-    dispatch(addInfTip(start, count));
+    dispatch(addInfTip(start, count, filter));
   };
   const windowStyle = {
     height: 400,
     overflow: 'auto',
   };
 
-  if (tips.length === 0) {
-    return <LinearProgress />;
+  if (currentTips.length === 0) {
+    return <CommentsLoading />;
   }
   return (
     <div style={windowStyle}>
@@ -49,3 +56,15 @@ const AllTips = () => {
 };
 
 export default AllTips;
+
+function filterTips(tips, filter) {
+  return tips.sort((a, b) => {
+    if (filter === 'mostRecent') {
+      return new Date(b.date) - new Date(a.date);
+    } else if (filter === 'mostPast') {
+      return new Date(a.date) - new Date(b.date);
+    } else if (filter === 'mostPopular') {
+      return b.likes.length - a.likes.length;
+    }
+  });
+}

@@ -332,6 +332,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
     await comment.save();
     user.comments = user.comments.concat(comment._id);
     question.comments = question.comments.concat(comment._id);
+    question.commentsLength = question.commentsLength + 1;
     await user.save();
     await question.save();
   }
@@ -433,6 +434,11 @@ commentsRouter.delete('/:id', async (req, res) => {
       error: 'Yorumu silmeye hakkınız yok.',
     });
   }
+  await Notification.findOneAndRemove({
+    tool: comment._id,
+    responsible: user._id,
+    notificationType: 'newComment',
+  });
 
   if (comment.commentType === 'lesson') {
     await Teacher.findOneAndUpdate(
@@ -482,6 +488,7 @@ commentsRouter.delete('/:id', async (req, res) => {
     },
     { $pull: { comments: req.params.id } }
   );
+
   res.status(204).end();
 });
 

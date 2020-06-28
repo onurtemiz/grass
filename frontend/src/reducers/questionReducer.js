@@ -7,6 +7,7 @@ const initialState = {
   hasMore: false,
   start: 0,
   count: 20,
+  filter: 'mostRecent',
 };
 
 const questionReducer = (state = initialState, action) => {
@@ -35,16 +36,39 @@ const questionReducer = (state = initialState, action) => {
         questions: uniqQetQuestion,
       };
       return newState;
-
+    case 'CHANGE_QUESTION_SORT':
+      const filteredState = { ...state, filter: action.data };
+      return filteredState;
     default:
       return state;
   }
 };
 
-export const addInfQuestions = (start, count, filter, first, fetching) => {
+export const changeSort = (sort) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_QUESTION_SORT',
+      data: sort,
+    });
+  };
+};
+
+export const addInfQuestions = (
+  start,
+  count,
+  filter,
+  first,
+  fetching,
+  sorting
+) => {
   fetching.current = true;
   return async (dispatch) => {
-    const questions = await questionsService.addInf(start, count, filter);
+    const questions = await questionsService.addInf(
+      start,
+      count,
+      filter,
+      sorting
+    );
     if (questions.error) {
       toast.error(`${questions.error}`, {
         position: 'bottom-left',

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Icon, Popup, Button } from 'semantic-ui-react';
 import { changeIcon, checkAchievement } from '../../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
 
 const Icons = ({ user }) => {
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    dispatch(checkAchievement());
+  }, []);
   const dispatch = useDispatch();
   const icons = [
     {
@@ -106,56 +108,44 @@ const Icons = ({ user }) => {
     dispatch(changeIcon(iconName, iconCode));
   };
 
-  const handleCheck = () => {
-    dispatch(checkAchievement(setLoading));
-  };
-
   if (!user.achievements) {
     return <LinearProgress />;
   }
 
   return (
-    <>
-      <Button
-        content="Kontrol Et"
-        color="green"
-        onClick={() => handleCheck()}
-        loading={loading}
-      />
-      <Grid columns="6">
-        <Grid.Row>
-          {icons.map((i) => {
-            return (
-              <Grid.Column
-                key={i.name}
-                verticalAlign="middle"
-                style={{ marginLeft: '0.5em', marginTop: '1em' }}
-              >
-                <Popup
-                  content={i.description}
-                  position="bottom center"
-                  trigger={
-                    <Icon
-                      onClick={() => handleIcon(i.name, i.achievement)}
-                      name={i.name}
-                      color={user.iconName === i.name ? 'green' : 'blue'}
-                      size="big"
-                      bordered
-                      disabled={!user.achievements[`${i.achievement}`]}
-                      style={{
-                        boxShadow: `0em 0em 0em 0.1em ${
-                          user.iconName === i.name ? greenColor : blueColor
-                        } inset`,
-                      }}
-                    />
-                  }
-                />
-              </Grid.Column>
-            );
-          })}
-        </Grid.Row>
-      </Grid>
-    </>
+    <Grid columns="6">
+      <Grid.Row>
+        {icons.map((i) => {
+          return (
+            <Grid.Column
+              key={i.name}
+              verticalAlign="middle"
+              style={{ marginLeft: '0.5em', marginTop: '1em' }}
+            >
+              <Popup
+                content={i.description}
+                position="bottom center"
+                trigger={
+                  <Icon
+                    onClick={() => handleIcon(i.name, i.achievement)}
+                    name={i.name}
+                    color={user.iconName === i.name ? 'green' : 'blue'}
+                    size="big"
+                    bordered
+                    disabled={!user.achievements[`${i.achievement}`]}
+                    style={{
+                      boxShadow: `0em 0em 0em 0.1em ${
+                        user.iconName === i.name ? greenColor : blueColor
+                      } inset`,
+                    }}
+                  />
+                }
+              />
+            </Grid.Column>
+          );
+        })}
+      </Grid.Row>
+    </Grid>
   );
 };
 

@@ -9,17 +9,18 @@ import Lesson from './LessonsPage/Lesson/Lesson';
 import Lessons from './LessonsPage/Lessons/Lessons';
 import Clubs from './ClubsPage/Clubs/Clubs';
 import Club from './ClubsPage/Club/Club';
-import AllTips from './TipsPage/AllTips/AllTips';
 import Campuses from './CampusesPage/Campuses/Campuses';
 import Campus from './CampusesPage/Campus/Campus';
 import Dorm from './DormsPage/Dorm/Dorm';
 import Dorms from './DormsPage/Dorms/Dorms';
 import Question from './QuestionsPage/Question/Question';
 import Questions from './QuestionsPage/Questions/Questions';
+import Tips from './TipsPage/Tips';
+import QuestionsPage from './QuestionsPage/QuestionsPage';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
   const teacherPageMatch = useRouteMatch('/teachers/:name');
   const lessonPageMatch = useRouteMatch(
     '/lessons/:areaCode/:digitCode/:teacherName'
@@ -31,7 +32,10 @@ const MainComponent = () => {
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname.includes('teachers')) {
+    if (
+      location.pathname.includes('teachers') ||
+      location.pathname.includes('control')
+    ) {
       setActiveIndex(0);
     } else if (location.pathname.includes('lessons')) {
       setActiveIndex(1);
@@ -40,11 +44,11 @@ const MainComponent = () => {
     } else if (location.pathname.includes('questions')) {
       setActiveIndex(3);
     } else if (location.pathname.includes('campuses')) {
-      setActiveIndex(4);
-    } else if (location.pathname.includes('dorms')) {
       setActiveIndex(5);
-    } else if (location.pathname.includes('tips')) {
+    } else if (location.pathname.includes('dorms')) {
       setActiveIndex(6);
+    } else if (location.pathname.includes('tips')) {
+      setActiveIndex(4);
     }
   }, [location]);
 
@@ -62,11 +66,11 @@ const MainComponent = () => {
       history.push('/clubs');
     } else if (data.activeIndex === 3) {
       history.push('/questions');
-    } else if (data.activeIndex === 4) {
-      history.push('/campuses');
     } else if (data.activeIndex === 5) {
-      history.push('/dorms');
+      history.push('/campuses');
     } else if (data.activeIndex === 6) {
+      history.push('/dorms');
+    } else if (data.activeIndex === 4) {
       history.push('/tips');
     }
   };
@@ -155,7 +159,7 @@ const MainComponent = () => {
           {questionPageMatch && questionPageMatch.isExact ? (
             <Question />
           ) : (
-            <Questions main />
+            <QuestionsPage main />
           )}
         </Segment>
       ),
@@ -164,11 +168,27 @@ const MainComponent = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(4)}>
-            Kampüsler
+            Tavsiyeler
           </Label>
         ),
         color: 'green',
         key: 5,
+      },
+      render: () => (
+        <Segment style={{ marginRight: '0.5em', paddingTop: '1.5em' }}>
+          <Tips />
+        </Segment>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(5)}>
+            Kampüsler
+          </Label>
+        ),
+        color: 'green',
+        key: 6,
       },
       render: () => (
         <Segment
@@ -186,12 +206,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(5)}>
+          <Label bold pointer color={getColor(6)}>
             Yurtlar
           </Label>
         ),
         color: 'green',
-        key: 6,
+        key: 7,
       },
       render: () => (
         <Segment
@@ -205,22 +225,6 @@ const MainComponent = () => {
           ) : (
             <Dorms main />
           )}
-        </Segment>
-      ),
-    },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(6)}>
-            Tavsiyeler
-          </Label>
-        ),
-        color: 'green',
-        key: 7,
-      },
-      render: () => (
-        <Segment basic>
-          <AllTips />
         </Segment>
       ),
     },

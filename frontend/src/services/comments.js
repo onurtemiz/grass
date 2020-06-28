@@ -18,7 +18,8 @@ const updateComment = async (comment, id) => {
 
 const removeComment = async (id) => {
   try {
-    await axios.delete(`${baseUrl}/${id}`, config);
+    const res = await axios.delete(`${baseUrl}/${id}`, config);
+    return res.data;
   } catch (e) {
     return e.response
       ? e.response.data

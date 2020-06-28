@@ -57,6 +57,12 @@ usersRouter.post('/signup', async (req, res) => {
 
 usersRouter.use(middleware.authUser);
 
+usersRouter.put('/modal', async (req, res) => {
+  req.user.sawModal = true;
+  await req.user.save();
+  res.json(req.user.toJSON());
+});
+
 usersRouter.get('/following', async (req, res) => {
   const user = req.user;
   const clubs = await Club.find({ _id: { $in: user.following } });
@@ -109,8 +115,7 @@ usersRouter.get('/notifications', async (req, res) => {
       path: 'tool',
       populate: {
         path: 'lesson',
-        select: ['digitCode', 'areaCode'],
-        populate: { path: 'teacher', select: 'name' },
+        select: ['digitCode', 'areaCode', 'parentName'],
       },
     })
     .populate({

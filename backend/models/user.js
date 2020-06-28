@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   ],
   userStatus: { type: String, default: 'user' },
   iconName: { type: String, default: '' },
+  sawModal: { type: Boolean, default: false },
   achievements: {
     type: mongoose.Schema.Types.Mixed,
     default: {
@@ -57,8 +58,6 @@ userSchema.set('toJSON', {
     delete returnedObject.passwordHash;
   },
 });
-
-
 
 userSchema.statics.getTotalLike = async function (username) {
   const user = await this.findOne({ username }).populate({

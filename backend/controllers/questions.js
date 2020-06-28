@@ -3,6 +3,15 @@ const Question = require('../models/question');
 const middleware = require('../utils/middleware');
 const User = require('../models/user');
 
+// questionsRouter.get('/refresh', async (req, res) => {
+//   const questions = await Question.find();
+//   for (let i = 0; i < questions.length; i++) {
+//     questions[i].commentsLength = questions[i].comments.length;
+//     await questions[i].save();
+//   }
+//   res.end();
+// });
+
 questionsRouter.post('/', async (req, res) => {
   const body = req.body;
   if (!body || !body.description || !body.question) {
@@ -43,23 +52,35 @@ questionsRouter.get('/:id', async (req, res) => {
 
 questionsRouter.get('/', async (req, res) => {
   const q = req.query;
-  if (!('start' in q) && !('total' in q)) {
+  if (!('start' in q) || !('total' in q) || !('filter' in q)) {
     res.status(400).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 3',
     });
   }
   const search = q.search ? q.search : '';
-  const questions = await Question.find({
+  let popular = false;
+  let sort = -1;
+
+  if (q.filter === 'mostPopular') {
+    popular = true;
+  } else if (q.filter === 'mostPast') {
+    sort = 1;
+  }
+  const questions = await Question.getFilteredInf(
+    { sort, popular },
+    search,
+    q.start,
+    q.total
+  );
+
+  const jsonQuestions = questions.map((q) => q.toJSON());
+  const total = await Question.find({
     $and: [
       { isApproved: true },
       { question: { $regex: search, $options: 'i' } },
     ],
-  })
-    .sort({ date: -1 })
-    .skip(Number(q.start))
-    .limit(Number(q.total));
-  const jsonQuestions = questions.map((q) => q.toJSON());
-  res.json({ questions: jsonQuestions, total: jsonQuestions.length });
+  }).countDocuments();
+  res.json({ questions: jsonQuestions, total: total });
 });
 
 questionsRouter.use(middleware.authAdmin);

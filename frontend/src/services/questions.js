@@ -17,10 +17,10 @@ const getQuestionById = async (id) => {
   }
 };
 
-const addInf = async (start, count, filter) => {
+const addInf = async (start, count, filter, sorting) => {
   try {
     const req = await axios.get(
-      `${baseUrl}?start=${start}&total=${count}&search=${filter}`,
+      `${baseUrl}?start=${start}&total=${count}&search=${filter}&filter=${sorting}`,
       config
     );
     return req.data;

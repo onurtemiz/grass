@@ -53,7 +53,7 @@ export const followLesson = (user, id) => {
       data: id,
     });
     user.following.push(id);
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setLocaleUser(user);
   };
 };
 
@@ -84,8 +84,7 @@ export const changeIcon = (iconName, iconCode) => {
   };
 };
 
-export const checkAchievement = (setLoading) => {
-  setLoading(true);
+export const checkAchievement = () => {
   return async (dispatch) => {
     const achievements = await userService.checkAchievement();
     if (achievements.error) {
@@ -104,7 +103,6 @@ export const checkAchievement = (setLoading) => {
       type: 'CHECK_ACHIEVEMENT',
       data: achievements,
     });
-    setLoading(false);
     const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
     window.localStorage.setItem(
       'grassUser',
@@ -133,7 +131,7 @@ export const unfollowLesson = (user, id) => {
       data: id,
     });
     user = { ...user, following: user.following.filter((uId) => uId !== id) };
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setLocaleUser(user);
   };
 };
 
@@ -153,7 +151,7 @@ export const updateUser = (u, setEdited) => {
       });
       return;
     }
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setLocaleUser(user);
     setToken(user.token);
 
     dispatch({
@@ -198,12 +196,35 @@ export const loginUser = (userInfo) => {
       });
       return;
     }
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setLocaleUser(user);
     setToken(user.token);
     dispatch({
       type: 'SET_USER',
       data: user,
     });
+  };
+};
+
+export const sawModal = () => {
+  return async (dispatch) => {
+    const user = await userService.sawModal();
+    if (user.error) {
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: 'SET_USER',
+      data: user,
+    });
+    setLocaleUser(user);
   };
 };
 
@@ -226,11 +247,7 @@ export const getPopulatedMainUser = () => {
       type: 'SET_LIKES',
       data: user,
     });
-    const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
-    window.localStorage.setItem(
-      'grassUser',
-      JSON.stringify({ ...jsonUser, ...user })
-    );
+    setLocaleUser(user);
   };
 };
 
@@ -265,7 +282,8 @@ export const signupUser = (userInfo) => {
       });
       return;
     }
-    window.localStorage.setItem('grassUser', JSON.stringify(user));
+    setLocaleUser(user);
+
     setToken(user.token);
 
     dispatch({
@@ -276,3 +294,10 @@ export const signupUser = (userInfo) => {
 };
 
 export default userReducer;
+function setLocaleUser(user) {
+  const jsonUser = JSON.parse(window.localStorage.getItem('grassUser'));
+  window.localStorage.setItem(
+    'grassUser',
+    JSON.stringify({ ...jsonUser, ...user })
+  );
+}

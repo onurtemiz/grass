@@ -17,7 +17,7 @@ const Clubs = ({ admin }) => {
   );
 
   if (!ready) {
-    return <LinearProgress />;
+    return <CommentsLoading />;
   }
 
   return (
@@ -31,7 +31,7 @@ const Clubs = ({ admin }) => {
       <Filter target="Kulüp" />
       <Divider />
       {!ready ? (
-        <LinearProgress />
+        <CommentsLoading />
       ) : noResult ? (
         <NoSubResult />
       ) : (

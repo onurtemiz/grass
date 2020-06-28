@@ -16,6 +16,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import MainComponent from './components/ControlPage/MainComponent';
 import ControlClub from './components/AdminPage/Admin/ControlClub';
 import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
+import StaticPages from './components/StaticPages/StaticPages';
+import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
 const DefaultContainer = () => {
   return (
     <>
@@ -34,11 +36,14 @@ const DefaultContainer = () => {
           component={MainComponent}
         />
         <Route path="/feed" component={Feed} />
-        <Route path="/about" component={About} />
-        <Route path="/contribution" component={Contribution} />
         <Route path="/user" component={MainUser} />
         <Route path="/users/:username" component={User} />
         <Route path="/comments" component={AllComments} />
+        <Route
+          path={['/statics', '/about', '/contribution', '/terms']}
+          component={StaticPages}
+        />
+
         <Route path="/">
           <Redirect to="/" />
         </Route>
@@ -79,7 +84,12 @@ const AuthorizedAdmin = () => {
 
 function AuthorizedApp() {
   const isAdmin = useAdmin();
-  return !isAdmin ? <AuthorizedUser /> : <AuthorizedAdmin />;
+  return (
+    <>
+      <FirstTimeModal />
+      {!isAdmin ? <AuthorizedUser /> : <AuthorizedAdmin />}
+    </>
+  );
 }
 
 export default AuthorizedApp;

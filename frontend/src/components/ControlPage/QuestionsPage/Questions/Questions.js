@@ -20,9 +20,6 @@ const Questions = ({ main }) => {
 
   return (
     <>
-      <Filter target="Soru" />
-      <QuestionModal />
-      <Divider />
       <div
         style={{
           minHeight: '300px',
@@ -31,7 +28,7 @@ const Questions = ({ main }) => {
         }}
       >
         {!ready ? (
-          <LinearProgress />
+          <CommentsLoading />
         ) : noResult ? (
           <NoSubResult />
         ) : (
@@ -57,9 +54,18 @@ const Questions = ({ main }) => {
 };
 
 export default Questions;
-function filterQuestions(questions, filter) {
+function filterQuestions(questions, filter, sorting) {
+  console.log('sorting', sorting);
   return questions
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .sort((a, b) => {
+      if (sorting === 'mostRecent') {
+        return new Date(b.date) - new Date(a.date);
+      } else if (sorting === 'mostPast') {
+        return new Date(a.date) - new Date(b.date);
+      } else if (sorting === 'mostPopular') {
+        return b.commentsLength - a.commentsLength;
+      }
+    })
     .filter((q) => {
       return q.question.toUpperCase().includes(filter.toUpperCase());
     });

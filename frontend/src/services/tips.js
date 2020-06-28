@@ -28,12 +28,23 @@ const getAllTips = async () => {
   }
 };
 
-const addInf = async (start, count) => {
+const addInf = async (start, count, filter) => {
   try {
     const req = await axios.get(
-      `${baseUrl}?start=${start}&total=${count}`,
+      `${baseUrl}?start=${start}&total=${count}&filter=${filter}`,
       config
     );
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const likeTip = async (id) => {
+  try {
+    const req = await axios.put(`${baseUrl}/like?id=${id}`, null, config);
     return req.data;
   } catch (e) {
     return e.response
@@ -79,4 +90,5 @@ export default {
   getAllTips,
   approveTip,
   deleteTip,
+  likeTip,
 };

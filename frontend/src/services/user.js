@@ -17,6 +17,17 @@ const updateUser = async (user) => {
   }
 };
 
+const sawModal = async () => {
+  try {
+    const res = await axios.put(`${baseUrl}/modal`, null, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
 const followLesson = async (id) => {
   try {
     const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
@@ -138,4 +149,5 @@ export default {
   getPopulatedMainUser,
   changeIcon,
   checkAchievement,
+  sawModal,
 };

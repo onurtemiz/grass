@@ -12,6 +12,7 @@ const questionSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
+  commentsLength: { type: Number, default: 0 },
   date: { type: Date, default: Date.now },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,5 +32,22 @@ questionSchema.set('toJSON', {
     delete returnedObject.__v;
   },
 });
+
+questionSchema.statics.getFilteredInf = function (
+  { sort, popular },
+  search,
+  start = 0,
+  total = Number.MAX_SAFE_INTEGER
+) {
+  return this.find({
+    $and: [
+      { isApproved: true },
+      { question: { $regex: search, $options: 'i' } },
+    ],
+  })
+    .sort(popular ? { date: sort } : { totalLength: -1 })
+    .skip(Number(start))
+    .limit(Number(total));
+};
 
 module.exports = mongoose.model('Question', questionSchema);

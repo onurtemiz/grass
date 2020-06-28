@@ -31,7 +31,7 @@ const Home = () => {
   if (tip === null) {
     return null;
   }
-
+  console.log('tip', tip);
   return (
     <Container fluid>
       <HomeGrid verticalAlign="middle" centered columns={1} stretched>
@@ -40,8 +40,11 @@ const Home = () => {
             <HomeHeader as="h1">
               <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
             </HomeHeader>
-            <Label color="green" style={{ fontWeight: 'bold' }}>
-              {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor: {tip.tip}
+            <Label color="green" bold>
+              {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor:{' '}
+              <Label color="blue" bold>
+                {tip.tip}
+              </Label>
             </Label>
             <br />
             <HomeSearch>
@@ -49,7 +52,7 @@ const Home = () => {
             </HomeSearch>
           </Grid.Column>
         </Grid.Row>
-        <Tips />
+        <Tips home />
       </HomeGrid>
     </Container>
   );

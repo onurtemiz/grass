@@ -26,6 +26,7 @@ const Dorms = ({ main }) => {
         pageStart={0}
         useWindow={true}
         hasMore={false}
+        loadMore={() => null}
         loader={<CommentsLoading />}
       >
         {dorms.map((d) => (

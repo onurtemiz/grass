@@ -17,12 +17,15 @@ const Teachers = () => {
     filterTeachers
   );
 
+  if (!ready) {
+    return <CommentsLoading />;
+  }
   return (
     <div style={{ minHeight: '300px', maxHeight: '500px', overflow: 'auto' }}>
       <Filter target={'Hoca'} />
       <Divider />
       {!ready ? (
-        <LinearProgress />
+        <CommentsLoading />
       ) : noResult ? (
         <NoSubResult />
       ) : (

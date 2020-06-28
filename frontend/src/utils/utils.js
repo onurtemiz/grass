@@ -15,6 +15,8 @@ export const useInfinite = (target, addInfFunc, filterFunc) => {
   const count = useSelector((state) => state[`${target}`].count);
   const start = useSelector((state) => state[`${target}`].start);
   const hasMore = useSelector((state) => state[`${target}`].hasMore);
+  const sorting = useSelector((state) => state[`${target}`].filter);
+
   const targets = useSelector((state) => state[`${target}`][`${target}`]);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
@@ -24,16 +26,16 @@ export const useInfinite = (target, addInfFunc, filterFunc) => {
   const first = useRef(false);
   const fetching = useRef(false);
   useEffect(() => {
-    dispatch(addInfFunc(0, count, filter, first, fetching));
+    dispatch(addInfFunc(0, count, filter, first, fetching, sorting));
   }, [filter]);
 
   useEffect(() => {
-    setCurrentTarget(filterFunc(targets, filter));
-  }, [targets]);
+    setCurrentTarget(filterFunc(targets, filter, sorting));
+  }, [targets, sorting]);
 
   const loadFunc = () => {
     if (!fetching.current) {
-      dispatch(addInfFunc(start, count, filter, first, fetching));
+      dispatch(addInfFunc(start, count, filter, first, fetching, sorting));
     }
   };
 

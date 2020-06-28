@@ -17,7 +17,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import tipsService from '../../../services/tips';
 import { useForm } from 'react-hook-form';
 
-const Tips = () => {
+const Tips = ({ home }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, errors } = useForm();
@@ -34,7 +34,9 @@ const Tips = () => {
         color="blue"
         pointer
         bold
-        style={{ position: 'fixed', bottom: '3em', width: '100%' }}
+        style={
+          home ? { position: 'fixed', bottom: '3em', width: '100%' } : null
+        }
         onClick={() => setIsOpen(true)}
       >
         Sizde tavsiye verin

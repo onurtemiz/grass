@@ -15,6 +15,7 @@ const Notifications = () => {
     setOpen(false);
     userService.getNotifications(setNotifications, setLoading);
   }, [location]);
+  console.log('notifications', notifications);
   return (
     <Popup
       wide="very"
@@ -86,10 +87,12 @@ const NotificationFeed = ({
       </Button>
       <Feed style={{ overflow: 'auto', height: '300px' }}>
         {notifications.map((n) =>
-          n.notificationType === 'like' ? (
-            <LikeNotification notification={n} key={n.id} />
-          ) : n.notificationType === 'newComment' ? (
-            <NewCommentNotification notification={n} key={n.id} />
+          n.tool ? (
+            n.notificationType === 'like' ? (
+              <LikeNotification notification={n} key={n.id} />
+            ) : n.notificationType === 'newComment' ? (
+              <NewCommentNotification notification={n} key={n.id} />
+            ) : null
           ) : null
         )}
       </Feed>

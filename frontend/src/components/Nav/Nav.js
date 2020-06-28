@@ -26,28 +26,42 @@ const Nav = ({ search, admin }) => {
   const match = useRouteMatch('/:path');
   const homeMatch = useRouteMatch('/');
   const userMatch = useRouteMatch(`/user`);
+
   const location = useLocation();
 
   useEffect(() => {
     if (match) {
-      if (match.params.path === 'feed') {
+      let p = match.params.path;
+      if (p === 'feed') {
         setActive('feed');
         return;
-      } else if (match.params.path === 'comments') {
+      } else if (p === 'comments') {
         setActive('comments');
+        return;
+      } else if (
+        p === 'statics' ||
+        p === 'about' ||
+        p === 'contribution' ||
+        p === 'terms'
+      ) {
+        setActive('statics');
         return;
       }
     }
     if (
       location.pathname.includes('control') ||
-      location.pathname.includes('users') ||
       location.pathname.includes('lessons') ||
+      location.pathname.includes('tips') ||
+      location.pathname.includes('questions') ||
+      location.pathname.includes('dorms') ||
+      location.pathname.includes('clubs') ||
+      location.pathname.includes('campuses') ||
       location.pathname.includes('teachers')
     ) {
       setActive('control');
       return;
     }
-    if (userMatch && userMatch.isExact) {
+    if (userMatch) {
       setActive('user');
       return;
     }
@@ -55,6 +69,7 @@ const Nav = ({ search, admin }) => {
       setActive('home');
       return;
     }
+
     setActive('');
   }, [location]);
 
@@ -75,7 +90,7 @@ const Nav = ({ search, admin }) => {
             ÇİM
           </Label>{' '}
           <Label pointer color="blue">
-            ALPHA v0.9
+            ALPHA v0.9.4
           </Label>
         </label>
       </Menu.Item>
@@ -110,9 +125,24 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('comments')}
         header
       >
-        <Icon name="users" color={active === 'comments' ? 'green' : 'blue'} />
+        <Icon
+          name="comments"
+          color={active === 'comments' ? 'green' : 'blue'}
+        />
         <Label color={active === 'comments' ? 'green' : 'blue'} pointer>
           Meydan
+        </Label>
+      </Menu.Item>
+      <Menu.Item
+        as={Link}
+        to={`/statics`}
+        active={active === 'statics'}
+        onClick={() => setActive('statics')}
+        header
+      >
+        <Icon name="flask" color={active === 'statics' ? 'green' : 'blue'} />
+        <Label color={active === 'statics' ? 'green' : 'blue'} pointer>
+          Detaylar
         </Label>
       </Menu.Item>
       {admin ? (

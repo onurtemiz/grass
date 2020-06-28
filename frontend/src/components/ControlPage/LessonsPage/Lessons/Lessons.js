@@ -16,7 +16,7 @@ const Lessons = ({ main }) => {
   );
 
   if (!ready) {
-    return <LinearProgress />;
+    return <CommentsLoading />;
   }
 
   return (
@@ -24,7 +24,7 @@ const Lessons = ({ main }) => {
       <Filter target="Ders" />
       <Divider />
       {!ready ? (
-        <LinearProgress />
+        <CommentsLoading />
       ) : noResult ? (
         <NoSubResult />
       ) : (

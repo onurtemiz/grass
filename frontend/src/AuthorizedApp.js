@@ -18,6 +18,7 @@ import ControlClub from './components/AdminPage/Admin/ControlClub';
 import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
 import StaticPages from './components/StaticPages/StaticPages';
 import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
+import CoursePlanner from './components/CoursePlanner/CoursePlanner';
 const DefaultContainer = () => {
   return (
     <>
@@ -43,7 +44,7 @@ const DefaultContainer = () => {
           path={['/statics', '/about', '/contribution', '/terms']}
           component={StaticPages}
         />
-
+        <Route path="/planner" component={CoursePlanner} />
         <Route path="/">
           <Redirect to="/" />
         </Route>

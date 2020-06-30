@@ -13,57 +13,42 @@ const Notification = require('../models/notification');
 const rateLimit = require('express-rate-limit');
 
 const getCommentFilter = async (q) => {
-  let comments;
-  if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
-    const sort = q.filter === 'mostRecent' ? -1 : 1;
-    comments =
-      'start' in q && 'total' in q
-        ? await Comment.getRecentPast(sort, q.start, q.total)
-        : await Comment.getRecentPast(sort);
-  } else if (q.filter === 'mostPopular') {
-    comments =
-      'start' in q && 'total' in q
-        ? await Comment.getMostPopular(q.start, q.total)
-        : await Comment.getMostPopular();
-  }
+  let popular = q.filter === 'mostPopular';
+  const sort = q.filter === 'mostRecent' ? -1 : 1;
+
+  const comments = await Comment.getSquareComments(
+    { sort, popular },
+    q.start,
+    q.total
+  );
+
   return comments;
 };
 
 const getCommentFeed = async (q, user) => {
-  let comments;
-  if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
-    const sort = q.filter === 'mostRecent' ? -1 : 1;
-    comments = await Comment.getRecentPastFeed(
-      user.following,
-      sort,
-      q.start,
-      q.total
-    );
-  } else if (q.filter === 'mostPopular') {
-    comments = await Comment.getMostPopularFeed(
-      user.following,
-      q.start,
-      q.total
-    );
-  }
+  let popular = q.filter === 'mostPopular';
+  const sort = q.filter === 'mostRecent' ? -1 : 1;
+
+  const comments = await Comment.getFeedComments(
+    { sort, popular },
+    user.following,
+    q.start,
+    q.total
+  );
 
   return comments;
 };
 
 const getIdFilter = async (q) => {
-  let comments;
-  if (q.filter === 'mostRecent' || q.filter === 'mostPast') {
-    const sort = q.filter === 'mostRecent' ? -1 : 1;
-    comments =
-      'start' in q && 'total' in q
-        ? await Comment.getRecentPastById(q.id, sort, q.start, q.total)
-        : await Comment.getRecentPastById(q.id, sort);
-  } else if (q.filter === 'mostPopular') {
-    comments =
-      'start' in q && 'total' in q
-        ? await Comment.getMostPopularById(q.id, q.start, q.total)
-        : await Comment.getMostPopularById(q.id);
-  }
+  let popular = q.filter === 'mostPopular';
+  const sort = q.filter === 'mostRecent' ? -1 : 1;
+
+  const comments = await Comment.getIdComments(
+    { sort, popular },
+    q.id,
+    q.start,
+    q.total
+  );
 
   return comments;
 };

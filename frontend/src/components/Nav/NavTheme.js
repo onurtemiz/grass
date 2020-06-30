@@ -26,6 +26,9 @@ export const Label = styled.label`
       : '#333'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'auto')};
   font-weight: ${(props) => (props.bold ? 'bold' : 'auto')};
+  &:hover {
+    filter: ${(props) => (props.pointer ? 'brightness(110%)' : null)};
+  }
 `;
 
 export const GreenLabel = styled.label`

@@ -14,11 +14,11 @@ const reportsRouter = require('./controllers/reports');
 const tipsRouter = require('./controllers/tips');
 const commentsRouter = require('./controllers/comments');
 const middleware = require('./utils/middleware');
-const Connect = require('./models/connect');
 const clubsRouter = require('./controllers/clubs');
 const campusesRouter = require('./controllers/campuses');
 const dormsRouter = require('./controllers/dorms');
 const questionsRouter = require('./controllers/questions');
+const coursesRouter = require('./controllers/courses');
 const mongoUri = async () => {
   let mongoUri;
   if (process.env.NODE_ENV === 'test') {
@@ -49,6 +49,7 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());
+app.use('/api/courses', coursesRouter);
 app.use(middleware.tokenExtractor);
 app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter);

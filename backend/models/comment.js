@@ -48,22 +48,13 @@ const commentSchema = new mongoose.Schema({
 
 commentSchema.set(uniqueValidator);
 
-commentSchema.statics.getMostPopularFeed = function (
-  ids,
+commentSchema.statics.getSquareComments = function (
+  { popular, sort },
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
-  return this.find({
-    commentStatus: { $ne: 'destroyed' },
-    $or: [
-      { lesson: { $in: ids } },
-      { club: { $in: ids } },
-      { campus: { $in: ids } },
-      { dorm: { $in: ids } },
-      { question: { $in: ids } },
-    ],
-  })
-    .sort({ likesLength: -1 })
+  return this.find({ commentStatus: { $ne: 'destroyed' } })
+    .sort(popular ? { totalLength: -1 } : { _id: sort })
     .skip(Number(start))
     .limit(Number(total))
     .populate({
@@ -81,7 +72,43 @@ commentSchema.statics.getMostPopularFeed = function (
     .populate({ path: 'question', select: ['id', 'question'] });
 };
 
-commentSchema.statics.getMostPopularById = function (
+commentSchema.statics.getFeedComments = function (
+  { sort, popular },
+  ids,
+
+  start = 0,
+  total = Number.MAX_SAFE_INTEGER
+) {
+  return this.find({
+    commentStatus: { $ne: 'destroyed' },
+    $or: [
+      { lesson: { $in: ids } },
+      { club: { $in: ids } },
+      { campus: { $in: ids } },
+      { dorm: { $in: ids } },
+      { question: { $in: ids } },
+    ],
+  })
+    .sort(popular ? { likesLength: -1 } : { _id: sort })
+    .skip(Number(start))
+    .limit(Number(total))
+    .populate({
+      path: 'user',
+      select: ['username', 'id', 'userStatus', 'iconName'],
+    })
+
+    .populate({
+      path: 'lesson',
+      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+    })
+    .populate({ path: 'club', select: ['name'] })
+    .populate({ path: 'campus', select: ['name'] })
+    .populate({ path: 'dorm', select: ['name'] })
+    .populate({ path: 'question', select: ['id', 'question'] });
+};
+
+commentSchema.statics.getIdComments = function (
+  { sort, popular },
   id,
   start = 0,
   total = Number.MAX_SAFE_INTEGER
@@ -98,124 +125,7 @@ commentSchema.statics.getMostPopularById = function (
       { question: id },
     ],
   })
-    .sort({ likesLength: -1 })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate({
-      path: 'user',
-      select: ['username', 'id', 'userStatus', 'iconName'],
-    })
-
-    .populate({
-      path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
-    })
-    .populate({ path: 'club', select: ['name'] })
-    .populate({ path: 'campus', select: ['name'] })
-    .populate({ path: 'dorm', select: ['name'] })
-    .populate({ path: 'question', select: ['id', 'question'] });
-};
-
-commentSchema.statics.getMostPopular = function (
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({ commentStatus: { $ne: 'destroyed' } })
-    .sort({ totalLength: -1 })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate({
-      path: 'user',
-      select: ['username', 'id', 'userStatus', 'iconName'],
-    })
-
-    .populate({
-      path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
-    })
-    .populate({ path: 'club', select: ['name'] })
-    .populate({ path: 'campus', select: ['name'] })
-    .populate({ path: 'dorm', select: ['name'] })
-    .populate({ path: 'question', select: ['id', 'question'] });
-};
-
-commentSchema.statics.getRecentPast = function (
-  sort,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({ commentStatus: { $ne: 'destroyed' } })
-    .sort({ _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate({
-      path: 'user',
-      select: ['username', 'id', 'userStatus', 'iconName'],
-    })
-
-    .populate({
-      path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
-    })
-    .populate({ path: 'club', select: ['name'] })
-    .populate({ path: 'campus', select: ['name'] })
-    .populate({ path: 'dorm', select: ['name'] })
-    .populate({ path: 'question', select: ['id', 'question'] });
-};
-
-commentSchema.statics.getRecentPastFeed = function (
-  ids,
-  sort,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({
-    commentStatus: { $ne: 'destroyed' },
-    $or: [
-      { lesson: { $in: ids } },
-      { club: { $in: ids } },
-      { campus: { $in: ids } },
-      { dorm: { $in: ids } },
-      { question: { $in: ids } },
-    ],
-  })
-    .sort({ _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate({
-      path: 'user',
-      select: ['username', 'id', 'userStatus', 'iconName'],
-    })
-
-    .populate({
-      path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
-    })
-    .populate({ path: 'club', select: ['name'] })
-    .populate({ path: 'campus', select: ['name'] })
-    .populate({ path: 'dorm', select: ['name'] })
-    .populate({ path: 'question', select: ['id', 'question'] });
-};
-
-commentSchema.statics.getRecentPastById = function (
-  id,
-  sort,
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({
-    commentStatus: { $ne: 'destroyed' },
-    $or: [
-      { teacher: id },
-      { lesson: id },
-      { user: id },
-      { club: id },
-      { campus: id },
-      { dorm: id },
-      { question: id },
-    ],
-  })
-    .sort({ _id: sort })
+    .sort(popular ? { likesLength: -1 } : { _id: sort })
     .skip(Number(start))
     .limit(Number(total))
     .populate({

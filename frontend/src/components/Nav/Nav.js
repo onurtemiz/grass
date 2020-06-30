@@ -46,6 +46,9 @@ const Nav = ({ search, admin }) => {
       ) {
         setActive('statics');
         return;
+      } else if (p === 'planner') {
+        setActive('planner');
+        return;
       }
     }
     if (
@@ -101,8 +104,8 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('control')}
         header
       >
-        <Icon name="eye" color={active === 'control' ? 'green' : 'blue'} />
         <Label color={active === 'control' ? 'green' : 'blue'} pointer>
+          <Icon name="eye" color={active === 'control' ? 'green' : 'blue'} />
           Manzara
         </Label>
       </Menu.Item>
@@ -113,8 +116,11 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('feed')}
         header
       >
-        <Icon name="hockey puck" color={active === 'feed' ? 'green' : 'blue'} />
         <Label color={active === 'feed' ? 'green' : 'blue'} pointer>
+          <Icon
+            name="hockey puck"
+            color={active === 'feed' ? 'green' : 'blue'}
+          />
           Mama Kabım
         </Label>
       </Menu.Item>
@@ -125,12 +131,27 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('comments')}
         header
       >
-        <Icon
-          name="comments"
-          color={active === 'comments' ? 'green' : 'blue'}
-        />
         <Label color={active === 'comments' ? 'green' : 'blue'} pointer>
+          <Icon
+            name="comments"
+            color={active === 'comments' ? 'green' : 'blue'}
+          />
           Meydan
+        </Label>
+      </Menu.Item>
+      <Menu.Item
+        as={Link}
+        to={`/planner`}
+        active={active === 'planner'}
+        onClick={() => setActive('planner')}
+        header
+      >
+        <Label color={active === 'planner' ? 'green' : 'blue'} pointer>
+          <Icon
+            name="calendar alternate"
+            color={active === 'planner' ? 'green' : 'blue'}
+          />
+          Course Planner ALPHA
         </Label>
       </Menu.Item>
       <Menu.Item
@@ -140,8 +161,8 @@ const Nav = ({ search, admin }) => {
         onClick={() => setActive('statics')}
         header
       >
-        <Icon name="flask" color={active === 'statics' ? 'green' : 'blue'} />
         <Label color={active === 'statics' ? 'green' : 'blue'} pointer>
+          <Icon name="flask" color={active === 'statics' ? 'green' : 'blue'} />
           Detaylar
         </Label>
       </Menu.Item>
@@ -153,8 +174,8 @@ const Nav = ({ search, admin }) => {
           onClick={() => setActive('admin')}
           header
         >
-          <Icon name="user secret" color="blue" />
           <Label color="blue" pointer>
+            <Icon name="user secret" color="blue" />
             Admin
           </Label>
         </Menu.Item>
@@ -171,8 +192,8 @@ const Nav = ({ search, admin }) => {
           onClick={() => setActive('user')}
           header
         >
-          <Icon name="user" color={active === 'user' ? 'green' : 'blue'} />
           <Label color={active === 'user' ? 'green' : 'blue'} pointer>
+            <Icon name="user" color={active === 'user' ? 'green' : 'blue'} />
             Hesabım
           </Label>
         </Menu.Item>

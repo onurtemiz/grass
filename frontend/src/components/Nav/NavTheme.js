@@ -18,7 +18,7 @@ export const Label = styled.label`
     props.color === 'green'
       ? '#21ba45'
       : props.color === 'blue'
-      ? '#2185d0'
+      ? '#2185d0 !important'
       : props.color === 'red'
       ? '#db2828'
       : props.color === 'hot red'

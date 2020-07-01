@@ -4,11 +4,12 @@ import { Input, Grid } from 'semantic-ui-react';
 import SelectedCourses from './SelectedCourses/SelectedCourses';
 import RequiredCourses from './RequiredCourses/RequiredCourses';
 import SearchCourses from './CoursePlannerTable/SearchCourses/SearchCourses';
+import ProgramOptions from './ProgramOptions.js/ProgramOptions';
 
 const CoursePlanner = () => {
   return (
     <Grid columns={3} style={{ margin: '0.5em' }}>
-      <Grid.Row style={{ height: '500px' }}>
+      <Grid.Row>
         <Grid.Column stretched>
           <CoursePlannerTable />
         </Grid.Column>
@@ -19,6 +20,7 @@ const CoursePlanner = () => {
           <SearchCourses />
         </Grid.Column>
       </Grid.Row>
+      <ProgramOptions />
       <Grid.Row columns={5}>
         <RequiredCourses />
       </Grid.Row>

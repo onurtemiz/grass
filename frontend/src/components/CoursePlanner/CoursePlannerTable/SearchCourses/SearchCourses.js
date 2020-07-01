@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchCourse } from '../../../../reducers/courseReducer';
-import { compareNames } from '../../../../utils/utils';
+import { compareNames, getIdByDayHour } from '../../../../utils/utils';
 import SubCourse from './SubCourse';
 const SearchCourses = () => {
   const dispatch = useDispatch();
@@ -12,16 +12,17 @@ const SearchCourses = () => {
   const [currentCourses, setCurrentCourses] = useState([]);
 
   useEffect(() => {
-    if (search !== '') {
-      dispatch(searchCourse(search, findTime));
-    }
-  }, [search]);
+    dispatch(
+      searchCourse(
+        search,
+        findTime.map((t) => t.id)
+      )
+    );
+  }, [search, findTime]);
 
   useEffect(() => {
-    setCurrentCourses(filterCourses(search, courses));
-  }, [courses]);
-
-  
+    setCurrentCourses(filterCourses(courses, search, findTime));
+  }, [courses, findTime]);
 
   return (
     <>
@@ -50,7 +51,7 @@ const SearchCourses = () => {
   );
 };
 
-const filterCourses = (search, courses) => {
+const filterCourses = (courses, search, findTime) => {
   let s = search.toLocaleUpperCase('tr-TR');
   let currentCourses = courses
     .filter(
@@ -58,8 +59,22 @@ const filterCourses = (search, courses) => {
         c.name.toLocaleUpperCase('tr-TR').includes(s) ||
         c.parentName.toLocaleUpperCase('tr-TR').includes(s)
     )
-    .sort(compareNames)
-    .slice(0, 10);
+    .sort(compareNames);
+  if (findTime.length > 0) {
+    currentCourses = currentCourses.filter((course) => {
+      let q = 0;
+
+      course.days.forEach((d, i) => {
+        findTime.forEach((t) => {
+          if (course.days[i] === t.day && course.hours[i] === t.hour) {
+            q++;
+          }
+        });
+      });
+      return q === findTime.length;
+    });
+  }
+
   return currentCourses;
 };
 

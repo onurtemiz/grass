@@ -43,7 +43,7 @@ const SubCourse = ({ course }) => {
   return (
     <div
       style={{
-        margin: '0.5em',
+        margin: '0.8em',
         cursor: 'pointer',
       }}
     >

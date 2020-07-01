@@ -7,7 +7,7 @@ const getCells = () => {
   let cells = [];
   let id = 0;
   for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < 9; j++) {
+    for (let j = 0; j < 14; j++) {
       let cell = {
         day: i,
         time: j,
@@ -28,6 +28,11 @@ const initialState = {
   selectedCourses: [],
   cells: getCells(),
   findTime: [],
+  tryEmptyDay: false,
+  conflict: {
+    makeConflict: false,
+  },
+  extraHours: false,
 };
 
 const courseReducer = (state = initialState, action) => {
@@ -44,13 +49,19 @@ const courseReducer = (state = initialState, action) => {
         (c) => c.id !== action.data.id
       );
       const selectedCourses = [...addedSelectedCourses, action.data];
-      return { ...state, selectedCourses };
+      const addedExtraHours = checkExtraHour(selectedCourses);
+      return { ...state, selectedCourses, extraHours: addedExtraHours };
     case 'REMOVE_SELECTED_COURSE':
       const otherSelectedCourses = state.selectedCourses.filter(
         (c) => c.id !== action.data.id
       );
+      const removedExtraHours = checkExtraHour(otherSelectedCourses);
 
-      return { ...state, selectedCourses: otherSelectedCourses };
+      return {
+        ...state,
+        selectedCourses: otherSelectedCourses,
+        extraHours: removedExtraHours,
+      };
     case 'SET_CELL':
       const otherCells = state.cells.filter((c) => c.id !== action.data.id);
       return {
@@ -69,7 +80,7 @@ const courseReducer = (state = initialState, action) => {
       };
     case 'RESET_TIME_CELL':
       const otherCells2 = state.cells.filter((c) => c.id !== action.data.id);
-      const lostTime = state.findTime.filter((t) => t !== action.data.id);
+      const lostTime = state.findTime.filter((t) => t.id !== action.data.id);
       return {
         ...state,
         findTime: lostTime,
@@ -135,9 +146,50 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         cells: [...otherCells4, { ...foundCell2, courses: cellCourses2 }],
       };
+    case 'TOGGLE_TRY_EMPTY_DAY':
+      return {
+        ...state,
+        tryEmptyDay: !state.tryEmptyDay,
+      };
+    case 'ONOFF_CONFLICT':
+      return {
+        ...state,
+        conflict: {
+          ...state.conflict,
+          makeConflict: !state.conflict.makeConflict,
+        },
+      };
     default:
       return state;
   }
+};
+
+const checkExtraHour = (courses) => {
+  let extra = false;
+  courses.forEach((course) => {
+    course.hours.forEach((hour) => {
+      if (hour > 8) {
+        extra = true;
+      }
+    });
+  });
+  return extra;
+};
+
+export const toggleTryEmptyDay = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'TOGGLE_TRY_EMPTY_DAY',
+    });
+  };
+};
+
+export const onOffConflict = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ONOFF_CONFLICT',
+    });
+  };
 };
 
 export const onHoverCourse = (course) => {
@@ -207,7 +259,7 @@ export const findTimeCell = (cell) => {
     dispatch({
       type: 'FIND_TIME_CELL',
       data: {
-        time: cell.id,
+        time: { id: cell.id, day: cell.day, hour: cell.time + 1 },
         cell: { ...cell, timeFind: true, color: '#bffdd3' },
       },
     });

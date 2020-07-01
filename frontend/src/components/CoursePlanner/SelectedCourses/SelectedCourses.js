@@ -49,25 +49,33 @@ const SelectedCourses = () => {
       </Table.Header>
 
       <Table.Body>
-        {selectedCourses.sort(compareNames).map((c) => {
-          return (
-            <Table.Row>
-              <Table.Cell
-                onMouseEnter={() => handleMouseEnter(c)}
-                onMouseLeave={() => handleMouseLeave(c)}
-              >
-                {c.name}{' '}
-                <Icon
-                  name="delete"
-                  style={{ float: 'right', cursor: 'pointer' }}
-                  onClick={() => {
-                    handleClick(c);
-                  }}
-                />
-              </Table.Cell>
-            </Table.Row>
-          );
-        })}
+        {selectedCourses.length === 0 ? (
+          <Table.Row>
+            <Table.Cell>
+              <span style={{ visibility: 'hidden' }}>a</span>
+            </Table.Cell>
+          </Table.Row>
+        ) : (
+          selectedCourses.sort(compareNames).map((c) => {
+            return (
+              <Table.Row>
+                <Table.Cell
+                  onMouseEnter={() => handleMouseEnter(c)}
+                  onMouseLeave={() => handleMouseLeave(c)}
+                >
+                  {c.name}{' '}
+                  <Icon
+                    name="delete"
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={() => {
+                      handleClick(c);
+                    }}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            );
+          })
+        )}
       </Table.Body>
     </Table>
   );

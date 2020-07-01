@@ -12,7 +12,7 @@ export function compareNames(a, b) {
 }
 
 export const getIdByDayHour = (index, course) => {
-  const TOTAL_HOURS = 9;
+  const TOTAL_HOURS = 14;
   const day = course.days[index];
   const hour = course.hours[index];
   const id = TOTAL_HOURS * day + (hour - 1);

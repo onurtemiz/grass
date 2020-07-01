@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Menu, Dropdown } from 'semantic-ui-react';
+import { Table, Menu, Dropdown, Button, Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setCell,
@@ -14,11 +14,62 @@ import { getIdByDayHour } from '../../../utils/utils';
 const CoursePlannerTable = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const cells = useSelector((state) => state.courses.cells);
+  const extraHours = useSelector((state) => state.courses.extraHours);
   const dispatch = useDispatch();
+  const [rows, setRows] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const TOTAL_HOURS = 14;
   useEffect(() => {
     insertSelectedToTable();
     removeFromTable();
   }, [selectedCourses]);
+
+  const findCellTime = (c) => {
+    dispatch(findTimeCell(c));
+  };
+
+  const notFindCellTime = (c) => {
+    dispatch(setCell({ ...c, timeFind: false, color: '#fdabab' }));
+  };
+
+  const resetCellTime = (c) => {
+    dispatch(resetTimeCell(c));
+  };
+
+  const dropdownFuncs = { findCellTime, notFindCellTime, resetCellTime };
+
+  const toggleVisibilty = () => {
+    setVisible(!visible);
+  };
+
+  useEffect(() => {
+    const rows = [];
+    for (let i = 0; i < TOTAL_HOURS; i++) {
+      rows.push(
+        <Table.Row
+          style={{
+            opacity: visible || i <= 8 ? null : '0,0',
+            position: visible || i <= 8 ? null : 'absolute',
+            left: visible || i <= 8 ? null : '-999999px',
+          }}
+        >
+          <Table.Cell>
+            <Label color="green" bold>
+              {i === 0 ? '09' : i + 9}:00
+            </Label>
+          </Table.Cell>
+          {cells
+            .filter((c) => c.time === i)
+            .sort((a, b) => a.day - b.day)
+
+            .map((c) => {
+              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
+            })}
+        </Table.Row>
+      );
+    }
+    setRows(rows);
+  }, [cells, visible]);
 
   const removeFromTable = () => {
     cells.forEach((cell) => {
@@ -47,121 +98,61 @@ const CoursePlannerTable = () => {
     });
   };
 
-  if (cells.length === 0) {
+  if (cells.length === 0 || rows.length === 0) {
     return null;
   }
-
-  const findCellTime = (c) => {
-    dispatch(findTimeCell(c));
-  };
-
-  const notFindCellTime = (c) => {
-    dispatch(setCell({ ...c, timeFind: false, color: '#fdabab' }));
-  };
-
-  const resetCellTime = (c) => {
-    dispatch(resetTimeCell(c));
-  };
-
-  const dropdownFuncs = { findCellTime, notFindCellTime, resetCellTime };
+  console.log('visible', visible);
   return (
-    <Table celled definition striped collapsing size="small">
+    <Table celled definition collapsing size="small">
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell></Table.HeaderCell>
 
-          <Table.HeaderCell>Pazartesi</Table.HeaderCell>
-          <Table.HeaderCell>Salı</Table.HeaderCell>
-          <Table.HeaderCell>Çarşamba</Table.HeaderCell>
-          <Table.HeaderCell>Perşembe</Table.HeaderCell>
-          <Table.HeaderCell>Cuma</Table.HeaderCell>
+          <Table.HeaderCell>
+            <Label color="blue" bold>
+              Pazartesi
+            </Label>
+          </Table.HeaderCell>
+          <Table.HeaderCell>
+            <Label color="blue" bold>
+              Salı
+            </Label>
+          </Table.HeaderCell>
+          <Table.HeaderCell>
+            <Label color="blue" bold>
+              Çarşamba
+            </Label>
+          </Table.HeaderCell>
+          <Table.HeaderCell>
+            <Label color="blue" bold>
+              Perşembe
+            </Label>
+          </Table.HeaderCell>
+          <Table.HeaderCell>
+            <Label color="blue" bold>
+              Cuma
+            </Label>
+          </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 
       <Table.Body>
-        <Table.Row>
-          <Table.Cell>09:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 0)
-            .sort((a, b) => a.day - b.day)
-
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>10:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 1)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>11:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 2)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>12:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 3)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>13:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 4)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>14:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 5)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>15:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 6)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>16:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 7)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>17:00</Table.Cell>
-          {cells
-            .filter((c) => c.time === 8)
-            .sort((a, b) => a.day - b.day)
-            .map((c) => {
-              return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
-            })}
-        </Table.Row>
+        {rows.map((r) => {
+          return r;
+        })}
       </Table.Body>
+      <Table.Footer fullWidth>
+        <Table.Row textAlign="center" column={1}>
+          <Table.Cell selectable colSpan="6" onClick={() => toggleVisibilty()}>
+            <Icon
+              color={extraHours ? 'red' : 'blue'}
+              name={visible ? 'sort up' : 'dropdown'}
+              size="large"
+              onClick={() => toggleVisibilty()}
+            />
+          </Table.Cell>
+        </Table.Row>
+      </Table.Footer>
     </Table>
   );
 };

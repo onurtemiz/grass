@@ -6,12 +6,17 @@ const baseUrl =
     ? 'http://localhost:3001/api/courses'
     : '/api/courses';
 
-const searchCourse = async (search, findTime) => {
+const searchCourse = async (search, findTime, notFindTime) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/search?q=${search}&t=${findTime}`,
-      config
-    );
+    const url =
+      findTime.length > 0 && notFindTime.length > 0
+        ? `${baseUrl}/search?q=${search}&t=${findTime}&nt=${notFindTime}`
+        : findTime.length > 0
+        ? `${baseUrl}/search?q=${search}&t=${findTime}`
+        : notFindTime.length > 0
+        ? `${baseUrl}/search?q=${search}&nt=${notFindTime}`
+        : `${baseUrl}/search?q=${search}`;
+    const res = await axios.get(url, config);
     return res.data;
   } catch (e) {
     return e.response

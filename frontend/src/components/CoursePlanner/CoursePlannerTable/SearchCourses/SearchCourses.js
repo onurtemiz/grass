@@ -8,6 +8,8 @@ const SearchCourses = () => {
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
   const findTime = useSelector((state) => state.courses.findTime);
+  const notFindTime = useSelector((state) => state.courses.notFindTime);
+
   const [search, setSearch] = useState('');
   const [currentCourses, setCurrentCourses] = useState([]);
 
@@ -15,14 +17,15 @@ const SearchCourses = () => {
     dispatch(
       searchCourse(
         search,
-        findTime.map((t) => t.id)
+        findTime.map((t) => t.id),
+        notFindTime.map((t) => t.id)
       )
     );
-  }, [search, findTime]);
+  }, [search, findTime, notFindTime]);
 
   useEffect(() => {
-    setCurrentCourses(filterCourses(courses, search, findTime));
-  }, [courses, findTime]);
+    setCurrentCourses(filterCourses(courses, search, findTime, notFindTime));
+  }, [courses, findTime, notFindTime]);
 
   return (
     <>
@@ -51,7 +54,7 @@ const SearchCourses = () => {
   );
 };
 
-const filterCourses = (courses, search, findTime) => {
+const filterCourses = (courses, search, findTime, notFindTime) => {
   let s = search.toLocaleUpperCase('tr-TR');
   let currentCourses = courses
     .filter(
@@ -63,7 +66,6 @@ const filterCourses = (courses, search, findTime) => {
   if (findTime.length > 0) {
     currentCourses = currentCourses.filter((course) => {
       let q = 0;
-
       course.days.forEach((d, i) => {
         findTime.forEach((t) => {
           if (course.days[i] === t.day && course.hours[i] === t.hour) {
@@ -73,6 +75,21 @@ const filterCourses = (courses, search, findTime) => {
       });
       return q === findTime.length;
     });
+  }
+  if (notFindTime.length > 0) {
+    console.log('currentCourses', currentCourses);
+    currentCourses = currentCourses.filter((course) => {
+      let found = false;
+      course.days.forEach((d, i) => {
+        notFindTime.forEach((t) => {
+          if (course.days[i] === t.day && course.hours[i] === t.hour) {
+            found = true;
+          }
+        });
+      });
+      return !found;
+    });
+    console.log('currentCourses', currentCourses);
   }
 
   return currentCourses;

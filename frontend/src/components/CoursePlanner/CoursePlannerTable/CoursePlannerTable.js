@@ -7,6 +7,7 @@ import {
   resetTimeCell,
   removeCourseFromCell,
   addCourseToCell,
+  notFindTimeCell,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
@@ -29,7 +30,7 @@ const CoursePlannerTable = () => {
   };
 
   const notFindCellTime = (c) => {
-    dispatch(setCell({ ...c, timeFind: false, color: '#fdabab' }));
+    dispatch(notFindTimeCell(c));
   };
 
   const resetCellTime = (c) => {

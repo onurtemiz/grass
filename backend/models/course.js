@@ -13,6 +13,7 @@ const courseSchema = new mongoose.Schema({
   ects: { type: String, required: true },
   fullName: { type: String, required: true },
   parentName: { type: String, required: true },
+  cellIds: [{ type: Number }],
 });
 
 courseSchema.set(uniqueValidator);
@@ -25,5 +26,69 @@ courseSchema.set('toJSON', {
     delete returnedObject.__v;
   },
 });
+
+courseSchema.statics.getSearchResult = function (search) {
+  return this.find({
+    $and: [
+      {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { parentName: { $regex: search, $options: 'i' } },
+        ],
+      },
+    ],
+  })
+    .sort({ name: 1 })
+    .limit(10);
+};
+
+courseSchema.statics.getTSearchResult = function (search, times) {
+  return this.find({
+    $and: [
+      ...times,
+      {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { parentName: { $regex: search, $options: 'i' } },
+        ],
+      },
+    ],
+  })
+    .sort({ name: 1 })
+    .limit(50);
+};
+
+courseSchema.statics.getTNSearchResult = function (search, times, ntimes) {
+  return this.find({
+    $and: [
+      ...times,
+      ...ntimes,
+      {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { parentName: { $regex: search, $options: 'i' } },
+        ],
+      },
+    ],
+  })
+    .sort({ name: 1 })
+    .limit(50);
+};
+
+courseSchema.statics.getNSearchResult = function (search, ntimes) {
+  return this.find({
+    $and: [
+      ...ntimes,
+      {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { parentName: { $regex: search, $options: 'i' } },
+        ],
+      },
+    ],
+  })
+    .sort({ name: 1 })
+    .limit(50);
+};
 
 module.exports = mongoose.model('Course', courseSchema);

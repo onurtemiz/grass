@@ -28,6 +28,7 @@ const initialState = {
   selectedCourses: [],
   cells: getCells(),
   findTime: [],
+  notFindTime: [],
   tryEmptyDay: false,
   conflict: {
     makeConflict: false,
@@ -72,20 +73,54 @@ const courseReducer = (state = initialState, action) => {
       const otherCells1 = state.cells.filter(
         (c) => c.id !== action.data.cell.id
       );
-      const findTime = state.findTime.concat(action.data.time);
+      const otherFindTimes = state.findTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
+      const otherNotFindTimes2 = state.notFindTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
       return {
         ...state,
-        findTime,
+        findTime: [...otherFindTimes, action.data.time],
+        notFindTime: otherNotFindTimes2,
         cells: [...otherCells1, action.data.cell],
       };
-    case 'RESET_TIME_CELL':
-      const otherCells2 = state.cells.filter((c) => c.id !== action.data.id);
-      const lostTime = state.findTime.filter((t) => t.id !== action.data.id);
+    case 'NOT_FIND_TIME_CELL':
+      const otherCells0 = state.cells.filter(
+        (c) => c.id !== action.data.cell.id
+      );
+      const otherNotFindTimes = state.notFindTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
+      const otherFindTimes1 = state.findTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
       return {
         ...state,
-        findTime: lostTime,
-        cells: [...otherCells2, action.data],
+        notFindTime: [...otherNotFindTimes, action.data.time],
+        findTime: otherFindTimes1,
+        cells: [...otherCells0, action.data.cell],
       };
+
+    case 'RESET_TIME_CELL':
+      const otherCells2 = state.cells.filter(
+        (c) => c.id !== action.data.cell.id
+      );
+
+      const proplessFind = state.findTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
+      const proplessNotFind = state.notFindTime.filter(
+        (t) => t.id !== action.data.time.id
+      );
+
+      return {
+        ...state,
+        findTime: proplessFind,
+        notFindTime: proplessNotFind,
+        cells: [...otherCells2, action.data.cell],
+      };
+
     case 'ADD_COURSE_TO_CELL':
       const foundCell = state.cells.find((c) => c.id === action.data.cell.id);
       const cellCourses = foundCell.courses.filter(
@@ -271,17 +306,36 @@ export const resetTimeCell = (cell) => {
     dispatch({
       type: 'RESET_TIME_CELL',
       data: {
-        ...cell,
-        timeFind: null,
-        color: null,
+        cell: {
+          ...cell,
+          timeFind: null,
+          color: null,
+        },
+        time: { id: cell.id, day: cell.day, hour: cell.time + 1 },
       },
     });
   };
 };
 
-export const searchCourse = (search, findTime) => {
+export const notFindTimeCell = (cell) => {
   return async (dispatch) => {
-    let courses = await coursesServices.searchCourse(search, findTime);
+    dispatch({
+      type: 'NOT_FIND_TIME_CELL',
+      data: {
+        time: { id: cell.id, day: cell.day, hour: cell.time + 1 },
+        cell: { ...cell, timeFind: false, color: '#fdabab' },
+      },
+    });
+  };
+};
+
+export const searchCourse = (search, findTime, notFindTime) => {
+  return async (dispatch) => {
+    let courses = await coursesServices.searchCourse(
+      search,
+      findTime,
+      notFindTime
+    );
     if (courses.error) {
       toast.error(`${courses.error}`, {
         position: 'bottom-left',

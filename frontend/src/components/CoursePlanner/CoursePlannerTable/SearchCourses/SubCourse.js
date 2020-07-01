@@ -40,6 +40,23 @@ const SubCourse = ({ course }) => {
     }
   };
 
+  const convertDays = (days) => {
+    days = days.map((d) => {
+      if (d === 0) {
+        return 'M';
+      } else if (d === 1) {
+        return 'T';
+      } else if (d === 2) {
+        return 'W';
+      } else if (d === 3) {
+        return 'Th';
+      } else {
+        return 'F';
+      }
+    });
+    return days;
+  };
+
   return (
     <div
       style={{
@@ -68,7 +85,7 @@ const SubCourse = ({ course }) => {
         <Card.Description>
           <Label color="blue" bold pointer>
             <Icon name="calendar" />
-            {course.days}
+            {convertDays(course.days)}
           </Label>{' '}
           •{' '}
           <Label color="green" bold pointer>

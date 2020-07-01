@@ -21,6 +21,8 @@ const SearchCourses = () => {
     setCurrentCourses(filterCourses(search, courses));
   }, [courses]);
 
+  
+
   return (
     <>
       <Input

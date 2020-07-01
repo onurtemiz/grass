@@ -15,20 +15,7 @@ export const getIdByDayHour = (index, course) => {
   const TOTAL_HOURS = 9;
   const day = course.days[index];
   const hour = course.hours[index];
-  let id = 0;
-  if (day === 'M') {
-    id += 0;
-  } else if (day === 'T') {
-    id += TOTAL_HOURS * 1;
-  } else if (day === 'W') {
-    id += TOTAL_HOURS * 2;
-  } else if (day === 'Th') {
-    id += TOTAL_HOURS * 3;
-  } else if (day === 'F') {
-    id += TOTAL_HOURS * 4;
-  }
-
-  id += hour - 1;
+  const id = TOTAL_HOURS * day + (hour - 1);
   return id;
 };
 

@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   addSelectedCourse,
   removeSelectedCourse,
+  onHoverCourse,
+  offHoverCourse,
 } from '../../../../reducers/courseReducer';
 
 const SubCourse = ({ course }) => {
@@ -13,28 +15,28 @@ const SubCourse = ({ course }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if (foundCourse && foundCourse.hover) {
-      dispatch(addSelectedCourse(course, false));
+    if (foundCourse && foundCourse.hover == false) {
+      dispatch(removeSelectedCourse(course));
     } else {
-      if (foundCourse) {
-        dispatch(removeSelectedCourse(course));
-      } else {
-        dispatch(addSelectedCourse(course, false));
-      }
+      dispatch(addSelectedCourse(course, false, true));
     }
   };
 
   const handleMouseEnter = () => {
     const isPresent = selectedCourses.find((c) => c.id === course.id);
     if (!isPresent) {
-      dispatch(addSelectedCourse(course, true));
+      dispatch(addSelectedCourse(course, true, false));
+    } else {
+      dispatch(onHoverCourse(course));
     }
   };
 
   const handleMouseLeave = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if (foundCourse && foundCourse.hover) {
+    if (foundCourse && !foundCourse.clicked) {
       dispatch(removeSelectedCourse(foundCourse));
+    } else if (foundCourse && foundCourse.hover) {
+      dispatch(offHoverCourse(foundCourse));
     }
   };
 

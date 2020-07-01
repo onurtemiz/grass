@@ -8,7 +8,7 @@ const courseSchema = new mongoose.Schema({
   sectionCode: { type: String, required: true },
   name: { type: String, required: true },
   hours: [{ type: Number }],
-  days: [{ type: String }],
+  days: [{ type: mongoose.Schema.Types.Mixed }],
   credits: { type: String, required: true },
   ects: { type: String, required: true },
   fullName: { type: String, required: true },

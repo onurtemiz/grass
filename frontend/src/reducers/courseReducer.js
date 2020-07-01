@@ -30,16 +30,6 @@ const initialState = {
   findTime: [],
 };
 
-export function compareDays(a, b) {
-  if (a.day < b.day) {
-    return -1;
-  }
-  if (a.day > b.day) {
-    return 1;
-  }
-  return 0;
-}
-
 const courseReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SEARCH_COURSES':
@@ -59,14 +49,13 @@ const courseReducer = (state = initialState, action) => {
       const otherSelectedCourses = state.selectedCourses.filter(
         (c) => c.id !== action.data.id
       );
+
       return { ...state, selectedCourses: otherSelectedCourses };
     case 'SET_CELL':
       const otherCells = state.cells.filter((c) => c.id !== action.data.id);
       return {
         ...state,
-        cells: [...otherCells, action.data]
-          .sort((a, b) => b.time - a.time)
-          .sort(compareDays),
+        cells: [...otherCells, action.data],
       };
     case 'FIND_TIME_CELL':
       const otherCells1 = state.cells.filter(
@@ -76,9 +65,7 @@ const courseReducer = (state = initialState, action) => {
       return {
         ...state,
         findTime,
-        cells: [...otherCells1, action.data.cell]
-          .sort((a, b) => b.time - a.time)
-          .sort(compareDays),
+        cells: [...otherCells1, action.data.cell],
       };
     case 'RESET_TIME_CELL':
       const otherCells2 = state.cells.filter((c) => c.id !== action.data.id);
@@ -86,26 +73,101 @@ const courseReducer = (state = initialState, action) => {
       return {
         ...state,
         findTime: lostTime,
-        cells: [...otherCells2, action.data]
-          .sort((a, b) => b.time - a.time)
-          .sort(compareDays),
+        cells: [...otherCells2, action.data],
+      };
+    case 'ADD_COURSE_TO_CELL':
+      const foundCell = state.cells.find((c) => c.id === action.data.cell.id);
+      const cellCourses = foundCell.courses.filter(
+        (c) => c.id !== action.data.course.id
+      );
+      const otherCells3 = state.cells.filter(
+        (c) => c.id !== action.data.cell.id
+      );
+      return {
+        ...state,
+        cells: [
+          ...otherCells3,
+          {
+            ...foundCell,
+            courses: [...cellCourses, action.data.course],
+          },
+        ],
+      };
+    case 'ON_HOVER_COURSE':
+      const hoverlessCourses = state.selectedCourses.filter(
+        (c) => c.id !== action.data.id
+      );
+      const foundHoverCourse = state.selectedCourses.find(
+        (c) => c.id === action.data.id
+      );
+
+      return {
+        ...state,
+        selectedCourses: [
+          ...hoverlessCourses,
+          { ...foundHoverCourse, hover: true },
+        ],
+      };
+    case 'OFF_HOVER_COURSE':
+      const hoverCourses = state.selectedCourses.filter(
+        (c) => c.id !== action.data.id
+      );
+
+      const foundHoverlessCourse = state.selectedCourses.find(
+        (c) => c.id === action.data.id
+      );
+      return {
+        ...state,
+        selectedCourses: [
+          ...hoverCourses,
+          { ...foundHoverlessCourse, hover: false },
+        ],
+      };
+    case 'REMOVE_COURSE_FROM_CELL':
+      const foundCell2 = state.cells.find((c) => c.id === action.data.cell.id);
+      const cellCourses2 = action.data.cell.courses.filter(
+        (c) => c.id !== action.data.course.id
+      );
+      const otherCells4 = state.cells.filter(
+        (c) => c.id !== action.data.cell.id
+      );
+      return {
+        ...state,
+        cells: [...otherCells4, { ...foundCell2, courses: cellCourses2 }],
       };
     default:
       return state;
   }
 };
 
-export const addSelectedCourse = (course, hover) => {
-  return async (dispatch) => {
+export const onHoverCourse = (course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ON_HOVER_COURSE',
+      data: course,
+    });
+  };
+};
+export const offHoverCourse = (course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'OFF_HOVER_COURSE',
+      data: course,
+    });
+  };
+};
+
+export const addSelectedCourse = (course, hover, clicked) => {
+  return (dispatch) => {
     dispatch({
       type: 'ADD_SELECTED_COURSE',
-      data: { ...course, hover },
+      data: { ...course, hover, clicked },
     });
   };
 };
 
 export const removeSelectedCourse = (course) => {
-  return async (dispatch) => {
+  return (dispatch) => {
     dispatch({
       type: 'REMOVE_SELECTED_COURSE',
       data: course,
@@ -114,10 +176,28 @@ export const removeSelectedCourse = (course) => {
 };
 
 export const setCell = (cell) => {
-  return async (dispatch) => {
+  return (dispatch) => {
     dispatch({
       type: 'SET_CELL',
       data: cell,
+    });
+  };
+};
+
+export const addCourseToCell = (cell, course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ADD_COURSE_TO_CELL',
+      data: { cell, course },
+    });
+  };
+};
+
+export const removeCourseFromCell = (cell, course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'REMOVE_COURSE_FROM_CELL',
+      data: { cell, course },
     });
   };
 };
@@ -147,9 +227,9 @@ export const resetTimeCell = (cell) => {
   };
 };
 
-export const searchCourse = (search,findTime) => {
+export const searchCourse = (search, findTime) => {
   return async (dispatch) => {
-    let courses = await coursesServices.searchCourse(search,findTime);
+    let courses = await coursesServices.searchCourse(search, findTime);
     if (courses.error) {
       toast.error(`${courses.error}`, {
         position: 'bottom-left',
@@ -163,7 +243,7 @@ export const searchCourse = (search,findTime) => {
       return;
     }
     courses = courses.map((c) => {
-      return { ...c, hover: false };
+      return { ...c, hover: false, clicked: false };
     });
     dispatch({
       type: 'SEARCH_COURSES',

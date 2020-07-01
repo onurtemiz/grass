@@ -5,6 +5,8 @@ import {
   setCell,
   findTimeCell,
   resetTimeCell,
+  removeCourseFromCell,
+  addCourseToCell,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
@@ -14,22 +16,19 @@ const CoursePlannerTable = () => {
   const cells = useSelector((state) => state.courses.cells);
   const dispatch = useDispatch();
   useEffect(() => {
-    removeFromTable();
     insertSelectedToTable();
+    removeFromTable();
   }, [selectedCourses]);
 
   const removeFromTable = () => {
     cells.forEach((cell) => {
       if (cell.courses.length !== 0) {
         cell.courses.forEach((cellCourse) => {
-          const isPresent = selectedCourses.find(
+          const course = selectedCourses.find(
             (selectedCourse) => selectedCourse.id === cellCourse.id
           );
-          if (!isPresent) {
-            const cellCourses = cell.courses.filter(
-              (c) => c.id !== cellCourse.id
-            );
-            dispatch(setCell({ ...cell, courses: cellCourses }));
+          if (!course) {
+            dispatch(removeCourseFromCell(cell, cellCourse));
           }
         });
       }
@@ -42,21 +41,8 @@ const CoursePlannerTable = () => {
         let cellId = getIdByDayHour(index, selectedCourse);
         let cell = cells.find((ce) => ce.id === cellId);
         if (!cell) return;
-        const isCellPresent = cell.courses.find(
-          (cellCourse) => cellCourse.id === selectedCourse.id
-        );
-        if (!isCellPresent) {
-          dispatch(
-            setCell({ ...cell, courses: [...cell.courses, selectedCourse] })
-          );
-        } else {
-          const filteredCourses = cell.courses.filter(
-            (cellCourse) => cellCourse.id !== selectedCourse.id
-          );
-          dispatch(
-            setCell({ ...cell, courses: [...filteredCourses, selectedCourse] })
-          );
-        }
+        console.log('cell', cell);
+        dispatch(addCourseToCell(cell, selectedCourse));
       });
     });
   };
@@ -97,6 +83,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>09:00</Table.Cell>
           {cells
             .filter((c) => c.time === 0)
+            .sort((a, b) => a.day - b.day)
 
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
@@ -106,6 +93,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>10:00</Table.Cell>
           {cells
             .filter((c) => c.time === 1)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -114,6 +102,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>11:00</Table.Cell>
           {cells
             .filter((c) => c.time === 2)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -122,6 +111,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>12:00</Table.Cell>
           {cells
             .filter((c) => c.time === 3)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -130,6 +120,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>13:00</Table.Cell>
           {cells
             .filter((c) => c.time === 4)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -138,6 +129,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>14:00</Table.Cell>
           {cells
             .filter((c) => c.time === 5)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -146,6 +138,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>15:00</Table.Cell>
           {cells
             .filter((c) => c.time === 6)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -154,6 +147,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>16:00</Table.Cell>
           {cells
             .filter((c) => c.time === 7)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}
@@ -162,6 +156,7 @@ const CoursePlannerTable = () => {
           <Table.Cell>17:00</Table.Cell>
           {cells
             .filter((c) => c.time === 8)
+            .sort((a, b) => a.day - b.day)
             .map((c) => {
               return <CellDropdown key={c.id} c={c} f={dropdownFuncs} />;
             })}

@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Label } from '../../Nav/NavTheme';
-import { removeSelectedCourse } from '../../../reducers/courseReducer';
+import {
+  removeSelectedCourse,
+  onHoverCourse,
+  offHoverCourse,
+} from '../../../reducers/courseReducer';
+import { compareNames } from '../../../utils/utils';
 
 const SelectedCourses = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -18,6 +23,14 @@ const SelectedCourses = () => {
 
   const handleClick = (course) => {
     dispatch(removeSelectedCourse(course));
+  };
+
+  const handleMouseEnter = (course) => {
+    dispatch(onHoverCourse(course));
+  };
+
+  const handleMouseLeave = (course) => {
+    dispatch(offHoverCourse(course));
   };
 
   return (
@@ -36,10 +49,13 @@ const SelectedCourses = () => {
       </Table.Header>
 
       <Table.Body>
-        {selectedCourses.map((c) => {
+        {selectedCourses.sort(compareNames).map((c) => {
           return (
             <Table.Row>
-              <Table.Cell>
+              <Table.Cell
+                onMouseEnter={() => handleMouseEnter(c)}
+                onMouseLeave={() => handleMouseLeave(c)}
+              >
                 {c.name}{' '}
                 <Icon
                   name="delete"

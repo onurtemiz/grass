@@ -3,6 +3,7 @@ import coursesServices from '../services/courses';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
 import { getIdByDayHour } from '../utils/utils';
+
 const getCells = () => {
   let cells = [];
   let id = 0;
@@ -32,8 +33,14 @@ const initialState = {
   tryEmptyDay: false,
   conflict: {
     makeConflict: false,
+    conflictRange: 5,
+    conflictRequired: false,
   },
   extraHours: false,
+  requiredCourses: [{ courses: [], id: lodash.uniqueId() }],
+  creditsRange: [15, 21],
+  hoursRange: [20, 30],
+  scenarios: [],
 };
 
 const courseReducer = (state = initialState, action) => {
@@ -194,9 +201,184 @@ const courseReducer = (state = initialState, action) => {
           makeConflict: !state.conflict.makeConflict,
         },
       };
+    case 'ADD_NEW_REQUIRED_COLUMN':
+      return {
+        ...state,
+        requiredCourses: [
+          ...state.requiredCourses,
+          { courses: [], id: lodash.uniqueId() },
+        ],
+      };
+    case 'REMOVE_REQUIRED_COLUMN':
+      const otherRequiredCourses = state.requiredCourses.filter(
+        (rc) => rc.id !== action.data.id
+      );
+      return {
+        ...state,
+        requiredCourses: otherRequiredCourses,
+      };
+
+    case 'ADD_TO_REQUIRED_COLUMN':
+      const addOtherRequiredCourses = state.requiredCourses.filter(
+        (rc) => rc.id !== action.data.rc.id
+      );
+      return {
+        ...state,
+        requiredCourses: [
+          ...addOtherRequiredCourses,
+          {
+            ...action.data.rc,
+            courses: [...action.data.rc.courses, action.data.course],
+          },
+        ],
+      };
+    case 'REMOVE_FROM_REQUIRED_COLUMN':
+      const otherRcCourses = action.data.rc.courses.filter(
+        (rcCourse) => rcCourse.id !== action.data.course.id
+      );
+      const removeOtherRequiredCourses = state.requiredCourses.filter(
+        (rc) => rc.id !== action.data.rc.id
+      );
+      return {
+        ...state,
+        requiredCourses: [
+          ...removeOtherRequiredCourses,
+          {
+            ...action.data.rc,
+            courses: otherRcCourses,
+          },
+        ],
+      };
+    case 'CHANGE_CREDITS_RANGE':
+      return {
+        ...state,
+        creditsRange: action.data,
+      };
+    case 'CHANGE_HOURS_RANGE':
+      return {
+        ...state,
+        hoursRange: action.data,
+      };
+    case 'CHANGE_CONFLICT_RANGE':
+      return {
+        ...state,
+        conflict: { ...state.conflict, conflictRange: action.data },
+      };
+    case 'CHANGE_CONFLICT_REQUIRED':
+      return {
+        ...state,
+        conflict: {
+          ...state.conflict,
+          conflictRequired: !state.conflict.conflictRequired,
+        },
+      };
+    case 'CHANGE_COURSE_VISIBILITY':
+      const otherVisCourses = state.selectedCourses.filter(
+        (sc) => sc.id !== action.data.id
+      );
+      return {
+        ...state,
+        selectedCourses: [
+          ...otherVisCourses,
+          { ...action.data, visible: !action.data.visible },
+        ],
+      };
+    case 'SET_SCENARIOS':
+      return {
+        ...state,
+        scenarios: action.data,
+      };
     default:
       return state;
   }
+};
+
+export const setScenarios = (scenarios) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SET_SCENARIOS',
+      data: scenarios,
+    });
+  };
+};
+
+export const changeCourseVisibility = (course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_COURSE_VISIBILITY',
+      data: course,
+    });
+  };
+};
+
+export const changeConflictRequired = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_CONFLICT_REQUIRED',
+    });
+  };
+};
+
+export const changeHoursRange = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_HOURS_RANGE',
+      data: value,
+    });
+  };
+};
+
+export const changeConflictRange = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_CONFLICT_RANGE',
+      data: value,
+    });
+  };
+};
+
+export const changeCreditsRange = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_CREDITS_RANGE',
+      data: value,
+    });
+  };
+};
+
+export const addToRequiredColumn = (rc, course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ADD_TO_REQUIRED_COLUMN',
+      data: { rc, course },
+    });
+  };
+};
+
+export const removeFromRequiredColumn = (rc, course) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'REMOVE_FROM_REQUIRED_COLUMN',
+      data: { rc, course },
+    });
+  };
+};
+
+export const addNewRequiredColumn = () => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ADD_NEW_REQUIRED_COLUMN',
+    });
+  };
+};
+
+export const removeRequiredColumn = (column) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'REMOVE_REQUIRED_COLUMN',
+      data: column,
+    });
+  };
 };
 
 const checkExtraHour = (courses) => {
@@ -349,7 +531,7 @@ export const searchCourse = (search, findTime, notFindTime) => {
       return;
     }
     courses = courses.map((c) => {
-      return { ...c, hover: false, clicked: false };
+      return { ...c, hover: false, clicked: false, visible: true };
     });
     dispatch({
       type: 'SEARCH_COURSES',

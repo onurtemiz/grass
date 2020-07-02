@@ -93,7 +93,7 @@ const Nav = ({ search, admin }) => {
             ÇİM
           </Label>{' '}
           <Label pointer color="blue">
-            ALPHA v0.9.4
+            BETA
           </Label>
         </label>
       </Menu.Item>

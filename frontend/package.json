@@ -13,6 +13,8 @@
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "notistack": "^0.9.14",
+    "rc-slider": "^9.3.1",
+    "rc-tooltip": "^4.2.1",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",
     "react-confirm-alert": "^2.6.1",

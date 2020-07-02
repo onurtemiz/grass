@@ -1,28 +1,33 @@
 import React from 'react';
 import { Table, Grid, Button, Icon } from 'semantic-ui-react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addNewRequiredColumn,
+  removeRequiredColumn,
+} from '../../../reducers/courseReducer';
+import RequiredColumn from './RequiredColumn';
 const RequiredCourses = () => {
+  const dispatch = useDispatch();
+  const requiredCourses = useSelector((state) => state.courses.requiredCourses);
+
+  const handleAddColumn = () => {
+    dispatch(addNewRequiredColumn());
+  };
+
   return (
     <>
-      <Grid.Column stretched>
-        <Table style={{ height: '50%' }}>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Zorunlu Ders Grubu 1</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
+      {requiredCourses
+        .sort((a, b) => Number(a.id) - Number(b.id))
+        .map((rc, i) => {
+          return <RequiredColumn rc={rc} i={i} />;
+        })}
 
-          <Table.Body>
-            <Table.Row>
-              <Button basic fluid>
-                Seçili Derslerden EKLE
-              </Button>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      </Grid.Column>
-      <Grid.Column>
-        <Button icon>
+      <Grid.Column
+        style={{
+          visibility: requiredCourses.length > 9 ? 'hidden' : 'visible',
+        }}
+      >
+        <Button icon onClick={() => handleAddColumn()}>
           <Icon name="add" />
         </Button>
       </Grid.Column>

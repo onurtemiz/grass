@@ -6,6 +6,7 @@ import {
   removeSelectedCourse,
   onHoverCourse,
   offHoverCourse,
+  changeCourseVisibility,
 } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
 
@@ -31,6 +32,10 @@ const SelectedCourses = () => {
 
   const handleMouseLeave = (course) => {
     dispatch(offHoverCourse(course));
+  };
+
+  const toggleCourseVisiblity = (course) => {
+    dispatch(changeCourseVisibility(course));
   };
 
   return (
@@ -66,10 +71,17 @@ const SelectedCourses = () => {
                   {c.name}{' '}
                   <Icon
                     name="delete"
+                    color="green"
                     style={{ float: 'right', cursor: 'pointer' }}
                     onClick={() => {
                       handleClick(c);
                     }}
+                  />
+                  <Icon
+                    name={c.visible ? 'eye' : 'eye slash'}
+                    color="green"
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={() => toggleCourseVisiblity(c)}
                   />
                 </Table.Cell>
               </Table.Row>

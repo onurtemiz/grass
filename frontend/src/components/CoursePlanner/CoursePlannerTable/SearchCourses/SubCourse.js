@@ -15,7 +15,7 @@ const SubCourse = ({ course }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if (foundCourse && foundCourse.hover == false) {
+    if (foundCourse && foundCourse.clicked) {
       dispatch(removeSelectedCourse(course));
     } else {
       dispatch(addSelectedCourse(course, false, true));

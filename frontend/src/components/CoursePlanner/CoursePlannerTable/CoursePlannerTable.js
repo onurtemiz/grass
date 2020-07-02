@@ -104,7 +104,7 @@ const CoursePlannerTable = () => {
   }
   console.log('visible', visible);
   return (
-    <Table celled definition collapsing size="small">
+    <Table celled definition size="small">
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell></Table.HeaderCell>
@@ -146,7 +146,7 @@ const CoursePlannerTable = () => {
         <Table.Row textAlign="center" column={1}>
           <Table.Cell selectable colSpan="6" onClick={() => toggleVisibilty()}>
             <Icon
-              color={extraHours ? 'red' : 'blue'}
+              color={extraHours ? 'green' : 'blue'}
               name={visible ? 'sort up' : 'dropdown'}
               size="large"
               onClick={() => toggleVisibilty()}
@@ -165,17 +165,19 @@ const CellDropdown = ({ c, f }) => {
       style={{ backgroundColor: c.color ? c.color : null }}
       textAlign="center"
     >
-      {c.courses.length !== 0
-        ? c.courses.map((cellCourse) => {
-            return (
-              <>
-                <Label color={cellCourse.hover ? 'green' : 'blue'} bold>
-                  {cellCourse.name}
-                </Label>
-                <br />
-              </>
-            );
-          })
+      {c.courses.filter((cCourse) => cCourse.visible).length !== 0
+        ? c.courses
+            .filter((cCourse) => cCourse.visible)
+            .map((cellCourse) => {
+              return (
+                <>
+                  <Label color={cellCourse.hover ? 'green' : 'blue'} bold>
+                    {cellCourse.name}
+                  </Label>
+                  <br />
+                </>
+              );
+            })
         : null}
       <Dropdown icon="" fluid>
         <Dropdown.Menu>

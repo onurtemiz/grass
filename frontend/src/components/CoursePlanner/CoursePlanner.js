@@ -8,23 +8,25 @@ import ProgramOptions from './ProgramOptions.js/ProgramOptions';
 
 const CoursePlanner = () => {
   return (
-    <Grid columns={3} style={{ margin: '0.5em' }}>
-      <Grid.Row>
-        <Grid.Column stretched>
-          <CoursePlannerTable />
-        </Grid.Column>
-        <Grid.Column>
-          <SelectedCourses />
-        </Grid.Column>
-        <Grid.Column>
-          <SearchCourses />
-        </Grid.Column>
-      </Grid.Row>
-      <ProgramOptions />
-      <Grid.Row columns={5}>
-        <RequiredCourses />
-      </Grid.Row>
-    </Grid>
+    <div style={{ height: '150vh' }}>
+      <Grid columns={3} style={{ margin: '0.5em' }}>
+        <Grid.Row>
+          <Grid.Column stretched width={6}>
+            <CoursePlannerTable />
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <SelectedCourses />
+          </Grid.Column>
+          <Grid.Column>
+            <SearchCourses stretched />
+          </Grid.Column>
+        </Grid.Row>
+        <ProgramOptions />
+        <Grid.Row columns={5}>
+          <RequiredCourses />
+        </Grid.Row>
+      </Grid>
+    </div>
   );
 };
 

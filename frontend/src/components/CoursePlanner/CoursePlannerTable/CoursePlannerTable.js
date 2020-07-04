@@ -6,6 +6,7 @@ import {
   Button,
   Icon,
   Pagination,
+  Popup,
 } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -88,8 +89,9 @@ const CoursePlannerTable = () => {
             position: visible || i <= 8 ? null : 'absolute',
             left: visible || i <= 8 ? null : '-999999px',
           }}
+          key={i}
         >
-          <Table.Cell>
+          <Table.Cell style={{ backgroundColor: '#F9FAFB' }}>
             <Label color="green" bold>
               {i === 0 ? '09' : i + 9}:00
             </Label>
@@ -128,7 +130,6 @@ const CoursePlannerTable = () => {
         let cellId = getIdByDayHour(index, selectedCourse);
         let cell = cells.find((ce) => ce.id === cellId);
         if (!cell) return;
-        console.log('cell', cell);
         dispatch(addCourseToCell(cell, selectedCourse));
       });
     });
@@ -137,12 +138,19 @@ const CoursePlannerTable = () => {
   if (cells.length === 0 || rows.length === 0) {
     return null;
   }
-  console.log('visible', visible);
   return (
-    <Table celled definition size="small">
+    <Table celled size="small">
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell></Table.HeaderCell>
+          <Table.HeaderCell textAlign="center">
+            <Popup
+              content="Herhangi bir saate tıkla"
+              trigger={
+                <Icon name="question circle outline" color="grey" size="big" />
+              }
+              position="right center"
+            />
+          </Table.HeaderCell>
 
           <Table.HeaderCell>
             <Label color="blue" bold>
@@ -227,7 +235,11 @@ const CellDropdown = ({ c, f }) => {
             .map((cellCourse) => {
               return (
                 <>
-                  <Label color={cellCourse.hover ? 'green' : 'blue'} bold>
+                  <Label
+                    color={cellCourse.hover ? 'green' : 'blue'}
+                    bold
+                    key={cellCourse.name}
+                  >
                     {cellCourse.name}
                   </Label>
                   <br />

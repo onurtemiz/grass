@@ -3,6 +3,7 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeScenariosSlider } from '../../../reducers/courseReducer';
+import { Label } from '../../Nav/NavTheme';
 
 const ScenariosSlider = () => {
   const scenariosSlider = useSelector((state) => state.courses.scenariosSlider);
@@ -13,14 +14,18 @@ const ScenariosSlider = () => {
 
   return (
     <div>
-      <p>Senaryo Aralığı</p>
+      <p>
+        <Label color="blue" bold>
+          Maksimum Senaryo Sayısı
+        </Label>
+      </p>
       <Slider
         min={1}
         max={50}
         onChange={onSliderChange}
         value={scenariosSlider}
         marks={getMark(scenariosSlider)}
-        trackStyle={{ backgroundColor: '#2185d0' }}
+        trackStyle={{ backgroundColor: '#21ba45' }}
       />
     </div>
   );

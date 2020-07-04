@@ -3,28 +3,32 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCreditsRange } from '../../../reducers/courseReducer';
+import { Label } from '../../Nav/NavTheme';
 
 const CreditsSlider = () => {
   const creditsRange = useSelector((state) => state.courses.creditsRange);
   const dispatch = useDispatch();
   const onSliderChange = (value) => {
-    console.log('value', value);
     dispatch(changeCreditsRange(value));
   };
 
   return (
     <div>
-      <p>Kredi Aralığı</p>
+      <p>
+        <Label color="blue" bold>
+          Kredi Aralığı
+        </Label>
+      </p>
       <Range
         min={5}
-        max={30}
+        max={40}
         allowCross={false}
         onChange={onSliderChange}
         value={creditsRange}
         marks={getMarks(creditsRange)}
         trackStyle={[
-          { backgroundColor: '#2185d0' },
-          { backgroundColor: '#2185d0' },
+          { backgroundColor: '#21ba45' },
+          { backgroundColor: '#21ba45' },
         ]}
       />
     </div>

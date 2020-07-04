@@ -13,6 +13,7 @@ const CoursePlanner = () => {
         <Grid.Row>
           <Grid.Column stretched width={6}>
             <CoursePlannerTable />
+            <ProgramOptions />
           </Grid.Column>
           <Grid.Column width={4}>
             <SelectedCourses />
@@ -21,7 +22,6 @@ const CoursePlanner = () => {
             <SearchCourses stretched />
           </Grid.Column>
         </Grid.Row>
-        <ProgramOptions />
         <Grid.Row columns={5}>
           <RequiredCourses />
         </Grid.Row>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Grid, Button, Icon, Dropdown } from 'semantic-ui-react';
+import { Table, Grid, Button, Icon, Dropdown, Popup } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   removeRequiredColumn,
@@ -29,7 +29,7 @@ const RequiredColumn = ({ rc, i }) => {
   };
 
   return (
-    <Grid.Column key={rc.i}>
+    <Grid.Column style={{ marginTop: '1em' }}>
       <Table>
         <Table.Header>
           <Table.Row>
@@ -44,43 +44,58 @@ const RequiredColumn = ({ rc, i }) => {
                   style={{ float: 'right' }}
                   onClick={() => handleRemoveColumn(rc)}
                 />
-              ) : null}
+              ) : (
+                <Popup
+                  content="Zorunlu grubuna eklediğin derslerden biri kesinlikle oluşturulan programda yer alır."
+                  trigger={
+                    <Icon
+                      name="question circle outline"
+                      color="grey"
+                      style={{ float: 'right' }}
+                      size="large"
+                    />
+                  }
+                  position="top center"
+                />
+              )}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           <Table.Row>
-            <Dropdown
-              text="Seçili Derslerden EKLE"
-              className="icon"
-              button
-              basic
-              fluid
-              scrolling
-              pointing={
-                (i + 1) % 5 === 0 && narrowedCourses.length === 0
-                  ? 'right'
-                  : 'up'
-              }
-            >
-              <Dropdown.Menu>
-                {narrowedCourses.length === 0 ? (
-                  <Dropdown.Item>
-                    Buraya eklenecek başka uygun bir ders yok.
-                  </Dropdown.Item>
-                ) : (
-                  narrowedCourses.map((sc) => {
-                    return (
-                      <Dropdown.Item
-                        onClick={() => handleAddToRequiredColumn(rc, sc)}
-                      >
-                        {sc.name}
-                      </Dropdown.Item>
-                    );
-                  })
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
+            <Table.Cell>
+              <Dropdown
+                text="Seçili Derslerden EKLE"
+                className="icon"
+                button
+                basic
+                fluid
+                scrolling
+                pointing={
+                  (i + 1) % 5 === 0 && narrowedCourses.length === 0
+                    ? 'right'
+                    : 'up'
+                }
+              >
+                <Dropdown.Menu>
+                  {narrowedCourses.length === 0 ? (
+                    <Dropdown.Item>
+                      Buraya eklenecek başka uygun bir ders yok.
+                    </Dropdown.Item>
+                  ) : (
+                    narrowedCourses.map((sc) => {
+                      return (
+                        <Dropdown.Item
+                          onClick={() => handleAddToRequiredColumn(rc, sc)}
+                        >
+                          {sc.name}
+                        </Dropdown.Item>
+                      );
+                    })
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Table.Cell>
           </Table.Row>
           {rc.courses.map((rcCourse) => {
             return (

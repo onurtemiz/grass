@@ -250,7 +250,12 @@ const CreateProgram = () => {
 
   return (
     <div>
-      <Button color="blue" onClick={() => createProgram()} loading={isLoading}>
+      <Button
+        color="blue"
+        onClick={() => createProgram()}
+        loading={isLoading}
+        fluid
+      >
         {value}
       </Button>
     </div>

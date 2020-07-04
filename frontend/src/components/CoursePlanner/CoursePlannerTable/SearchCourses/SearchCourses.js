@@ -41,7 +41,8 @@ const SearchCourses = () => {
       <div
         style={{
           overflow: 'auto',
-          maxHeight: '50vh',
+          maxHeight: '70vh',
+          marginTop: '1em',
         }}
       >
         {currentCourses.length === 0

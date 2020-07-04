@@ -33,26 +33,27 @@ const ProgramOptions = () => {
   };
   return (
     <>
-      <Grid.Row columns={5}>
-        <Grid.Column>
-          <CreditsSlider />
-        </Grid.Column>
-
+      <Grid.Row>
         <Grid.Column>
           <CreateProgram />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
+      <Grid.Row style={{ marginTop: '1.6em' }}>
+        <Grid.Column>
+          <CreditsSlider />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row style={{ marginTop: '1.6em' }}>
         <Grid.Column>
           <HoursSlider />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
+      <Grid.Row style={{ marginTop: '1.6em' }}>
         <Grid.Column>
           <ScenariosSlider />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
+      <Grid.Row style={{ marginTop: '1.6em' }}>
         <Grid.Column>
           <Checkbox
             defaultChecked={tryEmptyDay}
@@ -66,7 +67,7 @@ const ProgramOptions = () => {
           />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
+      <Grid.Row style={{ marginTop: '1em' }}>
         <Grid.Column>
           <ConflictOptions />
         </Grid.Column>

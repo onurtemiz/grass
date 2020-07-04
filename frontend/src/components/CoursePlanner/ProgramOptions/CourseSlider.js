@@ -3,6 +3,7 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCourseRange } from '../../../reducers/courseReducer';
+import { Label } from '../../Nav/NavTheme';
 
 const CourseSlider = () => {
   const courseRange = useSelector((state) => state.courses.courseRange);
@@ -13,17 +14,21 @@ const CourseSlider = () => {
 
   return (
     <div>
-      <p>Ders Aralığı</p>
+      <p>
+        <Label color="blue" bold>
+          Ders Aralığı
+        </Label>
+      </p>
       <Range
-        min={1}
-        max={10}
+        min={2}
+        max={20}
         allowCross={false}
         onChange={onSliderChange}
         value={courseRange}
         marks={getMarks(courseRange)}
         trackStyle={[
-          { backgroundColor: '#2185d0' },
-          { backgroundColor: '#2185d0' },
+          { backgroundColor: '#21ba45' },
+          { backgroundColor: '#21ba45' },
         ]}
       />
     </div>

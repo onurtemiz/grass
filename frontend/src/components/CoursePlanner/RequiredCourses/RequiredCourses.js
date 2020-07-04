@@ -19,12 +19,13 @@ const RequiredCourses = () => {
       {requiredCourses
         .sort((a, b) => Number(a.id) - Number(b.id))
         .map((rc, i) => {
-          return <RequiredColumn rc={rc} i={i} />;
+          return <RequiredColumn rc={rc} i={i} key={rc.id} />;
         })}
 
       <Grid.Column
         style={{
           visibility: requiredCourses.length > 9 ? 'hidden' : 'visible',
+          marginTop: '1em',
         }}
       >
         <Button icon onClick={() => handleAddColumn()}>

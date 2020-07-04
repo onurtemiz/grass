@@ -9,6 +9,7 @@ import {
   changeCourseVisibility,
 } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
+import CreateProgram from '../ProgramOptions/CreateProgram';
 
 const SelectedCourses = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -39,57 +40,60 @@ const SelectedCourses = () => {
   };
 
   return (
-    <Table columns={1}>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>
-            <Label color="blue" bold>
-              Seçili Dersler
-            </Label>
-            <Label color="green" bold style={{ float: 'right' }}>
-              {credits} Kredi
-            </Label>
-          </Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-
-      <Table.Body>
-        {selectedCourses.length === 0 ? (
-          <Table.Row>
-            <Table.Cell>
-              <span style={{ visibility: 'hidden' }}>a</span>
-            </Table.Cell>
-          </Table.Row>
-        ) : (
-          selectedCourses.sort(compareNames).map((c) => {
-            return (
+    <>
+      <div style={{ maxHeight: '70vh', overflow: 'auto', marginBottom: '1em' }}>
+        <Table columns={1}>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <Label color="blue" bold>
+                  Seçili Dersler
+                </Label>
+                <Label color="green" bold style={{ float: 'right' }}>
+                  {credits} Kredi
+                </Label>
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {selectedCourses.length === 0 ? (
               <Table.Row>
-                <Table.Cell
-                  onMouseEnter={() => handleMouseEnter(c)}
-                  onMouseLeave={() => handleMouseLeave(c)}
-                >
-                  {c.name}{' '}
-                  <Icon
-                    name="delete"
-                    color="green"
-                    style={{ float: 'right', cursor: 'pointer' }}
-                    onClick={() => {
-                      handleClick(c);
-                    }}
-                  />
-                  <Icon
-                    name={c.visible ? 'eye' : 'eye slash'}
-                    color="green"
-                    style={{ float: 'right', cursor: 'pointer' }}
-                    onClick={() => toggleCourseVisiblity(c)}
-                  />
+                <Table.Cell>
+                  <span style={{ visibility: 'hidden' }}>a</span>
                 </Table.Cell>
               </Table.Row>
-            );
-          })
-        )}
-      </Table.Body>
-    </Table>
+            ) : (
+              selectedCourses.sort(compareNames).map((c) => {
+                return (
+                  <Table.Row>
+                    <Table.Cell
+                      onMouseEnter={() => handleMouseEnter(c)}
+                      onMouseLeave={() => handleMouseLeave(c)}
+                    >
+                      {c.name}{' '}
+                      <Icon
+                        name="delete"
+                        color="green"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => {
+                          handleClick(c);
+                        }}
+                      />
+                      <Icon
+                        name={c.visible ? 'eye' : 'eye slash'}
+                        color="green"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => toggleCourseVisiblity(c)}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })
+            )}
+          </Table.Body>
+        </Table>
+      </div>
+    </>
   );
 };
 

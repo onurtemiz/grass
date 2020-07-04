@@ -38,6 +38,7 @@ const ConflictOptions = () => {
           <Label
             color="blue"
             bold
+            pointer
             onClick={() => setAccordionOpen(!accordionOpen)}
           >
             Conflicte izin ver
@@ -61,7 +62,6 @@ const HoursDetails = () => {
   const conflictRange = useSelector(
     (state) => state.courses.conflict.conflictRange
   );
-  const totalHours = useSelector((state) => state.courses.totalHours);
 
   const dispatch = useDispatch();
   const onSliderChange = (value) => {
@@ -73,11 +73,11 @@ const HoursDetails = () => {
       <p>En fazla kaç saat conflict olabilsin?</p>
       <Slider
         min={1}
-        max={totalHours}
+        max={40}
         onChange={onSliderChange}
         value={conflictRange}
         marks={getMark(conflictRange)}
-        trackStyle={{ backgroundColor: '#2185d0' }}
+        trackStyle={{ backgroundColor: '#21ba45' }}
       />
     </div>
   );

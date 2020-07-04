@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Menu, Dropdown, Button, Icon } from 'semantic-ui-react';
+import {
+  Table,
+  Menu,
+  Dropdown,
+  Button,
+  Icon,
+  Pagination,
+} from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setCell,
@@ -8,22 +15,50 @@ import {
   removeCourseFromCell,
   addCourseToCell,
   notFindTimeCell,
+  setCurrentScenario,
+  changeCoursesVisibility,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
 
 const CoursePlannerTable = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
+  const scenarios = useSelector((state) => state.courses.scenarios);
+  const currentScenario = useSelector((state) => state.courses.currentScenario);
+  const [scenariosActivePage, setScenariosActivePage] = useState(0);
   const cells = useSelector((state) => state.courses.cells);
   const extraHours = useSelector((state) => state.courses.extraHours);
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [paginationVisible, setPaginationVisible] = useState(false);
   const TOTAL_HOURS = 14;
   useEffect(() => {
     insertSelectedToTable();
     removeFromTable();
   }, [selectedCourses]);
+
+  useEffect(() => {
+    if (scenarios.length > 0) {
+      dispatch(setCurrentScenario(scenarios[scenariosActivePage - 1]));
+    }
+  }, [scenariosActivePage]);
+
+  useEffect(() => {
+    dispatch(changeCoursesVisibility(currentScenario));
+  }, [currentScenario]);
+
+  useEffect(() => {
+    if (scenarios.length > 0) {
+      setPaginationVisible(true);
+    } else {
+      setPaginationVisible(false);
+    }
+  }, [scenarios]);
+
+  const handleScenarioChange = (evet, data) => {
+    setScenariosActivePage(data.activePage);
+  };
 
   const findCellTime = (c) => {
     dispatch(findTimeCell(c));
@@ -143,6 +178,27 @@ const CoursePlannerTable = () => {
         })}
       </Table.Body>
       <Table.Footer fullWidth>
+        <Table.Row
+          column={1}
+          textAlign="center"
+          style={{
+            opacity: paginationVisible ? null : '0,0',
+            position: paginationVisible ? null : 'absolute',
+            left: paginationVisible ? null : '-999999px',
+          }}
+        >
+          <Table.Cell colSpan="6">
+            <Pagination
+              activePage={scenariosActivePage}
+              onPageChange={(event, data) => handleScenarioChange(event, data)}
+              firstItem={null}
+              lastItem={null}
+              pointing
+              secondary
+              totalPages={scenarios.length}
+            />
+          </Table.Cell>
+        </Table.Row>
         <Table.Row textAlign="center" column={1}>
           <Table.Cell selectable colSpan="6" onClick={() => toggleVisibilty()}>
             <Icon

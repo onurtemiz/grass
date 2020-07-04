@@ -39,8 +39,11 @@ const initialState = {
   extraHours: false,
   requiredCourses: [{ courses: [], id: lodash.uniqueId() }],
   creditsRange: [15, 21],
-  hoursRange: [20, 30],
+  totalHours: 40,
+  scenariosSlider: 10,
+  courseRange: [5, 8],
   scenarios: [],
+  currentScenario: [],
 };
 
 const courseReducer = (state = initialState, action) => {
@@ -254,15 +257,20 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         creditsRange: action.data,
       };
-    case 'CHANGE_HOURS_RANGE':
+    case 'CHANGE_COURSE_RANGE':
       return {
         ...state,
-        hoursRange: action.data,
+        courseRange: action.data,
       };
     case 'CHANGE_CONFLICT_RANGE':
       return {
         ...state,
         conflict: { ...state.conflict, conflictRange: action.data },
+      };
+    case 'CHANGE_SCENARIOS_SLIDER':
+      return {
+        ...state,
+        scenariosSlider: action.data,
       };
     case 'CHANGE_CONFLICT_REQUIRED':
       return {
@@ -288,9 +296,40 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         scenarios: action.data,
       };
+    case 'SET_CURRENT_SCENARIO':
+      return {
+        ...state,
+        currentScenario: action.data,
+      };
+    case 'CHANGE_COURSES_VISIBILITY':
+      const visibleCoursesId = action.data.map((sc) => sc.id);
+      const hiddenCourses = state.selectedCourses.filter((sc) =>
+        visibleCoursesId.includes(sc.id) ? false : true
+      );
+      const hiddenCoursesChanged = hiddenCourses.map((sc) => ({
+        ...sc,
+        visible: false,
+      }));
+      const visibleCoursesChanged = action.data.map((sc) => ({
+        ...sc,
+        visible: true,
+      }));
+      return {
+        ...state,
+        selectedCourses: [...hiddenCoursesChanged, ...visibleCoursesChanged],
+      };
     default:
       return state;
   }
+};
+
+export const setCurrentScenario = (scenario) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SET_CURRENT_SCENARIO',
+      data: scenario,
+    });
+  };
 };
 
 export const setScenarios = (scenarios) => {
@@ -311,6 +350,15 @@ export const changeCourseVisibility = (course) => {
   };
 };
 
+export const changeCoursesVisibility = (courses) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_COURSES_VISIBILITY',
+      data: courses,
+    });
+  };
+};
+
 export const changeConflictRequired = () => {
   return (dispatch) => {
     dispatch({
@@ -319,10 +367,19 @@ export const changeConflictRequired = () => {
   };
 };
 
-export const changeHoursRange = (value) => {
+export const changeScenariosSlider = (value) => {
   return (dispatch) => {
     dispatch({
-      type: 'CHANGE_HOURS_RANGE',
+      type: 'CHANGE_SCENARIOS_SLIDER',
+      data: value,
+    });
+  };
+};
+
+export const changeCourseRange = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHANGE_COURSE_RANGE',
       data: value,
     });
   };

@@ -151,7 +151,7 @@ const Nav = ({ search, admin }) => {
             name="calendar alternate"
             color={active === 'planner' ? 'green' : 'blue'}
           />
-          Course Planner ALPHA
+          Course Planner BETA
         </Label>
       </Menu.Item>
       <Menu.Item

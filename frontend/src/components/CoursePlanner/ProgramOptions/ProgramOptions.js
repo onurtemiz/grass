@@ -15,8 +15,9 @@ import {
 import { Label } from '../../Nav/NavTheme';
 import CreditsSlider from './CreditsSlider';
 import ConflictOptions from './ConflictOptions';
-import HoursSlider from './HoursSlider';
+import HoursSlider from './CourseSlider';
 import CreateProgram from './CreateProgram';
+import ScenariosSlider from './ScenariosSlider';
 const ProgramOptions = () => {
   const tryEmptyDay = useSelector((state) => state.courses.tryEmptyDay);
   const conflict = useSelector((state) => state.courses.conflict);
@@ -44,6 +45,11 @@ const ProgramOptions = () => {
       <Grid.Row>
         <Grid.Column>
           <HoursSlider />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <ScenariosSlider />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

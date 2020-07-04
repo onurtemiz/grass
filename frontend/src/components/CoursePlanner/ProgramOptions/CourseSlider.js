@@ -2,25 +2,25 @@ import React, { useState } from 'react';
 import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeHoursRange } from '../../../reducers/courseReducer';
+import { changeCourseRange } from '../../../reducers/courseReducer';
 
-const HoursSlider = () => {
-  const hoursRange = useSelector((state) => state.courses.hoursRange);
+const CourseSlider = () => {
+  const courseRange = useSelector((state) => state.courses.courseRange);
   const dispatch = useDispatch();
   const onSliderChange = (value) => {
-    dispatch(changeHoursRange(value));
+    dispatch(changeCourseRange(value));
   };
 
   return (
     <div>
-      <p>Saat Aralığı</p>
+      <p>Ders Aralığı</p>
       <Range
-        min={10}
-        max={50}
+        min={1}
+        max={10}
         allowCross={false}
         onChange={onSliderChange}
-        value={hoursRange}
-        marks={getMarks(hoursRange)}
+        value={courseRange}
+        marks={getMarks(courseRange)}
         trackStyle={[
           { backgroundColor: '#2185d0' },
           { backgroundColor: '#2185d0' },
@@ -32,10 +32,10 @@ const HoursSlider = () => {
 
 const getMarks = (value) => {
   let y = value.reduce((acc, elem) => {
-    acc[elem] = elem; // or what ever object you want inside
+    acc[elem] = elem;
     return acc;
   }, {});
   return y;
 };
 
-export default HoursSlider;
+export default CourseSlider;

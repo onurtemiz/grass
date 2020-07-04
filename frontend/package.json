@@ -42,7 +42,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "jest",
     "eject": "craco eject",
     "cypress": "cypress open"
   },
@@ -62,9 +62,12 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
     "@craco/craco": "^5.6.4",
     "@semantic-ui-react/craco-less": "^1.2.1",
     "cypress": "^4.8.0",
+    "react-test-renderer": "^16.13.1",
     "semantic-ui-less": "^2.4.1"
   },
   "proxy": "http://localhost:3001"

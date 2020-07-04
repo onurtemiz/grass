@@ -4,7 +4,7 @@ import { Input, Grid } from 'semantic-ui-react';
 import SelectedCourses from './SelectedCourses/SelectedCourses';
 import RequiredCourses from './RequiredCourses/RequiredCourses';
 import SearchCourses from './CoursePlannerTable/SearchCourses/SearchCourses';
-import ProgramOptions from './ProgramOptions.js/ProgramOptions';
+import ProgramOptions from './ProgramOptions/ProgramOptions';
 
 const CoursePlanner = () => {
   return (

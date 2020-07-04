@@ -51,8 +51,6 @@ const ConflictOptions = () => {
         </div>
       </Accordion.Title>
       <Accordion.Content active={accordionOpen} style={{ marginLeft: '1em' }}>
-        <CheckRequiredConflict conflict={conflict} />
-
         <HoursDetails />
       </Accordion.Content>
     </Accordion>
@@ -63,7 +61,7 @@ const HoursDetails = () => {
   const conflictRange = useSelector(
     (state) => state.courses.conflict.conflictRange
   );
-  const hoursRange = useSelector((state) => state.courses.hoursRange);
+  const totalHours = useSelector((state) => state.courses.totalHours);
 
   const dispatch = useDispatch();
   const onSliderChange = (value) => {
@@ -75,7 +73,7 @@ const HoursDetails = () => {
       <p>En fazla kaç saat conflict olabilsin?</p>
       <Slider
         min={1}
-        max={hoursRange[1]}
+        max={totalHours}
         onChange={onSliderChange}
         value={conflictRange}
         marks={getMark(conflictRange)}
@@ -93,21 +91,4 @@ const getMark = (value) => {
   return y;
 };
 
-const CheckRequiredConflict = ({ conflict }) => {
-  const dispatch = useDispatch();
-  const toggleRequiredConflict = () => {
-    dispatch(changeConflictRequired());
-  };
-  return (
-    <Checkbox
-      defaultChecked={conflict.conflictRequired}
-      onChange={() => toggleRequiredConflict()}
-      label={
-        <Label color="blue" bold>
-          Zorunlu Ders Grupları Çakışabilir
-        </Label>
-      }
-    />
-  );
-};
 export default ConflictOptions;

@@ -21,6 +21,7 @@ import {
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
+import CommentsLoading from '../../Comments/CommentsLoading';
 
 const CoursePlannerTable = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -40,10 +41,10 @@ const CoursePlannerTable = () => {
   }, [selectedCourses]);
 
   useEffect(() => {
-    if (scenarios.length > 0) {
+    if (scenarios.length > 0 && scenariosActivePage > 0) {
       dispatch(setCurrentScenario(scenarios[scenariosActivePage - 1]));
     }
-  }, [scenariosActivePage]);
+  }, [scenariosActivePage, scenarios]);
 
   useEffect(() => {
     dispatch(changeCoursesVisibility(currentScenario));
@@ -52,8 +53,11 @@ const CoursePlannerTable = () => {
   useEffect(() => {
     if (scenarios.length > 0) {
       setPaginationVisible(true);
+      setScenariosActivePage(1);
     } else {
+      setScenariosActivePage(0);
       setPaginationVisible(false);
+      dispatch(setCurrentScenario(selectedCourses));
     }
   }, [scenarios]);
 
@@ -136,7 +140,7 @@ const CoursePlannerTable = () => {
   };
 
   if (cells.length === 0 || rows.length === 0) {
-    return null;
+    return <CommentsLoading />;
   }
   return (
     <Table celled size="small">
@@ -223,20 +227,29 @@ const CoursePlannerTable = () => {
 };
 
 const CellDropdown = ({ c, f }) => {
+  const visibleCourses = c.courses.filter((cCourse) => cCourse.visible);
   return (
     <Table.Cell
       selectable
-      style={{ backgroundColor: c.color ? c.color : null }}
+      style={{
+        backgroundColor: c.color ? c.color : null,
+      }}
       textAlign="center"
     >
-      {c.courses.filter((cCourse) => cCourse.visible).length !== 0
+      {visibleCourses.length !== 0
         ? c.courses
             .filter((cCourse) => cCourse.visible)
             .map((cellCourse) => {
               return (
                 <>
                   <Label
-                    color={cellCourse.hover ? 'green' : 'blue'}
+                    color={
+                      visibleCourses.length > 1
+                        ? 'red'
+                        : cellCourse.hover
+                        ? 'green'
+                        : 'blue'
+                    }
                     bold
                     key={cellCourse.name}
                   >

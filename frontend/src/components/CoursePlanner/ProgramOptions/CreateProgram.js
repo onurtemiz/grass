@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import lodash, { keys } from 'lodash';
@@ -14,13 +14,15 @@ const CreateProgram = () => {
   const tryEmptyDay = useSelector((state) => state.courses.tryEmptyDay);
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const [value, setValue] = useState('Program Oluştur');
-  const [isLoading, setIsLoading] = useState(false);
+  const loading = useRef(false);
 
   const createProgram = () => {
-    setIsLoading(true);
+    loading.current = true;
     const canProgram = checkCanProgram();
     if (!canProgram) {
-      setValue('cant');
+      setValue('Program Oluşturulamıyor');
+      loading.current = false;
+
       return;
     } else {
       const requiredColumnsWithCourses = requiredCourses.filter((rc) => {
@@ -31,25 +33,14 @@ const CreateProgram = () => {
         }
       });
       if (requiredColumnsWithCourses.length > 0) {
-        dispatch(
-          setScenarios(
-            createWithRequired(courseRange[0], courseRange[1], scenariosSlider)
-          )
-        );
+        dispatch(setScenarios(createWithRequired(scenariosSlider)));
       } else {
-        dispatch(
-          setScenarios(
-            createWithoutRequired(
-              courseRange[0],
-              courseRange[1],
-              scenariosSlider
-            )
-          )
-        );
+        dispatch(setScenarios(createWithoutRequired(scenariosSlider)));
       }
-      setValue('can');
     }
-    setIsLoading(false);
+    loading.current = false;
+
+    setValue('Program Oluşturuldu');
   };
 
   const getOnlySelectedCourses = (requiredColumns) => {
@@ -67,83 +58,71 @@ const CreateProgram = () => {
     return onlys;
   };
 
-  const createWithRequired = (
-    minCoursesLength,
-    maxCoursesLength,
-    maxProgramsLength
-  ) => {
+  const createWithRequired = (maxProgramsLength) => {
     let possibleScenarios = [];
     let requiredColumns = requiredCourses.filter((rc) => rc.courses.length > 0);
     let otherSelectedCourses = getOnlySelectedCourses(requiredColumns);
-    let allScenarios = cartesian([...requiredColumns.map((rc) => rc.courses)]);
-    for (let t = 0; t < allScenarios.length; t++) {
-      if (possibleScenarios.length === maxProgramsLength) break;
-      for (let i = 0; i < otherSelectedCourses.length; i++) {
-        for (let q = minCoursesLength; q < maxCoursesLength + 1; q++) {
-          if (possibleScenarios.length === maxProgramsLength) break;
-          let potentialCourses = [...allScenarios[t], otherSelectedCourses[i]];
-          let j = i;
-          while (
-            potentialCourses.length !== q &&
-            j !== otherSelectedCourses.length &&
-            j + q - potentialCourses.length <= otherSelectedCourses.length
-          ) {
-            if (
-              otherSelectedCourses[i].id !== otherSelectedCourses[j].id &&
-              canAddToPotentialCourses(
-                potentialCourses,
-                otherSelectedCourses[j]
-              )
-            ) {
-              potentialCourses.push(otherSelectedCourses[j]);
+    let requiredCoursesCourses = [...requiredColumns.map((rc) => rc.courses)];
+    let randomSelected = shuffle(otherSelectedCourses);
+
+    let max = requiredCoursesCourses.length - 1;
+    function helper(arr, i) {
+      for (var j = 0, l = requiredCoursesCourses[i].length; j < l; j++) {
+        if (possibleScenarios.length === maxProgramsLength) break;
+
+        var a = arr.slice(0); // clone arr
+        a.push(requiredCoursesCourses[i][j]);
+        if (i == max) {
+          let w = randomSelected.length;
+          for (var r = 0; r < Math.pow(2, w); r++) {
+            var subset = [...a];
+            for (var g = 0; g < w; g++) {
+              if (subset.length > courseRange[1]) break;
+              if ((r & (1 << g)) > 0) subset.push(randomSelected[g]);
             }
-            j++;
+
+            if (possibleScenarios.length === maxProgramsLength) break;
+
+            if (
+              subset.length <= courseRange[1] &&
+              subset.length >= courseRange[0] &&
+              canAddToScenarios(subset, possibleScenarios) &&
+              canAddToPotentialCoursesWithout(subset)
+            ) {
+              possibleScenarios.push(subset);
+            }
           }
-          if (
-            potentialCourses.length > 1 &&
-            canAddToScenarios(potentialCourses, possibleScenarios)
-          ) {
-            possibleScenarios.push(potentialCourses);
-          }
-        }
+        } else helper(a, i + 1);
       }
     }
+    helper([], 0);
 
     return possibleScenarios;
   };
 
-  const createWithoutRequired = (
-    minCoursesLength,
-    maxCoursesLength,
-    maxProgramsLength
-  ) => {
+  const createWithoutRequired = (maxProgramsLength) => {
     let possibleScenarios = [];
-    for (let i = 0; i < selectedCourses.length; i++) {
-      for (let q = minCoursesLength; q < maxCoursesLength + 1; q++) {
-        if (possibleScenarios.length === maxProgramsLength) break;
-        let potentialCourses = [selectedCourses[i]];
-        let j = i;
-        while (
-          potentialCourses.length !== q &&
-          j !== selectedCourses.length &&
-          j + q - potentialCourses.length <= selectedCourses.length
-        ) {
-          if (
-            selectedCourses[i].id !== selectedCourses[j].id &&
-            canAddToPotentialCourses(potentialCourses, selectedCourses[j])
-          ) {
-            potentialCourses.push(selectedCourses[j]);
-          }
-          j++;
-        }
-        if (
-          potentialCourses.length > 1 &&
-          canAddToScenarios(potentialCourses, possibleScenarios)
-        ) {
-          possibleScenarios.push(potentialCourses);
-        }
+    let randomSelected = shuffle(selectedCourses);
+    let w = randomSelected.length;
+    for (var r = 0; r < Math.pow(2, w); r++) {
+      var subset = [];
+      for (var g = 0; g < w; g++) {
+        if (subset.length > courseRange[1]) break;
+        if ((r & (1 << g)) > 0) subset.push(randomSelected[g]);
+      }
+
+      if (possibleScenarios.length === maxProgramsLength) break;
+
+      if (
+        subset.length <= courseRange[1] &&
+        subset.length >= courseRange[0] &&
+        canAddToScenarios(subset, possibleScenarios) &&
+        canAddToPotentialCoursesWithout(subset)
+      ) {
+        possibleScenarios.push(subset);
       }
     }
+
     return possibleScenarios;
   };
 
@@ -157,7 +136,7 @@ const CreateProgram = () => {
     });
 
     if (
-      potentialCourses.length < courseRange[1] &&
+      potentialCourses.length <= courseRange[1] &&
       potentialCourses.length >= courseRange[0] &&
       !isDuplicate
     ) {
@@ -166,12 +145,12 @@ const CreateProgram = () => {
     return false;
   };
 
-  const canAddToPotentialCourses = (potentialCourses, course) => {
+  const canAddToPotentialCoursesWithout = (potentialCourses) => {
     if (
       coursesRangeMatch(potentialCourses) &&
-      creditsMatch([...potentialCourses, course]) &&
-      emptyDayMatch([...potentialCourses, course]) &&
-      conflictMatch([...potentialCourses, course])
+      creditsMatch(potentialCourses) &&
+      emptyDayMatch(potentialCourses) &&
+      conflictMatch(potentialCourses)
     ) {
       return true;
     }
@@ -253,7 +232,7 @@ const CreateProgram = () => {
       <Button
         color="blue"
         onClick={() => createProgram()}
-        loading={isLoading}
+        loading={loading.current}
         fluid
       >
         {value}
@@ -280,19 +259,64 @@ function arraysEqual(a, b) {
   return true;
 }
 
-function cartesian(arg) {
+function cartesian(
+  arg,
+  possibleScenarios,
+  maxProgramsLength,
+  canAddToPotentialCoursesWithout,
+  canAddToScenarios,
+  otherSelectedCourses
+) {
   var r = [],
     max = arg.length - 1;
   function helper(arr, i) {
     for (var j = 0, l = arg[i].length; j < l; j++) {
       var a = arr.slice(0); // clone arr
       a.push(arg[i][j]);
-      if (i == max) r.push(a);
-      else helper(a, i + 1);
+      if (i == max) {
+        r.push(a);
+        let n = otherSelectedCourses.length;
+        for (var e = 0; i < Math.pow(2, n); e++) {
+          var subset = [...a];
+          for (var z = 0; z < n; z++) {
+            if ((e & (1 << z)) > 0) subset.push(otherSelectedCourses[j]);
+          }
+          if (possibleScenarios.length === maxProgramsLength) break;
+          console.log(subset);
+          if (
+            subset.length > 1 &&
+            canAddToScenarios(subset, possibleScenarios) &&
+            canAddToPotentialCoursesWithout(subset)
+          ) {
+            possibleScenarios.push(subset);
+          }
+        }
+      } else helper(a, i + 1);
     }
   }
   helper([], 0);
   return r;
+}
+
+const betterCombine = (set) => {
+  let n = set.length;
+  var allSubsets = [];
+  for (var i = 0; i < Math.pow(2, n); i++) {
+    var subset = [];
+    for (var j = 0; j < n; j++) {
+      if ((i & (1 << j)) > 0) subset.push(set[j]);
+    }
+    allSubsets.push(subset);
+  }
+  return allSubsets;
+};
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 export default CreateProgram;

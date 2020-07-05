@@ -56,12 +56,12 @@ const SearchCourses = () => {
 };
 
 const filterCourses = (courses, search, findTime, notFindTime) => {
-  let s = search.toLocaleUpperCase('tr-TR');
+  let s = search.toUpperCase();
   let currentCourses = courses
     .filter(
       (c) =>
-        c.name.toLocaleUpperCase('tr-TR').includes(s) ||
-        c.parentName.toLocaleUpperCase('tr-TR').includes(s)
+        c.name.toUpperCase().includes(s) ||
+        c.parentName.toUpperCase().includes(s)
     )
     .sort(compareNames);
   if (findTime.length > 0) {

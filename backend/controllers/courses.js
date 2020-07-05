@@ -81,6 +81,14 @@ const convertDaysToInt = (days) => {
   return intDays;
 };
 
+coursesRouter.get('/allsections', async (req, res) => {
+  const q = req.query;
+  courses = await Course.find({
+    $and: [{ areaCode: q.areaCode }, { digitCode: q.digitCode }],
+  }).sort({ name: 1 });
+  res.json(courses.map((c) => c.toJSON()));
+});
+
 coursesRouter.get('/search', async (req, res) => {
   const q = req.query;
 

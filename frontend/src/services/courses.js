@@ -24,6 +24,21 @@ const searchCourse = async (search, findTime, notFindTime) => {
       : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
   }
 };
+
+const getAllSections = async (areaCode, digitCode) => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/allsections?areaCode=${areaCode}&digitCode=${digitCode}`,
+      config
+    );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
 export default {
   searchCourse,
+  getAllSections,
 };

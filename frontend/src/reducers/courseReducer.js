@@ -37,7 +37,7 @@ const initialState = {
   },
   extraHours: false,
   requiredCourses: [{ courses: [], id: lodash.uniqueId() }],
-  creditsRange: [15, 21],
+  creditsRange: [15, 24],
   scenariosSlider: 10,
   courseRange: [5, 8],
   scenarios: [],
@@ -65,11 +65,19 @@ const courseReducer = (state = initialState, action) => {
         (c) => c.id !== action.data.id
       );
       const removedExtraHours = checkExtraHour(otherSelectedCourses);
-
+      const requiredCoursesFiltered = state.requiredCourses.map((rcCourse) => {
+        return {
+          courses: rcCourse.courses.filter(
+            (course) => course.id !== action.data.id
+          ),
+          id: rcCourse.id,
+        };
+      });
       return {
         ...state,
         selectedCourses: otherSelectedCourses,
         extraHours: removedExtraHours,
+        requiredCourses: requiredCoursesFiltered,
       };
     case 'SET_CELL':
       const otherCells = state.cells.filter((c) => c.id !== action.data.id);
@@ -316,9 +324,66 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         selectedCourses: [...hiddenCoursesChanged, ...visibleCoursesChanged],
       };
+    case 'ADD_ALL_SECTIONS':
+      const changedAction = action.data.map((course) => ({
+        ...course,
+        hover: false,
+        clicked: true,
+        visible: true,
+      }));
+      const uniqSelected = lodash.uniqBy(
+        [...state.selectedCourses, ...changedAction],
+        'id'
+      );
+
+      const extraHoursSections = checkExtraHour(uniqSelected);
+      return {
+        ...state,
+        selectedCourses: uniqSelected,
+        extraHours: extraHoursSections,
+      };
+    case 'REMOVE_SELECTED_COURSES_STACK':
+      const otherStackedCourses = state.selectedCourses.filter(
+        (c) => `${c.areaCode}${c.digitCode}` !== action.data.shortName
+      );
+      const removedStackedHours = checkExtraHour(otherStackedCourses);
+      const requiredCoursesStacked = state.requiredCourses.map((rcCourse) => {
+        return {
+          courses: rcCourse.courses.filter(
+            (course) =>
+              `${course.areaCode}${course.digitCode}` !== action.data.shortName
+          ),
+          id: rcCourse.id,
+        };
+      });
+      let removedCells;
+      action.data.courses.forEach((removedCourse) => {
+        removedCells = state.cells.map((cell) => {
+          let filteredCourses = cell.courses.filter(
+            (c) => c.id === removedCourse.id
+          );
+          return { ...cell, courses: filteredCourses };
+        });
+      });
+      return {
+        ...state,
+        selectedCourses: otherStackedCourses,
+        extraHours: removedStackedHours,
+        requiredCourses: requiredCoursesStacked,
+        cells: removedCells,
+      };
     default:
       return state;
   }
+};
+
+export const removeSelectedCoursesWithStack = (stack) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'REMOVE_SELECTED_COURSES_STACK',
+      data: stack,
+    });
+  };
 };
 
 export const setCurrentScenario = (scenario) => {
@@ -562,6 +627,35 @@ export const notFindTimeCell = (cell) => {
         time: { id: cell.id, day: cell.day, hour: cell.time + 1 },
         cell: { ...cell, timeFind: false, color: '#fdabab' },
       },
+    });
+  };
+};
+
+export const addAllSections = (areaCode, digitCode) => {
+  return async (dispatch) => {
+    let courses = await coursesServices.getAllSections(areaCode, digitCode);
+    if (courses.error) {
+      toast.error(`${courses.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    courses = courses.map((c) => {
+      return { ...c, hover: false, clicked: false, visible: true };
+    });
+    dispatch({
+      type: 'SEARCH_COURSES',
+      data: courses,
+    });
+    dispatch({
+      type: 'ADD_ALL_SECTIONS',
+      data: courses,
     });
   };
 };

@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Header, Icon, Label as SLabel } from 'semantic-ui-react';
+import {
+  Card,
+  Header,
+  Icon,
+  Label as SLabel,
+  Button,
+  Grid,
+} from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,7 +15,9 @@ import {
   removeSelectedCourse,
   onHoverCourse,
   offHoverCourse,
+  addAllSections,
 } from '../../../../reducers/courseReducer';
+import { LESSON_PATH } from '../../../../utils/config';
 
 const SubCourse = ({ course }) => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -20,6 +29,9 @@ const SubCourse = ({ course }) => {
     } else {
       dispatch(addSelectedCourse(course, false, true));
     }
+  };
+  const handleAddAllSections = () => {
+    dispatch(addAllSections(course.areaCode, course.digitCode));
   };
 
   const handleMouseEnter = () => {
@@ -79,6 +91,17 @@ const SubCourse = ({ course }) => {
           <Label color="green" bold pointer>
             {course.parentName}
           </Label>
+          <Link to={LESSON_PATH(course)}>
+            <Label
+              color="blue"
+              bold
+              pointer
+              style={{ float: 'right', fontSize: '0.8em' }}
+            >
+              <Icon name="comments" />
+              Yorumlara bak
+            </Label>
+          </Link>
         </Card.Header>
         <Card.Meta>{course.fullName}</Card.Meta>
 
@@ -95,6 +118,16 @@ const SubCourse = ({ course }) => {
           •{' '}
           <Label color="blue" bold pointer>
             {course.credits} Kredi
+          </Label>
+          <Label
+            color="blue"
+            bold
+            pointer
+            style={{ float: 'right' }}
+            onClick={() => handleAddAllSections()}
+          >
+            <Icon name="add" />
+            Bütün sectionları ekle
           </Label>
         </Card.Description>
       </Card>

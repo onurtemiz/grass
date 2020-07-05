@@ -7,6 +7,7 @@ import {
   removeFromRequiredColumn,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
+import RequiredCourses from './RequiredCourses';
 
 const RequiredColumn = ({ rc, i }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const RequiredColumn = ({ rc, i }) => {
   const requiredCourses = useSelector((state) => state.courses.requiredCourses);
   const [narrowedCourses, setNarrowedCourses] = useState([]);
   useEffect(() => {
-    setNarrowedCourses(narrowRequired(selectedCourses, requiredCourses));
+    setNarrowedCourses(narrowRequired());
   }, [selectedCourses, requiredCourses]);
 
   const handleRemoveColumn = (rc) => {
@@ -28,6 +29,44 @@ const RequiredColumn = ({ rc, i }) => {
     dispatch(removeFromRequiredColumn(rc, course));
   };
 
+  const narrowRequired = () => {
+    let narrowedCourses = [];
+
+    for (let i = 0; i < selectedCourses.length; i++) {
+      if (presentsInColumns(selectedCourses[i])) continue;
+      const columnContainsSections = findColumnContainsSections(
+        selectedCourses[i]
+      );
+      if (columnContainsSections && columnContainsSections.id !== rc.id)
+        continue;
+
+      narrowedCourses.push(selectedCourses[i]);
+    }
+
+    return narrowedCourses;
+  };
+
+  const presentsInColumns = (course) => {
+    for (let i = 0; i < requiredCourses.length; i++) {
+      let foundCourse = requiredCourses[i].courses.find(
+        (rcCourse) => rcCourse.id === course.id
+      );
+      if (foundCourse) return true;
+    }
+    return false;
+  };
+
+  function findColumnContainsSections(course) {
+    for (let i = 0; i < requiredCourses.length; i++) {
+      let foundSections = requiredCourses[i].courses.find(
+        (rcCourse) =>
+          rcCourse.digitCode === course.digitCode &&
+          rcCourse.areaCode === course.areaCode
+      );
+      if (foundSections) return requiredCourses[i];
+    }
+  }
+
   return (
     <Grid.Column style={{ marginTop: '1em' }}>
       <Table>
@@ -35,7 +74,7 @@ const RequiredColumn = ({ rc, i }) => {
           <Table.Row>
             <Table.HeaderCell>
               <Label color="blue" bold>
-                Zorunlu Ders Grubu {i + 1}
+                Kesin Olmalı Ders Grubu {i + 1}
               </Label>
               {i > 0 ? (
                 <Icon
@@ -46,7 +85,7 @@ const RequiredColumn = ({ rc, i }) => {
                 />
               ) : (
                 <Popup
-                  content="Zorunlu grubuna eklediğin derslerden biri kesinlikle oluşturulan programda yer alır."
+                  content="Kesin Olmalı grubuna eklediğin derslerden biri kesinlikle oluşturulan programda yer alır."
                   trigger={
                     <Icon
                       name="question circle outline"
@@ -115,26 +154,6 @@ const RequiredColumn = ({ rc, i }) => {
       </Table>
     </Grid.Column>
   );
-};
-
-const narrowRequired = (selectedCourses, requiredCourses) => {
-  let narrowedCourses = [];
-
-  selectedCourses.forEach((sc) => {
-    let canAdd = true;
-    requiredCourses.forEach((rc) => {
-      const isPresentInOtherColumn = rc.courses.find(
-        (rcCourse) => rcCourse.id === sc.id
-      );
-      if (isPresentInOtherColumn) {
-        canAdd = false;
-      }
-    });
-    if (canAdd) {
-      narrowedCourses.push(sc);
-    }
-  });
-  return narrowedCourses;
 };
 
 export default RequiredColumn;

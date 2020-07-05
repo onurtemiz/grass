@@ -20,7 +20,7 @@ const CreditsSlider = () => {
         </Label>
       </p>
       <Range
-        min={5}
+        min={2}
         max={40}
         allowCross={false}
         onChange={onSliderChange}

@@ -49,9 +49,9 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());
-app.use(middleware.tokenExtractor);
 app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter);
+app.use(middleware.tokenExtractor);
 app.use(middleware.authUser);
 app.use('/api/courses', coursesRouter);
 app.use('/api/questions', questionsRouter);

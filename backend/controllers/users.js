@@ -54,6 +54,7 @@ usersRouter.post('/signup', async (req, res) => {
   await user.save();
   res.status(201).json(user.toJSONMain());
 });
+usersRouter.use(middleware.tokenExtractor);
 
 usersRouter.use(middleware.authUser);
 

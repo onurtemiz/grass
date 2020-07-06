@@ -24,7 +24,6 @@ export const useInfinite = (target, addInfFunc, filterFunc) => {
   const start = useSelector((state) => state[`${target}`].start);
   const hasMore = useSelector((state) => state[`${target}`].hasMore);
   const sorting = useSelector((state) => state[`${target}`].filter);
-
   const targets = useSelector((state) => state[`${target}`][`${target}`]);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();

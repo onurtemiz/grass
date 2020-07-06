@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Progress } from 'semantic-ui-react';
 import lodash, { keys } from 'lodash';
 import { setScenarios } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
@@ -11,36 +11,31 @@ const CreateProgram = () => {
   const creditsRange = useSelector((state) => state.courses.creditsRange);
   const requiredCourses = useSelector((state) => state.courses.requiredCourses);
   const conflict = useSelector((state) => state.courses.conflict);
+  const scenarios = useSelector((state) => state.courses.scenarios);
   const tryEmptyDay = useSelector((state) => state.courses.tryEmptyDay);
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const [value, setValue] = useState('Program Oluştur');
-  const loading = useRef(false);
+  const [loading, setLoading] = useState(false);
 
-  const createProgram = () => {
-    loading.current = true;
+  useEffect(() => {
+    if (loading) {
+      createWithParams(
+        requiredCourses,
+        dispatch,
+        createWithRequired,
+        scenariosSlider,
+        createWithoutRequired
+      );
+    }
+  }, [loading]);
+
+  const createProgram = async () => {
     const canProgram = checkCanProgram();
     if (!canProgram) {
       setValue('Program Oluşturulamıyor');
-      loading.current = false;
-
       return;
-    } else {
-      const requiredColumnsWithCourses = requiredCourses.filter((rc) => {
-        if (rc.courses.length > 0) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      if (requiredColumnsWithCourses.length > 0) {
-        dispatch(setScenarios(createWithRequired(scenariosSlider)));
-      } else {
-        dispatch(setScenarios(createWithoutRequired(scenariosSlider)));
-      }
     }
-    loading.current = false;
-
-    setValue('Program Oluşturuldu');
+    setLoading(true);
   };
 
   const getOnlySelectedCourses = (requiredColumns) => {
@@ -63,91 +58,92 @@ const CreateProgram = () => {
     let requiredColumns = requiredCourses.filter((rc) => rc.courses.length > 0);
     let otherSelectedCourses = getOnlySelectedCourses(requiredColumns);
     let requiredCoursesCourses = [...requiredColumns.map((rc) => rc.courses)];
-    let randomSelected = shuffle(otherSelectedCourses);
 
-    let max = requiredCoursesCourses.length - 1;
-    function helper(arr, i) {
-      for (var j = 0, l = requiredCoursesCourses[i].length; j < l; j++) {
-        if (possibleScenarios.length === maxProgramsLength) break;
+    let stackedSelectedCourses = stackedCourses([
+      ...otherSelectedCourses,
+    ]).map((stack) => [, ...stack.courses]);
 
-        var a = arr.slice(0); // clone arr
-        a.push(requiredCoursesCourses[i][j]);
-        if (i == max) {
-          let w = randomSelected.length;
-          for (var r = 0; r < Math.pow(2, w); r++) {
-            var subset = [...a];
-            for (var g = 0; g < w; g++) {
-              if (subset.length > courseRange[1]) break;
-              if ((r & (1 << g)) > 0) subset.push(randomSelected[g]);
-            }
-
-            if (possibleScenarios.length === maxProgramsLength) break;
-
-            if (
-              subset.length <= courseRange[1] &&
-              subset.length >= courseRange[0] &&
-              canAddToScenarios(subset, possibleScenarios) &&
-              canAddToPotentialCoursesWithout(subset)
-            ) {
-              possibleScenarios.push(subset);
-            }
-          }
-        } else helper(a, i + 1);
-      }
-    }
-    helper([], 0);
+    loopTwoTimesStack(
+      requiredCoursesCourses,
+      stackedSelectedCourses,
+      possibleScenarios,
+      maxProgramsLength
+    );
 
     return possibleScenarios;
   };
 
   const createWithoutRequired = (maxProgramsLength) => {
     let possibleScenarios = [];
-    let randomSelected = shuffle(selectedCourses);
-    let w = randomSelected.length;
-    for (var r = 0; r < Math.pow(2, w); r++) {
-      var subset = [];
-      for (var g = 0; g < w; g++) {
-        if (subset.length > courseRange[1]) break;
-        if ((r & (1 << g)) > 0) subset.push(randomSelected[g]);
-      }
+    let stackedSelectedCourses = stackedCourses(
+      selectedCourses
+    ).map((stack) => [, ...stack.courses]);
 
-      if (possibleScenarios.length === maxProgramsLength) break;
-
-      if (
-        subset.length <= courseRange[1] &&
-        subset.length >= courseRange[0] &&
-        canAddToScenarios(subset, possibleScenarios) &&
-        canAddToPotentialCoursesWithout(subset)
-      ) {
-        possibleScenarios.push(subset);
-      }
-    }
-
+    loopOverStack(stackedSelectedCourses, possibleScenarios, maxProgramsLength);
     return possibleScenarios;
   };
 
-  const canAddToScenarios = (potentialCourses, possibleScenarios) => {
-    let isDuplicate = false;
-    possibleScenarios.forEach((ps) => {
-      let isSame = arraysEqual(ps, potentialCourses);
-      if (isSame) {
-        isDuplicate = true;
-      }
-    });
+  const loopTwoTimesStack = (
+    requiredStack,
+    optionalStack,
+    scenario,
+    length
+  ) => {
+    let max = requiredStack.length - 1;
+    function helper(arr, i) {
+      for (var j = 0, l = requiredStack[i].length; j < l; j++) {
+        if (scenario.length === length) break;
 
-    if (
-      potentialCourses.length <= courseRange[1] &&
-      potentialCourses.length >= courseRange[0] &&
-      !isDuplicate
-    ) {
-      return true;
+        var a = arr.slice(0);
+        a.push(requiredStack[i][j]);
+        if (i == max) {
+          loopOverStack(optionalStack, scenario, length, a);
+        } else helper(a, i + 1);
+      }
     }
-    return false;
+    helper([], 0);
   };
 
-  const canAddToPotentialCoursesWithout = (potentialCourses) => {
+  const loopOverStack = (loopedStack, scenario, length, aditional) => {
+    let max = loopedStack.length - 1;
+    function helper(arr, i) {
+      for (var j = 0, l = loopedStack[i].length; j < l; j++) {
+        if (scenario.length === length) break;
+
+        var a = arr.slice(0);
+        if (loopedStack[i][j]) a.push(loopedStack[i][j]);
+        if (i == max) {
+          if (aditional) a = [...a, ...aditional];
+          if (canAddToScenarios(a)) {
+            scenario.push(a);
+          }
+        } else helper(a, i + 1);
+      }
+    }
+    helper([], 0);
+  };
+
+  const stackedCourses = (courses) => {
+    let stacked = [];
+    courses.sort(compareNames).forEach((sc) => {
+      let presentsInStacked = stacked.find(
+        (stack) => stack.shortName === `${sc.areaCode}${sc.digitCode}`
+      );
+      if (presentsInStacked) {
+        presentsInStacked.courses.push(sc);
+      } else {
+        stacked.push({
+          courses: [sc],
+          shortName: `${sc.areaCode}${sc.digitCode}`,
+        });
+      }
+    });
+    return stacked;
+  };
+
+  const canAddToScenarios = (potentialCourses) => {
     if (
-      coursesRangeMatch(potentialCourses) &&
+      between(potentialCourses.length, courseRange[0], courseRange[1], true) &&
       creditsMatch(potentialCourses) &&
       emptyDayMatch(potentialCourses) &&
       conflictMatch(potentialCourses)
@@ -179,10 +175,6 @@ const CreateProgram = () => {
   const creditsMatch = (potentialCourses) => {
     const currentCredits = getTotalCoursesCredits(potentialCourses);
     return currentCredits > creditsRange[1] ? false : true;
-  };
-
-  const coursesRangeMatch = (potentialCourses) => {
-    return potentialCourses.length + 1 > courseRange[1] ? false : true;
   };
 
   const checkCanProgram = () => {
@@ -227,12 +219,35 @@ const CreateProgram = () => {
     return unionDays.length;
   };
 
+  function createWithParams(
+    requiredCourses,
+    dispatch,
+    createWithRequired,
+    scenariosSlider,
+    createWithoutRequired
+  ) {
+    const requiredColumnsWithCourses = requiredCourses.filter((rc) => {
+      if (rc.courses.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (requiredColumnsWithCourses.length > 0) {
+      dispatch(setScenarios(createWithRequired(scenariosSlider)));
+    } else {
+      dispatch(setScenarios(createWithoutRequired(scenariosSlider)));
+    }
+    setLoading(false);
+    setValue('Program Oluşturuldu');
+  }
+
   return (
     <div>
       <Button
         color="blue"
         onClick={() => createProgram()}
-        loading={loading.current}
+        loading={loading}
         fluid
       >
         {value}
@@ -259,64 +274,10 @@ function arraysEqual(a, b) {
   return true;
 }
 
-function cartesian(
-  arg,
-  possibleScenarios,
-  maxProgramsLength,
-  canAddToPotentialCoursesWithout,
-  canAddToScenarios,
-  otherSelectedCourses
-) {
-  var r = [],
-    max = arg.length - 1;
-  function helper(arr, i) {
-    for (var j = 0, l = arg[i].length; j < l; j++) {
-      var a = arr.slice(0); // clone arr
-      a.push(arg[i][j]);
-      if (i == max) {
-        r.push(a);
-        let n = otherSelectedCourses.length;
-        for (var e = 0; i < Math.pow(2, n); e++) {
-          var subset = [...a];
-          for (var z = 0; z < n; z++) {
-            if ((e & (1 << z)) > 0) subset.push(otherSelectedCourses[j]);
-          }
-          if (possibleScenarios.length === maxProgramsLength) break;
-          console.log(subset);
-          if (
-            subset.length > 1 &&
-            canAddToScenarios(subset, possibleScenarios) &&
-            canAddToPotentialCoursesWithout(subset)
-          ) {
-            possibleScenarios.push(subset);
-          }
-        }
-      } else helper(a, i + 1);
-    }
-  }
-  helper([], 0);
-  return r;
-}
-
-const betterCombine = (set) => {
-  let n = set.length;
-  var allSubsets = [];
-  for (var i = 0; i < Math.pow(2, n); i++) {
-    var subset = [];
-    for (var j = 0; j < n; j++) {
-      if ((i & (1 << j)) > 0) subset.push(set[j]);
-    }
-    allSubsets.push(subset);
-  }
-  return allSubsets;
-};
-
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function between(n, a, b, inclusive) {
+  var min = Math.min.apply(Math, [a, b]),
+    max = Math.max.apply(Math, [a, b]);
+  return inclusive ? n >= min && n <= max : n > min && n < max;
 }
 
 export default CreateProgram;

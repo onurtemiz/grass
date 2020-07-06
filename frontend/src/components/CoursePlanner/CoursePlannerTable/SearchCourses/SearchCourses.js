@@ -1,21 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Input } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroller';
+
 import { searchCourse } from '../../../../reducers/courseReducer';
-import { compareNames, getIdByDayHour } from '../../../../utils/utils';
+import {
+  compareNames,
+  getIdByDayHour,
+  useInfinite,
+} from '../../../../utils/utils';
 import SubCourse from './SubCourse';
+import CommentsLoading from '../../../Comments/CommentsLoading';
+import NoSubResult from '../../../Search/NoSubResult';
 const SearchCourses = () => {
-  const dispatch = useDispatch();
-  const courses = useSelector((state) => state.courses.courses);
+  const count = useSelector((state) => state.courses.count);
+  const start = useSelector((state) => state.courses.start);
+  const hasMore = useSelector((state) => state.courses.hasMore);
+  const targets = useSelector((state) => state.courses.courses);
   const findTime = useSelector((state) => state.courses.findTime);
-  const notFindTime = useSelector((state) => state.courses.notFindTime);
-
   const [search, setSearch] = useState('');
-  const [currentCourses, setCurrentCourses] = useState([]);
-
+  const notFindTime = useSelector((state) => state.courses.notFindTime);
+  const dispatch = useDispatch();
+  const [currentTarget, setCurrentTarget] = useState([]);
+  const [ready, setReady] = useState(false);
+  const [noResult, setNoResult] = useState(true);
+  const first = useRef(false);
+  const fetching = useRef(false);
   useEffect(() => {
     dispatch(
       searchCourse(
+        0,
+        count,
+        first,
+        fetching,
         search,
         findTime.map((t) => t.id),
         notFindTime.map((t) => t.id)
@@ -24,8 +41,37 @@ const SearchCourses = () => {
   }, [search, findTime, notFindTime]);
 
   useEffect(() => {
-    setCurrentCourses(filterCourses(courses, search, findTime, notFindTime));
-  }, [courses, findTime, notFindTime]);
+    setCurrentTarget(filterCourses(targets, search, findTime, notFindTime));
+  }, [targets, findTime, notFindTime]);
+
+  const loadFunc = () => {
+    if (!fetching.current) {
+      dispatch(
+        searchCourse(
+          start,
+          count,
+          first,
+          fetching,
+          search,
+          findTime.map((t) => t.id),
+          notFindTime.map((t) => t.id)
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (first.current && currentTarget.length === 0) {
+      setNoResult(true);
+    } else if (currentTarget.length !== 0 && first.current) {
+      setNoResult(false);
+    }
+    if (!first.current) {
+      setReady(false);
+    } else {
+      setReady(true);
+    }
+  }, [currentTarget, first]);
 
   return (
     <>
@@ -45,11 +91,27 @@ const SearchCourses = () => {
           marginTop: '1em',
         }}
       >
-        {currentCourses.length === 0
-          ? null
-          : currentCourses.map((c) => {
-              return <SubCourse course={c} key={c.id} />;
-            })}
+        {!ready ? (
+          <CommentsLoading />
+        ) : noResult ? (
+          <NoSubResult />
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadFunc}
+            hasMore={hasMore}
+            loader={
+              <div className="loader" key={0}>
+                <CommentsLoading skeletonLength={1} />
+              </div>
+            }
+            useWindow={false}
+          >
+            {currentTarget.map((c) => (
+              <SubCourse course={c} key={c.id} />
+            ))}
+          </InfiniteScroll>
+        )}
       </div>
     </>
   );
@@ -78,7 +140,6 @@ const filterCourses = (courses, search, findTime, notFindTime) => {
     });
   }
   if (notFindTime.length > 0) {
-    console.log('currentCourses', currentCourses);
     currentCourses = currentCourses.filter((course) => {
       let found = false;
       course.days.forEach((d, i) => {
@@ -90,7 +151,6 @@ const filterCourses = (courses, search, findTime, notFindTime) => {
       });
       return !found;
     });
-    console.log('currentCourses', currentCourses);
   }
 
   return currentCourses;

@@ -18,6 +18,7 @@ import {
   notFindTimeCell,
   setCurrentScenario,
   changeCoursesVisibility,
+  toggleCellCoursesVisiblity,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
@@ -236,6 +237,63 @@ const CellDropdown = ({ c, f }) => {
       }}
       textAlign="center"
     >
+      {visibleCourses.length < 4 ? (
+        <AllCells visibleCourses={visibleCourses} c={c} />
+      ) : c.visible ? (
+        <AllCells visibleCourses={visibleCourses} c={c} upper />
+      ) : (
+        <FirstThreeCells visibleCourses={visibleCourses} c={c} />
+      )}
+
+      <Dropdown icon="" fluid>
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => f.findCellTime(c)}>
+            Bu saatte ders ara
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => f.notFindCellTime(c)}>
+            Bu saatte ders arama
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => f.resetCellTime(c)}>
+            Sıfırla
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </Table.Cell>
+  );
+};
+
+const FirstThreeCells = ({ visibleCourses, c }) => {
+  const dispatch = useDispatch();
+  const makeCellCoursesVisible = () => {
+    dispatch(toggleCellCoursesVisiblity(c, true));
+  };
+  return (
+    <>
+      {c.courses
+        .filter((cCourse) => cCourse.visible)
+        .slice(0, 3)
+        .map((cellCourse) => {
+          return (
+            <>
+              <Label color={'red'} bold key={cellCourse.name}>
+                {cellCourse.name}
+              </Label>
+              <br />
+            </>
+          );
+        })}
+      <Icon name="caret down" onClick={() => makeCellCoursesVisible()} />
+    </>
+  );
+};
+
+const AllCells = ({ visibleCourses, c, upper }) => {
+  const dispatch = useDispatch();
+  const makeCellCoursesHidden = () => {
+    dispatch(toggleCellCoursesVisiblity(c, false));
+  };
+  return (
+    <>
       {visibleCourses.length !== 0
         ? c.courses
             .filter((cCourse) => cCourse.visible)
@@ -260,20 +318,10 @@ const CellDropdown = ({ c, f }) => {
               );
             })
         : null}
-      <Dropdown icon="" fluid>
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => f.findCellTime(c)}>
-            Bu saatte ders ara
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => f.notFindCellTime(c)}>
-            Bu saatte ders arama
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => f.resetCellTime(c)}>
-            Sıfırla
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </Table.Cell>
+      {upper ? (
+        <Icon name="caret up" onClick={() => makeCellCoursesHidden()} />
+      ) : null}
+    </>
   );
 };
 

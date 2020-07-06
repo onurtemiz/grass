@@ -14,16 +14,19 @@ import {
   changeConflictRange,
   changeConflictRequired,
 } from '../../../reducers/courseReducer';
-import { Label } from '../../Nav/NavTheme';
+import { Label, StyledSlider } from '../../Nav/NavTheme';
 import Slider from 'rc-slider';
 
 const ConflictOptions = () => {
   const conflict = useSelector((state) => state.courses.conflict);
   const [accordionOpen, setAccordionOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
 
   const toggleConflict = () => {
     dispatch(onOffConflict());
+    setChecked(!checked);
+    setAccordionOpen(!checked);
   };
 
   return (
@@ -33,13 +36,13 @@ const ConflictOptions = () => {
           <Checkbox
             defaultChecked={conflict.makeConflict}
             onChange={() => toggleConflict()}
-            label={''}
           />
           <Label
             color="blue"
             bold
             pointer
             onClick={() => setAccordionOpen(!accordionOpen)}
+            style={{ marginLeft: '0.5em' }}
           >
             Conflicte izin ver
           </Label>
@@ -71,7 +74,7 @@ const HoursDetails = () => {
   return (
     <div>
       <p>En fazla kaç saat conflict olabilsin?</p>
-      <Slider
+      <StyledSlider
         min={1}
         max={40}
         onChange={onSliderChange}

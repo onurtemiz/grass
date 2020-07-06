@@ -5,25 +5,56 @@ import {
   removeRequiredColumn,
   addToRequiredColumn,
   removeFromRequiredColumn,
+  removeRequiredWithStack,
+  addToRequiredColumnMulti,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import RequiredCourses from './RequiredCourses';
+import { compareNames } from '../../../utils/utils';
 
 const RequiredColumn = ({ rc, i }) => {
   const dispatch = useDispatch();
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const requiredCourses = useSelector((state) => state.courses.requiredCourses);
   const [narrowedCourses, setNarrowedCourses] = useState([]);
+  const [stackedCourses, setStackedCourses] = useState([]);
   useEffect(() => {
     setNarrowedCourses(narrowRequired());
   }, [selectedCourses, requiredCourses]);
+
+  useEffect(() => {
+    setStackedCourses(stackCourses(rc.courses));
+  }, [rc]);
 
   const handleRemoveColumn = (rc) => {
     dispatch(removeRequiredColumn(rc));
   };
 
+  const stackCourses = (courses) => {
+    let stacked = [];
+    courses.forEach((sc) => {
+      let presentsInStacked = stacked.find(
+        (stack) => stack.shortName === `${sc.areaCode}${sc.digitCode}`
+      );
+      if (presentsInStacked) {
+        presentsInStacked.courses.push(sc);
+      } else {
+        stacked.push({
+          courses: [sc],
+          shortName: `${sc.areaCode}${sc.digitCode}`,
+          visible: false,
+        });
+      }
+    });
+    return stacked;
+  };
+
   const handleAddToRequiredColumn = (rc, course) => {
-    dispatch(addToRequiredColumn(rc, course));
+    if (course.stack) {
+      dispatch(addToRequiredColumnMulti(rc, course));
+    } else {
+      dispatch(addToRequiredColumn(rc, course));
+    }
   };
   const handleRemoveFromRequiredColumn = (rc, course) => {
     dispatch(removeFromRequiredColumn(rc, course));
@@ -42,6 +73,15 @@ const RequiredColumn = ({ rc, i }) => {
 
       narrowedCourses.push(selectedCourses[i]);
     }
+    stackCourses(narrowedCourses).forEach((stack) => {
+      if (stack.courses.length > 1) {
+        narrowedCourses.push({
+          name: `${stack.shortName} HEPSİ`,
+          courses: stack.courses,
+          stack: true,
+        });
+      }
+    });
 
     return narrowedCourses;
   };
@@ -122,7 +162,7 @@ const RequiredColumn = ({ rc, i }) => {
                       Buraya eklenecek başka uygun bir ders yok.
                     </Dropdown.Item>
                   ) : (
-                    narrowedCourses.map((sc) => {
+                    narrowedCourses.sort(compareNames).map((sc) => {
                       return (
                         <Dropdown.Item
                           onClick={() => handleAddToRequiredColumn(rc, sc)}
@@ -136,23 +176,104 @@ const RequiredColumn = ({ rc, i }) => {
               </Dropdown>
             </Table.Cell>
           </Table.Row>
-          {rc.courses.map((rcCourse) => {
-            return (
-              <Table.Row>
-                <Table.Cell>
-                  {rcCourse.name}
-                  <Icon
-                    name="cancel"
-                    style={{ float: 'right' }}
-                    onClick={() => handleRemoveFromRequiredColumn(rc, rcCourse)}
-                  />{' '}
-                </Table.Cell>
-              </Table.Row>
+          {stackedCourses.map((stack) => {
+            return stack.courses.length === 1 ? (
+              <SingleRowCourse rc={rc} course={stack.courses[0]} />
+            ) : (
+              <MultiRowCourse rc={rc} stack={stack} />
             );
           })}
         </Table.Body>
       </Table>
     </Grid.Column>
+  );
+};
+
+const MultiRowCourse = ({ rc, stack }) => {
+  const dispatch = useDispatch();
+  const [stackVisible, setStackVisible] = useState(stack.visible);
+
+  const toggleStackVisibility = () => {
+    setStackVisible(!stackVisible);
+  };
+
+  const handleRemove = () => {
+    dispatch(removeRequiredWithStack(stack));
+  };
+
+  if (stackVisible) {
+    return stack.courses.sort(compareNames).map((c, i) => {
+      return (
+        <SingleRowCourse
+          rc={rc}
+          key={c.id}
+          course={c}
+          last={i === stack.courses.length - 1 ? true : false}
+          toggleStackVisibility={toggleStackVisibility}
+        />
+      );
+    });
+  }
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Label color="blue" bold>
+          {stack.shortName}{' '}
+        </Label>
+
+        {stack.courses.sort(compareNames).map((stackCourse) => {
+          return (
+            <Label color="green" bold>
+              {stackCourse.sectionCode}{' '}
+            </Label>
+          );
+        })}
+        <Icon
+          name="delete"
+          color="green"
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => {
+            handleRemove();
+          }}
+        />
+        <Icon
+          name={'caret down'}
+          color="green"
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => toggleStackVisibility()}
+        />
+      </Table.Cell>
+    </Table.Row>
+  );
+};
+
+const SingleRowCourse = ({ rc, course, last, toggleStackVisibility }) => {
+  const dispatch = useDispatch();
+  const handleRemoveFromRequiredColumn = (rc, course) => {
+    dispatch(removeFromRequiredColumn(rc, course));
+  };
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Label color="blue" bold>
+          {course.name}
+        </Label>
+        <Icon
+          name="cancel"
+          color="green"
+          style={{ float: 'right' }}
+          onClick={() => handleRemoveFromRequiredColumn(rc, course)}
+        />{' '}
+        {last ? (
+          <Icon
+            name={'caret up'}
+            color="green"
+            style={{ float: 'right', cursor: 'pointer' }}
+            onClick={() => toggleStackVisibility()}
+          />
+        ) : null}
+      </Table.Cell>
+    </Table.Row>
   );
 };
 

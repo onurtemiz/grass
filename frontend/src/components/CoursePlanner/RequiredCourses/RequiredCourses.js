@@ -28,7 +28,7 @@ const RequiredCourses = () => {
           marginTop: '1em',
         }}
       >
-        <Button icon onClick={() => handleAddColumn()}>
+        <Button icon onClick={() => handleAddColumn()} color="blue">
           <Icon name="add" />
         </Button>
       </Grid.Column>

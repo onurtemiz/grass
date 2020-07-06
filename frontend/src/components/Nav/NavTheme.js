@@ -1,5 +1,7 @@
 import Search from '../Search/Search';
 import styled from 'styled-components';
+import Slider, { Range } from 'rc-slider';
+
 export const NavSearch = styled.div`
   .ui.search .prompt {
     border-radius: 0rem;
@@ -10,6 +12,36 @@ export const NavSearch = styled.div`
   .results {
     min-width: 300px;
     font-weight: bold;
+  }
+`;
+
+export const StyledRange = styled(Range)`
+  .rc-slider-handle {
+    background-color: #2185d0;
+    border-color: #2185d0;
+  }
+  .rc-slider-handle:active {
+    box-shadow: 0 0 5px #2185d0;
+  }
+  .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
+    background-color: #2185d0;
+    border-color: #2185d0;
+    box-shadow: 0 0 5px #2185d0;
+  }
+`;
+
+export const StyledSlider = styled(Slider)`
+  .rc-slider-handle {
+    background-color: #2185d0;
+    border-color: #2185d0;
+  }
+  .rc-slider-handle:active {
+    box-shadow: 0 0 5px #2185d0;
+  }
+  .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
+    background-color: #2185d0;
+    border-color: #2185d0;
+    box-shadow: 0 0 5px #2185d0;
   }
 `;
 

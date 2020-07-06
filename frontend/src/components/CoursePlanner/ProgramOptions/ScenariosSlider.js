@@ -3,7 +3,7 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeScenariosSlider } from '../../../reducers/courseReducer';
-import { Label } from '../../Nav/NavTheme';
+import { Label, StyledSlider } from '../../Nav/NavTheme';
 
 const ScenariosSlider = () => {
   const scenariosSlider = useSelector((state) => state.courses.scenariosSlider);
@@ -19,7 +19,7 @@ const ScenariosSlider = () => {
           Maksimum Senaryo Sayısı
         </Label>
       </p>
-      <Slider
+      <StyledSlider
         min={1}
         max={50}
         onChange={onSliderChange}

@@ -3,7 +3,7 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCourseRange } from '../../../reducers/courseReducer';
-import { Label } from '../../Nav/NavTheme';
+import { Label, StyledRange } from '../../Nav/NavTheme';
 
 const CourseSlider = () => {
   const courseRange = useSelector((state) => state.courses.courseRange);
@@ -19,7 +19,7 @@ const CourseSlider = () => {
           Ders Aralığı
         </Label>
       </p>
-      <Range
+      <StyledRange
         min={2}
         max={20}
         allowCross={false}

@@ -3,7 +3,7 @@ import 'rc-slider/assets/index.css';
 import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCreditsRange } from '../../../reducers/courseReducer';
-import { Label } from '../../Nav/NavTheme';
+import { Label, StyledRange } from '../../Nav/NavTheme';
 
 const CreditsSlider = () => {
   const creditsRange = useSelector((state) => state.courses.creditsRange);
@@ -11,7 +11,6 @@ const CreditsSlider = () => {
   const onSliderChange = (value) => {
     dispatch(changeCreditsRange(value));
   };
-
   return (
     <div>
       <p>
@@ -19,7 +18,7 @@ const CreditsSlider = () => {
           Kredi Aralığı
         </Label>
       </p>
-      <Range
+      <StyledRange
         min={2}
         max={40}
         allowCross={false}

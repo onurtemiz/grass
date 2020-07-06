@@ -93,22 +93,27 @@ coursesRouter.get('/search', async (req, res) => {
   const q = req.query;
 
   let search = q.q ? q.q : '';
-  let courses;
   let times;
   let ntimes;
   if (q.t) times = getTimeFilter(q);
   if (q.nt) ntimes = getNTimeFilter(q);
-  if (q.t && q.nt) {
-    courses = await Course.getTNSearchResult(search, times, ntimes);
-  } else if (q.t) {
-    courses = await Course.getTSearchResult(search, times);
-  } else if (q.nt) {
-    courses = await Course.getNSearchResult(search, ntimes);
-  } else {
-    courses = await Course.getSearchResult(search);
-  }
 
-  res.json(courses.map((c) => c.toJSON()));
+  if (q.t && q.nt) {
+    response = await Course.getTNSearchResult(
+      search,
+      q.start,
+      q.total,
+      times,
+      ntimes
+    );
+  } else if (q.t) {
+    response = await Course.getTSearchResult(search, q.start, q.total, times);
+  } else if (q.nt) {
+    response = await Course.getNSearchResult(search, q.start, q.total, ntimes);
+  } else {
+    response = await Course.getSearchResult(search, q.start, q.total);
+  }
+  res.json(response);
 });
 
 module.exports = coursesRouter;

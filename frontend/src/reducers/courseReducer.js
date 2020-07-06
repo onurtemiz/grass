@@ -15,6 +15,7 @@ const getCells = () => {
         courses: [],
         color: null,
         timeFind: null,
+        visible: false,
         id,
       };
       cells.push(cell);
@@ -26,6 +27,10 @@ const getCells = () => {
 };
 const initialState = {
   courses: [],
+  total: 0,
+  hasMore: false,
+  start: 0,
+  count: 20,
   selectedCourses: [],
   cells: getCells(),
   findTime: [],
@@ -47,9 +52,18 @@ const initialState = {
 const courseReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SEARCH_COURSES':
-      const uniqAll = lodash.uniqBy([...state.courses, ...action.data], 'id');
+      const uniqAll = lodash.uniqBy(
+        [...state.courses, ...action.data.courses],
+        'id'
+      );
+
       const currentState = {
         ...state,
+        total: action.data.total,
+        hasMore: action.data.hasMore,
+        start: action.data.start,
+        count: action.data.count,
+
         courses: uniqAll,
       };
       return currentState;
@@ -241,6 +255,20 @@ const courseReducer = (state = initialState, action) => {
           },
         ],
       };
+    case 'ADD_TO_REQUIRED_COLUMN_MULTI':
+      const otherMultiRequired = state.requiredCourses.filter(
+        (rc) => rc.id !== action.data.rc.id
+      );
+      return {
+        ...state,
+        requiredCourses: [
+          ...otherMultiRequired,
+          {
+            ...action.data.rc,
+            courses: [...action.data.rc.courses, ...action.data.stack.courses],
+          },
+        ],
+      };
     case 'REMOVE_FROM_REQUIRED_COLUMN':
       const otherRcCourses = action.data.rc.courses.filter(
         (rcCourse) => rcCourse.id !== action.data.course.id
@@ -372,9 +400,78 @@ const courseReducer = (state = initialState, action) => {
         requiredCourses: requiredCoursesStacked,
         cells: removedCells,
       };
+    case 'TOGGLE_CELL_COURSES_VISIBILITY':
+      let otherNormalCells = state.cells.filter(
+        (c) => c.id !== action.data.cell.id
+      );
+      return {
+        ...state,
+        cells: [
+          ...otherNormalCells,
+          { ...action.data.cell, visible: action.data.visibility },
+        ],
+      };
+    case 'TOGGLE_SELECTED_COURSES_EYE':
+      const stackVisCourses = action.data.stack.courses.map((c) => c.id);
+      const otherVisibleCourses = state.selectedCourses.filter((sc) =>
+        stackVisCourses.includes(sc.id) ? false : true
+      );
+      let ourVisibleCourses = state.selectedCourses.filter((sc) =>
+        stackVisCourses.includes(sc.id)
+      );
+      ourVisibleCourses = ourVisibleCourses.map((c) => ({
+        ...c,
+        visible: action.data.visibility,
+      }));
+      return {
+        ...state,
+        selectedCourses: [...otherVisibleCourses, ...ourVisibleCourses],
+      };
+    case 'REMOVE_REQUIRED_COURSES_WITH_STACK':
+      const requiredCoursesStackless = state.requiredCourses.map((rcCourse) => {
+        return {
+          courses: rcCourse.courses.filter(
+            (course) =>
+              `${course.areaCode}${course.digitCode}` !== action.data.shortName
+          ),
+          id: rcCourse.id,
+        };
+      });
+
+      return {
+        ...state,
+        requiredCourses: requiredCoursesStackless,
+      };
     default:
       return state;
   }
+};
+
+export const removeRequiredWithStack = (stack) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'REMOVE_REQUIRED_COURSES_WITH_STACK',
+      data: stack,
+    });
+  };
+};
+
+export const toggleSelectedCoursesEye = (stack, visibility) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'TOGGLE_SELECTED_COURSES_EYE',
+      data: { stack, visibility },
+    });
+  };
+};
+
+export const toggleCellCoursesVisiblity = (cell, visibility) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'TOGGLE_CELL_COURSES_VISIBILITY',
+      data: { cell, visibility },
+    });
+  };
 };
 
 export const removeSelectedCoursesWithStack = (stack) => {
@@ -462,6 +559,15 @@ export const changeCreditsRange = (value) => {
     dispatch({
       type: 'CHANGE_CREDITS_RANGE',
       data: value,
+    });
+  };
+};
+
+export const addToRequiredColumnMulti = (rc, stack) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'ADD_TO_REQUIRED_COLUMN_MULTI',
+      data: { rc, stack },
     });
   };
 };
@@ -660,15 +766,27 @@ export const addAllSections = (areaCode, digitCode) => {
   };
 };
 
-export const searchCourse = (search, findTime, notFindTime) => {
+export const searchCourse = (
+  start,
+  count,
+  first,
+  fetching,
+  search,
+  findTime,
+  notFindTime
+) => {
   return async (dispatch) => {
-    let courses = await coursesServices.searchCourse(
+    fetching.current = true;
+
+    let res = await coursesServices.addInf(
+      start,
+      count,
       search,
       findTime,
       notFindTime
     );
-    if (courses.error) {
-      toast.error(`${courses.error}`, {
+    if (res.error) {
+      toast.error(`${res.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -679,13 +797,30 @@ export const searchCourse = (search, findTime, notFindTime) => {
       });
       return;
     }
+
+    let { courses, total } = res;
     courses = courses.map((c) => {
       return { ...c, hover: false, clicked: false, visible: true };
     });
+    let data = {
+      hasMore: true,
+      start: start + count,
+      courses,
+      total,
+      count,
+    };
+    if (total === 0 || total < count + start) {
+      data.hasMore = false;
+      data.start = 0;
+    }
     dispatch({
       type: 'SEARCH_COURSES',
-      data: courses,
+      data: data,
     });
+    if (start === 0) {
+      first.current = true;
+    }
+    fetching.current = false;
   };
 };
 

@@ -20,17 +20,12 @@ import CreateProgram from './CreateProgram';
 import ScenariosSlider from './ScenariosSlider';
 const ProgramOptions = () => {
   const tryEmptyDay = useSelector((state) => state.courses.tryEmptyDay);
-  const conflict = useSelector((state) => state.courses.conflict);
-  const [accordionOpen, setAccordionOpen] = useState(false);
   const dispatch = useDispatch();
 
   const toggleDay = () => {
     dispatch(toggleTryEmptyDay());
   };
 
-  const toggleConflict = () => {
-    dispatch(onOffConflict());
-  };
   return (
     <>
       <Grid.Row>
@@ -61,7 +56,7 @@ const ProgramOptions = () => {
             label={
               <Label color="blue" bold>
                 {' '}
-                Bir günü boşta bırakmaya çalış
+                Bir günü boşta bırak
               </Label>
             }
           />

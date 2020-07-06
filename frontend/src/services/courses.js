@@ -6,17 +6,18 @@ const baseUrl =
     ? 'http://localhost:3001/api/courses'
     : '/api/courses';
 
-const searchCourse = async (search, findTime, notFindTime) => {
+const addInf = async (start, count, search, findTime, notFindTime) => {
   try {
     const url =
       findTime.length > 0 && notFindTime.length > 0
-        ? `${baseUrl}/search?q=${search}&t=${findTime}&nt=${notFindTime}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&nt=${notFindTime}`
         : findTime.length > 0
-        ? `${baseUrl}/search?q=${search}&t=${findTime}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}`
         : notFindTime.length > 0
-        ? `${baseUrl}/search?q=${search}&nt=${notFindTime}`
-        : `${baseUrl}/search?q=${search}`;
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&nt=${notFindTime}`
+        : `${baseUrl}/search?start=${start}&total=${count}&q=${search}`;
     const res = await axios.get(url, config);
+    console.log('res', res.data);
     return res.data;
   } catch (e) {
     return e.response
@@ -39,6 +40,6 @@ const getAllSections = async (areaCode, digitCode) => {
   }
 };
 export default {
-  searchCourse,
+  addInf,
   getAllSections,
 };

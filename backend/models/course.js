@@ -27,8 +27,8 @@ courseSchema.set('toJSON', {
   },
 });
 
-courseSchema.statics.getSearchResult = function (search) {
-  return this.find({
+courseSchema.statics.getSearchResult = async function (search, start, total) {
+  let searchParams = {
     $and: [
       {
         $or: [
@@ -37,13 +37,22 @@ courseSchema.statics.getSearchResult = function (search) {
         ],
       },
     ],
-  })
+  };
+  let courses = await this.find(searchParams)
     .sort({ name: 1 })
-    .limit(10);
+    .skip(Number(start))
+    .limit(Number(total));
+  let all = await this.find(searchParams).countDocuments();
+  return { courses: courses.map((c) => c.toJSON()), total: all };
 };
 
-courseSchema.statics.getTSearchResult = function (search, times) {
-  return this.find({
+courseSchema.statics.getTSearchResult = async function (
+  search,
+  start,
+  total,
+  times
+) {
+  let searchParams = {
     $and: [
       ...times,
       {
@@ -53,13 +62,23 @@ courseSchema.statics.getTSearchResult = function (search, times) {
         ],
       },
     ],
-  })
+  };
+  let courses = await this.find(searchParams)
     .sort({ name: 1 })
-    .limit(50);
+    .skip(Number(start))
+    .limit(Number(total));
+  let all = await this.find(searchParams).countDocuments();
+  return { courses: courses.map((c) => c.toJSON()), total: all };
 };
 
-courseSchema.statics.getTNSearchResult = function (search, times, ntimes) {
-  return this.find({
+courseSchema.statics.getTNSearchResult = async function (
+  search,
+  start,
+  total,
+  times,
+  ntimes
+) {
+  let searchParams = {
     $and: [
       ...times,
       ...ntimes,
@@ -70,13 +89,22 @@ courseSchema.statics.getTNSearchResult = function (search, times, ntimes) {
         ],
       },
     ],
-  })
+  };
+  let courses = await this.find(searchParams)
     .sort({ name: 1 })
-    .limit(50);
+    .skip(Number(start))
+    .limit(Number(total));
+  let all = await this.find(searchParams).countDocuments();
+  return { courses: courses.map((c) => c.toJSON()), total: all };
 };
 
-courseSchema.statics.getNSearchResult = function (search, ntimes) {
-  return this.find({
+courseSchema.statics.getNSearchResult = async function (
+  search,
+  start,
+  total,
+  ntimes
+) {
+  let searchParams = {
     $and: [
       ...ntimes,
       {
@@ -86,9 +114,14 @@ courseSchema.statics.getNSearchResult = function (search, ntimes) {
         ],
       },
     ],
-  })
+  };
+  let courses = await this.find(searchParams)
     .sort({ name: 1 })
-    .limit(50);
+    .skip(Number(start))
+    .limit(Number(total));
+
+  let all = await this.find(searchParams).countDocuments();
+  return { courses: courses.map((c) => c.toJSON()), total: all };
 };
 
 module.exports = mongoose.model('Course', courseSchema);

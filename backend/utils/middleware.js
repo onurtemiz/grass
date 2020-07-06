@@ -67,6 +67,7 @@ const errorHandler = (error, request, response, next) => {
     });
   }
   if (error.name === 'JsonWebTokenError') {
+    console.log(JSON.stringify(error));
     return response.status(401).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 11',
     });

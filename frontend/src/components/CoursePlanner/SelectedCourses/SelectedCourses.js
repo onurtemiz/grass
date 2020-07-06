@@ -8,6 +8,7 @@ import {
   offHoverCourse,
   changeCourseVisibility,
   removeSelectedCoursesWithStack,
+  toggleSelectedCoursesEye,
 } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
 import CreateProgram from '../ProgramOptions/CreateProgram';
@@ -54,6 +55,7 @@ const SelectedCourses = () => {
           courses: [sc],
           shortName: `${sc.areaCode}${sc.digitCode}`,
           visible: false,
+          eye: true,
         });
       }
     });
@@ -113,12 +115,19 @@ const SelectedCourses = () => {
 const MultipleCourses = ({ stack }) => {
   const dispatch = useDispatch();
   const [stackVisible, setStackVisible] = useState(stack.visible);
+  const [stackEye, setStackEye] = useState(stack.eye);
+
   const toggleStackVisibility = () => {
     setStackVisible(!stackVisible);
   };
 
   const handleRemove = () => {
     dispatch(removeSelectedCoursesWithStack(stack));
+  };
+
+  const toggleStackEye = () => {
+    dispatch(toggleSelectedCoursesEye(stack, !stackEye));
+    setStackEye(!stackEye);
   };
 
   if (stackVisible) {
@@ -160,6 +169,12 @@ const MultipleCourses = ({ stack }) => {
           color="green"
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleStackVisibility()}
+        />
+        <Icon
+          name={stackEye ? 'eye' : 'eye slash'}
+          color="green"
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => toggleStackEye()}
         />
       </Table.Cell>
     </Table.Row>

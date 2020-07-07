@@ -51,7 +51,7 @@ const initialState = {
 
 const courseReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SEARCH_COURSES':
+    case 'ADD_INF_COURSES':
       const uniqAll = lodash.uniqBy(
         [...state.courses, ...action.data.courses],
         'id'
@@ -67,6 +67,17 @@ const courseReducer = (state = initialState, action) => {
         courses: uniqAll,
       };
       return currentState;
+    case 'ADD_COURSES':
+      const uniqAllCourses = lodash.uniqBy(
+        [...state.courses, ...action.data],
+        'id'
+      );
+
+      const currentStateCourses = {
+        ...state,
+        courses: uniqAllCourses,
+      };
+      return currentStateCourses;
     case 'ADD_SELECTED_COURSE':
       const addedSelectedCourses = state.selectedCourses.filter(
         (c) => c.id !== action.data.id
@@ -756,7 +767,7 @@ export const addAllSections = (areaCode, digitCode) => {
       return { ...c, hover: false, clicked: false, visible: true };
     });
     dispatch({
-      type: 'SEARCH_COURSES',
+      type: 'ADD_COURSES',
       data: courses,
     });
     dispatch({
@@ -814,7 +825,7 @@ export const searchCourse = (
       data.start = 0;
     }
     dispatch({
-      type: 'SEARCH_COURSES',
+      type: 'ADD_INF_COURSES',
       data: data,
     });
     if (start === 0) {

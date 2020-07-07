@@ -84,11 +84,11 @@ const SubCourse = ({ course }) => {
         onMouseLeave={() => handleMouseLeave()}
       >
         <Card.Header style={{ display: 'inline' }}>
-          <Label color="blue" bold pointer>
+          <Label color="blue" bold pointer nolink>
             {course.name}
           </Label>{' '}
           •{' '}
-          <Label color="green" bold pointer>
+          <Label color="green" bold pointer nolink>
             {course.parentName}
           </Label>
           <Link to={LESSON_PATH(course)}>
@@ -106,17 +106,17 @@ const SubCourse = ({ course }) => {
         <Card.Meta>{course.fullName}</Card.Meta>
 
         <Card.Description>
-          <Label color="blue" bold pointer>
+          <Label color="blue" bold pointer nolink>
             <Icon name="calendar" />
             {convertDays(course.days)}
           </Label>{' '}
           •{' '}
-          <Label color="green" bold pointer>
+          <Label color="green" bold pointer nolink>
             <Icon name="clock" />
             {course.hours}
           </Label>{' '}
           •{' '}
-          <Label color="blue" bold pointer>
+          <Label color="blue" bold pointer nolink>
             {course.credits} Kredi
           </Label>
           <Label

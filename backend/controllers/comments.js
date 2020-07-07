@@ -16,13 +16,14 @@ const getCommentFilter = async (q) => {
   let popular = q.filter === 'mostPopular';
   const sort = q.filter === 'mostRecent' ? -1 : 1;
 
-  const comments = await Comment.getSquareComments(
+  const res = await Comment.getSquareComments(
     { sort, popular },
     q.start,
-    q.total
+    q.total,
+    q.day
   );
 
-  return comments;
+  return res;
 };
 
 const getCommentFeed = async (q, user) => {
@@ -33,7 +34,8 @@ const getCommentFeed = async (q, user) => {
     { sort, popular },
     user.following,
     q.start,
-    q.total
+    q.total,
+    q.day
   );
 
   return comments;
@@ -43,14 +45,15 @@ const getIdFilter = async (q) => {
   let popular = q.filter === 'mostPopular';
   const sort = q.filter === 'mostRecent' ? -1 : 1;
 
-  const comments = await Comment.getIdComments(
+  const res = await Comment.getIdComments(
     { sort, popular },
     q.id,
     q.start,
-    q.total
+    q.total,
+    q.day
   );
 
-  return comments;
+  return res;
 };
 commentsRouter.get('/total', async (req, res) => {
   const q = req.query;
@@ -91,32 +94,31 @@ commentsRouter.get('/feed/total', async (req, res) => {
 commentsRouter.get('/feed', async (req, res) => {
   const q = req.query;
 
-  if (!'start' in q || !'total' in q || !'filter' in q) {
+  if (!'start' in q || !'total' in q || !'filter' in q || 'daySort' in q) {
     return res.status(401).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 4',
     });
   }
   const user = req.user;
 
-  let comments = await getCommentFeed(q, user);
+  let { comments, total } = await getCommentFeed(q, user);
+
   comments.map((c) => {
     if (c.isHidden == true) {
       c.comment = 'hidden';
     }
   });
-  if (q.filter === 'mostPopular') {
-    return res.json(comments);
-  }
-  res.json(comments.map((c) => c.toJSON()));
+
+  res.json({ total, comments: comments.map((c) => c.toJSON()) });
 });
 
 commentsRouter.get('/', async (req, res) => {
   const q = req.query;
-  let comments;
+  let data;
   if ('id' in q && 'filter' in q) {
-    comments = await getIdFilter(q);
+    data = await getIdFilter(q);
   } else if ('filter' in q) {
-    comments = await getCommentFilter(q);
+    data = await getCommentFilter(q);
   } else if ('id' in q) {
     let comment = await Comment.findById(q.id);
     if (comment) {
@@ -129,15 +131,16 @@ commentsRouter.get('/', async (req, res) => {
       error: 'Yorum bulunamadı',
     });
   } else {
-    comments = await Comment.find({});
+    res.end();
   }
+  let { total, comments } = data;
   comments.map((c) => {
     if (c.commentStatus == 'hidden') {
       c.comment = 'hidden';
     }
   });
 
-  res.json(comments.map((c) => c.toJSON()));
+  res.json({ total, comments: comments.map((c) => c.toJSON()) });
 });
 
 const limiter = rateLimit({

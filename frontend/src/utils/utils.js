@@ -11,6 +11,18 @@ export function compareNames(a, b) {
   return 0;
 }
 
+export const daySortToInt = (daySort) => {
+  if (daySort === 'today') {
+    return 1;
+  } else if (daySort === 'lastWeek') {
+    return 7;
+  } else if (daySort === 'lastMonth') {
+    return 30;
+  } else {
+    return null;
+  }
+};
+
 export const getIdByDayHour = (index, course) => {
   const TOTAL_HOURS = 14;
   const day = course.days[index];

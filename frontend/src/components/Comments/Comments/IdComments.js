@@ -5,6 +5,8 @@ import { addInfCommentById } from '../../../reducers/commentReducer';
 import Comment from '../Comment/Comment';
 import CommentsLoading from '../CommentsLoading';
 import NoComments from '../NoComments';
+import moment from 'moment';
+import { daySortToInt } from '../../../utils/utils';
 
 const IdComments = ({ type, typeId, height }) => {
   const count = useSelector((state) => state.comments.count);
@@ -12,6 +14,8 @@ const IdComments = ({ type, typeId, height }) => {
   const hasMore = useSelector((state) => state.comments.hasMore);
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
+  const daySort = useSelector((state) => state.comments.daySort);
+
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
   const first = useRef(false);
@@ -19,16 +23,26 @@ const IdComments = ({ type, typeId, height }) => {
   useEffect(() => {
     first.current = false;
     fetching.current = false;
-    dispatch(addInfCommentById(0, count, typeId, filter, first, fetching));
-  }, [filter]);
+    dispatch(
+      addInfCommentById(0, count, typeId, filter, first, fetching, daySort)
+    );
+  }, [filter, daySort]);
   useEffect(() => {
-    setCurrentComments(filterComments(comments, type, typeId, filter));
-  }, [filter, start, comments]);
+    setCurrentComments(filterComments(comments, type, typeId, filter, daySort));
+  }, [filter, start, comments, daySort]);
 
   const loadFunc = () => {
     if (!fetching.current) {
       dispatch(
-        addInfCommentById(start, count, typeId, filter, first, fetching)
+        addInfCommentById(
+          start,
+          count,
+          typeId,
+          filter,
+          first,
+          fetching,
+          daySort
+        )
       );
     }
   };
@@ -66,7 +80,8 @@ const IdComments = ({ type, typeId, height }) => {
 };
 
 export default IdComments;
-function filterComments(comments, type, typeId, filter) {
+function filterComments(comments, type, typeId, filter, daySort) {
+  let dayInt = daySortToInt(daySort);
   return comments
     .filter((c) => {
       if (c.commentType === type) {
@@ -76,6 +91,14 @@ function filterComments(comments, type, typeId, filter) {
       } else if (type === 'user') {
         return c.user.id === typeId;
       }
+    })
+    .filter((c) => {
+      if (dayInt === null) {
+        return true;
+      }
+      let commentDate = moment(c.date);
+      var convertedSortDay = moment().subtract(dayInt, 'days');
+      return commentDate >= convertedSortDay;
     })
     .sort((a, b) => {
       if (filter === 'mostRecent') {

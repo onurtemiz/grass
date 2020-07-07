@@ -8,6 +8,7 @@ const initialState = {
   start: 0,
   count: 20,
   filter: 'mostRecent',
+  daySort: 'lastWeek',
 };
 
 const commentReducer = (state = initialState, action) => {
@@ -71,9 +72,30 @@ const commentReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       };
+    case 'DAY_SORT_COMMENT':
+      return {
+        ...state,
+        ...action.data,
+      };
     default:
       return state;
   }
+};
+
+export const daySortComment = (option) => {
+  return async (dispatch) => {
+    const state = {
+      total: 0,
+      hasMore: true,
+      start: 0,
+      comments: [],
+      daySort: option,
+    };
+    dispatch({
+      type: 'DAY_SORT_COMMENT',
+      data: state,
+    });
+  };
 };
 
 export const sortComment = (option) => {
@@ -185,16 +207,24 @@ export const removeComment = (id) => {
   };
 };
 
-export const addInfCommentAll = (start, count, filter, first, fetching) => {
+export const addInfCommentAll = (
+  start,
+  count,
+  filter,
+  first,
+  fetching,
+  daySort
+) => {
   fetching.current = true;
   return async (dispatch) => {
-    const comments = await commentsService.addInfCommentsAll(
+    const res = await commentsService.addInfCommentsAll(
       start,
       count,
-      filter
+      filter,
+      daySort
     );
-    if (comments.error) {
-      toast.error(`${comments.error}`, {
+    if (res.error) {
+      toast.error(`${res.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -205,15 +235,15 @@ export const addInfCommentAll = (start, count, filter, first, fetching) => {
       });
       return;
     }
-    const total = await commentsService.getTotalCommentsAll(filter);
+    let { comments, total } = res;
     let data = {
       hasMore: true,
       start: start + count,
       comments: comments,
-      total: total.total,
+      total: total,
       count: count,
     };
-    if (total.total === 0 || total.total < start) {
+    if (total === 0 || total < start) {
       data.hasMore = false;
       data.start = 0;
     }
@@ -234,18 +264,20 @@ export const addInfCommentById = (
   id,
   filter,
   first,
-  fetching
+  fetching,
+  daySort
 ) => {
   return async (dispatch) => {
     fetching.current = true;
-    const comments = await commentsService.addInfCommentsById(
+    const res = await commentsService.addInfCommentsById(
       start,
       count,
       id,
-      filter
+      filter,
+      daySort
     );
-    if (comments.error) {
-      toast.error(`${comments.error}`, {
+    if (res.error) {
+      toast.error(`${res.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -256,15 +288,15 @@ export const addInfCommentById = (
       });
       return;
     }
-    const total = await commentsService.getTotalCommentsById(id, filter);
+    let { comments, total } = res;
     let data = {
       hasMore: true,
       start: start + count,
       comments: comments,
-      total: total.total,
+      total: total,
       count: count,
     };
-    if (total.total === 0 || total.total < count + start) {
+    if (total === 0 || total < count + start) {
       data.hasMore = false;
       data.start = 0;
     }
@@ -301,16 +333,24 @@ export const getCommentById = (id) => {
   };
 };
 
-export const addInfCommentFeed = (start, count, filter, first, fetching) => {
+export const addInfCommentFeed = (
+  start,
+  count,
+  filter,
+  first,
+  fetching,
+  daySort
+) => {
   return async (dispatch) => {
     fetching.current = true;
-    const comments = await commentsService.addInfCommentsFeed(
+    const res = await commentsService.addInfCommentsFeed(
       start,
       count,
-      filter
+      filter,
+      daySort
     );
-    if (comments.error) {
-      toast.error(`${comments.error}`, {
+    if (res.error) {
+      toast.error(`${res.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -321,15 +361,15 @@ export const addInfCommentFeed = (start, count, filter, first, fetching) => {
       });
       return;
     }
-    const total = await commentsService.getTotalCommentsFeed();
+    const { comments, total } = res;
     let data = {
       hasMore: true,
       start: start + count,
       comments: comments,
-      total: total.total,
+      total: total,
       count: count,
     };
-    if (total.total === 0 || total.total < count + start) {
+    if (total === 0 || total < count + start) {
       data.hasMore = false;
       data.start = 0;
     }

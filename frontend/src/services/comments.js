@@ -82,10 +82,10 @@ const getTotalCommentsFeed = async () => {
   }
 };
 
-const addInfCommentsFeed = async (start, count, filter) => {
+const addInfCommentsFeed = async (start, count, filter, daySort) => {
   try {
     const res = await axios.get(
-      `${baseUrl}/feed?start=${start}&total=${count}&filter=${filter}`,
+      `${baseUrl}/feed?start=${start}&total=${count}&filter=${filter}&day=${daySort}`,
       config
     );
     return res.data;
@@ -96,10 +96,10 @@ const addInfCommentsFeed = async (start, count, filter) => {
   }
 };
 
-const addInfCommentsAll = async (start, count, filter) => {
+const addInfCommentsAll = async (start, count, filter, daySort) => {
   try {
     const req = await axios.get(
-      `${baseUrl}?start=${start}&total=${count}&filter=${filter}`,
+      `${baseUrl}?start=${start}&total=${count}&filter=${filter}&day=${daySort}`,
       config
     );
     return req.data;
@@ -122,10 +122,10 @@ const getCommentById = async (id, setComment) => {
   }
 };
 
-const addInfCommentsById = async (start, count, id, filter) => {
+const addInfCommentsById = async (start, count, id, filter, daySort) => {
   try {
     const req = await axios.get(
-      `${baseUrl}?start=${start}&total=${count}&id=${id}&filter=${filter}`,
+      `${baseUrl}?start=${start}&total=${count}&id=${id}&filter=${filter}&day=${daySort}`,
       config
     );
     return req.data;
@@ -136,9 +136,9 @@ const addInfCommentsById = async (start, count, id, filter) => {
   }
 };
 
-const allComments = async () => {
+const allComments = async (daySort) => {
   try {
-    const req = await axios.get(baseUrl, config);
+    const req = await axios.get(`${baseUrl}?day=${daySort}`, config);
     return req.data;
   } catch (e) {
     return e.response

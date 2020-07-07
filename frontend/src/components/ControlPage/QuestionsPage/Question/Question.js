@@ -33,7 +33,16 @@ const Question = () => {
   }
   return (
     <div>
-      <Label color="blue" bold style={{ fontSize: '2em' }}>
+      <Label
+        color="blue"
+        bold
+        style={{
+          fontSize: '2em',
+          display: 'flex',
+          whiteSpace: 'pre-wrap',
+          alignItems: 'center',
+        }}
+      >
         {question.question} · <Follow idToFollow={question.id} user={user} />
       </Label>
       <br />

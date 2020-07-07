@@ -28,7 +28,7 @@ export const SubCampus = ({ campus, main }) => {
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2">
             <Header.Content>
-              <Label color="blue" bold pointer>
+              <Label color="blue" bold pointer >
                 {campus.name.toLocaleUpperCase('TR')}
               </Label>
             </Header.Content>

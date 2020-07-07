@@ -10,7 +10,7 @@ import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 
 import Follow from '../../../Follow/Follow';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle } from '../../../Nav/NavTheme';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -44,18 +44,16 @@ const Lesson = () => {
 
   return (
     <div>
-      <div style={{ fontSize: '2em' }}>
+      <div style={HeadingStyle}>
         <Label color="blue" bold>
-          {lesson.name.toUpperCase()} ·
+          {lesson.name.toUpperCase()} ·{' '}
         </Label>
 
         <Link to={`/teachers/${lesson.teacher.name}`}>
           <Label color="green" bold pointer>
-            {' '}
             {lesson.teacher.name}
           </Label>{' '}
           <Label color="blue" bold>
-            {' '}
             ·{' '}
           </Label>
         </Link>

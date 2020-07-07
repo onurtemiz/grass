@@ -19,6 +19,7 @@ import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
 import StaticPages from './components/StaticPages/StaticPages';
 import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
 import CoursePlanner from './components/CoursePlanner/CoursePlanner';
+import Patreon from './components/Patreon/Patreon';
 const DefaultContainer = () => {
   return (
     <>
@@ -57,6 +58,7 @@ const AuthorizedUser = () => {
   return (
     <>
       <Nav />
+      <Patreon />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/" component={DefaultContainer} />
@@ -69,6 +71,7 @@ const AuthorizedAdmin = () => {
   return (
     <>
       <Nav admin />
+      <Patreon />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/admin/tips" component={ControlTips} />

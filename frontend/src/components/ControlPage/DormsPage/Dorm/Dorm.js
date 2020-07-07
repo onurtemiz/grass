@@ -6,7 +6,7 @@ import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
 import dormService from '../../../../services/dorms';
 
@@ -23,7 +23,7 @@ const Dorm = () => {
   }
   return (
     <div>
-      <Label color="blue" bold style={{ fontSize: '2em' }}>
+      <Label color="blue" bold style={HeadingStyle}>
         {dorm.name} · <Follow idToFollow={dorm.id} user={user} />
       </Label>
       <br />

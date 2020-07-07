@@ -1,6 +1,7 @@
 import Search from '../Search/Search';
 import styled from 'styled-components';
 import Slider, { Range } from 'rc-slider';
+import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
 export const NavSearch = styled.div`
   .ui.search .prompt {
@@ -45,6 +46,19 @@ export const StyledSlider = styled(Slider)`
   }
 `;
 
+export const HeadingStyle = {
+  fontSize: '2em',
+  display: 'flex',
+  whiteSpace: 'pre-wrap',
+  alignItems: 'center',
+};
+
+export const StyledDropdown = styled(Dropdown)`
+  .dropdown.icon {
+    color: #2185d0;
+  }
+`;
+
 export const Label = styled.label`
   color: ${(props) =>
     props.color === 'green'
@@ -59,7 +73,8 @@ export const Label = styled.label`
   cursor: ${(props) => (props.pointer ? 'pointer' : 'auto')};
   font-weight: ${(props) => (props.bold ? 'bold' : 'auto')};
   &:hover {
-    filter: ${(props) => (props.pointer ? 'brightness(110%)' : null)};
+    filter: ${(props) =>
+      props.pointer && !props.nolink ? 'brightness(110%)' : null};
   }
 `;
 

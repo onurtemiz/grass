@@ -6,11 +6,11 @@ import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
 import campusService from '../../../../services/campuses';
 
-const Campus = ( ) => {
+const Campus = () => {
   const match = useRouteMatch('/campuses/:name');
   const user = useSelector((state) => state.user);
   const [campus, setCampus] = useState(null);
@@ -23,7 +23,7 @@ const Campus = ( ) => {
   }
   return (
     <div>
-      <Label color="blue" bold style={{ fontSize: '2em' }}>
+      <Label color="blue" bold style={HeadingStyle}>
         {campus.name} · <Follow idToFollow={campus.id} user={user} />
       </Label>
       <br />

@@ -26,6 +26,9 @@ const SearchCourses = () => {
   const [noResult, setNoResult] = useState(true);
   const first = useRef(false);
   const fetching = useRef(false);
+  const refValue = useRef('');
+  const [storedTimeout, setStoredTimeout] = useState(null);
+
   useEffect(() => {
     dispatch(
       searchCourse(
@@ -73,13 +76,24 @@ const SearchCourses = () => {
     }
   }, [currentTarget, first]);
 
+  const handleValueChange = (e) => {
+    refValue.current = e.target.value;
+
+    if (storedTimeout) clearTimeout(storedTimeout);
+    setStoredTimeout(
+      setTimeout(() => {
+        setSearch(refValue.current);
+      }, 300)
+    );
+  };
+
   return (
     <>
       <Input
         icon="search"
         placeholder={`Ders Arayın...`}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={refValue.current}
+        onChange={(e) => handleValueChange(e)}
         lang="tr"
         size="big"
         style={{ width: '100%' }}

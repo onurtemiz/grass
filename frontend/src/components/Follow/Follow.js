@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { followLesson, unfollowLesson } from '../../reducers/userReducer';
 import { Label } from '../Nav/NavTheme';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Button } from 'semantic-ui-react';
 const Follow = ({ user, idToFollow }) => {
   const [following, setFollowing] = useState(false);
   const dispatch = useDispatch();
@@ -23,20 +23,15 @@ const Follow = ({ user, idToFollow }) => {
     }
   };
   return (
-    <>
-      <Icon name="hockey puck" color={following ? 'green' : 'blue'} />
+    <Button
+      color={following ? 'green' : 'blue'}
+      size="small"
+      onClick={() => handleFollow()}
+    >
+      <Icon name="hockey puck" color="white" />
 
-      <Label
-        color={following ? 'green' : 'blue'}
-        bold
-        pointer
-        style={{ boder: '1px solid green' }}
-      >
-        <span onClick={() => handleFollow()}>
-          {following ? 'Takibi Bırak' : 'Takip Et'}
-        </span>
-      </Label>
-    </>
+      <span>{following ? 'Takibi Bırak' : 'Takip Et'}</span>
+    </Button>
   );
 };
 export default Follow;

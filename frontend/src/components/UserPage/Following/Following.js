@@ -12,7 +12,7 @@ import {
   QUESTION_PATH,
   CAMPUS_PATH,
 } from '../../../utils/config';
-import { Label } from '../../Nav/NavTheme';
+import { Label, HeadingStyle } from '../../Nav/NavTheme';
 import userService from '../../../services/user';
 import NoFollowingUser from './NoFollowingUser';
 const Following = () => {
@@ -112,8 +112,8 @@ const FollowingList = ({ title, arr, path, user }) => {
       </Label>
       <ul style={{ listStyle: 'none' }}>
         {arr.map((f) => (
-          <li style={{ padding: '0.5em' }} key={f.id}>
-            <Label color="blue" bold style={{ fontSize: '2em' }}>
+          <li style={{ marginTop: '0.5em', ...HeadingStyle }} key={f.id}>
+            <Label color="blue" bold>
               <Link to={path(f)}>
                 {f.name
                   ? f.name.toUpperCase()
@@ -121,8 +121,9 @@ const FollowingList = ({ title, arr, path, user }) => {
                   ? f.question
                   : f.fullName.toUpperCase()}
               </Link>{' '}
-              · <Follow idToFollow={f.id} user={user} />
+              ·{' '}
             </Label>
+            <Follow idToFollow={f.id} user={user} />
           </li>
         ))}
       </ul>

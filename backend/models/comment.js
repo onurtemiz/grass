@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false);
-
+const moment = require('moment');
+const { search } = require('../app');
 const commentSchema = new mongoose.Schema({
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
@@ -48,47 +49,18 @@ const commentSchema = new mongoose.Schema({
 
 commentSchema.set(uniqueValidator);
 
-commentSchema.statics.getSquareComments = function (
+commentSchema.statics.getSquareComments = async function (
   { popular, sort },
   start = 0,
-  total = Number.MAX_SAFE_INTEGER
+  total = Number.MAX_SAFE_INTEGER,
+  daySort
 ) {
-  return this.find({ commentStatus: { $ne: 'destroyed' } })
-    .sort(popular ? { totalLength: -1 } : { _id: sort })
-    .skip(Number(start))
-    .limit(Number(total))
-    .populate({
-      path: 'user',
-      select: ['username', 'id', 'userStatus', 'iconName'],
-    })
-
-    .populate({
-      path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
-    })
-    .populate({ path: 'club', select: ['name'] })
-    .populate({ path: 'campus', select: ['name'] })
-    .populate({ path: 'dorm', select: ['name'] })
-    .populate({ path: 'question', select: ['id', 'question'] });
-};
-
-commentSchema.statics.getFeedComments = function (
-  { sort, popular },
-  ids,
-
-  start = 0,
-  total = Number.MAX_SAFE_INTEGER
-) {
-  return this.find({
+  let dayFilter = getDayFilter(daySort);
+  let searchParams = {
+    date: dayFilter,
     commentStatus: { $ne: 'destroyed' },
-    $or: [
-      { lesson: { $in: ids } },
-      { club: { $in: ids } },
-      { campus: { $in: ids } },
-      { dorm: { $in: ids } },
-      { question: { $in: ids } },
-    ],
-  })
+  };
+  let comments = await this.find(searchParams)
     .sort(popular ? { likesLength: -1 } : { _id: sort })
     .skip(Number(start))
     .limit(Number(total))
@@ -105,15 +77,65 @@ commentSchema.statics.getFeedComments = function (
     .populate({ path: 'campus', select: ['name'] })
     .populate({ path: 'dorm', select: ['name'] })
     .populate({ path: 'question', select: ['id', 'question'] });
+  let all = await this.find(searchParams).countDocuments();
+  return { comments, total: all };
 };
 
-commentSchema.statics.getIdComments = function (
+commentSchema.statics.getFeedComments = async function (
+  { sort, popular },
+  ids,
+
+  start = 0,
+  total = Number.MAX_SAFE_INTEGER,
+  daySort
+) {
+  let dayFilter = getDayFilter(daySort);
+  let searchParams = {
+    date: dayFilter,
+
+    commentStatus: { $ne: 'destroyed' },
+
+    $or: [
+      { lesson: { $in: ids } },
+      { club: { $in: ids } },
+      { dorm: { $in: ids } },
+      { campus: { $in: ids } },
+      { question: { $in: ids } },
+    ],
+  };
+  let comments = await this.find(searchParams)
+    .sort(popular ? { likesLength: -1 } : { _id: sort })
+    .skip(Number(start))
+    .limit(Number(total))
+    .populate({
+      path: 'user',
+      select: ['username', 'id', 'userStatus', 'iconName'],
+    })
+
+    .populate({
+      path: 'lesson',
+      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+    })
+    .populate({ path: 'club', select: ['name'] })
+    .populate({ path: 'campus', select: ['name'] })
+    .populate({ path: 'dorm', select: ['name'] })
+    .populate({ path: 'question', select: ['id', 'question'] });
+
+  const all = await this.find(searchParams).countDocuments();
+  return { comments, total: all };
+};
+
+commentSchema.statics.getIdComments = async function (
   { sort, popular },
   id,
   start = 0,
-  total = Number.MAX_SAFE_INTEGER
+  total = Number.MAX_SAFE_INTEGER,
+  daySort
 ) {
-  return this.find({
+  let dayFilter = getDayFilter(daySort);
+  let searchParams = {
+    date: dayFilter,
+
     commentStatus: { $ne: 'destroyed' },
     $or: [
       { teacher: id },
@@ -124,7 +146,8 @@ commentSchema.statics.getIdComments = function (
       { dorm: id },
       { question: id },
     ],
-  })
+  };
+  let comments = await this.find(searchParams)
     .sort(popular ? { likesLength: -1 } : { _id: sort })
     .skip(Number(start))
     .limit(Number(total))
@@ -140,6 +163,8 @@ commentSchema.statics.getIdComments = function (
     .populate({ path: 'campus', select: ['name'] })
     .populate({ path: 'dorm', select: ['name'] })
     .populate({ path: 'question', select: ['id', 'question'] });
+  let all = await this.find(searchParams).countDocuments();
+  return { comments, total: all };
 };
 
 commentSchema.set('toJSON', {
@@ -152,3 +177,23 @@ commentSchema.set('toJSON', {
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
+
+const getDayFilter = (daySort) => {
+  if (daySort === 'today') {
+    return {
+      $gte: moment().subtract(1, 'days'),
+    };
+  } else if (daySort === 'lastWeek') {
+    return {
+      $gte: moment().subtract(7, 'days'),
+    };
+  } else if (daySort === 'lastMonth') {
+    return {
+      $gte: moment().subtract(30, 'days'),
+    };
+  } else {
+    return {
+      $lte: new Date().getTime(),
+    };
+  }
+};

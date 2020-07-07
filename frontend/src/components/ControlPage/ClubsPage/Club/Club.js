@@ -7,7 +7,7 @@ import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
 
 const Club = () => {
@@ -29,14 +29,17 @@ const Club = () => {
   }
   return (
     <div>
-      <Label color="blue" bold style={{ fontSize: '2em' }}>
-        {club.name} · <Follow idToFollow={club.id} user={user} />
+      <Label color="blue" bold style={HeadingStyle}>
+        {club.name} ·{' '}
+        <Label color="green" bold>
+          {club.fullName}{' '}
+          <Label color="blue" bold>
+            ·{' '}
+          </Label>
+        </Label>
+        <Follow idToFollow={club.id} user={user} />
       </Label>
-      <br />
-      <br />
-      <Label color="green" bold style={{ fontSize: '2em' }}>
-        {club.fullName}
-      </Label>
+
       <br />
       <br />
       <>

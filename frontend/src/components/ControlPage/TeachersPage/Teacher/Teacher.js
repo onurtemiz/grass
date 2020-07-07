@@ -40,15 +40,23 @@ const Teacher = () => {
       </Label>
 
       {
-        <ul style={{ listStyle: 'none', fontSize: '1.5em', paddingLeft: '0' }}>
+        <ul style={{ listStyle: 'none', fontSize: '1.7em', paddingLeft: '0' }}>
           {teacher.lessons.map((l) => (
-            <li key={l.id} style={{ paddingTop: '0.5em' }}>
+            <li
+              key={l.id}
+              style={{
+                paddingTop: '0.5em',
+                display: 'flex',
+                alignItems: 'center',
+                whiteSpace: 'pre-wrap',
+              }}
+            >
               <Link to={LESSON_PATH(l)}>
                 <Label color="green" bold pointer>
                   {' '}
-                  {l.name.toUpperCase()} ·
+                  {l.name.toUpperCase()} ·{' '}
                 </Label>
-              </Link>{' '}
+              </Link>
               <Follow idToFollow={l.id} user={user} />
             </li>
           ))}

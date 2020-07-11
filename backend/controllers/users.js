@@ -13,6 +13,7 @@ const Notification = require('../models/notification');
 const Comment = require('../models/comment');
 const Tip = require('../models/tip');
 const middleware = require('../utils/middleware');
+const blacklist = require('../blacklistv2.json');
 
 usersRouter.post('/signup', async (req, res) => {
   const body = req.body;
@@ -35,7 +36,12 @@ usersRouter.post('/signup', async (req, res) => {
     return res.status(400).json({
       error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
     });
+  } else if (inBanList(body.email)) {
+    return res.status(400).json({
+      error: 'Site sadece Boğaziçi Öğrencilerine açıktır.',
+    });
   }
+
   const isEmailOrUsernameDuplicate = await User.findOne({
     $or: [{ email: body.email }, { username: body.username }],
   });
@@ -46,16 +52,16 @@ usersRouter.post('/signup', async (req, res) => {
   }
 
   const passwordHash = await bcrypt.hash(body.password, 10);
+
   const user = new User({
     username: body.username,
     email: body.email,
     passwordHash: passwordHash,
   });
-  await user.save();
-  res.status(201).json(user.toJSONMain());
-});
-usersRouter.use(middleware.tokenExtractor);
 
+  await user.save();
+  res.status(201).json(user.toJSON());
+});
 usersRouter.use(middleware.authUser);
 
 usersRouter.put('/modal', async (req, res) => {
@@ -63,6 +69,10 @@ usersRouter.put('/modal', async (req, res) => {
   await req.user.save();
   res.json(req.user.toJSON());
 });
+
+const inBanList = (email) => {
+  return blacklist.find((b) => b === email);
+};
 
 usersRouter.get('/following', async (req, res) => {
   const user = req.user;

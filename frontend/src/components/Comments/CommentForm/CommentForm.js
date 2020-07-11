@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { postComment } from '../../../reducers/commentReducer';
 import { useDispatch } from 'react-redux';
-import { Form, Button, Segment, Label } from 'semantic-ui-react';
+import { Form, Button, Segment, Label, Checkbox } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
+import { Label as StyledLabel } from '../../Nav/NavTheme';
 
-const CommentForm = ({ typeId, commentType, teacherId }) => {
+const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, errors, reset } = useForm();
+  const [recommend, setRecommend] = useState(true);
 
   const handleComment = async (data) => {
     let values = {
@@ -17,6 +19,7 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
       typeId,
       teacherId: teacherId ? teacherId : null,
       commentType,
+      recommend,
     };
     setIsLoading(true);
     dispatch(postComment(values, reset, setTools, setIsLoading));
@@ -58,6 +61,15 @@ const CommentForm = ({ typeId, commentType, teacherId }) => {
             </>
           )}
         </Form.Field>
+
+        {tools && !noRecommend ? (
+          <Checkbox
+            defaultChecked={recommend}
+            onChange={() => setRecommend(!recommend)}
+            label="Öneriyorum"
+          />
+        ) : null}
+
         {tools ? (
           <div>
             <Button

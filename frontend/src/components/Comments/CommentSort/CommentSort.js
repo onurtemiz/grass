@@ -86,7 +86,7 @@ const CommentSort = () => {
   );
 };
 
-const daySortToText = (sort) => {
+export const daySortToText = (sort) => {
   if (sort === 'today') {
     return 'Bugün';
   } else if (sort === 'lastWeek') {
@@ -95,6 +95,12 @@ const daySortToText = (sort) => {
     return 'Bu Ay';
   } else if (sort === 'allTime') {
     return 'Tüm Zamanlar';
+  } else if (sort === 'tomorrow') {
+    return 'Yarın';
+  } else if (sort === 'nextWeek') {
+    return 'Bu Hafta';
+  } else if (sort === 'nextMonth') {
+    return 'Bu Ay';
   }
 };
 

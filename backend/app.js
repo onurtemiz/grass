@@ -19,6 +19,9 @@ const campusesRouter = require('./controllers/campuses');
 const dormsRouter = require('./controllers/dorms');
 const questionsRouter = require('./controllers/questions');
 const coursesRouter = require('./controllers/courses');
+const eventsRouter = require('./controllers/events');
+// const tok = require('./heh');
+// tok();
 const mongoUri = async () => {
   let mongoUri;
   if (process.env.NODE_ENV === 'test') {
@@ -55,6 +58,7 @@ apiRouter.use('/login', loginRouter);
 apiRouter.use('/users', usersRouter);
 apiRouter.use(middleware.authUser);
 apiRouter.use('/courses', coursesRouter);
+apiRouter.use('/events', eventsRouter);
 apiRouter.use('/questions', questionsRouter);
 apiRouter.use('/dorms', dormsRouter);
 apiRouter.use('/campuses', campusesRouter);

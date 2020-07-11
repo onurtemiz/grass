@@ -15,6 +15,7 @@ import MainUser from './components/UserPage/User/MainUser';
 import 'react-toastify/dist/ReactToastify.css';
 import MainComponent from './components/ControlPage/MainComponent';
 import ControlClub from './components/AdminPage/Admin/ControlClub';
+import ControlEvents from './components/AdminPage/Admin/ControlEvents';
 import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
 import StaticPages from './components/StaticPages/StaticPages';
 import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
@@ -34,6 +35,7 @@ const DefaultContainer = () => {
             '/questions',
             '/teachers',
             '/lessons',
+            '/events',
           ]}
           component={MainComponent}
         />
@@ -78,6 +80,7 @@ const AuthorizedAdmin = () => {
         <Route path="/admin/reports" component={ControlReports} />
         <Route path="/admin/clubs" component={ControlClub} />
         <Route path="/admin/questions" component={ControlQuestions} />
+        <Route path="/admin/events" component={ControlEvents} />
 
         <Route path="/admin" component={Admin} />
         <Route path="/" component={DefaultContainer} />

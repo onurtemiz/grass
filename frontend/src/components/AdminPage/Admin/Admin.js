@@ -31,6 +31,12 @@ const Admin = () => {
           QUESTION
         </Label>
       </Header>
+      <br />
+      <Header as={Link} to="admin/events">
+        <Label color="blue" pointer>
+          EVENTS
+        </Label>
+      </Header>
     </div>
   );
 };

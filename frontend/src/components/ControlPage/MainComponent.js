@@ -17,6 +17,7 @@ import Question from './QuestionsPage/Question/Question';
 import Questions from './QuestionsPage/Questions/Questions';
 import Tips from './TipsPage/Tips';
 import QuestionsPage from './QuestionsPage/QuestionsPage';
+import EventsPage from './EventsPage/EventsPage';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
@@ -31,24 +32,36 @@ const MainComponent = () => {
   const questionPageMatch = useRouteMatch('/questions/:id');
   const history = useHistory();
   const location = useLocation();
+  const categories = [
+    'teachers',
+    'lessons',
+    'clubs',
+    'questions',
+    'events',
+    'tips',
+    'campuses',
+    'dorms',
+  ];
   useEffect(() => {
     if (
       location.pathname.includes('teachers') ||
       location.pathname.includes('control')
     ) {
-      setActiveIndex(0);
+      setActiveIndex(categories.indexOf('teachers'));
     } else if (location.pathname.includes('lessons')) {
-      setActiveIndex(1);
+      setActiveIndex(categories.indexOf('lessons'));
     } else if (location.pathname.includes('clubs')) {
-      setActiveIndex(2);
+      setActiveIndex(categories.indexOf('clubs'));
     } else if (location.pathname.includes('questions')) {
-      setActiveIndex(3);
+      setActiveIndex(categories.indexOf('questions'));
     } else if (location.pathname.includes('campuses')) {
-      setActiveIndex(5);
+      setActiveIndex(categories.indexOf('campuses'));
     } else if (location.pathname.includes('dorms')) {
-      setActiveIndex(6);
+      setActiveIndex(categories.indexOf('dorms'));
     } else if (location.pathname.includes('tips')) {
-      setActiveIndex(4);
+      setActiveIndex(categories.indexOf('tips'));
+    } else if (location.pathname.includes('events')) {
+      setActiveIndex(categories.indexOf('events'));
     }
   }, [location]);
 
@@ -58,20 +71,22 @@ const MainComponent = () => {
 
   const handleIndex = (e, data) => {
     setActiveIndex(data.activeIndex);
-    if (data.activeIndex === 0) {
+    if (data.activeIndex === categories.indexOf('teachers')) {
       history.push('/teachers');
-    } else if (data.activeIndex === 1) {
+    } else if (data.activeIndex === categories.indexOf('lessons')) {
       history.push('/lessons');
-    } else if (data.activeIndex === 2) {
+    } else if (data.activeIndex === categories.indexOf('clubs')) {
       history.push('/clubs');
-    } else if (data.activeIndex === 3) {
+    } else if (data.activeIndex === categories.indexOf('questions')) {
       history.push('/questions');
-    } else if (data.activeIndex === 5) {
-      history.push('/campuses');
-    } else if (data.activeIndex === 6) {
-      history.push('/dorms');
-    } else if (data.activeIndex === 4) {
+    } else if (data.activeIndex === categories.indexOf('tips')) {
       history.push('/tips');
+    } else if (data.activeIndex === categories.indexOf('campuses')) {
+      history.push('/campuses');
+    } else if (data.activeIndex === categories.indexOf('dorms')) {
+      history.push('/dorms');
+    } else if (data.activeIndex === categories.indexOf('events')) {
+      history.push('/events');
     }
   };
 
@@ -79,12 +94,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(0)}>
+          <Label bold pointer color={getColor(categories.indexOf('teachers'))}>
             Hocalar
           </Label>
         ),
         color: 'green',
-        key: 1,
+        key: categories.indexOf('teachers'),
       },
       render: () => (
         <Segment
@@ -102,12 +117,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(1)}>
+          <Label bold pointer color={getColor(categories.indexOf('lessons'))}>
             Dersler
           </Label>
         ),
         color: 'green',
-        key: 2,
+        key: categories.indexOf('lessons'),
       },
       render: () => (
         <Segment
@@ -125,12 +140,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(2)}>
+          <Label bold pointer color={getColor(categories.indexOf('clubs'))}>
             Kulüpler
           </Label>
         ),
         color: 'green',
-        key: 3,
+        key: categories.indexOf('clubs'),
       },
       render: () => (
         <Segment
@@ -144,12 +159,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(3)}>
+          <Label bold pointer color={getColor(categories.indexOf('questions'))}>
             Sorular
           </Label>
         ),
         color: 'green',
-        key: 4,
+        key: categories.indexOf('questions'),
       },
       render: () => (
         <Segment
@@ -167,12 +182,28 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(4)}>
+          <Label bold pointer color={getColor(categories.indexOf('events'))}>
+            Etkinlikler
+          </Label>
+        ),
+        color: 'green',
+        key: categories.indexOf('events'),
+      },
+      render: () => (
+        <Segment style={{ marginRight: '0.5em' }}>
+          <EventsPage />
+        </Segment>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(categories.indexOf('tips'))}>
             Tavsiyeler
           </Label>
         ),
         color: 'green',
-        key: 5,
+        key: categories.indexOf('tips'),
       },
       render: () => (
         <Segment style={{ marginRight: '0.5em', paddingTop: '1.5em' }}>
@@ -183,12 +214,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(5)}>
+          <Label bold pointer color={getColor(categories.indexOf('campuses'))}>
             Kampüsler
           </Label>
         ),
         color: 'green',
-        key: 6,
+        key: categories.indexOf('campuses'),
       },
       render: () => (
         <Segment
@@ -206,12 +237,12 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(6)}>
+          <Label bold pointer color={getColor(categories.indexOf('dorms'))}>
             Yurtlar
           </Label>
         ),
         color: 'green',
-        key: 7,
+        key: categories.indexOf('dorms'),
       },
       render: () => (
         <Segment

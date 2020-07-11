@@ -3,6 +3,7 @@ import { Modal, Button, Divider } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import { useSelector, useDispatch } from 'react-redux';
 import { sawModal } from '../../reducers/userReducer';
+import { Link } from 'react-router-dom';
 
 const FirstTimeModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,6 @@ const FirstTimeModal = () => {
   const handleAction = () => {
     dispatch(sawModal());
   };
-
   return (
     <Modal open={isOpen}>
       <Modal.Header>
@@ -65,11 +65,13 @@ const FirstTimeModal = () => {
             Öğrenciler Hariç Giriş Yasak
           </Label>
           <br />
-          Öğrenci statüsünde olmayan ve halka açık @boun uzantılı epostalar
+          Öğrenci statüsünde olmayan halka açık @boun uzantılı epostalar
           sistemden banlıdır. Güncel banlı eposta listesini{' '}
-          <Label color="green" bold pointer>
-            buradan
-          </Label>{' '}
+          <Link to="https://github.com/onurtemiz/grass/blob/master/backend/blacklistv2.json">
+            <Label color="green" bold pointer>
+              buradan
+            </Label>
+          </Link>{' '}
           görebilirsiniz.
           <br />
           Eğer bir kullanıcının öğrenci olmadığından şüpheleniyorsanız iletişime

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false);
 const moment = require('moment');
-const { search } = require('../app');
+const utils = require('../utils/utils');
 const commentSchema = new mongoose.Schema({
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,9 +42,11 @@ const commentSchema = new mongoose.Schema({
     },
   ],
   likesLength: { type: Number, default: 0 },
-  date: { type: Date, required: true, default: Date.now },
+  date: { type: Date, default: Date.now },
   commentStatus: { type: String, defaut: 'visible' },
   commentType: { type: String, required: true },
+  recommend: { type: Boolean, required: true, default: true },
+  edited: { type: Boolean, default: false },
 });
 
 commentSchema.set(uniqueValidator);
@@ -55,7 +57,7 @@ commentSchema.statics.getSquareComments = async function (
   total = Number.MAX_SAFE_INTEGER,
   daySort
 ) {
-  let dayFilter = getDayFilter(daySort);
+  let dayFilter = utils.getDayFilter(daySort);
   let searchParams = {
     date: dayFilter,
     commentStatus: { $ne: 'destroyed' },
@@ -89,7 +91,7 @@ commentSchema.statics.getFeedComments = async function (
   total = Number.MAX_SAFE_INTEGER,
   daySort
 ) {
-  let dayFilter = getDayFilter(daySort);
+  let dayFilter = utils.getDayFilter(daySort);
   let searchParams = {
     date: dayFilter,
 
@@ -132,7 +134,7 @@ commentSchema.statics.getIdComments = async function (
   total = Number.MAX_SAFE_INTEGER,
   daySort
 ) {
-  let dayFilter = getDayFilter(daySort);
+  let dayFilter = utils.getDayFilter(daySort);
   let searchParams = {
     date: dayFilter,
 
@@ -177,23 +179,3 @@ commentSchema.set('toJSON', {
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
-
-const getDayFilter = (daySort) => {
-  if (daySort === 'today') {
-    return {
-      $gte: moment().subtract(1, 'days'),
-    };
-  } else if (daySort === 'lastWeek') {
-    return {
-      $gte: moment().subtract(7, 'days'),
-    };
-  } else if (daySort === 'lastMonth') {
-    return {
-      $gte: moment().subtract(30, 'days'),
-    };
-  } else {
-    return {
-      $lte: new Date().getTime(),
-    };
-  }
-};

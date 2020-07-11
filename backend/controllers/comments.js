@@ -12,6 +12,15 @@ const Question = require('../models/question');
 const Notification = require('../models/notification');
 const rateLimit = require('express-rate-limit');
 
+// commentsRouter.get('/refresh', async (req, res) => {
+//   const comments = await Comment.find();
+//   for (let i = 0; i < comments.length; i++) {
+//     comments[i].edited = false;
+//     await comments[i].save();
+//   }
+//   res.end();
+// });
+
 const getCommentFilter = async (q) => {
   let popular = q.filter === 'mostPopular';
   const sort = q.filter === 'mostRecent' ? -1 : 1;
@@ -178,9 +187,10 @@ commentsRouter.post('/', limiter, async (req, res) => {
       });
     }
   }
-  if (!body.typeId) {
+  console.log(body);
+  if (!body.typeId || !('recommend' in body)) {
     return res.status(400).json({
-      error: 'typeId must be present',
+      error: 'typeId and recommend must be present',
     });
   }
 
@@ -196,17 +206,6 @@ commentsRouter.post('/', limiter, async (req, res) => {
         error: 'Could not find the teacher,lesson,user',
       });
     }
-    // ONLY ONE COMMENT PER LESSON
-    // const isDuplicate = await Comment.findOne({
-    //   teacher: body.teacherId,
-    //   lesson: body.lessonId,
-    //   user: user._id,
-    // });
-    // if (isDuplicate !== null) {
-    //   return res.status(400).json({
-    //     error: 'you have already commented',
-    //   });
-    // }
     if (!isTeacherRight) {
       return res.status(400).json({
         error: 'teacher and lesson dont match.',
@@ -222,6 +221,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
       likes: [user._id],
       likesLength: 1,
       commentType: 'lesson',
+      recommend: body.recommend,
     });
     await comment.save();
     user.comments = user.comments.concat(comment._id);
@@ -245,8 +245,8 @@ commentsRouter.post('/', limiter, async (req, res) => {
       date: new Date(),
       likes: [user._id],
       likesLength: 1,
-
       commentType: 'club',
+      recommend: body.recommend,
     });
     await comment.save();
     user.comments = user.comments.concat(comment._id);
@@ -267,6 +267,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likes: [user._id],
+      recommend: body.recommend,
       likesLength: 1,
 
       commentType: 'campus',
@@ -292,6 +293,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
       likes: [user._id],
       likesLength: 1,
 
+      recommend: body.recommend,
       commentType: 'dorm',
     });
     await comment.save();
@@ -313,7 +315,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
       comment: body.comment,
       date: new Date(),
       likesLength: 1,
-
+      recommend: body.recommend,
       likes: [user._id],
       commentType: 'question',
     });
@@ -369,6 +371,7 @@ commentsRouter.put('/:id', async (req, res) => {
       });
     }
     comment.comment = body.comment;
+    comment.edited = true;
   } else {
     const isLiked = comment.likes.some((u) => u.equals(user._id));
 

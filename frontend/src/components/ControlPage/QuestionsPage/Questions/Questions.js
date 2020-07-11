@@ -14,7 +14,7 @@ import NoSubResult from '../../../Search/NoSubResult';
 const Questions = ({ main }) => {
   const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
     'questions',
-    addInfQuestions,
+  addInfQuestions,
     filterQuestions
   );
 

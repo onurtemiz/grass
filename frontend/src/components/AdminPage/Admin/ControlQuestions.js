@@ -17,7 +17,6 @@ const ControlQuestions = () => {
   if (questions.length === 0) {
     return null;
   }
-  console.log('questions', questions);
   return (
     <div
       style={{

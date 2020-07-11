@@ -14,8 +14,8 @@ import { Label, HeadingStyle } from '../../../Nav/NavTheme';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName')
-    .params;
+  const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName');
+
   const location = useLocation();
 
   const lessons = useSelector((state) => state.all.all);
@@ -23,15 +23,16 @@ const Lesson = () => {
 
   useEffect(() => {
     setLesson(null);
-    const q = match;
+    const q = match.params;
     dispatch(getLessonPageByName(q.areaCode, q.digitCode, q.teacherName));
   }, [location]);
 
   useEffect(() => {
+    const q = match.params;
     const lesson = lessons.find(
       (l) =>
-        l.name === `${match.areaCode}${match.digitCode}` &&
-        l.teacher.name === decodeURI(match.teacherName)
+        l.name === `${q.areaCode}${q.digitCode}` &&
+        l.parentName === decodeURI(q.teacherName)
     );
     if (lesson !== undefined) {
       setLesson(lesson);

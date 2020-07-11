@@ -57,7 +57,7 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
     return <HiddenComment comment={comment} showSource={showSource} />;
   }
   return (
-    <Segment color="blue">
+    <Segment color={comment.recommend ? 'blue' : 'red'}>
       <SComment.Group>
         <SComment>
           <CommentReport
@@ -133,16 +133,20 @@ export const UserAndMeta = ({ comment, showSource }) => {
   return (
     <SComment.Author>
       <Link to={`/users/${comment.user.username}`}>
-        {comment.user.username}
-        {comment.user.iconName.length > 0 ? (
-          <>
-            {' '}
-            <UserIcon user={comment.user} />
-          </>
-        ) : null}
+        <Label color={commentThemeColor(comment)} bold pointer>
+          {comment.user.username}
+          {comment.user.iconName.length > 0 ? (
+            <>
+              {' '}
+              <UserIcon comment={comment} />
+            </>
+          ) : null}
+        </Label>
       </Link>
+
       <SComment.Metadata>
         {comment.likes.length} Pati · {moment(new Date(comment.date)).fromNow()}{' '}
+        {comment.edited ? ' · (düzenlendi)' : null}
         {!!showSource ? ' · ' : null}
         {!!showSource ? (
           <>
@@ -171,7 +175,7 @@ export const UserAndMeta = ({ comment, showSource }) => {
 const LessonType = ({ comment }) => {
   return (
     <Link to={LESSON_PATH(comment.lesson)}>
-      <Label color="blue" pointer>
+      <Label color={commentThemeColor(comment)} pointer>
         {`${comment.lesson.name.toUpperCase()} · ${comment.lesson.parentName}`}
       </Label>
     </Link>
@@ -181,7 +185,7 @@ const LessonType = ({ comment }) => {
 const ClubType = ({ comment }) => {
   return (
     <Link to={CLUB_PATH(comment.club)}>
-      <Label color="blue" pointer>
+      <Label color={commentThemeColor(comment)} pointer>
         {comment.club.name.toUpperCase()}
       </Label>
     </Link>
@@ -191,7 +195,7 @@ const ClubType = ({ comment }) => {
 const CampusType = ({ comment }) => {
   return (
     <Link to={CAMPUS_PATH(comment.campus)}>
-      <Label color="blue" pointer>
+      <Label color={commentThemeColor(comment)} pointer>
         {comment.campus.name.toUpperCase()}
       </Label>
     </Link>
@@ -201,7 +205,7 @@ const CampusType = ({ comment }) => {
 const DormType = ({ comment }) => {
   return (
     <Link to={DORM_PATH(comment.dorm)}>
-      <Label color="blue" pointer>
+      <Label color={commentThemeColor(comment)} pointer>
         {comment.dorm.name.toUpperCase()}
       </Label>
     </Link>
@@ -211,15 +215,21 @@ const DormType = ({ comment }) => {
 const QuestionType = ({ comment }) => {
   return (
     <Link to={QUESTION_PATH(comment.question)}>
-      <Label color="blue" pointer>
+      <Label color={commentThemeColor(comment)} pointer>
         {comment.question.question}
       </Label>
     </Link>
   );
 };
 
-const UserIcon = ({ user }) => {
-  return <Icon color="blue" name={user.iconName} />;
+const commentThemeColor = (comment) => {
+  return comment.recommend ? 'blue' : 'red';
+};
+
+const UserIcon = ({ comment }) => {
+  return (
+    <Icon color={commentThemeColor(comment)} name={comment.user.iconName} />
+  );
 };
 
 export default Comment;

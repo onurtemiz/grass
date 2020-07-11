@@ -49,7 +49,7 @@ const Question = () => {
       <br />
       {question.description}
       <br />
-      <CommentForm typeId={question.id} commentType="question" />
+      <CommentForm typeId={question.id} commentType="question" noRecommend />
       <Divider />
       <CommentSort />
       <IdComments typeId={question.id} type="question" />

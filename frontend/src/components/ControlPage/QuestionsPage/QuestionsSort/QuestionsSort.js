@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, StyledDropdown } from '../../../Nav/NavTheme';
 import { changeSort } from '../../../../reducers/questionReducer';
 import Filter from '../../../Filter/Filter';
 import QuestionModal from './../Questions/QuestionModal';
+import { commentSortToLabel } from '../../../Comments/CommentSort/CommentSort';
 
 const QuestionsSort = () => {
   const filter = useSelector((state) => state.questions.filter);
@@ -13,51 +14,35 @@ const QuestionsSort = () => {
   useEffect(() => {
     dispatch(changeSort(active));
   }, [active]);
-
   return (
     <Menu
-      style={{ marginBottom: '0',  }}
+      style={{ marginBottom: '0' }}
       pointing
       secondary
       color="green"
+      stackable
     >
-      <Menu.Item
-        active={active === 'mostRecent'}
-        onClick={() => setActive('mostRecent')}
-        header
-      >
-        <Icon name="fire" color={active === 'mostRecent' ? 'green' : 'blue'} />
-        <Label color={active === 'mostRecent' ? 'green' : 'blue'} pointer>
-          En Yeni
-        </Label>
+      <Menu.Item>
+        <StyledDropdown text={commentSortToLabel(active)}>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              text="En Yeni"
+              onClick={() => setActive('mostRecent')}
+            />
+            <Dropdown.Item
+              text="En Eski"
+              onClick={() => setActive('mostPast')}
+            />
+            <Dropdown.Item
+              text="En Patili"
+              onClick={() => setActive('mostPopular')}
+            />
+          </Dropdown.Menu>
+        </StyledDropdown>
+        <QuestionModal />
       </Menu.Item>
-      <Menu.Item
-        active={active === 'mostPast'}
-        onClick={() => setActive('mostPast')}
-        header
-      >
-        <Icon name="time" color={active === 'mostPast' ? 'green' : 'blue'} />
-        <Label color={active === 'mostPast' ? 'green' : 'blue'} pointer>
-          En Eski
-        </Label>
-      </Menu.Item>
-      <Menu.Item
-        active={active === 'mostPopular'}
-        onClick={() => setActive('mostPopular')}
-        header
-      >
-        <Icon
-          name="comments"
-          color={active === 'mostPopular' ? 'green' : 'blue'}
-        />
-        <Label color={active === 'mostPopular' ? 'green' : 'blue'} pointer>
-          En Tartışmalı
-        </Label>
-      </Menu.Item>
+
       <Menu.Menu position="right">
-        <Menu.Item header>
-          <QuestionModal />
-        </Menu.Item>
         <Menu.Item header>
           <Filter target="Soru" />
         </Menu.Item>

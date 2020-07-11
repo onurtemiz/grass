@@ -5,10 +5,11 @@ import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import { Label } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle, HeadingStyleMobile } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
 import { getQuestionById } from '../../../../reducers/questionReducer';
 import { Divider } from 'semantic-ui-react';
+import { isMobile } from 'react-device-detect';
 
 const Question = () => {
   const questions = useSelector((state) => state.questions.questions);
@@ -33,18 +34,24 @@ const Question = () => {
   }
   return (
     <div>
-      <Label
-        color="blue"
-        bold
-        style={{
-          fontSize: '2em',
-          display: 'flex',
-          whiteSpace: 'pre-wrap',
-          alignItems: 'center',
-        }}
-      >
-        {question.question} · <Follow idToFollow={question.id} user={user} />
-      </Label>
+      {isMobile ? (
+        <div style={HeadingStyleMobile}>
+          <Label color="blue" bold>
+            {question.question}
+          </Label>
+          <div style={{ marginTop: '0.5em' }}>
+            <Follow idToFollow={question.id} user={user} />
+          </div>
+        </div>
+      ) : (
+        <div style={HeadingStyle}>
+          <Label color="blue" bold>
+            {question.question} ·{' '}
+            <Follow idToFollow={question.id} user={user} />
+          </Label>
+        </div>
+      )}
+
       <br />
       <br />
       {question.description}

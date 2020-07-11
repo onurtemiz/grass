@@ -9,6 +9,8 @@ import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';
 import { compareNames, useInfinite } from '../../../../utils/utils';
 import NoSubResult from '../../../Search/NoSubResult';
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
+
 const Clubs = ({ admin }) => {
   const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
     'clubs',
@@ -21,13 +23,7 @@ const Clubs = ({ admin }) => {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '300px',
-        maxHeight: '500px',
-        overflow: 'auto',
-      }}
-    >
+    <div style={InfiniteListStyle}>
       <Filter target="Kulüp" />
       <Divider />
       {!ready ? (

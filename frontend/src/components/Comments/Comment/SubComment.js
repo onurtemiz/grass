@@ -24,6 +24,7 @@ import HiddenComment from './HiddenComment';
 import CommentReport from './CommentReport';
 import { Label } from '../../Nav/NavTheme';
 import { ReactSVG } from 'react-svg';
+import { isMobile } from 'react-device-detect';
 
 const Comment = ({ comment, setIsUpdate, showSource }) => {
   const user = useSelector((state) => state.user);

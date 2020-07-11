@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Header, Tab, Menu, Icon, Segment } from 'semantic-ui-react';
+import {
+  Header,
+  Tab,
+  Menu,
+  Icon,
+  Segment,
+  Responsive,
+  Container,
+} from 'semantic-ui-react';
 import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
 import Teachers from './TeachersPage/Teachers/Teachers';
@@ -18,6 +26,8 @@ import Questions from './QuestionsPage/Questions/Questions';
 import Tips from './TipsPage/Tips';
 import QuestionsPage from './QuestionsPage/QuestionsPage';
 import EventsPage from './EventsPage/EventsPage';
+import { useWindowDimensions } from '../../utils/utils';
+import { isMobile } from 'react-device-detect';
 
 const MainComponent = () => {
   const dispatch = useDispatch();
@@ -42,6 +52,8 @@ const MainComponent = () => {
     'campuses',
     'dorms',
   ];
+  const { height, width } = useWindowDimensions();
+
   useEffect(() => {
     if (
       location.pathname.includes('teachers') ||
@@ -103,7 +115,11 @@ const MainComponent = () => {
       },
       render: () => (
         <Segment
-          basic={teacherPageMatch && teacherPageMatch.isExact ? true : false}
+          basic={
+            (teacherPageMatch && teacherPageMatch.isExact) || isMobile
+              ? true
+              : false
+          }
           style={{ marginRight: '0.5em' }}
         >
           {teacherPageMatch && teacherPageMatch.isExact ? (
@@ -126,7 +142,11 @@ const MainComponent = () => {
       },
       render: () => (
         <Segment
-          basic={lessonPageMatch && lessonPageMatch.isExact ? true : false}
+          basic={
+            (lessonPageMatch && lessonPageMatch.isExact) || isMobile
+              ? true
+              : false
+          }
           style={{ marginRight: '0.5em' }}
         >
           {lessonPageMatch && lessonPageMatch.isExact ? (
@@ -149,7 +169,9 @@ const MainComponent = () => {
       },
       render: () => (
         <Segment
-          basic={clubPageMatch && clubPageMatch.isExact ? true : false}
+          basic={
+            (clubPageMatch && clubPageMatch.isExact) || isMobile ? true : false
+          }
           style={{ marginRight: '0.5em' }}
         >
           {clubPageMatch && clubPageMatch.isExact ? <Club /> : <Clubs main />}
@@ -168,7 +190,11 @@ const MainComponent = () => {
       },
       render: () => (
         <Segment
-          basic={questionPageMatch && questionPageMatch.isExact ? true : false}
+          basic={
+            (questionPageMatch && questionPageMatch.isExact) || isMobile
+              ? true
+              : false
+          }
           style={{ marginRight: '0.5em' }}
         >
           {questionPageMatch && questionPageMatch.isExact ? (
@@ -190,7 +216,10 @@ const MainComponent = () => {
         key: categories.indexOf('events'),
       },
       render: () => (
-        <Segment style={{ marginRight: '0.5em' }}>
+        <Segment
+          style={{ marginRight: '0.5em' }}
+          basic={isMobile ? true : false}
+        >
           <EventsPage />
         </Segment>
       ),
@@ -206,7 +235,10 @@ const MainComponent = () => {
         key: categories.indexOf('tips'),
       },
       render: () => (
-        <Segment style={{ marginRight: '0.5em', paddingTop: '1.5em' }}>
+        <Segment
+          style={{ marginRight: '0.5em', paddingTop: '1.5em' }}
+          basic={isMobile ? true : false}
+        >
           <Tips />
         </Segment>
       ),
@@ -223,7 +255,11 @@ const MainComponent = () => {
       },
       render: () => (
         <Segment
-          basic={campusPageMatch && campusPageMatch.isExact ? true : false}
+          basic={
+            (campusPageMatch && campusPageMatch.isExact) || isMobile
+              ? true
+              : false
+          }
           style={{ marginRight: '0.5em' }}
         >
           {campusPageMatch && campusPageMatch.isExact ? (
@@ -247,7 +283,9 @@ const MainComponent = () => {
       render: () => (
         <Segment
           basic={
-            dormitoryPageMatch && dormitoryPageMatch.isExact ? true : false
+            (dormitoryPageMatch && dormitoryPageMatch.isExact) || isMobile
+              ? true
+              : false
           }
           style={{ marginRight: '0.5em' }}
         >
@@ -260,17 +298,48 @@ const MainComponent = () => {
       ),
     },
   ];
-
   return (
-    <div style={{ height: '90vh' }}>
-      <Tab
-        menu={{ fluid: true, vertical: true, tabular: true, pointing: true }}
-        panes={panes}
-        onTabChange={(event, data) => handleIndex(event, data)}
-        activeIndex={activeIndex}
-        style={{ paddingTop: '1em' }}
-      />
-    </div>
+    // <Tab
+    //   menu={{
+    //     fluid: true,
+    //     vertical: true,
+    //     tabular: true,
+    //     pointing: false,
+    //     stackable: true,
+    //   }}
+    //   panes={panes}
+    //   onTabChange={(event, data) => handleIndex(event, data)}
+    //   activeIndex={activeIndex}
+    //   style={{ paddingTop: '1em' }}
+    // />
+    <>
+      {width <= 1000 ? (
+        <Tab
+          menu={{
+            secondary: true,
+            pointing: true,
+            stackable: true,
+          }}
+          panes={panes}
+          onTabChange={(event, data) => handleIndex(event, data)}
+          activeIndex={activeIndex}
+        />
+      ) : (
+        <Tab
+          menu={{
+            fluid: true,
+            vertical: true,
+            tabular: true,
+            pointing: false,
+            stackable: true,
+          }}
+          panes={panes}
+          onTabChange={(event, data) => handleIndex(event, data)}
+          activeIndex={activeIndex}
+          style={{ paddingTop: '1em' }}
+        />
+      )}
+    </>
   );
 };
 

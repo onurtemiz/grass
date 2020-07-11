@@ -36,7 +36,7 @@ const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
         <Form.Field inline>
           <TextareaAutosize
             rows={4}
-            style={{ width: '30vw', height: '4rem' }}
+            style={{ width: '90vw', height: '4rem', maxWidth: '350px' }}
             placeholder="Nasıldır?"
             name="comment"
             ref={register({

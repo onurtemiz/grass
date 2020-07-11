@@ -10,23 +10,18 @@ import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';
 import { useInfinite } from '../../../../utils/utils';
 import NoSubResult from '../../../Search/NoSubResult';
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
 
 const Questions = ({ main }) => {
   const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
     'questions',
-  addInfQuestions,
+    addInfQuestions,
     filterQuestions
   );
 
   return (
     <>
-      <div
-        style={{
-          minHeight: '300px',
-          maxHeight: '500px',
-          overflow: 'auto',
-        }}
-      >
+      <div style={InfiniteListStyle}>
         {!ready ? (
           <CommentsLoading />
         ) : noResult ? (

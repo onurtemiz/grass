@@ -15,12 +15,11 @@ const Notifications = () => {
     setOpen(false);
     userService.getNotifications(setNotifications, setLoading);
   }, [location]);
-  console.log('notifications', notifications);
   return (
     <Popup
       wide="very"
       on="click"
-      position={'bottom center'}
+      position={'right'}
       trigger={
         <Label
           color={notifications.length === 0 ? 'blue' : 'green'}
@@ -36,6 +35,11 @@ const Notifications = () => {
         </Label>
       }
       open={open}
+      popperModifiers={{
+        preventOverflow: {
+          boundariesElement: 'offsetParent',
+        },
+      }}
     >
       <NotificationFeed
         notifications={notifications}

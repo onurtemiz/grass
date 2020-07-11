@@ -8,9 +8,10 @@ import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
+import { isMobile } from 'react-device-detect';
 
 import Follow from '../../../Follow/Follow';
-import { Label, HeadingStyle } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle, HeadingStyleMobile } from '../../../Nav/NavTheme';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -45,21 +46,41 @@ const Lesson = () => {
 
   return (
     <div>
-      <div style={HeadingStyle}>
-        <Label color="blue" bold>
-          {lesson.name.toUpperCase()} ·{' '}
-        </Label>
-
-        <Link to={`/teachers/${lesson.teacher.name}`}>
-          <Label color="green" bold pointer>
-            {lesson.teacher.name}
-          </Label>{' '}
+      {isMobile ? (
+        <div style={HeadingStyleMobile}>
           <Label color="blue" bold>
-            ·{' '}
+            {lesson.name.toUpperCase()}
           </Label>
-        </Link>
-        <Follow idToFollow={lesson.id} user={user} />
-      </div>
+          <Link
+            to={`/teachers/${lesson.parentName}`}
+            style={{ marginTop: '0.5em' }}
+          >
+            <Label color="green" bold pointer>
+              {lesson.teacher.name}
+            </Label>
+          </Link>
+          <div style={{ marginTop: '0.5em' }}>
+            <Follow idToFollow={lesson.id} user={user} />
+          </div>
+        </div>
+      ) : (
+        <div style={HeadingStyle}>
+          <Label color="blue" bold>
+            {lesson.name.toUpperCase()} ·{' '}
+          </Label>
+
+          <Link to={`/teachers/${lesson.teacher.name}`}>
+            <Label color="green" bold pointer>
+              {lesson.teacher.name}
+            </Label>{' '}
+            <Label color="blue" bold>
+              ·{' '}
+            </Label>
+          </Link>
+          <Follow idToFollow={lesson.id} user={user} />
+        </div>
+      )}
+
       <br />
       <CommentForm
         typeId={lesson.id}

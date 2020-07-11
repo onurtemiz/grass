@@ -25,9 +25,8 @@ const SubTip = ({ tip }) => {
     <Segment
       color="blue"
       style={{
-        width: '50vw',
-        marginLeft: '1rem',
-        marginTop: '1rem',
+        width: '90vw',
+        maxWidth: '640px',
       }}
     >
       <SComment.Group>

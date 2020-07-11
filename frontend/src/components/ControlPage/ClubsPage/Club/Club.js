@@ -7,8 +7,9 @@ import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import { Label, HeadingStyle } from '../../../Nav/NavTheme';
+import { Label, HeadingStyle, HeadingStyleMobile } from '../../../Nav/NavTheme';
 import CommentForm from '../../../Comments/CommentForm/CommentForm';
+import { isMobile } from 'react-device-detect';
 
 const Club = () => {
   const dispatch = useDispatch();
@@ -29,18 +30,31 @@ const Club = () => {
   }
   return (
     <div>
-      <Label color="blue" bold style={HeadingStyle}>
-        {club.name} ·{' '}
-        <Label color="green" bold>
-          {club.fullName}{' '}
+      {isMobile ? (
+        <div style={HeadingStyleMobile}>
           <Label color="blue" bold>
-            ·{' '}
+            {club.name}
           </Label>
+          <Label color="green" bold style={{ marginTop: '0.5em' }}>
+            {club.fullName}
+          </Label>
+          <div style={{ marginTop: '0.5em' }}>
+            <Follow idToFollow={club.id} user={user} />
+          </div>
+        </div>
+      ) : (
+        <Label color="blue" bold style={HeadingStyle}>
+          {club.name} ·{' '}
+          <Label color="green" bold>
+            {club.fullName}{' '}
+            <Label color="blue" bold>
+              ·{' '}
+            </Label>
+          </Label>
+          <Follow idToFollow={club.id} user={user} />
         </Label>
-        <Follow idToFollow={club.id} user={user} />
-      </Label>
+      )}
 
-      <br />
       <br />
       <>
         {club.description.length === 0

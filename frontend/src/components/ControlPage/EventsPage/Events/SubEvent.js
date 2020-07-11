@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Header, Segment, Popup } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
+import { isMobile } from 'react-device-detect';
 import moment from 'moment';
 const SubEvent = ({ event, main }) => {
   const [wide, setWide] = useState(false);
@@ -18,11 +19,15 @@ const SubEvent = ({ event, main }) => {
         }}
       >
         <div onClick={() => setWide(!wide)} style={{ cursor: 'pointer' }}>
-          <Card.Header style={{ display: 'inline' }}>
+          <Card.Header>
             <Header as="h2">
-              <Header.Content>
+              <Header.Content
+                style={
+                  isMobile ? { display: 'flex', flexDirection: 'column' } : null
+                }
+              >
                 <Label color="blue" bold pointer nolink>
-                  {event.title} •
+                  {event.title}
                 </Label>{' '}
                 <Label color="green" bold pointer nolink>
                   {moment(event.date).format('DD/MM hh:mm')}

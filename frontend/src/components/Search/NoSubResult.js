@@ -8,7 +8,7 @@ const NoSubResult = () => {
         columns={1}
         centered
         stretched
-        style={{ minHeight: '200px', width: '50vw' }}
+        style={{ minHeight: '200px', width: '90vw', maxWidth: '640px' }}
       >
         <Grid.Row centered stretched>
           <Grid.Column textAlign="center">

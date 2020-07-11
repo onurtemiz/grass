@@ -6,6 +6,7 @@ import Comment from '../Comment/Comment';
 import CommentsLoading from '../CommentsLoading';
 import moment from 'moment';
 import { daySortToInt } from '../../../utils/utils';
+import { Segment } from 'semantic-ui-react';
 
 const SquareComments = ({ height }) => {
   const count = useSelector((state) => state.comments.count);
@@ -40,23 +41,25 @@ const SquareComments = ({ height }) => {
   }
 
   return (
-    <div
-      style={{
-        height: height ? height : '50vh',
-      }}
-    >
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadFunc}
-        useWindow={true}
-        hasMore={hasMore}
-        loader={<CommentsLoading key={1} />}
+    <Segment basic style={{ marginTop: 0 }}>
+      <div
+        style={{
+          height: height ? height : '50vh',
+        }}
       >
-        {currentComments.map((c) => (
-          <Comment key={c.id} comment={c} showSource={true} />
-        ))}
-      </InfiniteScroll>
-    </div>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadFunc}
+          useWindow={true}
+          hasMore={hasMore}
+          loader={<CommentsLoading key={1} />}
+        >
+          {currentComments.map((c) => (
+            <Comment key={c.id} comment={c} showSource={true} />
+          ))}
+        </InfiniteScroll>
+      </div>
+    </Segment>
   );
 };
 

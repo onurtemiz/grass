@@ -3,6 +3,7 @@ import dormsService from '../../../../services/dorms';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import InfiniteScroll from 'react-infinite-scroller';
 import SubDorm from './SubDorm';
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
 
 const Dorms = ({ main }) => {
   const [dorms, setDorms] = useState([]);
@@ -15,13 +16,7 @@ const Dorms = ({ main }) => {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '300px',
-        maxHeight: '500px',
-        overflow: 'auto',
-      }}
-    >
+    <div style={InfiniteListStyle}>
       <InfiniteScroll
         pageStart={0}
         useWindow={true}

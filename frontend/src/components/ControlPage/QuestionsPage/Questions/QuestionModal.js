@@ -33,7 +33,7 @@ const QuestionModal = () => {
         onClick={() => setOpen(true)}
         style={{ paddingLeft: '1em' }}
       >
-        Sizde soru sorun
+        Soru Sor
       </Label>
       <Modal open={open}>
         <Modal.Header>

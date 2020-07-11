@@ -6,6 +6,7 @@ import { Label } from '../Nav/NavTheme';
 import Contribution from './Contribution/Contribution';
 import About from './About/About';
 import Terms from './Terms/Terms';
+import { isMobile } from 'react-device-detect';
 
 const StaticPages = () => {
   const dispatch = useDispatch();
@@ -95,7 +96,11 @@ const StaticPages = () => {
   return (
     <div style={{ height: '90vh' }}>
       <Tab
-        menu={{ fluid: true, vertical: true, tabular: true, pointing: true }}
+        menu={
+          isMobile
+            ? { fluid: true, vertical: false, tabular: true, pointing: true }
+            : { fluid: true, vertical: true, tabular: true, pointing: true }
+        }
         panes={panes}
         onTabChange={(event, data) => handleIndex(event, data)}
         activeIndex={activeIndex}

@@ -3,6 +3,7 @@ import campusesService from '../../../../services/campuses';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import InfiniteScroll from 'react-infinite-scroller';
 import SubCampus from './SubCampus';
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
 
 const Campuses = ({ main }) => {
   const [campuses, setCampuses] = useState([]);
@@ -15,13 +16,7 @@ const Campuses = ({ main }) => {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '300px',
-        maxHeight: '500px',
-        overflow: 'auto',
-      }}
-    >
+    <div style={InfiniteListStyle}>
       <InfiniteScroll
         pageStart={0}
         useWindow={true}

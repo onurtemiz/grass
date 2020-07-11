@@ -20,70 +20,78 @@ const CommentSort = () => {
   }, [day]);
 
   return (
-    <>
-      <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
-        <Menu.Item
-          active={active === 'mostRecent'}
-          onClick={() => setActive('mostRecent')}
-          header
+    <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
+      <Menu.Item>
+        <StyledDropdown text={commentSortToLabel(active)}>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              text="En Yeni"
+              onClick={() => setActive('mostRecent')}
+            />
+            <Dropdown.Item
+              text="En Eski"
+              onClick={() => setActive('mostPast')}
+            />
+            <Dropdown.Item
+              text="En Patili"
+              onClick={() => setActive('mostPopular')}
+            />
+          </Dropdown.Menu>
+        </StyledDropdown>
+      </Menu.Item>
+      <Menu.Item>
+        <StyledDropdown
+          text={
+            <Label color="blue" bold pointer>
+              <Icon name="calendar alternate outline" />
+              {daySortToText(day)}
+            </Label>
+          }
         >
-          <Icon
-            name="fire"
-            color={active === 'mostRecent' ? 'green' : 'blue'}
-          />
-          <Label color={active === 'mostRecent' ? 'green' : 'blue'} pointer>
-            En Yeni
-          </Label>
-        </Menu.Item>
-        <Menu.Item
-          active={active === 'mostPast'}
-          onClick={() => setActive('mostPast')}
-          header
-        >
-          <Icon name="time" color={active === 'mostPast' ? 'green' : 'blue'} />
-          <Label color={active === 'mostPast' ? 'green' : 'blue'} pointer>
-            En Eski
-          </Label>
-        </Menu.Item>
-        <Menu.Item
-          active={active === 'mostPopular'}
-          onClick={() => setActive('mostPopular')}
-          header
-        >
-          <Icon
-            name="paw"
-            color={active === 'mostPopular' ? 'green' : 'blue'}
-          />
-          <Label color={active === 'mostPopular' ? 'green' : 'blue'} pointer>
-            En Patili
-          </Label>
-        </Menu.Item>
-        <Menu.Item>
-          <StyledDropdown
-            text={
-              <Label color="blue" bold pointer>
-                <Icon name="calendar alternate outline" />
-                {daySortToText(day)}
-              </Label>
-            }
-          >
-            <Dropdown.Menu>
-              <Dropdown.Item text="Bugün" onClick={() => setDay('today')} />
-              <Dropdown.Item
-                text="Bu Hafta"
-                onClick={() => setDay('lastWeek')}
-              />
-              <Dropdown.Item text="Bu Ay" onClick={() => setDay('lastMonth')} />
-              <Dropdown.Item
-                text="Tüm Zamanlar"
-                onClick={() => setDay('allTime')}
-              />
-            </Dropdown.Menu>
-          </StyledDropdown>
-        </Menu.Item>
-      </Menu>
-    </>
+          <Dropdown.Menu>
+            <Dropdown.Item text="Bugün" onClick={() => setDay('today')} />
+            <Dropdown.Item text="Bu Hafta" onClick={() => setDay('lastWeek')} />
+            <Dropdown.Item text="Bu Ay" onClick={() => setDay('lastMonth')} />
+            <Dropdown.Item
+              text="Tüm Zamanlar"
+              onClick={() => setDay('allTime')}
+            />
+          </Dropdown.Menu>
+        </StyledDropdown>
+      </Menu.Item>
+    </Menu>
   );
+};
+
+export const commentSortToLabel = (sort) => {
+  if (sort === 'mostRecent') {
+    return (
+      <>
+        <Icon name="fire" color="blue" />
+        <Label color="blue" pointer bold>
+          En Yeni
+        </Label>
+      </>
+    );
+  } else if (sort === 'mostPast') {
+    return (
+      <>
+        <Icon name="time" color="blue" />
+        <Label color="blue" pointer bold>
+          En Eski
+        </Label>
+      </>
+    );
+  } else if (sort === 'mostPopular') {
+    return (
+      <>
+        <Icon name="paw" color="blue" />
+        <Label color="blue" pointer bold>
+          En Patili
+        </Label>
+      </>
+    );
+  }
 };
 
 export const daySortToText = (sort) => {

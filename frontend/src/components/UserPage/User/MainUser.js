@@ -11,6 +11,8 @@ import Following from '../Following/Following';
 import { Label } from '../../Nav/NavTheme';
 import User from './User';
 import Icons from '../Icons/Icons';
+import { isMobile } from 'react-device-detect';
+
 const MainUser = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -73,7 +75,7 @@ const MainUser = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(1)}>
-            Takip Ettiklerim
+            Düzenle
           </Label>
         ),
         color: 'green',
@@ -81,6 +83,9 @@ const MainUser = () => {
       },
       render: () => (
         <Tab.Pane>
+          <div style={{ marginBottom: '1em' }}>
+            <Icons user={user} />
+          </div>
           <Following />
         </Tab.Pane>
       ),
@@ -101,28 +106,16 @@ const MainUser = () => {
         </Tab.Pane>
       ),
     },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(3)}>
-            İkonlarım
-          </Label>
-        ),
-        color: 'green',
-        key: 4,
-      },
-      render: () => (
-        <Tab.Pane>
-          <Icons user={user} />
-        </Tab.Pane>
-      ),
-    },
   ];
 
   return (
     <div style={{ height: '90vh' }}>
       <Tab
-        menu={{ fluid: true, vertical: true, tabular: true, pointing: true }}
+        menu={
+          isMobile
+            ? { fluid: true, vertical: false, tabular: true, pointing: true }
+            : { fluid: true, vertical: true, tabular: true, pointing: true }
+        }
         panes={panes}
         onTabChange={(event, data) => setActiveIndex(data.activeIndex)}
         activeIndex={activeIndex}

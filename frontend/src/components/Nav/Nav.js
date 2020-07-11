@@ -77,7 +77,12 @@ const Nav = ({ search, admin }) => {
   }, [location]);
 
   return (
-    <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
+    <Menu
+      style={{ marginBottom: '0', overflow: 'auto', maxWidth: '100%' }}
+      pointing
+      secondary
+      color="green"
+    >
       <Menu.Item
         as={Link}
         to="/"

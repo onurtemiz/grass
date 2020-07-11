@@ -7,6 +7,7 @@ import CommentsLoading from '../CommentsLoading';
 import NoFeed from '../../FeedPage/Feed/NoFeed';
 import moment from 'moment';
 import { daySortToInt } from '../../../utils/utils';
+import { Segment } from 'semantic-ui-react';
 const FeedComments = ({ height }) => {
   const count = useSelector((state) => state.comments.count);
   const start = useSelector((state) => state.comments.start);
@@ -45,23 +46,25 @@ const FeedComments = ({ height }) => {
   }
 
   return (
-    <div
-      style={{
-        height: height ? height : '50vh',
-      }}
-    >
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadFunc}
-        useWindow={true}
-        hasMore={hasMore}
-        loader={<CommentsLoading key={1} />}
+    <Segment basic style={{ marginTop: 0 }}>
+      <div
+        style={{
+          height: height ? height : '50vh',
+        }}
       >
-        {currentComments.map((c) => (
-          <Comment key={c.id} comment={c} showSource={true} />
-        ))}
-      </InfiniteScroll>
-    </div>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadFunc}
+          useWindow={true}
+          hasMore={hasMore}
+          loader={<CommentsLoading key={1} />}
+        >
+          {currentComments.map((c) => (
+            <Comment key={c.id} comment={c} showSource={true} />
+          ))}
+        </InfiniteScroll>
+      </div>
+    </Segment>
   );
 };
 

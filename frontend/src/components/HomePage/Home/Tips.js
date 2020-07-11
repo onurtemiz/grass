@@ -39,7 +39,7 @@ const Tips = ({ home }) => {
         }
         onClick={() => setIsOpen(true)}
       >
-        Sizde tavsiye verin
+        Tavsiye Ver
       </Label>
       <Modal open={isOpen}>
         <Modal.Header>

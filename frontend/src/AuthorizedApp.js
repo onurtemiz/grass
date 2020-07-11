@@ -59,12 +59,14 @@ const DefaultContainer = () => {
 const AuthorizedUser = () => {
   return (
     <>
-      <Nav />
+      <div>
+        <Nav />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/" component={DefaultContainer} />
+        </Switch>
+      </div>
       <Patreon />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/" component={DefaultContainer} />
-      </Switch>
     </>
   );
 };
@@ -72,19 +74,21 @@ const AuthorizedUser = () => {
 const AuthorizedAdmin = () => {
   return (
     <>
-      <Nav admin />
-      <Patreon />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/admin/tips" component={ControlTips} />
-        <Route path="/admin/reports" component={ControlReports} />
-        <Route path="/admin/clubs" component={ControlClub} />
-        <Route path="/admin/questions" component={ControlQuestions} />
-        <Route path="/admin/events" component={ControlEvents} />
+      <div style={{ minHeight: '100vh' }}>
+        <Nav admin />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/admin/tips" component={ControlTips} />
+          <Route path="/admin/reports" component={ControlReports} />
+          <Route path="/admin/clubs" component={ControlClub} />
+          <Route path="/admin/questions" component={ControlQuestions} />
+          <Route path="/admin/events" component={ControlEvents} />
 
-        <Route path="/admin" component={Admin} />
-        <Route path="/" component={DefaultContainer} />
-      </Switch>
+          <Route path="/admin" component={Admin} />
+          <Route path="/" component={DefaultContainer} />
+        </Switch>
+      </div>
+      <Patreon />
     </>
   );
 };

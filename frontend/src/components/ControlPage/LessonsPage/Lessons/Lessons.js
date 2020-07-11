@@ -8,6 +8,8 @@ import { Divider } from 'semantic-ui-react';
 import { compareNames, useInfinite } from '../../../../utils/utils';
 import { LinearProgress } from '@material-ui/core';
 import NoSubResult from '../../../Search/NoSubResult';
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
+
 const Lessons = ({ main }) => {
   const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
     'lessons',
@@ -20,7 +22,7 @@ const Lessons = ({ main }) => {
   }
 
   return (
-    <div style={{ minHeight: '300px', maxHeight: '500px', overflow: 'auto' }}>
+    <div style={InfiniteListStyle}>
       <Filter target="Ders" />
       <Divider />
       {!ready ? (

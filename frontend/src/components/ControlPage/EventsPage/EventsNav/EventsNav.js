@@ -7,6 +7,8 @@ import Filter from '../../../Filter/Filter';
 import EventModal from './EventModal';
 import { daySortToText } from '../../../Comments/CommentSort/CommentSort';
 import { changeDaySort } from '../../../../reducers/eventReducer';
+import { isMobile } from 'react-device-detect';
+
 const EventsNav = () => {
   const daySort = useSelector((state) => state.events.filter);
   const dispatch = useDispatch();
@@ -17,7 +19,13 @@ const EventsNav = () => {
   }, [day]);
 
   return (
-    <Menu style={{ marginBottom: '0' }} pointing secondary color="green">
+    <Menu
+      style={{ marginBottom: '0' }}
+      pointing
+      secondary
+      color="green"
+      stackable
+    >
       <Menu.Item>
         <StyledDropdown
           text={
@@ -37,11 +45,9 @@ const EventsNav = () => {
             />
           </Dropdown.Menu>
         </StyledDropdown>
+        <EventModal />
       </Menu.Item>
       <Menu.Menu position="right">
-        <Menu.Item header>
-          <EventModal />
-        </Menu.Item>
         <Menu.Item header>
           <Filter target="Etkinlik" />
         </Menu.Item>

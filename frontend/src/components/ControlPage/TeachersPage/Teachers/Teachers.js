@@ -9,7 +9,7 @@ import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';
 import { compareNames, useInfinite } from '../../../../utils/utils';
 import NoSubResult from '../../../Search/NoSubResult';
-
+import { InfiniteListStyle } from '../../../Nav/NavTheme';
 const Teachers = () => {
   const { loadFunc, hasMore, currentTarget, ready, noResult } = useInfinite(
     'teachers',
@@ -21,7 +21,7 @@ const Teachers = () => {
     return <CommentsLoading />;
   }
   return (
-    <div style={{ minHeight: '300px', maxHeight: '500px', overflow: 'auto' }}>
+    <div style={InfiniteListStyle}>
       <Filter target={'Hoca'} />
       <Divider />
       {!ready ? (

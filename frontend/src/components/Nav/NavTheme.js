@@ -2,6 +2,11 @@ import Search from '../Search/Search';
 import styled from 'styled-components';
 import Slider, { Range } from 'rc-slider';
 import { Menu, Icon, Dropdown } from 'semantic-ui-react';
+import { isMobile } from 'react-device-detect';
+
+export const InfiniteListStyle = !isMobile
+  ? { minHeight: '300px', maxHeight: '500px', overflow: 'auto' }
+  : null;
 
 export const NavSearch = styled.div`
   .ui.search .prompt {
@@ -51,6 +56,12 @@ export const HeadingStyle = {
   display: 'flex',
   whiteSpace: 'pre-wrap',
   alignItems: 'center',
+};
+
+export const HeadingStyleMobile = {
+  display: 'flex',
+  fontSize: '2em',
+  flexDirection: 'column',
 };
 
 export const StyledDropdown = styled(Dropdown)`

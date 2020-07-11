@@ -5,16 +5,14 @@ import EditComment from './EditComment';
 
 const Comment = ({ comment, showSource }) => {
   const [isUpdate, setIsUpdate] = useState(false);
-
+  const commentStyle = {
+    width: '90vw',
+    maxWidth: '640px',
+    marginTop: '1rem',
+  };
   if (!isUpdate) {
     return (
-      <div
-        style={{
-          width: '50vw',
-          marginLeft: '1rem',
-          marginTop: '1rem',
-        }}
-      >
+      <div style={commentStyle}>
         <SubComment
           comment={comment}
           setIsUpdate={setIsUpdate}
@@ -24,13 +22,7 @@ const Comment = ({ comment, showSource }) => {
     );
   } else {
     return (
-      <div
-        style={{
-          width: '50vw',
-          marginLeft: '1rem',
-          marginTop: '1rem',
-        }}
-      >
+      <div style={commentStyle}>
         <EditComment comment={comment} setIsUpdate={setIsUpdate} />
       </div>
     );

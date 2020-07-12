@@ -6,7 +6,9 @@ const Tips = () => {
   return (
     <>
       <TipsSort />
-      <AllTips />
+      <div style={{ marginTop: '1em' }}>
+        <AllTips />
+      </div>
     </>
   );
 };

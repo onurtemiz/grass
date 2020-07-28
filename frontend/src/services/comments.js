@@ -7,7 +7,11 @@ const baseUrl =
 
 const updateComment = async (comment, id) => {
   try {
-    const req = await axios.put(`${baseUrl}/${id}`, { comment }, config);
+    const req = await axios.put(
+      `${baseUrl}/update_comment/${id}`,
+      comment,
+      config
+    );
     return req.data;
   } catch (e) {
     return e.response
@@ -29,7 +33,7 @@ const removeComment = async (id) => {
 
 const likeComment = async (id) => {
   try {
-    const req = await axios.put(`${baseUrl}/${id}`, null, config);
+    const req = await axios.put(`${baseUrl}/pati_comment/${id}`, null, config);
     return req.data;
   } catch (e) {
     return e.response

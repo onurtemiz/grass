@@ -15,7 +15,7 @@ const rateLimit = require('express-rate-limit');
 // commentsRouter.get('/refresh', async (req, res) => {
 //   const comments = await Comment.find();
 //   for (let i = 0; i < comments.length; i++) {
-//     comments[i].edited = false;
+//     comments[i].recommend = 0;
 //     await comments[i].save();
 //   }
 //   res.end();
@@ -165,7 +165,7 @@ commentsRouter.post('/', limiter, async (req, res) => {
 
   if (!body.comment) {
     return res.status(400).json({
-      error: 'Comment must be present',
+      error: 'Yorum yer almıyor',
     });
   } else if (
     !body.commentType ||
@@ -176,21 +176,20 @@ commentsRouter.post('/', limiter, async (req, res) => {
       body.commentType !== 'question')
   ) {
     return res.status(401).json({
-      error: 'need valid commentType',
+      error: 'Geçerli commentType gerekli',
     });
   }
 
   if (body.commentType === 'lesson') {
     if (!body.teacherId) {
       return res.status(400).json({
-        error: 'TeacherId must be present',
+        error: 'Geçerli TeacherId gerekli',
       });
     }
   }
-  console.log(body);
   if (!body.typeId || !('recommend' in body)) {
     return res.status(400).json({
-      error: 'typeId and recommend must be present',
+      error: 'typeId ve recommend gerekli',
     });
   }
 
@@ -203,12 +202,12 @@ commentsRouter.post('/', limiter, async (req, res) => {
 
     if (!teacher || !lesson) {
       return res.status(400).json({
-        error: 'Could not find the teacher,lesson,user',
+        error: 'Hoca ya da ders bulunamadı',
       });
     }
     if (!isTeacherRight) {
       return res.status(400).json({
-        error: 'teacher and lesson dont match.',
+        error: 'Dersi bu hoca vermiyor.',
       });
     }
 
@@ -217,111 +216,94 @@ commentsRouter.post('/', limiter, async (req, res) => {
       lesson: body.typeId,
       user: user._id,
       comment: body.comment,
-      date: new Date(),
-      likes: [user._id],
-      likesLength: 1,
       commentType: 'lesson',
       recommend: body.recommend,
     });
     await comment.save();
-    user.comments = user.comments.concat(comment._id);
-    teacher.comments = teacher.comments.concat(comment._id);
-    lesson.comments = lesson.comments.concat(comment._id);
+    user.comments = [...new Set([...user.comments, comment._id])];
+    teacher.comments = [...new Set([...teacher.comments, comment._id])];
+    lesson.comments = [...new Set([...lesson.comments, comment._id])];
     await user.save();
     await teacher.save();
     await lesson.save();
   } else if (body.commentType === 'club') {
     const club = await Club.findById(body.typeId);
-
-    if (!club || !user) {
+    if (!club) {
       return res.status(400).json({
-        error: 'Could not find the teacher,lesson,user',
+        error: 'Kulüp bulunamadı',
       });
     }
     comment = new Comment({
       club: body.typeId,
       user: user._id,
       comment: body.comment,
-      date: new Date(),
-      likes: [user._id],
-      likesLength: 1,
       commentType: 'club',
       recommend: body.recommend,
     });
     await comment.save();
-    user.comments = user.comments.concat(comment._id);
-    club.comments = club.comments.concat(comment._id);
+    user.comments = [...new Set([...user.comments, comment._id])];
+    club.comments = [...new Set([...club.comments, comment._id])];
+
     await user.save();
     await club.save();
   } else if (body.commentType === 'campus') {
     const campus = await Campus.findById(body.typeId);
 
-    if (!campus || !user) {
+    if (!campus) {
       return res.status(400).json({
-        error: 'Could not find the teacher,lesson,user',
+        error: 'Kampüs bulunamadı',
       });
     }
     comment = new Comment({
       campus: body.typeId,
       user: user._id,
       comment: body.comment,
-      date: new Date(),
-      likes: [user._id],
       recommend: body.recommend,
-      likesLength: 1,
-
       commentType: 'campus',
     });
     await comment.save();
-    user.comments = user.comments.concat(comment._id);
-    campus.comments = campus.comments.concat(comment._id);
+    user.comments = [...new Set([...user.comments, comment._id])];
+    campus.comments = [...new Set([...campus.comments, comment._id])];
+
     await user.save();
     await campus.save();
   } else if (body.commentType === 'dorm') {
     const dorm = await Dorm.findById(body.typeId);
 
-    if (!dorm || !user) {
+    if (!dorm) {
       return res.status(400).json({
-        error: 'Could not find the teacher,lesson,user',
+        error: 'Yurt bulunamadı',
       });
     }
     comment = new Comment({
       dorm: body.typeId,
       user: user._id,
       comment: body.comment,
-      date: new Date(),
-      likes: [user._id],
-      likesLength: 1,
-
       recommend: body.recommend,
       commentType: 'dorm',
     });
     await comment.save();
-    user.comments = user.comments.concat(comment._id);
-    dorm.comments = dorm.comments.concat(comment._id);
+    user.comments = [...new Set([...user.comments, comment._id])];
+    dorm.comments = [...new Set([...dorm.comments, comment._id])];
     await user.save();
     await dorm.save();
   } else if (body.commentType === 'question') {
     const question = await Question.findById(body.typeId);
 
-    if (!question || !user) {
+    if (!question) {
       return res.status(400).json({
-        error: 'Could not find the teacher,lesson,user',
+        error: 'Soru bulunamadı',
       });
     }
     comment = new Comment({
       question: body.typeId,
       user: user._id,
       comment: body.comment,
-      date: new Date(),
-      likesLength: 1,
-      recommend: body.recommend,
-      likes: [user._id],
       commentType: 'question',
     });
     await comment.save();
-    user.comments = user.comments.concat(comment._id);
-    question.comments = question.comments.concat(comment._id);
+    user.comments = [...new Set([...user.comments, comment._id])];
+    question.comments = [...new Set([...question.comments, comment._id])];
     question.commentsLength = question.commentsLength + 1;
     await user.save();
     await question.save();
@@ -352,7 +334,51 @@ commentsRouter.post('/', limiter, async (req, res) => {
   res.json(populatedComment.toJSON());
 });
 
-commentsRouter.put('/:id', async (req, res) => {
+commentsRouter.put('/pati_comment/:id', async (req, res) => {
+  const comment = await Comment.findById(req.params.id);
+  const user = req.user;
+  if (!comment) {
+    return res.status(400).json({
+      error: 'Yorum bulunamadı.',
+    });
+  }
+
+  const isLiked = comment.likes.some((u) => u.equals(user._id));
+
+  if (isLiked) {
+    comment.likes = comment.likes.filter((u) => !u.equals(user._id));
+    comment.likesLength = comment.likesLength - 1;
+    await Notification.deleteMany({
+      tool: comment._id,
+      responsible: user._id,
+      target: comment.user,
+      notificationType: 'like',
+    });
+  } else {
+    comment.likes = [...new Set([...comment.likes, user._id])];
+    comment.likesLength = comment.likesLength + 1;
+    notify = new Notification({
+      tool: comment._id,
+      responsible: user._id,
+      target: comment.user,
+      notificationType: 'like',
+    });
+    await notify.save();
+  }
+  await comment.save();
+  const populatedComment = await Comment.findById(comment._id)
+    .populate('user')
+    .populate('teacher')
+    .populate('lesson')
+    .populate('club')
+    .populate('dorm')
+    .populate('campus')
+    .populate('question');
+
+  res.json(populatedComment.toJSON());
+});
+
+commentsRouter.put('/update_comment/:id', async (req, res) => {
   const body = req.body;
   const comment = await Comment.findById(req.params.id);
 
@@ -363,42 +389,18 @@ commentsRouter.put('/:id', async (req, res) => {
       error: 'Yorum bulunamadı.',
     });
   }
-  if ('comment' in body) {
-    const isUserHave = user.comments.some((c) => c.equals(req.params.id));
-    if (!isUserHave) {
-      return res.status(400).json({
-        error: 'Yorumu düzenlemeye hakkınız yok.',
-      });
-    }
-    comment.comment = body.comment;
-    comment.edited = true;
-  } else {
-    const isLiked = comment.likes.some((u) => u.equals(user._id));
 
-    if (isLiked) {
-      comment.likes = comment.likes.filter((u) => !u.equals(user._id));
-      comment.likesLength = comment.likesLength - 1;
-      await Notification.findOneAndRemove({
-        tool: comment._id,
-        responsible: user._id,
-        target: comment.user,
-        notificationType: 'like',
-      });
-    } else {
-      comment.likes = comment.likes.concat(user._id);
-      let notify = await Notification.findOne({ tool: comment._id });
-      comment.likesLength = comment.likesLength + 1;
-      if (!notify) {
-        notify = new Notification({
-          tool: comment._id,
-          responsible: user._id,
-          target: comment.user,
-          notificationType: 'like',
-        });
-        await notify.save();
-      }
-    }
+  const isUserHave = user.comments.some((c) => c.equals(req.params.id));
+  if (!isUserHave) {
+    return res.status(400).json({
+      error: 'Yorumu düzenlemeye hakkınız yok.',
+    });
   }
+
+  comment.comment = body.comment;
+  comment.edited = true;
+  comment.recommend = body.recommend;
+
   await comment.save();
   const populatedComment = await Comment.findById(comment._id)
     .populate('user')
@@ -425,7 +427,7 @@ commentsRouter.delete('/:id', async (req, res) => {
       error: 'Yorumu silmeye hakkınız yok.',
     });
   }
-  await Notification.findOneAndRemove({
+  await Notification.deleteMany({
     tool: comment._id,
     responsible: user._id,
     notificationType: 'newComment',
@@ -464,6 +466,11 @@ commentsRouter.delete('/:id', async (req, res) => {
       { $pull: { comments: req.params.id } }
     );
   } else if (comment.commentType === 'question') {
+    const question = await Question.findOne({
+      comments: { $in: req.params.id },
+    });
+    question.commentsLength = question.commentsLength - 1;
+    await question.save();
     await Question.findOneAndUpdate(
       {
         comments: { $in: req.params.id },

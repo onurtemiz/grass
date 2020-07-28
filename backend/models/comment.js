@@ -41,11 +41,11 @@ const commentSchema = new mongoose.Schema({
       required: true,
     },
   ],
-  likesLength: { type: Number, default: 0 },
+  likesLength: { type: Number, default: 1 },
   date: { type: Date, default: Date.now },
   commentStatus: { type: String, defaut: 'visible' },
   commentType: { type: String, required: true },
-  recommend: { type: Boolean, required: true, default: true },
+  recommend: { type: Number, default: 0 },
   edited: { type: Boolean, default: false },
 });
 

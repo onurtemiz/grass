@@ -5,13 +5,14 @@ import { Form, Button, Segment, Label, Checkbox } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
 import { Label as StyledLabel } from '../../Nav/NavTheme';
+import RecommendSlider from '../Comment/RecommendSlider';
 
 const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, errors, reset } = useForm();
-  const [recommend, setRecommend] = useState(true);
+  const [recommend, setRecommend] = useState(0);
 
   const handleComment = async (data) => {
     let values = {
@@ -63,11 +64,7 @@ const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
         </Form.Field>
 
         {tools && !noRecommend ? (
-          <Checkbox
-            defaultChecked={recommend}
-            onChange={() => setRecommend(!recommend)}
-            label="Öneriyorum"
-          />
+          <RecommendSlider setRecommend={setRecommend} recommend={recommend} />
         ) : null}
 
         {tools ? (

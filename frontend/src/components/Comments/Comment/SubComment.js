@@ -58,7 +58,7 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
     return <HiddenComment comment={comment} showSource={showSource} />;
   }
   return (
-    <Segment color={comment.recommend ? 'blue' : 'red'}>
+    <Segment color={commentThemeColor(comment)}>
       <SComment.Group>
         <SComment>
           <CommentReport
@@ -224,12 +224,23 @@ const QuestionType = ({ comment }) => {
 };
 
 const commentThemeColor = (comment) => {
-  return comment.recommend ? 'blue' : 'red';
+  return comment.recommend === 1
+    ? 'green'
+    : comment.recommend === -1
+    ? 'red'
+    : 'blue';
 };
 
 const UserIcon = ({ comment }) => {
   return (
-    <Icon color={commentThemeColor(comment)} name={comment.user.iconName} />
+    <>
+      {' '}
+      <Icon
+        color={commentThemeColor(comment)}
+        name={comment.user.iconName}
+        fitted
+      />
+    </>
   );
 };
 

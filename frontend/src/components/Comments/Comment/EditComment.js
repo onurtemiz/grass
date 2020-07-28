@@ -4,14 +4,18 @@ import { useDispatch } from 'react-redux';
 import { Form, Button, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
+import RecommendSlider from './RecommendSlider';
 
 const EditComment = ({ comment, setIsUpdate }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [recommend, setRecommend] = useState(comment.recommend);
+
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       comment: comment.comment,
+      recommend: comment.recommend,
     },
   });
 
@@ -22,7 +26,12 @@ const EditComment = ({ comment, setIsUpdate }) => {
   const handleComment = async (data) => {
     setIsLoading(true);
     dispatch(
-      updateComment(data.comment, comment.id, setIsUpdate, setIsLoading)
+      updateComment(
+        { comment: data.comment, recommend },
+        comment.id,
+        setIsUpdate,
+        setIsLoading
+      )
     );
   };
 
@@ -56,6 +65,9 @@ const EditComment = ({ comment, setIsUpdate }) => {
             </>
           )}
         </Form.Field>
+        {tools && comment.commentType !== 'question' ? (
+          <RecommendSlider setRecommend={setRecommend} recommend={recommend} />
+        ) : null}
         {tools ? (
           <div>
             <Button

@@ -5,7 +5,6 @@ const blacklist = require('../blacklistv2.json');
 const rateLimit = require('express-rate-limit');
 const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

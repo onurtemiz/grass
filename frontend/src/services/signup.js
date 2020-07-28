@@ -3,7 +3,7 @@ import axios from 'axios';
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001/api/signup'
-    : '/api/users/signup';
+    : '/api/signup';
 
 const signup = async (user) => {
   try {

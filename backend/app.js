@@ -20,6 +20,8 @@ const dormsRouter = require('./controllers/dorms');
 const questionsRouter = require('./controllers/questions');
 const coursesRouter = require('./controllers/courses');
 const eventsRouter = require('./controllers/events');
+const signupRouter = require('./controllers/signup');
+
 // const tok = require('./heh');
 // tok();
 const mongoUri = async () => {
@@ -55,8 +57,10 @@ app.use(express.json());
 const apiRouter = require('express').Router();
 apiRouter.use(middleware.tokenExtractor);
 apiRouter.use('/login', loginRouter);
-apiRouter.use('/users', usersRouter);
+apiRouter.use('/signup', signupRouter);
+
 apiRouter.use(middleware.authUser);
+apiRouter.use('/users', usersRouter);
 apiRouter.use('/courses', coursesRouter);
 apiRouter.use('/events', eventsRouter);
 apiRouter.use('/questions', questionsRouter);

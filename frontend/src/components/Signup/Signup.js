@@ -14,6 +14,7 @@ import {
   Divider,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
+import { HomeHeader } from '../HomePage/Home/HomeTheme';
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -82,6 +83,9 @@ const Signup = () => {
       columns="equal"
     >
       <Grid.Column style={{ maxWidth: 450 }}>
+        <HomeHeader as="h1">
+          <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
+        </HomeHeader>
         <Header as="h1" color="green" textAlign="center">
           Çimlerde Yerinizi Alın.
         </Header>
@@ -165,7 +169,7 @@ const Signup = () => {
             </Button>
           </Segment>
         </Form>
-        <Message info>
+        <Message color="green">
           Zaten Üye misiniz?{' '}
           <Link to="/login">
             <b>Giriş Yap</b>

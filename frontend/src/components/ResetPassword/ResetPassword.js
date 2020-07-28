@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { loginUser } from '../../reducers/userReducer';
+import React, { useEffect, useState } from 'react';
+import { loginUser, resetPassword } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
@@ -15,17 +15,14 @@ import {
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
-const Login = () => {
+const ResetPassword = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const history = useHistory();
   const onSubmit = async (data) => {
-    dispatch(loginUser(data));
+    setLoading(true);
+    dispatch(resetPassword(data, setLoading));
   };
-
-  useEffect(() => {
-    history.push('/login');
-  }, []);
 
   useEffect(() => {
     register(
@@ -35,16 +32,6 @@ const Login = () => {
         pattern: {
           value: /^[A-Z0-9._%+-]+@boun\.edu\.tr$/i,
           message: 'Epostanız @boun.edu.tr ile bitiyor olmalı.',
-        },
-      }
-    );
-    register(
-      { name: 'password' },
-      {
-        required: 'Lütfen şifrenizi girin.',
-        minLength: {
-          value: 8,
-          message: 'Şifreniz en az 8 karakterden oluşmalı.',
         },
       }
     );
@@ -62,16 +49,9 @@ const Login = () => {
           <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
         </HomeHeader>
         <Header as="h1" color="green">
-          Çimlere Hoşgeldiniz.
+          Çim Şifrenizi Sıfırlayın.
         </Header>
 
-        <Message color="green">
-          Çim uygulamasına sadece{' '}
-          <Label color="blue" style={{ padding: 5 }}>
-            @boun.edu.tr
-          </Label>{' '}
-          emaili olanlar giriş yapabilir.
-        </Message>
         <Form size="large" onSubmit={handleSubmit(onSubmit)}>
           <Segment>
             <Form.Field inline>
@@ -96,48 +76,28 @@ const Login = () => {
                 </Label>
               )}
             </Form.Field>
-            <Form.Field inline>
-              <Form.Input
-                fluid
-                icon={<Icon color="green" name="key" />}
-                iconPosition="left"
-                placeholder="Şifre"
-                type="password"
-                name="password"
-                className="password-input"
-                onChange={(e, { name, value }) => setValue(name, value)}
-              />
-              {errors.password && (
-                <Label
-                  basic
-                  color="red"
-                  pointing="above"
-                  className="password-error"
-                >
-                  {errors.password.message}
-                </Label>
-              )}
-            </Form.Field>
+
             <Divider />
             <Button
               fluid
               size="large"
               primary
               type="submit"
+              loading={loading}
               className="login-button"
             >
-              Giriş Yap
+              Şifreyi Sıfırla
             </Button>
           </Segment>
         </Form>
+        <Message color="green">
+          <Link to="/login">
+            <b>Giriş Yap</b>
+          </Link>
+        </Message>
         <Message info>
           <Link to="/signup">
             <b>Hesap Oluştur</b>
-          </Link>
-        </Message>
-        <Message error>
-          <Link to="/reset_password" style={{ color: '#f53131' }}>
-            <b>Şifremi Unuttum</b>
           </Link>
         </Message>
       </Grid.Column>
@@ -145,4 +105,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

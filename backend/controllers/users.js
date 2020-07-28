@@ -1,7 +1,6 @@
 const usersRouter = require('express').Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
-const config = require('../utils/config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Lesson = require('../models/lesson');
@@ -10,59 +9,7 @@ const Question = require('../models/question');
 const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
 const Notification = require('../models/notification');
-const Comment = require('../models/comment');
 const Tip = require('../models/tip');
-const middleware = require('../utils/middleware');
-const blacklist = require('../blacklistv2.json');
-
-usersRouter.post('/signup', async (req, res) => {
-  const body = req.body;
-  const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
-
-  if (!body.email || reResult === null) {
-    return res.status(400).json({
-      error: 'Eposta adresi boun uzantılı olmalı.',
-    });
-  } else if (!body.password || body.password.trim().length < 8) {
-    return res.status(400).json({
-      error: 'Şifre 8 veya daha fazla karakterden oluşmalı.',
-    });
-  } else if (
-    !body.username ||
-    body.username.trim().length > 15 ||
-    body.username.trim().length === 0 ||
-    body.username.trim().length !== body.username.length
-  ) {
-    return res.status(400).json({
-      error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
-    });
-  } else if (inBanList(body.email)) {
-    return res.status(400).json({
-      error: 'Site sadece Boğaziçi Öğrencilerine açıktır.',
-    });
-  }
-
-  const isEmailOrUsernameDuplicate = await User.findOne({
-    $or: [{ email: body.email }, { username: body.username }],
-  });
-  if (isEmailOrUsernameDuplicate) {
-    return res.status(400).json({
-      error: 'Bu kullanıcı adı ya da eposta daha önceden alınmış.',
-    });
-  }
-
-  const passwordHash = await bcrypt.hash(body.password, 10);
-
-  const user = new User({
-    username: body.username,
-    email: body.email,
-    passwordHash: passwordHash,
-  });
-
-  await user.save();
-  res.status(201).json(user.toJSON());
-});
-usersRouter.use(middleware.authUser);
 
 usersRouter.put('/modal', async (req, res) => {
   req.user.sawModal = true;
@@ -70,19 +17,13 @@ usersRouter.put('/modal', async (req, res) => {
   res.json(req.user.toJSON());
 });
 
-const inBanList = (email) => {
-  return blacklist.find((b) => b === email);
-};
-
 usersRouter.get('/following', async (req, res) => {
   const user = req.user;
   const clubs = await Club.find({ _id: { $in: user.following } });
   const questions = await Question.find({ _id: { $in: user.following } });
   const dorms = await Dorm.find({ _id: { $in: user.following } });
   const campuses = await Campus.find({ _id: { $in: user.following } });
-  const lessons = await Lesson.find({ _id: { $in: user.following } }).populate(
-    'teacher'
-  );
+  const lessons = await Lesson.find({ _id: { $in: user.following } });
   const allFollowing = {
     clubs: clubs.map((c) => c.toJSON()),
     questions: questions.map((c) => c.toJSON()),
@@ -93,15 +34,14 @@ usersRouter.get('/following', async (req, res) => {
   res.json(allFollowing);
 });
 
-usersRouter.put('/follow', async (req, res) => {
-  const body = req.body;
+usersRouter.put('/follow/:id', async (req, res) => {
   let isMalformatedId = false;
   try {
-    let typeId = new mongoose.Types.ObjectId(body.id);
+    let typeId = new mongoose.Types.ObjectId(req.params.id);
   } catch (e) {
     isMalformatedId = true;
   }
-  if (!body.id || isMalformatedId) {
+  if (!req.params.id || isMalformatedId) {
     return res.status(400).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 1',
     });
@@ -212,10 +152,13 @@ usersRouter.put('/', async (req, res) => {
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
-  const jsonUser = user.toJSONMain();
+  const jsonUser = user.toJSON();
+  const totalLikedUser = await User.getTotalLike(user.username);
+
   res.status(200).json({
     token,
     ...jsonUser,
+    ...totalLikedUser,
   });
 });
 
@@ -310,24 +253,24 @@ usersRouter.get('/:username', async (req, res) => {
   res.json(totalLikedUser);
 });
 
-usersRouter.get('/', async (req, res) => {
-  const q = req.query;
+// usersRouter.get('/', async (req, res) => {
+//   const q = req.query;
 
-  if (!q.id) {
-    return res.json({
-      error: 'Onur bir şeyleri batırdı. Hata kodu 2',
-    });
-  }
-  const user = await User.findById(q.id);
+//   if (!q.id) {
+//     return res.json({
+//       error: 'Onur bir şeyleri batırdı. Hata kodu 2',
+//     });
+//   }
+//   const user = await User.findById(q.id);
 
-  if (!user) {
-    return res.json({
-      error: 'Aradığınız kullanıcı bulunamadı.',
-    });
-  }
+//   if (!user) {
+//     return res.json({
+//       error: 'Aradığınız kullanıcı bulunamadı.',
+//     });
+//   }
 
-  res.json(user.toJSON());
-});
+//   res.json(user.toJSON());
+// });
 
 module.exports = usersRouter;
 function handleExtras(user, achievements) {

@@ -30,7 +30,7 @@ const sawModal = async () => {
 
 const followLesson = async (id) => {
   try {
-    const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+    const res = await axios.put(`${baseUrl}/follow/${id}`, null, config);
 
     return res.data;
   } catch (e) {
@@ -81,7 +81,7 @@ const deleteNotifications = async () => {
 
 const unfollowLesson = async (id) => {
   try {
-    const res = await axios.put(`${baseUrl}/follow/`, { id }, config);
+    const res = await axios.put(`${baseUrl}/follow/${id}`, null, config);
     return res.data;
   } catch (e) {
     return e.response

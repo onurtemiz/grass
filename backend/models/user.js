@@ -5,6 +5,9 @@ mongoose.set('useFindAndModify', false);
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   username: { type: String, required: true },
+  verified: { type: Boolean, default: false },
+  verifyToken: { type: String },
+  passwordVerification: { type: String },
   passwordHash: { type: String, required: true },
   comments: [
     {
@@ -54,8 +57,11 @@ userSchema.set('toJSON', {
     // eslint-disable-next-line no-underscore-dangle
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
+    delete returnedObject.verified;
+    delete returnedObject.verifyToken;
     delete returnedObject.__v;
     delete returnedObject.passwordHash;
+    delete returnedObject.passwordVerification;
   },
 });
 

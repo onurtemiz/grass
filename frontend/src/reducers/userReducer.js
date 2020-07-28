@@ -52,7 +52,10 @@ export const followLesson = (user, id) => {
       type: 'FOLLOW_LESSON',
       data: id,
     });
-    user.following.push(id);
+    user = {
+      ...user,
+      following: [...user.following.filter((uId) => uId !== id), id],
+    };
     setLocaleUser(user);
   };
 };
@@ -251,6 +254,73 @@ export const getPopulatedMainUser = () => {
   };
 };
 
+export const verifyUser = (verifyToken) => {
+  return async (dispatch) => {
+    const res = await signupService.verify(verifyToken);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+  };
+};
+
+export const resetPassword = (email, setLoading) => {
+  return async (dispatch) => {
+    const res = await signupService.resetPassword(email);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    } else {
+      toast.info(`Onay linki epostanıza gönderilmiştir.`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    setLoading(false);
+  };
+};
+
+export const changePassword = (password, code, id, setSucess) => {
+  return async (dispatch) => {
+    const res = await signupService.changePassword(password, code, id);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    } else {
+      setSucess(true);
+    }
+  };
+};
+
 export const signupUser = (userInfo) => {
   return async (dispatch) => {
     const res = await signupService.signup(userInfo);
@@ -266,30 +336,6 @@ export const signupUser = (userInfo) => {
       });
       return;
     }
-    const user = await loginService.login({
-      email: userInfo.email,
-      password: userInfo.password,
-    });
-    if (user.error) {
-      toast.error(`${user.error}`, {
-        position: 'bottom-left',
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-    setLocaleUser(user);
-
-    setToken(user.token);
-
-    dispatch({
-      type: 'SET_USER',
-      data: user,
-    });
   };
 };
 

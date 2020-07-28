@@ -31,7 +31,11 @@ loginRouter.post('/', async (request, response) => {
       ? false
       : await bcrypt.compare(body.password, user.passwordHash);
 
-  if (!(user && passwordCorrect)) {
+  if (user.verified === false) {
+    return response.status(401).json({
+      error: 'Lütfen epostanızı onaylayın.',
+    });
+  } else if (!(user && passwordCorrect)) {
     return response.status(401).json({
       error: 'Epostanız ya da şifreniz geçersiz.',
     });
@@ -45,7 +49,7 @@ loginRouter.post('/', async (request, response) => {
   const jsonedUser = user.toJSON();
   const totalLikedUser = await User.getTotalLike(user.username);
 
-  response.status(200).send({
+  response.status(200).json({
     token,
     ...jsonedUser,
     ...totalLikedUser,

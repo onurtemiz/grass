@@ -55,9 +55,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(express.json());
 const apiRouter = require('express').Router();
-apiRouter.use(middleware.tokenExtractor);
 apiRouter.use('/login', loginRouter);
 apiRouter.use('/signup', signupRouter);
+apiRouter.use(middleware.tokenExtractor);
 
 apiRouter.use(middleware.authUser);
 apiRouter.use('/users', usersRouter);

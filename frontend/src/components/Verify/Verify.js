@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { signupUser, verifyUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Redirect } from 'react-router-dom';
 import {
   Button,
   Form,
@@ -12,51 +12,43 @@ import {
   Icon,
   Label,
   Divider,
+  Loader,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
 import queryString from 'query-string';
+import { Label as SLabel } from '../Nav/NavTheme';
+import { toast } from 'react-toastify';
 
 const Verify = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [verifyCode, setVerifyCode] = useState();
+  const [situation, setSituation] = useState('started');
 
   useEffect(() => {
     setVerifyCode(queryString.parse(location.search));
   }, [location]);
 
   useEffect(() => {
-    if (verifyCode && verifyCode.code) {
-      dispatch(verifyUser(verifyCode.code));
+    if (verifyCode && verifyCode.code && verifyCode.u) {
+      dispatch(verifyUser(verifyCode.code, verifyCode.u, setSituation));
     }
   }, [verifyCode]);
 
-  if (verifyCode && verifyCode.code) {
-    return (
-      <Grid
-        textAlign="center"
-        style={{ height: '100vh' }}
-        verticalAlign="middle"
-        columns="equal"
-      >
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <HomeHeader as="h1">
-            <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
-          </HomeHeader>
-          <Header as="h1" color="green" textAlign="center">
-            Epostanız onaylandı.
-          </Header>
-
-          <Message info>
-            <Link to="/login">
-              <b>Giriş Yap</b>
-            </Link>
-          </Message>
-        </Grid.Column>
-      </Grid>
-    );
+  if (situation === 'success') {
+    toast.success(`Üyeliğiniz onaylandı`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    return <Redirect to="/login" />;
   }
+
   return (
     <Grid
       textAlign="center"
@@ -68,24 +60,20 @@ const Verify = () => {
         <HomeHeader as="h1">
           <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
         </HomeHeader>
-        <Header as="h1" color="green" textAlign="center">
-          Epostanızı onaylayın.
-        </Header>
 
-        <Message color="green">
-          <Label color="blue" style={{ padding: 5 }}>
-            @boun.edu.tr
-          </Label>{' '}
-          emailinize onay linki gitmiştir. Epostanızı onaylayarak siteye giriş
-          yapabilirsiniz.
-        </Message>
-
-        <Message info>
-          Zaten Üye misiniz?{' '}
-          <Link to="/login">
-            <b>Giriş Yap</b>
-          </Link>
-        </Message>
+        <SLabel color="blue" bold style={{ fontSize: '1.5em' }}>
+          {situation === 'started'
+            ? 'Üyeliğinizi onaylıyoruz'
+            : situation === 'failed'
+            ? 'Üyeliğiniz onaylanamadı'
+            : 'Üyeliğiniz Onaylandı'}
+        </SLabel>
+        <br />
+        <br />
+        <Loader
+          active={situation === 'started' ? true : false}
+          inline="centered"
+        />
       </Grid.Column>
     </Grid>
   );

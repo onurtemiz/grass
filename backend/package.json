@@ -4,8 +4,8 @@
   "description": "Backend for Grass Application",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon index.js",
-    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=dev nodemon index.js",
+    "start": "NODE_ENV=prod node index.js",
     "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend/",
     "deploy": "cd ../ && git subtree push --prefix backend heroku master && cd ./backend",
     "deploy:full": "npm run build:ui && git add . && git commit -am 'buildui' && npm run deploy",

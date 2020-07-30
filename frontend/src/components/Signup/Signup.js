@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signupUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -12,13 +12,21 @@ import {
   Icon,
   Label,
   Divider,
+  Loader,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
+import { Label as SLabel } from '../Nav/NavTheme';
+import signup from '../../services/signup';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, errors, setValue, watch } = useForm();
+  const [send, setSend] = useState(false);
+  const [email, setEmail] = useState('');
+  const [activationLoading, setActivaitonLoading] = useState(false);
 
   useEffect(() => {
     register(
@@ -72,7 +80,36 @@ const Signup = () => {
   }, []);
 
   const onSubmit = (data) => {
-    dispatch(signupUser(data));
+    setLoading(true);
+    setEmail(data.email);
+    dispatch(signupUser(data, setLoading, setSend));
+  };
+
+  const sendVerification = async () => {
+    setActivaitonLoading(true);
+    const res = await signup.sendVerification(email);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      toast.success(`Yeni bir aktivasyon linki emailinize gönderildi.`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    setActivaitonLoading(false);
   };
 
   return (
@@ -164,15 +201,32 @@ const Signup = () => {
               )}
             </Form.Field>
             <Divider />
-            <Button fluid size="large" primary type="submit">
+            <Button fluid size="large" primary type="submit" loading={loading}>
               Hesap Oluştur
             </Button>
           </Segment>
         </Form>
-        <Message color="green">
-          Zaten Üye misiniz?{' '}
+        {send ? (
+          <Message info>
+            {activationLoading ? (
+              <Loader active={true} inline="centered" />
+            ) : (
+              <SLabel
+                color="blue"
+                pointer
+                bold
+                onClick={() => sendVerification()}
+              >
+                <b>Aktivasyon Kodunu Tekrar Yolla</b>
+              </SLabel>
+            )}
+          </Message>
+        ) : null}
+        <Message success>
           <Link to="/login">
-            <b>Giriş Yap</b>
+            <SLabel color="green" pointer bold>
+              <b>Giriş Yap</b>
+            </SLabel>
           </Link>
         </Message>
       </Grid.Column>

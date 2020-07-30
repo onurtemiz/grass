@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const randomstring = require('randomstring');
+
 mongoose.set('useFindAndModify', false);
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   username: { type: String, required: true },
   verified: { type: Boolean, default: false },
-  verifyToken: { type: String },
-  passwordVerification: { type: String },
+  verifyToken: { type: String, default: randomstring.generate() },
+  passwordVerification: { type: String, default: randomstring.generate() },
   passwordHash: { type: String, required: true },
   comments: [
     {

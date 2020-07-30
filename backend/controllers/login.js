@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
 const User = require('../models/user');
 const rateLimit = require('express-rate-limit');
+const utils = require('../utils/utils');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -32,8 +33,9 @@ loginRouter.post('/', async (request, response) => {
       : await bcrypt.compare(body.password, user.passwordHash);
 
   if (user.verified === false) {
+    await utils.sendActivationEmail(user);
     return response.status(401).json({
-      error: 'Lütfen epostanızı onaylayın.',
+      error: 'Emailiniz onaylanmamış. Yeni bir aktivasyon linki yollandı.',
     });
   } else if (!(user && passwordCorrect)) {
     return response.status(401).json({

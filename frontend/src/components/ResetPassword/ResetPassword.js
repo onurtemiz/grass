@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { loginUser, resetPassword } from '../../reducers/userReducer';
-import { useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { withRouter, useLocation, Redirect } from 'react-router';
+import { LinearProgress } from '@material-ui/core';
+
+import * as Yup from 'yup'; // for everything
 import {
   Button,
   Form,
   Grid,
   Header,
+  Image,
   Message,
   Segment,
   Icon,
@@ -15,32 +20,56 @@ import {
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
-const ResetPassword = () => {
-  const { register, handleSubmit, errors, setValue } = useForm();
-  const [loading, setLoading] = useState(false);
+import signupServices from '../../services/signup';
+import queryString from 'query-string';
+import { changePassword, resetPassword } from '../../reducers/userReducer';
+
+const ResetPassword = ({ setActiveIndex }) => {
   const dispatch = useDispatch();
-  const onSubmit = async (data) => {
-    setLoading(true);
-    dispatch(resetPassword(data, setLoading));
-  };
+  const { register, handleSubmit, errors, setValue, watch } = useForm();
+  const location = useLocation();
+  const [parsed, setParsed] = useState();
+  const [sucess, setSucess] = useState(false);
+  useEffect(() => {
+    setParsed(queryString.parse(location.search));
+  }, [location]);
 
   useEffect(() => {
     register(
-      { name: 'email' },
+      { name: 'password' },
       {
-        required: 'Lütfen boun eposta adresinizi girin.',
-        pattern: {
-          value: /^[A-Z0-9._%+-]+@boun\.edu\.tr$/i,
-          message: 'Epostanız @boun.edu.tr ile bitiyor olmalı.',
+        minLength: {
+          value: 8,
+          message: 'Yeni şifreniz en az 8 karakterden oluşmalı.',
         },
+        validate: (comment) =>
+          comment
+            ? (comment && comment.trim().length !== 0) ||
+              'Yeni şifreniz sadece boşluklardan oluşamaz.'
+            : true,
+      }
+    );
+    register(
+      { name: 'samePassword' },
+      {
+        validate: (value) =>
+          value === watch('password') || 'Şifreleriniz uyuşmuyor.',
       }
     );
   }, []);
 
+  const onSubmit = async (data) => {
+    dispatch(resetPassword(data.password, parsed.code, parsed.u, setSucess));
+  };
+
+  if (sucess) {
+    return <Redirect to="login" />;
+  }
+
   return (
     <Grid
       textAlign="center"
-      style={{ height: '100vh' }}
+      style={{ height: '90vh' }}
       verticalAlign="middle"
       columns="equal"
     >
@@ -48,58 +77,52 @@ const ResetPassword = () => {
         <HomeHeader as="h1">
           <label style={{ color: '#2185D0' }}>BOUN</label> ÇİM
         </HomeHeader>
-        <Header as="h1" color="green">
-          Çim Şifrenizi Sıfırlayın.
+        <Header as="h1" color="green" textAlign="center">
+          Çim Şifrenizi Güncelleyin.
         </Header>
 
-        <Form size="large" onSubmit={handleSubmit(onSubmit)}>
+        <Form size="large">
           <Segment>
             <Form.Field inline>
               <Form.Input
+                autoComplete="new-password"
                 fluid
-                onChange={(e, { name, value }) => setValue(name, value)}
-                icon={<Icon color="green" name="mail" />}
+                icon={<Icon color="green" name="key" />}
                 iconPosition="left"
-                placeholder="Eposta Adresi"
-                name="email"
-                autoFocus
-                className="email-input"
+                placeholder="Yeni şifre"
+                type="password"
+                onChange={(e, { name, value }) => setValue(name, value)}
+                name="password"
               />
-              {errors.email && (
-                <Label
-                  basic
-                  color="red"
-                  pointing="above"
-                  className="email-error"
-                >
-                  {errors.email.message}
+              {errors.password && (
+                <Label basic color="red" pointing="above">
+                  {errors.password.message}
                 </Label>
               )}
             </Form.Field>
+            <Form.Field inline>
+              <Form.Input
+                fluid
+                icon={<Icon color="green" name="key" />}
+                iconPosition="left"
+                placeholder="Yeni şifrenizi tekrar girin"
+                type="password"
+                onChange={(e, { name, value }) => setValue(name, value)}
+                name="samePassword"
+              />
 
+              {errors.samePassword && (
+                <Label basic color="red" pointing="above">
+                  {errors.samePassword.message}
+                </Label>
+              )}
+            </Form.Field>
             <Divider />
-            <Button
-              fluid
-              size="large"
-              primary
-              type="submit"
-              loading={loading}
-              className="login-button"
-            >
-              Şifreyi Sıfırla
+            <Button fluid size="large" primary onClick={handleSubmit(onSubmit)}>
+              Güncelle
             </Button>
           </Segment>
         </Form>
-        <Message color="green">
-          <Link to="/login">
-            <b>Giriş Yap</b>
-          </Link>
-        </Message>
-        <Message info>
-          <Link to="/signup">
-            <b>Hesap Oluştur</b>
-          </Link>
-        </Message>
       </Grid.Column>
     </Grid>
   );

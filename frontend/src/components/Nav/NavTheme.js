@@ -80,6 +80,8 @@ export const Label = styled.label`
       ? '#db2828'
       : props.color === 'hot red'
       ? '#F44336'
+      : props.color === 'white'
+      ? '#FFF'
       : '#333'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'auto')};
   font-weight: ${(props) => (props.bold ? 'bold' : 'auto')};

@@ -184,7 +184,7 @@ export const setUser = (user) => {
   };
 };
 
-export const loginUser = (userInfo) => {
+export const loginUser = (userInfo, setLoading) => {
   return async (dispatch) => {
     const user = await loginService.login(userInfo);
     if (user.error || user.message) {
@@ -197,6 +197,7 @@ export const loginUser = (userInfo) => {
         draggable: true,
         progress: undefined,
       });
+      setLoading(false);
       return;
     }
     setLocaleUser(user);
@@ -205,6 +206,7 @@ export const loginUser = (userInfo) => {
       type: 'SET_USER',
       data: user,
     });
+    setLoading(false);
   };
 };
 
@@ -254,9 +256,9 @@ export const getPopulatedMainUser = () => {
   };
 };
 
-export const verifyUser = (verifyToken) => {
+export const verifyUser = (verifyToken, u, setSituation) => {
   return async (dispatch) => {
-    const res = await signupService.verify(verifyToken);
+    const res = await signupService.verify(verifyToken, u);
     if (res.error) {
       toast.error(`${res.error}`, {
         position: 'bottom-left',
@@ -267,14 +269,16 @@ export const verifyUser = (verifyToken) => {
         draggable: true,
         progress: undefined,
       });
+      setSituation('failed');
       return;
     }
+    setSituation('success');
   };
 };
 
-export const resetPassword = (email, setLoading) => {
+export const forgotPassword = (email, setLoading) => {
   return async (dispatch) => {
-    const res = await signupService.resetPassword(email);
+    const res = await signupService.forgotPassword(email);
     if (res.error) {
       toast.error(`${res.error}`, {
         position: 'bottom-left',
@@ -287,7 +291,7 @@ export const resetPassword = (email, setLoading) => {
       });
       return;
     } else {
-      toast.info(`Onay linki epostanıza gönderilmiştir.`, {
+      toast.success(`Onay linki epostanıza gönderilmiştir.`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -301,9 +305,9 @@ export const resetPassword = (email, setLoading) => {
   };
 };
 
-export const changePassword = (password, code, id, setSucess) => {
+export const resetPassword = (password, code, u, setSucess) => {
   return async (dispatch) => {
-    const res = await signupService.changePassword(password, code, id);
+    const res = await signupService.resetPassword(password, code, u);
     if (res.error) {
       toast.error(`${res.error}`, {
         position: 'bottom-left',
@@ -321,7 +325,7 @@ export const changePassword = (password, code, id, setSucess) => {
   };
 };
 
-export const signupUser = (userInfo) => {
+export const signupUser = (userInfo, setLoading, setSend) => {
   return async (dispatch) => {
     const res = await signupService.signup(userInfo);
     if (res.error) {
@@ -334,8 +338,19 @@ export const signupUser = (userInfo) => {
         draggable: true,
         progress: undefined,
       });
-      return;
+    } else {
+      toast.success(`Aktivasyon linki emailinize yollandı`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setSend(true);
     }
+    setLoading(false);
   };
 };
 

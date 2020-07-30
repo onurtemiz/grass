@@ -16,9 +16,9 @@ const signup = async (user) => {
   }
 };
 
-const resetPassword = async (email) => {
+const forgotPassword = async (email) => {
   try {
-    const req = await axios.post(`${baseUrl}/reset_password`, email);
+    const req = await axios.post(`${baseUrl}/forgot_password`, email);
     return req.data;
   } catch (e) {
     return e.response
@@ -27,10 +27,21 @@ const resetPassword = async (email) => {
   }
 };
 
-const changePassword = async (password, code, id) => {
+const sendVerification = async (email) => {
+  try {
+    const req = await axios.post(`${baseUrl}/send_verification`, { email });
+    return req.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const resetPassword = async (password, code, u) => {
   try {
     const res = await axios.post(
-      `${baseUrl}/change_password?code=${code}&id=${id}`,
+      `${baseUrl}/reset_password?code=${code}&u=${u}`,
       {
         password,
       }
@@ -43,9 +54,12 @@ const changePassword = async (password, code, id) => {
   }
 };
 
-const verify = async (verifyToken) => {
+const verify = async (verifyToken, u) => {
   try {
-    const req = await axios.post(`${baseUrl}/verify/${verifyToken}`, null);
+    const req = await axios.post(
+      `${baseUrl}/verify?verifyToken=${verifyToken}&u=${u}`,
+      null
+    );
     return req.data;
   } catch (e) {
     return e.response
@@ -58,5 +72,6 @@ export default {
   signup,
   verify,
   resetPassword,
-  changePassword,
+  forgotPassword,
+  sendVerification,
 };

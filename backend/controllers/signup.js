@@ -5,21 +5,23 @@ const blacklist = require('../blacklistv2.json');
 const rateLimit = require('express-rate-limit');
 const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
+const utils = require('../utils/utils');
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // limit each IP to 100 requests per windowMs
-  message: { error: 'Lütfen 15 dakika sonra tekrar deneyin.' },
+  windowMs: 60 * 60 * 1000, // 15 minutes
+  max: 15, // limit each IP to 100 requests per windowMs
+  message: { error: 'Lütfen 1 saat sonra tekrar deneyin.' },
 });
 
 signupRouter.use(limiter);
 
-signupRouter.post('/change_password', async (req, res) => {
-  const user = await User.findById(req.query.id);
-
-  if (!user || user.passwordVerification !== req.query.code) {
+signupRouter.post('/reset_password', async (req, res) => {
+  const user = await User.findOne({
+    $and: [{ _id: req.query.u }, { passwordVerification: req.query.code }],
+  });
+  if (!user) {
     res.status(400).json({
-      error: 'Geçersiz Aktivitasyon',
+      error: 'Geçersiz Link',
     });
   }
   const body = req.body;
@@ -31,12 +33,12 @@ signupRouter.post('/change_password', async (req, res) => {
 
   const passwordHash = await bcrypt.hash(body.password, 10);
   user.passwordHash = passwordHash;
-  user.passwordVerification = '';
+  user.passwordVerification = randomstring.generate();
   await user.save();
   res.end();
 });
 
-signupRouter.post('/reset_password', async (req, res) => {
+signupRouter.post('/forgot_password', async (req, res) => {
   const body = req.body;
   const user = await User.findOne({ email: body.email });
   if (!user) {
@@ -44,43 +46,34 @@ signupRouter.post('/reset_password', async (req, res) => {
       error: 'Böyle bir kullanıcı bulunamadı',
     });
   }
-  user.passwordVerification = randomstring.generate();
-  await user.save();
-
-  let transporter = nodemailer.createTransport({
-    host: 'mail.privateemail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: 'iletisim@bouncim.com', // generated ethereal user
-      pass: process.env.EMAIL_PASS, // generated ethereal password
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
-  const verificationLink = `https://www.bouncim.com/change_password?code=${user.passwordVerification}&id=${user._id}`;
-
-  await transporter.sendMail({
-    from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
-    to: body.email, // list of receivers
-    subject: 'Boun Çim Şifre Sıfırlama', // Subject line
-    text: 'Hello world?', // plain text body
-    html: `<a href="${verificationLink}">Sıfırla</a>`, // html body
-  });
+  await utils.sendForgotPasswordEmail(user);
 
   res.end();
 });
 
-signupRouter.post('/verify/:verifyToken', async (req, res) => {
-  const user = await User.findOne({ verifyToken: req.params.verifyToken });
+signupRouter.post('/send_verification', async (req, res) => {
+  const body = req.body;
+  const user = await User.findOne({ email: body.email });
+  if (!user) {
+    res.status(400).json({
+      error: 'Eposta bulunamadı',
+    });
+  }
+  await utils.sendActivationEmail(user);
+  res.end();
+});
+
+signupRouter.post('/verify', async (req, res) => {
+  const user = await User.findOne({
+    $and: [{ verifyToken: req.query.verifyToken }, { _id: req.query.u }],
+  });
   if (!user) {
     res.status(400).json({
       error: 'Kullanıcı ile token eşleşmiyor',
     });
   }
   user.verified = true;
+  user.verifyToken = randomstring.generate();
   await user.save();
   res.end();
 });
@@ -127,32 +120,10 @@ signupRouter.post('/', async (req, res) => {
     username: body.username,
     email: body.email,
     passwordHash: passwordHash,
-    verifyToken: randomstring.generate(),
   });
-
   await user.save();
-  let transporter = nodemailer.createTransport({
-    host: 'mail.privateemail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: 'iletisim@bouncim.com', // generated ethereal user
-      pass: process.env.EMAIL_PASS, // generated ethereal password
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
 
-  const verificationLink = `https://www.bouncim.com/verify?code=${user.verifyToken}`;
-
-  await transporter.sendMail({
-    from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
-    to: body.email, // list of receivers
-    subject: 'Boun Çim Aktivasyon Linki', // Subject line
-    text: 'Hello world?', // plain text body
-    html: `<a href="${verificationLink}">Onayla</a>`, // html body
-  });
+  await utils.sendActivationEmail(user);
 
   res.end();
 });

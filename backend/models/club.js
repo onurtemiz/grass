@@ -31,7 +31,8 @@ clubSchema.statics.getFilteredInf = function (
     })
       .sort({ name: 1 })
       .skip(Number(start))
-      .limit(Number(total));
+      .limit(Number(total))
+      .populate({ path: 'comments', select: ['user'] });
   } catch (e) {
     console.log('e', e);
   }

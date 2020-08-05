@@ -2,9 +2,10 @@ const campusesRouter = require('express').Router();
 const Campus = require('../models/campus');
 
 campusesRouter.get('/:name', async (req, res) => {
-  const campus = await Campus.findOne({ name: req.params.name }).populate(
-    'comments'
-  );
+  const campus = await Campus.findOne({ name: req.params.name }).populate({
+    path: 'comments',
+    select: ['user'],
+  });
   return res.json(campus.toJSON());
 });
 

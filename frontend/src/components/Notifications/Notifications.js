@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Popup, Icon, Feed, Button, Placeholder } from 'semantic-ui-react';
+import {
+  Popup,
+  Icon,
+  Feed,
+  Button,
+  Placeholder,
+  Label as SLabel,
+} from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import userService from '../../services/user';
 import LikeNotification from './LikeNotification';
@@ -15,23 +22,38 @@ const Notifications = () => {
     setOpen(false);
     userService.getNotifications(setNotifications, setLoading);
   }, [location]);
+  console.log(notifications);
   return (
     <Popup
       wide="very"
       on="click"
       position={'right'}
       trigger={
-        <Label
-          color={notifications.length === 0 ? 'blue' : 'green'}
-          pointer
-          bold
-          onClick={() => setOpen(!open)}
-        >
-          <Icon
-            name="bell"
-            color={notifications.length === 0 ? 'blue' : 'green'}
-          />
-          Bildirimler
+        <Label color="blue" pointer bold onClick={() => setOpen(!open)}>
+          <div style={{ display: 'flex' }}>
+            {notifications.length > 0 ? (
+              <div style={{ position: 'relative', marginRight: '1em' }}>
+                <Icon name="bell" color="blue" />
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-0.5em',
+                    right: '-0.6em',
+                    backgroundColor: '#2185d0',
+                    borderRadius: ' 50%',
+                    color: 'white',
+                    padding: notifications.length > 9 ? '2px 3px' : '1px 3px',
+                    fontSize: '10px',
+                  }}
+                >
+                  {notifications.length > 9 ? '9+' : notifications.length}
+                </span>
+              </div>
+            ) : (
+              <Icon name="bell" color="blue" />
+            )}
+            Bildirimler
+          </div>
         </Label>
       }
       open={open}

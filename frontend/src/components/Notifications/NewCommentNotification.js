@@ -29,34 +29,32 @@ const NewCommentNotification = ({ notification }) => {
               {notification.responsible.username}{' '}
             </Label>
           </Link>{' '}
-          takip ettiğin bir
           <Link to={getCommentLink(notification.tool)}>
             {' '}
             <Label color="green" bold pointer>
               {getType(notification.tool)}
             </Label>
           </Link>{' '}
-          yorum yazdı.
+          {extraWord[notification.tool.commentType]} yorum yazdı.
         </Feed.Summary>
       </Feed.Content>
     </Feed.Event>
   );
 };
 
+const extraWord = {
+  lesson: 'dersine',
+  club: 'kulübüne',
+  dorm: 'yurduna',
+  campus: 'kampüsüne',
+  question: 'sorusuna',
+};
+
 const getType = (comment) => {
-  switch (comment.commentType) {
-    case 'lesson':
-      return 'derse';
-    case 'club':
-      return 'kulübe';
-    case 'dorm':
-      return 'yurda';
-    case 'campus':
-      return 'kampüse';
-    case 'question':
-      return 'soruya';
-    default:
-      return;
+  if (comment.commentType === 'question') {
+    return comment.question.question;
+  } else {
+    return comment[`${comment.commentType}`].name;
   }
 };
 

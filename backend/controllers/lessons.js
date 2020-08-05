@@ -59,16 +59,14 @@ lessonsRouter.get('/total', async (req, res) => {
 });
 
 const getSingleLesson = async (req) => {
-  var ObjectId = require('mongoose').Types.ObjectId;
   const q = req.query;
   const teacher = await Teacher.findOne({ name: q.teacherName });
   const lesson = await Lesson.findOne({
-    areaCode: q.areaCode,
+    areaCode: q.areaCode.toUpperCase(),
     digitCode: q.digitCode,
     teacher: teacher._id,
-  })
-    .populate('teacher')
-    .populate('comments');
+  }).populate({ path: 'comments', select: ['user'] });
+
   return lesson.toJSON();
 };
 
@@ -84,17 +82,17 @@ lessonsRouter.get('/', async (req, res) => {
   } else {
     lessons = await Lesson.find({})
       .sort({ name: 1 })
-      .populate('teacher')
-      .populate('comments');
+      .populate({ path: 'comments', select: ['user'] });
   }
   const jsonLessons = lessons.map((l) => l.toJSON());
   res.json({ lessons: jsonLessons, total: jsonLessons.length });
 });
 
 lessonsRouter.get('/:id', async (req, res) => {
-  const lesson = await Lesson.findById(req.params.id)
-    .populate('teacher')
-    .populate('comments');
+  const lesson = await Lesson.findById(req.params.id).populate({
+    path: 'comments',
+    select: ['user'],
+  });
   res.json(lesson.toJSON());
 });
 

@@ -61,7 +61,11 @@ const Club = () => {
           ? 'Kulüp yöneticileri iletişime geçer ise kendileri buraya açıklama ekleyebilir.'
           : club.description}
       </>
-      <CommentForm typeId={club.id} commentType="club" />
+      <CommentForm
+        typeId={club.id}
+        commentType="club"
+        users={club.comments.map((c) => c.user)}
+      />
       <Divider />
       <CommentSort />
       <IdComments typeId={club.id} type="club" />

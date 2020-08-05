@@ -34,6 +34,7 @@ signupRouter.post('/reset_password', async (req, res) => {
   const passwordHash = await bcrypt.hash(body.password, 10);
   user.passwordHash = passwordHash;
   user.passwordVerification = randomstring.generate();
+  user.verified =true;
   await user.save();
   res.end();
 });

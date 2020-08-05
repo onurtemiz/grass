@@ -32,7 +32,7 @@ const Lesson = () => {
     const q = match.params;
     const lesson = lessons.find(
       (l) =>
-        l.name === `${q.areaCode}${q.digitCode}` &&
+        l.name === `${q.areaCode.toUpperCase()}${q.digitCode}` &&
         l.parentName === decodeURI(q.teacherName)
     );
     if (lesson !== undefined) {
@@ -69,9 +69,9 @@ const Lesson = () => {
             {lesson.name.toUpperCase()} ·{' '}
           </Label>
 
-          <Link to={`/teachers/${lesson.teacher.name}`}>
+          <Link to={`/teachers/${lesson.parentName}`}>
             <Label color="green" bold pointer>
-              {lesson.teacher.name}
+              {lesson.parentName}
             </Label>{' '}
             <Label color="blue" bold>
               ·{' '}
@@ -84,8 +84,9 @@ const Lesson = () => {
       <br />
       <CommentForm
         typeId={lesson.id}
-        teacherId={lesson.teacher.id}
+        teacherId={lesson.teacher}
         commentType="lesson"
+        users={lesson.comments.map((c) => c.user)}
       />
 
       <Divider />

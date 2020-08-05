@@ -1,6 +1,10 @@
 const moment = require('moment');
 const nodemailer = require('nodemailer');
 const randomstring = require('randomstring');
+const {
+  passwordResetTemplate,
+  emailVerificationTemplate,
+} = require('./emailTemplates');
 
 const getDayFilter = (daySort) => {
   if (daySort === 'today') {
@@ -49,8 +53,7 @@ const sendForgotPasswordEmail = async (user) => {
     from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
     to: user.email, // list of receivers
     subject: 'Boun Çim Şifre Sıfırlama', // Subject line
-    text: 'Hello world?', // plain text body
-    html: `<a href="${forgotPasswordLink}">Sıfırla</a>`, // html body
+    html: passwordResetTemplate(user, forgotPasswordLink), // html body
   });
 };
 
@@ -66,8 +69,7 @@ const sendActivationEmail = async (user) => {
     from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
     to: user.email, // list of receivers
     subject: 'Boun Çim Aktivasyon Linki', // Subject line
-    text: 'Hello world?', // plain text body
-    html: `<a href="${verificationLink}">Onayla</a>`, // html body
+    html: emailVerificationTemplate(user, verificationLink), // html body
   });
 };
 

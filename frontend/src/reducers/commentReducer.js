@@ -129,6 +129,9 @@ export const postComment = (c, reset, setTools, setIsLoading) => {
         draggable: true,
         progress: undefined,
       });
+      reset();
+      setTools(false);
+      setIsLoading(false);
       return;
     }
     dispatch({

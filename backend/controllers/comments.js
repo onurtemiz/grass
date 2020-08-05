@@ -192,8 +192,14 @@ commentsRouter.post('/', limiter, async (req, res) => {
       error: 'typeId ve recommend gerekli',
     });
   }
-
   const user = req.user;
+  hasComment = await userHasComment(user, body.commentType, body.typeId);
+  if (hasComment) {
+    return res.status(400).json({
+      error: 'Sadece 1 yorum yazabilirsiniz',
+    });
+  }
+
   let comment;
   if (body.commentType === 'lesson') {
     const teacher = await Teacher.findById(body.teacherId);
@@ -489,5 +495,23 @@ commentsRouter.delete('/:id', async (req, res) => {
 
   res.status(204).end();
 });
+
+const userHasComment = async (user, commentType, typeId) => {
+  await user.populate('comments').execPopulate();
+  let found;
+
+  if (commentType === 'lesson') {
+    found = user.comments.find((c) => c.lesson && c.lesson.equals(typeId));
+  } else if (commentType === 'dorm') {
+    found = user.comments.find((c) => c.dorm && c.dorm.equals(typeId));
+  } else if (commentType === 'campus') {
+    found = user.comments.find((c) => c.campus && c.campus.equals(typeId));
+  } else if (commentType === 'question') {
+    found = user.comments.find((c) => c.question && c.question.equals(typeId));
+  } else if (commentType === 'club') {
+    found = user.comments.find((c) => c.club && c.club.equals(typeId));
+  }
+  return found ? true : false;
+};
 
 module.exports = commentsRouter;

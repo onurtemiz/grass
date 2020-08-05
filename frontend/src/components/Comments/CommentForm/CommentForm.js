@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { postComment } from '../../../reducers/commentReducer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Segment, Label, Checkbox } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
 import { Label as StyledLabel } from '../../Nav/NavTheme';
 import RecommendSlider from '../Comment/RecommendSlider';
 
-const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
+const CommentForm = ({
+  typeId,
+  commentType,
+  teacherId,
+  noRecommend,
+  users,
+}) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, errors, reset } = useForm();
   const [recommend, setRecommend] = useState(0);
-
+  const user = useSelector((state) => state.user);
   const handleComment = async (data) => {
     let values = {
       comment: data.comment,
@@ -25,6 +31,9 @@ const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
     setIsLoading(true);
     dispatch(postComment(values, reset, setTools, setIsLoading));
   };
+  if (users.includes(user.id)) {
+    return null;
+  }
 
   return (
     <Segment

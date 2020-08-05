@@ -30,7 +30,6 @@ const LikeNotification = ({ notification }) => {
               {notification.responsible.username}{' '}
             </Label>
           </Link>{' '}
-          şu
           <Link to={getCommentLink(notification.tool)}>
             {' '}
             <Label color="green" bold pointer>
@@ -45,19 +44,10 @@ const LikeNotification = ({ notification }) => {
 };
 
 const getType = (comment) => {
-  switch (comment.commentType) {
-    case 'lesson':
-      return 'derstteki';
-    case 'club':
-      return 'kulüpteki';
-    case 'dorm':
-      return 'yurttaki';
-    case 'campus':
-      return 'kampüsteki';
-    case 'question':
-      return 'sorudaki';
-    default:
-      return;
+  if (comment.commentType === 'question') {
+    return comment.question.question;
+  } else {
+    return comment[`${comment.commentType}`].name;
   }
 };
 

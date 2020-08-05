@@ -48,12 +48,16 @@ usersRouter.put('/follow/:id', async (req, res) => {
   }
 
   const user = req.user;
-  let isUserFollows = user.following.find((id) => id.toString() === body.id);
+  let isUserFollows = user.following.find(
+    (id) => id.toString() === req.params.id
+  );
 
   if (isUserFollows) {
-    user.following = user.following.filter((id) => id.toString() !== body.id);
+    user.following = user.following.filter(
+      (id) => id.toString() !== req.params.id
+    );
   } else {
-    user.following.push(body.id);
+    user.following.push(req.params.id);
   }
   await user.save();
   res.status(200).end();
@@ -66,7 +70,7 @@ usersRouter.get('/notifications', async (req, res) => {
       path: 'tool',
       populate: {
         path: 'lesson',
-        select: ['digitCode', 'areaCode', 'parentName'],
+        select: ['digitCode', 'areaCode', 'parentName', 'name'],
       },
     })
     .populate({
@@ -80,6 +84,10 @@ usersRouter.get('/notifications', async (req, res) => {
     .populate({
       path: 'tool',
       populate: { path: 'campus', select: 'name' },
+    })
+    .populate({
+      path: 'tool',
+      populate: { path: 'question', select: 'question' },
     });
 
   res.json(notifications.map((n) => n.toJSON()));

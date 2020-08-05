@@ -25,23 +25,25 @@ loginRouter.post('/', async (request, response) => {
       error: 'Şifreniz 8 veya daha çok karakterden oluşmalı.',
     });
   }
-
+  console.log('hey');
   const user = await User.findOne({ email: body.email });
   const passwordCorrect =
     user === null
       ? false
       : await bcrypt.compare(body.password, user.passwordHash);
+  console.log('hey');
 
-  if (user.verified === false) {
+  if (!(user && passwordCorrect)) {
+    return response.status(401).json({
+      error: 'Epostanız ya da şifreniz geçersiz.',
+    });
+  } else if (user.verified === false) {
     await utils.sendActivationEmail(user);
     return response.status(401).json({
       error: 'Emailiniz onaylanmamış. Yeni bir aktivasyon linki yollandı.',
     });
-  } else if (!(user && passwordCorrect)) {
-    return response.status(401).json({
-      error: 'Epostanız ya da şifreniz geçersiz.',
-    });
   }
+  console.log('hey');
 
   const userForToken = {
     email: user.email,

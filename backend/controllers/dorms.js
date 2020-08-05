@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 dormsRouter.get('/:name', async (req, res) => {
-  const dorm = await Dorm.findOne({ name: req.params.name }).populate(
-    'comments'
-  );
+  const dorm = await Dorm.findOne({ name: req.params.name }).populate({
+    path: 'comments',
+    select: ['user'],
+  });
   return res.json(dorm.toJSON());
 });
 

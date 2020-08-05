@@ -12,9 +12,10 @@ clubsRouter.get('/total', async (req, res) => {
 });
 
 clubsRouter.get('/:name', async (req, res) => {
-  const club = await Club.findOne({ name: req.params.name }).populate(
-    'comments'
-  );
+  const club = await Club.findOne({ name: req.params.name }).populate({
+    path: 'comments',
+    select: ['user'],
+  });
   res.json(club.toJSON());
 });
 

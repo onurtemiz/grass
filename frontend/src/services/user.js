@@ -71,7 +71,7 @@ const getNotifications = async (setNotifications, setLoading) => {
 
 const deleteNotifications = async () => {
   try {
-    await axios.delete(`${baseUrl}/notifications`, config);
+    await axios.delete(`${baseUrl}/notifications?all=true`, config);
   } catch (e) {
     return e.response
       ? e.response.data
@@ -79,6 +79,25 @@ const deleteNotifications = async () => {
   }
 };
 
+const deleteNotification = async (id) => {
+  try {
+    await axios.delete(`${baseUrl}/notifications?id=${id}`, config);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const seenNotification = async (id) => {
+  try {
+    await axios.put(`${baseUrl}/notifications/seen?id=${id}`, null, config);
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
 const unfollowLesson = async (id) => {
   try {
     const res = await axios.put(`${baseUrl}/follow/${id}`, null, config);
@@ -150,4 +169,6 @@ export default {
   changeIcon,
   checkAchievement,
   sawModal,
+  deleteNotification,
+  seenNotification,
 };

@@ -14,43 +14,54 @@ import NewCommentNotification from './NewCommentNotification';
 import { useLocation } from 'react-router-dom';
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
+  const [unseenNotifications, setUnseenNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setUnseenNotifications(notifications.filter((n) => n.seen !== true));
+  }, [notifications]);
   useEffect(() => {
     setLoading(true);
     setOpen(false);
     userService.getNotifications(setNotifications, setLoading);
   }, [location]);
-  console.log(notifications);
   return (
     <Popup
       wide="very"
       on="click"
       position={'right'}
       trigger={
-        <Label color="blue" pointer bold onClick={() => setOpen(!open)}>
+        <Label
+          color={open ? 'green' : 'blue'}
+          pointer
+          bold
+          onClick={() => setOpen(!open)}
+        >
           <div style={{ display: 'flex' }}>
-            {notifications.length > 0 ? (
+            {unseenNotifications.length > 0 ? (
               <div style={{ position: 'relative', marginRight: '1em' }}>
-                <Icon name="bell" color="blue" />
+                <Icon name="bell" color={open ? 'green' : 'blue'} />
                 <span
                   style={{
                     position: 'absolute',
                     top: '-0.5em',
                     right: '-0.6em',
-                    backgroundColor: '#2185d0',
+                    backgroundColor: '#db2828',
                     borderRadius: ' 50%',
                     color: 'white',
-                    padding: notifications.length > 9 ? '2px 3px' : '1px 3px',
+                    padding:
+                      unseenNotifications.length > 9 ? '2px 3px' : '2px 3px',
                     fontSize: '10px',
                   }}
                 >
-                  {notifications.length > 9 ? '9+' : notifications.length}
+                  {unseenNotifications.length > 9
+                    ? '9+'
+                    : unseenNotifications.length}
                 </span>
               </div>
             ) : (
-              <Icon name="bell" color="blue" />
+              <Icon name="bell" color={open ? 'green' : 'blue'} />
             )}
             Bildirimler
           </div>
@@ -115,9 +126,19 @@ const NotificationFeed = ({
         {notifications.map((n) =>
           n.tool ? (
             n.notificationType === 'like' ? (
-              <LikeNotification notification={n} key={n.id} />
+              <LikeNotification
+                notification={n}
+                key={n.id}
+                notifications={notifications}
+                setNotifications={setNotifications}
+              />
             ) : n.notificationType === 'newComment' ? (
-              <NewCommentNotification notification={n} key={n.id} />
+              <NewCommentNotification
+                notification={n}
+                key={n.id}
+                notifications={notifications}
+                setNotifications={setNotifications}
+              />
             ) : null
           ) : null
         )}

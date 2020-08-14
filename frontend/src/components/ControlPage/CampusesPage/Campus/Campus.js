@@ -40,11 +40,7 @@ const Campus = () => {
       )}
 
       <br />
-      <CommentForm
-        typeId={campus.id}
-        commentType="campus"
-        users={campus.comments.map((c) => c.user)}
-      />
+      <CommentForm typeId={campus.id} commentType="campus" />
       <Divider />
       <CommentSort />
       <IdComments typeId={campus.id} type="campus" />

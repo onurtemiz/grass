@@ -17,6 +17,7 @@ const notificationSchema = new mongoose.Schema({
     ref: 'User',
   },
   date: { type: Date, default: Date.now },
+  seen: { type: Boolean, default: false },
 });
 
 notificationSchema.set(uniqueValidator);

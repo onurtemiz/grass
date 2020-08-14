@@ -31,7 +31,7 @@ const User = ({ u }) => {
     return <LinearProgress />;
   }
   return (
-    <div style={{ height: '90vh' }}>
+    <div style={{ minHeight: '90vh', maxHeight: '100%' }}>
       <Header
         as="h1"
         style={

@@ -56,12 +56,7 @@ const Question = () => {
       <br />
       {question.description}
       <br />
-      <CommentForm
-        typeId={question.id}
-        commentType="question"
-        noRecommend
-        users={question.comments.map((c) => c.user)}
-      />
+      <CommentForm typeId={question.id} commentType="question" noRecommend />
       <Divider />
       <CommentSort />
       <IdComments typeId={question.id} type="question" />

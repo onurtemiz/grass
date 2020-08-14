@@ -50,17 +50,27 @@ const getCommentFeed = async (q, user) => {
   return comments;
 };
 
-const getIdFilter = async (q) => {
+const getIdFilter = async (q, user) => {
   let popular = q.filter === 'mostPopular';
   const sort = q.filter === 'mostRecent' ? -1 : 1;
 
-  const res = await Comment.getIdComments(
+  let res = await Comment.getIdComments(
     { sort, popular },
     q.id,
     q.start,
     q.total,
     q.day
   );
+  const userComment = await Comment.getUserComment(q.id, user.id);
+  if (userComment) {
+    res = {
+      total: res.total,
+      comments: [
+        ...res.comments.filter((c) => c.id !== userComment.id),
+        userComment,
+      ],
+    };
+  }
 
   return res;
 };
@@ -125,7 +135,7 @@ commentsRouter.get('/', async (req, res) => {
   const q = req.query;
   let data;
   if ('id' in q && 'filter' in q) {
-    data = await getIdFilter(q);
+    data = await getIdFilter(q, req.user);
   } else if ('filter' in q) {
     data = await getCommentFilter(q);
   } else if ('id' in q) {

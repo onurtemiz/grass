@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Feed, Icon, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
+import userService from '../../services/user';
+
 import {
   USER_PATH,
   CAMPUS_PATH,
@@ -11,16 +13,51 @@ import {
   QUESTION_PATH,
 } from '../../utils/config';
 import moment from 'moment';
-const LikeNotification = ({ notification }) => {
+const LikeNotification = ({
+  notification,
+  notifications,
+  setNotifications,
+}) => {
   moment.locale('tr');
 
-  return (
-    <Feed.Event>
-      <Feed.Label>
-        <Icon color="green" name="paw" />
-      </Feed.Label>
+  const [hover, setHover] = useState(false);
 
-      <Feed.Content>
+  useEffect(() => {
+    if (!notification.seen && hover) {
+      notification.seen = true;
+      userService.seenNotification(notification.id);
+    }
+  }, [hover]);
+
+  const deleteNotification = () => {
+    userService.deleteNotification(notification.id);
+    setNotifications(notifications.filter((n) => n.id !== notification.id));
+  };
+
+  return (
+    <Feed.Event
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{ opacity: notification.seen ? '1' : '0.8' }}
+    >
+      <Feed.Label
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {hover ? (
+          <Icon
+            color="grey"
+            name="delete"
+            onClick={() => deleteNotification()}
+          />
+        ) : (
+          <Icon color="green" name="paw" />
+        )}
+      </Feed.Label>
+      <Feed.Content style={{ marginLeft: '0' }}>
         <Feed.Date content={moment(new Date(notification.date)).fromNow()} />
 
         <Feed.Summary>

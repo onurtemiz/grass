@@ -169,6 +169,39 @@ commentSchema.statics.getIdComments = async function (
   return { comments, total: all };
 };
 
+commentSchema.statics.getUserComment = async function (id, userId) {
+  return await this.findOne({
+    $and: [
+      { user: userId },
+      { commentStatus: { $ne: 'destroyed' } },
+
+      {
+        $or: [
+          { teacher: id },
+          { lesson: id },
+          { user: id },
+          { club: id },
+          { campus: id },
+          { dorm: id },
+          { question: id },
+        ],
+      },
+    ],
+  })
+    .populate({
+      path: 'user',
+      select: ['username', 'id', 'userStatus', 'iconName'],
+    })
+    .populate({
+      path: 'lesson',
+      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+    })
+    .populate({ path: 'club', select: ['name'] })
+    .populate({ path: 'campus', select: ['name'] })
+    .populate({ path: 'dorm', select: ['name'] })
+    .populate({ path: 'question', select: ['id', 'question'] });
+};
+
 commentSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // eslint-disable-next-line no-underscore-dangle

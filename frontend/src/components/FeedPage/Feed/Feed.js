@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CommentSort from '../../Comments/CommentSort/CommentSort';
 import NoFeed from './NoFeed';
 import FeedComments from '../../Comments/Comments/FeedComments';

@@ -86,7 +86,6 @@ const Lesson = () => {
         typeId={lesson.id}
         teacherId={lesson.teacher}
         commentType="lesson"
-        users={lesson.comments.map((c) => c.user)}
       />
 
       <Divider />

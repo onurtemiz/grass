@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { postComment } from '../../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Segment, Label, Checkbox } from 'semantic-ui-react';
@@ -6,20 +6,18 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
 import { Label as StyledLabel } from '../../Nav/NavTheme';
 import RecommendSlider from '../Comment/RecommendSlider';
+import Comment from '../Comment/Comment';
+import CommentsLoading from '../CommentsLoading';
 
-const CommentForm = ({
-  typeId,
-  commentType,
-  teacherId,
-  noRecommend,
-  users,
-}) => {
+const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, errors, reset } = useForm();
   const [recommend, setRecommend] = useState(0);
   const user = useSelector((state) => state.user);
+  const comments = useSelector((state) => state.comments.comments);
+  const [userComment, setUserComment] = useState(null);
   const handleComment = async (data) => {
     let values = {
       comment: data.comment,
@@ -31,8 +29,13 @@ const CommentForm = ({
     setIsLoading(true);
     dispatch(postComment(values, reset, setTools, setIsLoading));
   };
-  if (users.includes(user.id)) {
-    return null;
+
+  useEffect(() => {
+    setUserComment(comments.find((c) => c.user.id === user.id));
+  }, [comments]);
+
+  if (userComment) {
+    return <Comment comment={userComment} showSource={false} />;
   }
 
   return (

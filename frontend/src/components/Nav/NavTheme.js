@@ -21,33 +21,46 @@ export const NavSearch = styled.div`
   }
 `;
 
+const getColorCode = (props) => {
+  return props.color === 'green'
+    ? '#21ba45'
+    : props.color === 'blue'
+    ? '#2185d0 !important'
+    : props.color === 'red'
+    ? '#db2828'
+    : props.color === 'hot red'
+    ? '#F44336'
+    : props.color === 'white'
+    ? '#FFF'
+    : '#21ba45';
+};
+
 export const StyledRange = styled(Range)`
   .rc-slider-handle {
-    background-color: #2185d0;
-    border-color: #2185d0;
+    background-color: ${(props) => getColorCode(props)};
+    border-color: ${(props) => getColorCode(props)};
   }
   .rc-slider-handle:active {
-    box-shadow: 0 0 5px #2185d0;
+    box-shadow: ${(props) => `0 0 5px ${getColorCode(props)}`};
   }
   .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
-    background-color: #2185d0;
-    border-color: #2185d0;
-    box-shadow: 0 0 5px #2185d0;
-  }
+    background-color: ${(props) => getColorCode(props)};
+    border-color: ${(props) => getColorCode(props)};
+    box-shadow: ${(props) => `0 0 5px ${getColorCode(props)}`};
 `;
 
 export const StyledSlider = styled(Slider)`
   .rc-slider-handle {
-    background-color: #2185d0;
-    border-color: #2185d0;
+    background-color: ${(props) => getColorCode(props)};
+    border-color: ${(props) => getColorCode(props)};
   }
   .rc-slider-handle:active {
-    box-shadow: 0 0 5px #2185d0;
+    box-shadow: ${(props) => `0 0 5px ${getColorCode(props)}`};
   }
   .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
-    background-color: #2185d0;
-    border-color: #2185d0;
-    box-shadow: 0 0 5px #2185d0;
+    background-color: ${(props) => getColorCode(props)};
+    border-color: ${(props) => getColorCode(props)};
+    box-shadow: ${(props) => `0 0 5px ${getColorCode(props)}`};
   }
 `;
 

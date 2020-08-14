@@ -9,8 +9,14 @@ const RecommendSlider = ({ recommend, setRecommend }) => {
       onChange={(recommend) => setRecommend(recommend)}
       value={recommend}
       marks={{ '-1': 'Önermiyorum', '0': 'Eh', '1': 'Öneriyorum' }}
-      trackStyle={{ backgroundColor: '#21ba45' }}
+      trackStyle={
+        recommend === -1
+          ? { backgroundColor: '#DB2828' }
+          : { backgroundColor: '#21ba45' }
+      }
+      color={recommend === -1 ? 'red' : recommend === 0 ? 'blue' : 'green'}
       style={{ margin: '1em auto', width: '75%' }}
+      startPoint={0}
     />
   );
 };

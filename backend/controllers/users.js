@@ -93,8 +93,21 @@ usersRouter.get('/notifications', async (req, res) => {
   res.json(notifications.map((n) => n.toJSON()));
 });
 
+usersRouter.put('/notifications/seen', async (req, res) => {
+  const q = req.query;
+  if (q.id) {
+    await Notification.findByIdAndUpdate(q.id, { seen: true });
+  }
+  res.status(200).end();
+});
+
 usersRouter.delete('/notifications', async (req, res) => {
-  await Notification.deleteMany({ target: req.user._id });
+  const q = req.query;
+  if (q.all === true) {
+    await Notification.deleteMany({ target: req.user._id });
+  } else {
+    await Notification.findByIdAndDelete(q.id);
+  }
   res.status(204).end();
 });
 

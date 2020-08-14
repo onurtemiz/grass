@@ -39,11 +39,7 @@ const Dorm = () => {
         </Label>
       )}
       <br />
-      <CommentForm
-        typeId={dorm.id}
-        commentType="dorm"
-        users={dorm.comments.map((c) => c.user)}
-      />
+      <CommentForm typeId={dorm.id} commentType="dorm" />
       <Divider />
       <CommentSort />
       <IdComments typeId={dorm.id} type="dorm" />

@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 import { sortComment, daySortComment } from '../../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Label, StyledDropdown } from '../../Nav/NavTheme';
+import queryString from 'query-string';
+import { useLocation, useHistory } from 'react-router-dom';
+import userService from '../../../services/user';
 
 const CommentSort = () => {
   const filter = useSelector((state) => state.comments.filter);
@@ -10,6 +13,29 @@ const CommentSort = () => {
   const dispatch = useDispatch();
   const [active, setActive] = useState(filter);
   const [day, setDay] = useState(daySort);
+  const firstRender = useRef();
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    const q = queryString.parse(location.search);
+    if (q.sort && q.day) {
+      setActive(q.sort);
+      setDay(q.day);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      history.push(`?sort=${active}&day=${day}`);
+    } else {
+      const q = queryString.parse(location.search);
+      if (!q.sort && !q.day) {
+        history.push(`?sort=${active}&day=${day}`);
+      }
+      firstRender.current = true;
+    }
+  }, [active, day]);
 
   useEffect(() => {
     dispatch(sortComment(active));

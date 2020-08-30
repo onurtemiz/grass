@@ -51,6 +51,22 @@ const getCoursesByUser = async () => {
   }
 };
 
+const quotaUpdate = async (course, setLoading) => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/update?course=${course.id}`,
+      config
+    );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  } finally {
+    setLoading(false);
+  }
+};
+
 const getAllSections = async (areaCode, digitCode) => {
   try {
     const res = await axios.get(
@@ -69,4 +85,5 @@ export default {
   getAllSections,
   getSectionsByLesson,
   getCoursesByUser,
+  quotaUpdate,
 };

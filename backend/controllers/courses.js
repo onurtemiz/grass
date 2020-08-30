@@ -1,6 +1,8 @@
 const coursesRouter = require('express').Router();
 const Course = require('../models/course');
-
+const axios = require('axios');
+const cheerio = require('cheerio');
+const lodash = require('lodash');
 // const jsonData = require('../2018-2019-2.json');
 // coursesRouter.get('/loadjson/', async (req, res) => {
 //   let re = new RegExp('([a-zA-Z]+)([0-9][a-zA-Z0-9]+).([0-9]+)');
@@ -104,6 +106,15 @@ coursesRouter.get('/user', async (req, res) => {
   res.json(courses.map((c) => c.toJSON()));
 });
 
+coursesRouter.get('/update', async (req, res) => {
+  let course = await Course.findById(req.query.course);
+  if (course) {
+    course = await updateCourseQuota(course);
+  }
+  console.log(course);
+  res.json(course.toJSON());
+});
+
 coursesRouter.get('/allsections', async (req, res) => {
   const q = req.query;
   const courses = await Course.find({
@@ -159,3 +170,53 @@ function getNTimeFilter(q) {
   });
   return times;
 }
+
+const updateCourseQuota = async (course) => {
+  const quotaLink = getQuotaLink(course, '2019/2020-3');
+  const d = await axios.get(quotaLink);
+  let $ = cheerio.load(d.data);
+  const tables = {};
+
+  $('.schtd2, .schtd').each(function (i, elem) {
+    let tableName = $(this).parent().find('.rectitle').text().trim();
+    if (!tables[`${tableName}`]) {
+      tables[`${tableName}`] = [];
+    }
+    let row = {};
+    $(this)
+      .parent()
+      .find('.title td')
+      .each(function (i, elem) {
+        if (!row[`${$(this).text().trim()}`])
+          row[`${$(this).text().trim()}`] = '';
+      });
+    tables[`${tableName}`].push(row);
+  });
+  $('.schtd2 td, .schtd td').each(function (i, elem) {
+    insertCellToIndex($(this).text().trim(), i, tables);
+  });
+  if (!lodash.isEmpty(tables)) {
+    course.quota = tables;
+    course.lastChange = Date.now();
+    await course.save();
+  }
+  return course;
+};
+
+const getQuotaLink = (c, semester) => {
+  return `https://registration.boun.edu.tr/scripts/quotasearch.asp?abbr=${c.areaCode}&code=${c.digitCode}&section=${c.sectionCode}&donem=${semester}`;
+};
+
+const insertCellToIndex = (element, index, tables) => {
+  let q = 0;
+  for (const [quotas, quotasValue] of Object.entries(tables)) {
+    for (let i = 0; i < quotasValue.length; i++) {
+      for (const [key, value] of Object.entries(quotasValue[i])) {
+        if (index === q) {
+          quotasValue[i][key] = element;
+        }
+        q++;
+      }
+    }
+  }
+};

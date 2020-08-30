@@ -30,7 +30,7 @@ const Quotas = () => {
   return (
     <>
       {courses.map((c) => (
-        <QuotaTable course={c} />
+        <QuotaTable c={c} setCourses={setCourses} courses={courses} />
       ))}
     </>
   );

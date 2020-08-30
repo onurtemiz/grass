@@ -49,6 +49,9 @@ const Nav = ({ search, admin }) => {
       } else if (p === 'planner') {
         setActive('planner');
         return;
+      } else if (p === 'quotas') {
+        setActive('quotas');
+        return;
       }
     }
     if (
@@ -72,7 +75,6 @@ const Nav = ({ search, admin }) => {
       setActive('home');
       return;
     }
-
     setActive('');
   }, [location]);
 
@@ -156,7 +158,19 @@ const Nav = ({ search, admin }) => {
             name="calendar alternate"
             color={active === 'planner' ? 'green' : 'blue'}
           />
-          Course Planner BETA
+          Course Planner
+        </Label>
+      </Menu.Item>
+      <Menu.Item
+        as={Link}
+        to={`/quotas`}
+        active={active === 'quotas'}
+        onClick={() => setActive('quotas')}
+        header
+      >
+        <Label color={active === 'quotas' ? 'green' : 'blue'} pointer>
+          <Icon name="sliders" color={active === 'quotas' ? 'green' : 'blue'} />
+          Kota Takip
         </Label>
       </Menu.Item>
       <Menu.Item

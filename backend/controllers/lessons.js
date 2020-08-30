@@ -1,7 +1,9 @@
 const lessonsRouter = require('express').Router();
 const Lesson = require('../models/lesson');
+const Course = require('../models/course');
+const middleware = require('../utils/middleware');
+
 const Teacher = require('../models/teacher');
-const lesson = require('../models/lesson');
 // const jsonData = require('../2018-2019-2.json');
 
 // lessonsRouter.get('/loadjson/', async (req, res) => {
@@ -95,6 +97,9 @@ lessonsRouter.get('/:id', async (req, res) => {
   });
   res.json(lesson.toJSON());
 });
+
+lessonsRouter.use(middleware.authAdmin);
+
 
 lessonsRouter.post('/', async (req, res) => {
   if (

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const Lesson = require('../models/lesson');
 const Club = require('../models/club');
 const Question = require('../models/question');
+const Course = require('../models/course');
 const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
 const Notification = require('../models/notification');
@@ -109,6 +110,102 @@ usersRouter.delete('/notifications', async (req, res) => {
     await Notification.findByIdAndDelete(q.id);
   }
   res.status(204).end();
+});
+
+usersRouter.post('/quota/follow', async (req, res) => {
+  const q = req.query;
+  const user = req.user;
+
+  const isFollowing = user.followingCourses.some((u) => u.equals(q.courseId));
+
+  if (isFollowing) {
+    user.followingCourses = user.followingCourses.filter(
+      (c) => !c.equals(q.courseId)
+    );
+  } else {
+    user.followingCourses.push(q.courseId);
+  }
+  await user.save();
+
+  res.status(200).end();
+});
+
+usersRouter.post('/depsem_info/update', async (req, res) => {
+  const body = req.body;
+  const user = req.user;
+  if (body.semester > 9 || body.semester < 1) {
+    return res.status(400).json({
+      error: 'Dönem 1 ile 9 arası olabilir.',
+    });
+  } else if (!body.quotaNotifications) {
+    return res.status(400).json({
+      error: 'Bildirim Seçenekleri Eksik',
+    });
+  } else if (body.departments.length > 2 || body.departments.length < 1) {
+    return res.status(400).json({
+      error: '1 ya da 2 Bölüm seçebilirsiniz.',
+    });
+  }
+  const departments = [
+    'Batı Dilleri ve Edebiyatları',
+    'Bilgisayar Mühendisliği',
+    'Bilgisayar ve Öğretim Teknolojileri Öğretmenliği',
+    'Çeviribilim',
+    'Dilbilim',
+    'Ekonomi',
+    'Elektrik Elektronik Mühendisliği',
+    'Endüstri Mühendisliği',
+    'Felsefe',
+    'Fen Bilgisi Öğretmenliği',
+    'Fizik',
+    'Fizik Öğretmenliği',
+    'İlköğretim Matematik Öğretmenliği',
+    'İngilizce Öğretmenliği',
+    'İnşaat Mühendisliği',
+    'İşletme',
+    'Kimya',
+    'Kimya Öğretmenliği',
+    'Makina Mühendisliği',
+    'Matematik',
+    'Matematik Öğretmenliği',
+    'Moleküler Biyololik ve Genetik',
+    'Okul Öncesi Öğretmenliği',
+    'Psikoloji',
+    'Rehberlik ve Psikolojik Danışmanlık',
+    'Siyaset Bilimi ve Uluslararası İlişkiler',
+    'Sosyoloji',
+    'Tarih',
+    'Turizm İşletmeciliği',
+    'Türk Dili ve Edebiyatı',
+    'Uluslararası Ticaret',
+    'Yönetim Bilişim Sistemleri',
+  ];
+  for (let i = 0; i < body.departments.length; i++) {
+    if (!departments.includes(body.departments[i])) {
+      return res.status(400).json({
+        error: 'Girilen bölümler uygun değil.',
+      });
+    }
+  }
+
+  user.departments = body.departments;
+  user.semester = body.semester;
+  user.quotaNotifications = body.quotaNotifications;
+  await user.save();
+
+  const userForToken = {
+    email: user.email,
+    id: user._id,
+  };
+  const token = jwt.sign(userForToken, process.env.SECRET);
+  const jsonedUser = user.toJSON();
+  const totalLikedUser = await User.getTotalLike(user.username);
+
+  res.status(200).json({
+    token,
+    ...jsonedUser,
+    ...totalLikedUser,
+  });
 });
 
 usersRouter.put('/', async (req, res) => {

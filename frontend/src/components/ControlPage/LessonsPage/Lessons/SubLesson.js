@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH, TEACHER_PATH } from '../../../../utils/config';
-import { Card, Header, Divider, Statistic, Icon } from 'semantic-ui-react';
+import {
+  Card,
+  Header,
+  Divider,
+  Statistic,
+  Icon,
+  Label as SLabel,
+} from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 const SubLesson = ({ lesson, main }) => {
   const header = () => {};
@@ -33,7 +40,10 @@ const SubLesson = ({ lesson, main }) => {
       >
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2" color="blue">
-            <Header.Content>{lesson.name.toUpperCase()}</Header.Content>
+            <Header.Content>{lesson.name.toUpperCase()} </Header.Content>
+            {lesson.active ? (
+              <SLabel color="green">Bu dönem açık</SLabel>
+            ) : null}
           </Header>
         </Card.Header>
         <Card.Description>

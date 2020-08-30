@@ -20,6 +20,8 @@ const lessonSchema = new mongoose.Schema({
   credits: { type: String },
   ects: { type: String },
   parentName: { type: String, required: true },
+  active: { type: Boolean, default: false },
+  sections: [{ type: String }],
 });
 
 lessonSchema.set(uniqueValidator);

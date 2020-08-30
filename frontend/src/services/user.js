@@ -156,6 +156,34 @@ const checkAchievement = async () => {
   }
 };
 
+const followCourse = async (courseId) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/quota/follow?courseId=${courseId}`,
+      null,
+      config
+    );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const updateDepSemInfo = async (data, setIsLoading) => {
+  try {
+    const res = await axios.post(`${baseUrl}/depsem_info/update`, data, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 export default {
   updateUser,
   getPopulatedUser,
@@ -171,4 +199,6 @@ export default {
   sawModal,
   deleteNotification,
   seenNotification,
+  updateDepSemInfo,
+  followCourse,
 };

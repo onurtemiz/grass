@@ -21,6 +21,7 @@ import StaticPages from './components/StaticPages/StaticPages';
 import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
 import CoursePlanner from './components/CoursePlanner/CoursePlanner';
 import Patreon from './components/Patreon/Patreon';
+import Quotas from './components/Quota/Quotas';
 const DefaultContainer = () => {
   return (
     <>
@@ -48,6 +49,7 @@ const DefaultContainer = () => {
           component={StaticPages}
         />
         <Route path="/planner" component={CoursePlanner} />
+        <Route path="/quotas" component={Quotas} />
         <Route path="/">
           <Redirect to="/" />
         </Route>

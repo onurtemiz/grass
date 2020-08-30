@@ -9,18 +9,18 @@ import { LinearProgress } from '@material-ui/core';
 import { Header, Divider, Icon, Menu, Progress } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import { isMobile } from 'react-device-detect';
-
+import courseService from '../../../../services/courses';
 import Follow from '../../../Follow/Follow';
 import { Label, HeadingStyle, HeadingStyleMobile } from '../../../Nav/NavTheme';
+import LessonQuotaButton from '../../../Quota/LessonQuotaButton';
 const Lesson = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName');
-
   const location = useLocation();
-
   const lessons = useSelector((state) => state.all.all);
   const [lesson, setLesson] = useState(null);
+
 
   useEffect(() => {
     setLesson(null);
@@ -78,6 +78,7 @@ const Lesson = () => {
             </Label>
           </Link>
           <Follow idToFollow={lesson.id} user={user} />
+          {lesson.active ? <LessonQuotaButton lesson={lesson} /> : null}
         </div>
       )}
 

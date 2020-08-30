@@ -24,6 +24,15 @@ const userSchema = new mongoose.Schema({
   ],
   userStatus: { type: String, default: 'user' },
   iconName: { type: String, default: '' },
+  semester: { type: String },
+  departments: [{ type: String }],
+  quotaNotifications: { type: mongoose.Schema.Types.Mixed },
+  followingCourses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+    },
+  ],
   sawModal: { type: Boolean, default: false },
   achievements: {
     type: mongoose.Schema.Types.Mixed,

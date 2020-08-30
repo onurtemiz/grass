@@ -18,6 +18,23 @@ const userReducer = (state = null, action) => {
       const followedLessons = [...state.following, action.data];
       const followedState = { ...state, following: followedLessons };
       return followedState;
+    case 'FOLLOW_COURSE':
+      const followedStateCourses = {
+        ...state,
+        followingCourses: [
+          ...state.followingCourses.filter((id) => id !== action.data),
+          action.data,
+        ],
+      };
+      return followedStateCourses;
+    case 'UNFOLLOW_COURSE':
+      const unFollowedStateCourses = {
+        ...state,
+        followingCourses: [
+          ...state.followingCourses.filter((id) => id !== action.data),
+        ],
+      };
+      return unFollowedStateCourses;
     case 'UNFOLLOW_LESSON':
       const unfollowed = state.following.filter((id) => id !== action.data);
 
@@ -138,6 +155,65 @@ export const unfollowLesson = (user, id) => {
   };
 };
 
+export const followCourse = (user, courseId) => {
+  return async (dispatch) => {
+    const res = await userService.followCourse(courseId);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: 'FOLLOW_COURSE',
+      data: courseId,
+    });
+    user = {
+      ...user,
+      followingCourses: [
+        ...user.followingCourses.filter((uId) => uId !== courseId),
+        courseId,
+      ],
+    };
+    setLocaleUser(user);
+  };
+};
+
+export const unFollowCourse = (user, courseId) => {
+  return async (dispatch) => {
+    const res = await userService.followCourse(courseId);
+    if (res.error) {
+      toast.error(`${res.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: 'UNFOLLOW_COURSE',
+      data: courseId,
+    });
+    user = {
+      ...user,
+      followingCourses: [
+        ...user.followingCourses.filter((uId) => uId !== courseId),
+      ],
+    };
+    setLocaleUser(user);
+  };
+};
+
 export const updateUser = (u, setEdited) => {
   return async (dispatch) => {
     const user = await userService.updateUser(u);
@@ -162,6 +238,30 @@ export const updateUser = (u, setEdited) => {
       data: user,
     });
     setEdited('finished');
+  };
+};
+
+export const updateDepSemInfo = (data, setIsLoading, setIsOpen) => {
+  return async (dispatch) => {
+    const user = await userService.updateDepSemInfo(data, setIsLoading);
+    if (user.error) {
+      toast.error(`${user.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    setLocaleUser(user);
+    dispatch({
+      type: 'UPDATE_USER',
+      data: user,
+    });
+    setIsOpen(false);
   };
 };
 

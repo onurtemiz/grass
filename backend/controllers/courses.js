@@ -81,9 +81,32 @@ const convertDaysToInt = (days) => {
   return intDays;
 };
 
+coursesRouter.get('/lesson', async (req, res) => {
+  const q = req.query;
+  const courses = await Course.find({
+    $and: [
+      { areaCode: q.areaCode },
+      { digitCode: q.digitCode },
+      { parentName: q.parent },
+    ],
+  }).sort({ name: 1 });
+  res.json(courses.map((c) => c.toJSON()));
+});
+
+coursesRouter.get('/user', async (req, res) => {
+  const user = req.user;
+  const courses = await Course.find({
+    _id: { $in: user.followingCourses },
+  }).sort({
+    name: 1,
+  });
+
+  res.json(courses.map((c) => c.toJSON()));
+});
+
 coursesRouter.get('/allsections', async (req, res) => {
   const q = req.query;
-  courses = await Course.find({
+  const courses = await Course.find({
     $and: [{ areaCode: q.areaCode }, { digitCode: q.digitCode }],
   }).sort({ name: 1 });
   res.json(courses.map((c) => c.toJSON()));

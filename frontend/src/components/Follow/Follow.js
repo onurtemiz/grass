@@ -24,7 +24,7 @@ const Follow = ({ user, idToFollow }) => {
   };
   return (
     <Button
-      color={following ? 'green' : 'blue'}
+      color={following ? 'red' : 'blue'}
       size="small"
       onClick={() => handleFollow()}
     >

@@ -43,7 +43,6 @@ loginRouter.post('/', async (request, response) => {
       error: 'Emailiniz onaylanmamış. Yeni bir aktivasyon linki yollandı.',
     });
   }
-  console.log('hey');
 
   const userForToken = {
     email: user.email,

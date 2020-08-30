@@ -12,6 +12,7 @@ import { Label } from '../../Nav/NavTheme';
 import User from './User';
 import Icons from '../Icons/Icons';
 import { isMobile } from 'react-device-detect';
+import QuotaFollowing from '../QuotaFollowing/QuotaFollowing';
 
 const MainUser = () => {
   const dispatch = useDispatch();
@@ -25,10 +26,12 @@ const MainUser = () => {
   useEffect(() => {
     if (location.pathname.includes('follows')) {
       setActiveIndex(1);
-    } else if (location.pathname.includes('edit')) {
+    } else if (location.pathname.includes('quota')) {
       setActiveIndex(2);
     } else if (location.pathname.includes('icons')) {
       setActiveIndex(3);
+    } else if (location.pathname.includes('edit')) {
+      setActiveIndex(4);
     } else {
       setActiveIndex(0);
     }
@@ -38,11 +41,13 @@ const MainUser = () => {
     if (activeIndex === 1) {
       history.push('/user/follows');
     } else if (activeIndex === 2) {
-      history.push('/user/edit');
+      history.push('/user/quota');
     } else if (activeIndex === 0) {
       history.push('/user');
     } else if (activeIndex === 3) {
       history.push('/user/icons');
+    } else if (activeIndex === 4) {
+      history.push('/user/edit');
     }
   }, [activeIndex]);
 
@@ -63,7 +68,7 @@ const MainUser = () => {
           </Label>
         ),
         color: 'green',
-        key: 1,
+        key: 0,
       },
       render: () => (
         <Tab.Pane>
@@ -75,17 +80,14 @@ const MainUser = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(1)}>
-            Düzenle
+            Takip
           </Label>
         ),
         color: 'green',
-        key: 2,
+        key: 1,
       },
       render: () => (
         <Tab.Pane>
-          <div style={{ marginBottom: '1em' }}>
-            <Icons user={user} />
-          </div>
           <Following />
         </Tab.Pane>
       ),
@@ -94,11 +96,45 @@ const MainUser = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(2)}>
-            Bilgilerimi Güncelle
+            Kota Takip
+          </Label>
+        ),
+        color: 'green',
+        key: 2,
+      },
+      render: () => (
+        <Tab.Pane>
+          <QuotaFollowing />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(3)}>
+            İkonlarım
           </Label>
         ),
         color: 'green',
         key: 3,
+      },
+      render: () => (
+        <Tab.Pane>
+          <div style={{ marginBottom: '1em' }}>
+            <Icons user={user} />
+          </div>
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(4)}>
+            Güncelle
+          </Label>
+        ),
+        color: 'green',
+        key: 4,
       },
       render: () => (
         <Tab.Pane>
@@ -124,20 +160,5 @@ const MainUser = () => {
     </div>
   );
 };
-
-// const UserPage = ({ user }) => {
-//   return (
-//     <div>
-//       <Header as="h1" color="green">
-//         {user.username}
-//       </Header>
-//       <Header as="h1" color="blue">
-//         {user.totalLikes}
-//       </Header>
-
-//       <Comments type="user" typeId={user.id} />
-//     </div>
-//   );
-// };
 
 export default MainUser;

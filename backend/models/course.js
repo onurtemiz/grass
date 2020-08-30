@@ -21,6 +21,7 @@ const courseSchema = new mongoose.Schema({
   sl: { type: String },
   req: { type: String },
   dep: { type: String },
+  quota: { type: mongoose.Schema.Types.Mixed },
 });
 
 courseSchema.set(uniqueValidator);

@@ -26,6 +26,31 @@ const addInf = async (start, count, search, findTime, notFindTime) => {
   }
 };
 
+const getSectionsByLesson = async (lesson) => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/lesson?areaCode=${lesson.areaCode}&digitCode=${lesson.digitCode}&parent=${lesson.parentName}`,
+      config
+    );
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const getCoursesByUser = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/user`, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
 const getAllSections = async (areaCode, digitCode) => {
   try {
     const res = await axios.get(
@@ -42,4 +67,6 @@ const getAllSections = async (areaCode, digitCode) => {
 export default {
   addInf,
   getAllSections,
+  getSectionsByLesson,
+  getCoursesByUser,
 };

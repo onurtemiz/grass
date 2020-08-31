@@ -157,7 +157,7 @@ const UserQuotaPopup = () => {
               </Form.Field>
               <Divider />
               <Label color="blue" bold>
-                Uygun Kota Varsa:
+                Uygun Kota Varsa(Henüz Aktif Değil):
               </Label>
               <br />
               <br />

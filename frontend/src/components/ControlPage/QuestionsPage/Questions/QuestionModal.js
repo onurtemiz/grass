@@ -13,6 +13,7 @@ import { Label } from '../../../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import questionsService from '../../../../services/questions';
 import { useForm } from 'react-hook-form';
+import { isMobile } from 'react-device-detect';
 
 const QuestionModal = () => {
   const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ const QuestionModal = () => {
                   trigger={
                     <input
                       placeholder="Sorunuzu yazın..."
-                      style={{ width: '30vw' }}
+                      style={{ width: isMobile ? '80vw' : '30vw' }}
                       name="question"
                       ref={register({
                         required: 'Lütfen sorunuzu yazın',
@@ -86,7 +87,7 @@ const QuestionModal = () => {
                     <TextareaAutosize
                       disabled={loading}
                       rows={4}
-                      style={{ width: '30vw' }}
+                      style={{ width: isMobile ? '80vw' : '30vw' }}
                       placeholder="Sorunuzu detaylandırın..."
                       name="description"
                       ref={register({

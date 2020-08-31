@@ -18,9 +18,7 @@ const LessonQuotaButton = ({ lesson }) => {
     getCourses();
   }, []);
 
-  if (!user.departments || !user.semester) {
-    return <UserQuotaPopup />;
-  }
+ 
 
   return (
     <div>

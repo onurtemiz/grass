@@ -5,7 +5,8 @@ import courseService from '../../services/courses';
 import CommentsLoading from '../Comments/CommentsLoading';
 import { Table } from 'semantic-ui-react';
 import QuotaTable from './QuotaTable';
-
+import lodash from 'lodash';
+import UserQuotaPopup from './UserQuotaPopup';
 const Quotas = () => {
   const user = useSelector((state) => state.user);
   const [courses, setCourses] = useState([]);
@@ -18,6 +19,10 @@ const Quotas = () => {
   useEffect(() => {
     getCourses();
   }, []);
+
+  if (!user.departments || !user.semester) {
+    return <UserQuotaPopup />;
+  }
 
   if (user.followingCourses.length === 0) {
     return <NoQuotas />;
@@ -34,7 +39,7 @@ const Quotas = () => {
           c={c}
           setCourses={setCourses}
           courses={courses}
-          key={c.id}
+          key={lodash.uniqueId()}
         />
       ))}
     </>

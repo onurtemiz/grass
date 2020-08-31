@@ -16,6 +16,7 @@ import { Label } from '../../Nav/NavTheme';
 import TextareaAutosize from 'react-textarea-autosize';
 import tipsService from '../../../services/tips';
 import { useForm } from 'react-hook-form';
+import { isMobile } from 'react-device-detect';
 
 const Tips = ({ home }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +65,7 @@ const Tips = ({ home }) => {
                 <TextareaAutosize
                   disabled={isLoading}
                   rows={4}
-                  style={{ width: '30vw', height: '4rem' }}
+                  style={{ width: isMobile ? '80vw' : '30vw', height: '4rem' }}
                   placeholder="Tavsiyen Nedir?"
                   ref={register({
                     required: 'Lütfen tavsiyenizi yazın',

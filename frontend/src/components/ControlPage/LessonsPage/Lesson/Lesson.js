@@ -55,7 +55,7 @@ const Lesson = () => {
             style={{ marginTop: '0.5em' }}
           >
             <Label color="green" bold pointer>
-              {lesson.teacher.name}
+              {lesson.parentName}
             </Label>
           </Link>
           <div style={{ marginTop: '0.5em' }}>

@@ -65,13 +65,17 @@ const FirstTimeModal = () => {
             Öğrenciler Hariç Giriş Yasak
           </Label>
           <br />
-          Öğrenci statüsünde olmayan halka açık @boun uzantılı epostalar
-          sistemden banlıdır. Güncel banlı eposta listesini{' '}
-          <Link to="https://github.com/onurtemiz/grass/blob/master/backend/blacklistv2.json">
+          Öğrenci statüsünde olmayan @boun uzantılı epostalar sistemden
+          banlıdır. Güncel banlı eposta listesini{' '}
+          <a
+            href="https://github.com/onurtemiz/grass/blob/master/backend/blacklistv2.json"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Label color="green" bold pointer>
               buradan
             </Label>
-          </Link>{' '}
+          </a>{' '}
           görebilirsiniz.
           <br />
           Eğer bir kullanıcının öğrenci olmadığından şüpheleniyorsanız iletişime

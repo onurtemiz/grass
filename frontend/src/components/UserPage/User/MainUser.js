@@ -66,11 +66,7 @@ const MainUser = () => {
         color: 'green',
         key: 0,
       },
-      render: () => (
-        <Tab.Pane>
-          <User u={user} />
-        </Tab.Pane>
-      ),
+      render: () => <User u={user} />,
     },
     {
       menuItem: {

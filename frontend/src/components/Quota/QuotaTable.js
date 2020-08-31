@@ -13,6 +13,8 @@ import {
 } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import { unFollowCourse } from '../../reducers/userReducer';
+import { isMobile } from 'react-device-detect';
+import lodash from 'lodash';
 
 import moment from 'moment';
 const QuotaTable = ({ c, setCourses, courses }) => {
@@ -52,7 +54,7 @@ const QuotaTable = ({ c, setCourses, courses }) => {
         <Segment compact loading={loading}>
           <Header as="h2">
             <Label color="blue" bold>
-              {course.name}.{course.sectionCode}{' '}
+              {course.name}{' '}
               <label style={{ fontSize: '12px', color: '#00000066' }}>
                 {moment(new Date(course.lastChange)).fromNow()}{' '}
               </label>
@@ -83,7 +85,7 @@ const QuotaTable = ({ c, setCourses, courses }) => {
       <Segment compact loading={loading}>
         <Header as="h2">
           <Label color="blue" bold>
-            {course.name}.{course.sectionCode}{' '}
+            {course.name}{' '}
             <label style={{ fontSize: '12px', color: '#00000066' }}>
               {moment(new Date(course.lastChange)).fromNow()}
             </label>
@@ -105,16 +107,20 @@ const QuotaTable = ({ c, setCourses, courses }) => {
         </Header>
         {tables.map((t) => {
           return (
-            <>
+            <div key={lodash.uniqueId()}>
               <Label color="green" bold>
                 {t}
               </Label>
-              <Table celled striped collapsing compact>
+              <Table celled striped collapsing compact unstackable={isMobile}>
                 <Table.Header>
                   <Table.Row>
                     {Object.entries(course.quota[`${t}`][0]).map(
                       ([key, value]) => {
-                        return <Table.HeaderCell>{key}</Table.HeaderCell>;
+                        return (
+                          <Table.HeaderCell key={lodash.uniqueId()}>
+                            {key}
+                          </Table.HeaderCell>
+                        );
                       }
                     )}
                   </Table.Row>
@@ -123,10 +129,14 @@ const QuotaTable = ({ c, setCourses, courses }) => {
                 <Table.Body>
                   {Object.entries(course.quota[`${t}`]).map(([key, value]) => {
                     return (
-                      <Table.Row>
+                      <Table.Row key={lodash.uniqueId()}>
                         {Object.entries(course.quota[`${t}`][key]).map(
                           ([k, v]) => {
-                            return <Table.Cell>{v}</Table.Cell>;
+                            return (
+                              <Table.Cell key={lodash.uniqueId()}>
+                                {v}
+                              </Table.Cell>
+                            );
                           }
                         )}
                       </Table.Row>
@@ -134,7 +144,7 @@ const QuotaTable = ({ c, setCourses, courses }) => {
                   })}
                 </Table.Body>
               </Table>
-            </>
+            </div>
           );
         })}
       </Segment>

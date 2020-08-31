@@ -86,7 +86,7 @@ const SubCourse = ({ course }) => {
       >
         <Card.Header style={{ display: 'inline' }}>
           <Label color="blue" bold pointer nolink>
-            {course.name}.{course.sectionCode}
+            {course.name}
           </Label>{' '}
           •{' '}
           <Label color="green" bold pointer nolink>

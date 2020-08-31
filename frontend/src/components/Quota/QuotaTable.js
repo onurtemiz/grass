@@ -27,11 +27,13 @@ const QuotaTable = ({ c, setCourses, courses }) => {
     setCourse(updatedCourse);
   }, []);
   useEffect(() => {
-    let cTables = [];
-    for (const key of Object.keys(course.quota)) {
-      cTables.push(key);
+    if (course.quota) {
+      let cTables = [];
+      for (const key of Object.keys(course.quota)) {
+        cTables.push(key);
+      }
+      setTables(cTables);
     }
-    setTables(cTables);
   }, []);
 
   const handleUpdate = async () => {
@@ -43,13 +45,45 @@ const QuotaTable = ({ c, setCourses, courses }) => {
     dispatch(unFollowCourse(user, course.id));
     setCourses(courses.filter((co) => co.id !== course.id));
   };
+  console.log(course);
+  if (!course.quota) {
+    return (
+      <div style={{ marginLeft: '1em', marginTop: '1em' }}>
+        <Segment compact loading={loading}>
+          <Header as="h2">
+            <Label color="blue" bold>
+              {course.name}.{course.sectionCode}{' '}
+              <label style={{ fontSize: '12px', color: '#00000066' }}>
+                {moment(new Date(course.lastChange)).fromNow()}{' '}
+              </label>
+              <Icon
+                name="delete"
+                color="grey"
+                style={{ float: 'right' }}
+                size="small"
+                onClick={() => handleRemove()}
+              />
+              <Icon
+                name="refresh"
+                color="grey"
+                style={{ float: 'right' }}
+                size="small"
+                onClick={() => handleUpdate()}
+              />
+            </Label>
+          </Header>
+          Kota bilgisi henüz yok.
+        </Segment>
+      </div>
+    );
+  }
 
   return (
     <div style={{ marginLeft: '1em', marginTop: '1em' }}>
       <Segment compact loading={loading}>
         <Header as="h2">
           <Label color="blue" bold>
-            {course.name}{' '}
+            {course.name}.{course.sectionCode}{' '}
             <label style={{ fontSize: '12px', color: '#00000066' }}>
               {moment(new Date(course.lastChange)).fromNow()}
             </label>

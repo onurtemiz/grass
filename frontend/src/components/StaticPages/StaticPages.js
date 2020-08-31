@@ -75,22 +75,6 @@ const StaticPages = () => {
         </Segment>
       ),
     },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(2)}>
-            Kurallar
-          </Label>
-        ),
-        color: 'green',
-        key: 3,
-      },
-      render: () => (
-        <Segment style={{ marginRight: '0.5em' }}>
-          <Terms />
-        </Segment>
-      ),
-    },
   ];
 
   return (

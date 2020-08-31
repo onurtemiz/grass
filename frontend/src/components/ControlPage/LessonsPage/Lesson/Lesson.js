@@ -21,7 +21,6 @@ const Lesson = () => {
   const lessons = useSelector((state) => state.all.all);
   const [lesson, setLesson] = useState(null);
 
-
   useEffect(() => {
     setLesson(null);
     const q = match.params;
@@ -61,6 +60,12 @@ const Lesson = () => {
           </Link>
           <div style={{ marginTop: '0.5em' }}>
             <Follow idToFollow={lesson.id} user={user} />
+
+            {lesson.active ? (
+              <div style={{ marginTop: '0.5em' }}>
+                <LessonQuotaButton lesson={lesson} />
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (

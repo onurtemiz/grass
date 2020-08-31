@@ -197,9 +197,9 @@ const updateCourseQuota = async (course) => {
   });
   if (!lodash.isEmpty(tables)) {
     course.quota = tables;
-    course.lastChange = Date.now();
-    await course.save();
   }
+  course.lastChange = Date.now();
+  await course.save();
   return course;
 };
 

@@ -18,6 +18,7 @@ import {
   addAllSections,
 } from '../../../../reducers/courseReducer';
 import { LESSON_PATH } from '../../../../utils/config';
+import QuotaLabel from '../../../Quota/QuotaLabel';
 
 const SubCourse = ({ course }) => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -85,7 +86,7 @@ const SubCourse = ({ course }) => {
       >
         <Card.Header style={{ display: 'inline' }}>
           <Label color="blue" bold pointer nolink>
-            {course.name}
+            {course.name}.{course.sectionCode}
           </Label>{' '}
           •{' '}
           <Label color="green" bold pointer nolink>
@@ -103,7 +104,9 @@ const SubCourse = ({ course }) => {
             </Label>
           </Link>
         </Card.Header>
-        <Card.Meta>{course.fullName}</Card.Meta>
+        <Card.Meta>
+          {course.fullName} <QuotaLabel course={course} />
+        </Card.Meta>
 
         <Card.Description>
           <Label color="blue" bold pointer nolink>
@@ -123,7 +126,7 @@ const SubCourse = ({ course }) => {
             color="blue"
             bold
             pointer
-            style={{ float: 'right' }}
+            style={{ float: 'right', fontSize: '0.8em' }}
             onClick={() => handleAddAllSections()}
           >
             <Icon name="add" />

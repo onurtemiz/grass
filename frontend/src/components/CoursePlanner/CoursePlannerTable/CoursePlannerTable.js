@@ -23,6 +23,7 @@ import {
 import { Label } from '../../Nav/NavTheme';
 import { getIdByDayHour } from '../../../utils/utils';
 import CommentsLoading from '../../Comments/CommentsLoading';
+import { isMobile } from 'react-device-detect';
 
 const CoursePlannerTable = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -144,7 +145,7 @@ const CoursePlannerTable = () => {
     return <CommentsLoading />;
   }
   return (
-    <Table celled size="small">
+    <Table celled size="small" unstackable={isMobile}>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell textAlign="center">

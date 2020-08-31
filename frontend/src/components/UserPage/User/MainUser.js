@@ -26,12 +26,10 @@ const MainUser = () => {
   useEffect(() => {
     if (location.pathname.includes('follows')) {
       setActiveIndex(1);
-    } else if (location.pathname.includes('quota')) {
-      setActiveIndex(2);
     } else if (location.pathname.includes('icons')) {
-      setActiveIndex(3);
+      setActiveIndex(2);
     } else if (location.pathname.includes('edit')) {
-      setActiveIndex(4);
+      setActiveIndex(3);
     } else {
       setActiveIndex(0);
     }
@@ -40,13 +38,11 @@ const MainUser = () => {
   useEffect(() => {
     if (activeIndex === 1) {
       history.push('/user/follows');
-    } else if (activeIndex === 2) {
-      history.push('/user/quota');
     } else if (activeIndex === 0) {
       history.push('/user');
-    } else if (activeIndex === 3) {
+    } else if (activeIndex === 2) {
       history.push('/user/icons');
-    } else if (activeIndex === 4) {
+    } else if (activeIndex === 3) {
       history.push('/user/edit');
     }
   }, [activeIndex]);
@@ -96,27 +92,11 @@ const MainUser = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(2)}>
-            Kota Takip
-          </Label>
-        ),
-        color: 'green',
-        key: 2,
-      },
-      render: () => (
-        <Tab.Pane>
-          <QuotaFollowing />
-        </Tab.Pane>
-      ),
-    },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(3)}>
             İkonlarım
           </Label>
         ),
         color: 'green',
-        key: 3,
+        key: 2,
       },
       render: () => (
         <Tab.Pane>
@@ -129,12 +109,12 @@ const MainUser = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(4)}>
+          <Label bold pointer color={getColor(3)}>
             Güncelle
           </Label>
         ),
         color: 'green',
-        key: 4,
+        key: 3,
       },
       render: () => (
         <Tab.Pane>

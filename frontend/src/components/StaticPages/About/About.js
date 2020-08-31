@@ -5,8 +5,7 @@ const About = () => {
   return (
     <div>
       <Label color="blue" bold>
-        Çimin asıl amacı Boğaziçi öğrencilerine sistematik bir şekilde bilgi
-        ulaştırmaktır.
+        Burası boş yapılan bölüm.
       </Label>
       <br />
       <br />
@@ -24,25 +23,21 @@ const About = () => {
           tamamen alakasız bir sürü postu okumak zorunda.
         </li>
         <li>
-          Eğer belirli bir ders üzerin hoca seçmek yerine seçmeli ders kotasını
-          doldurmak için arama yapıyorsa çok büyük uğraşa giriyor.
+          Eğer seçmeli ders kotasını doldurmak için arama yapıyorsa çok büyük
+          uğraşa giriyor.
         </li>
         <li>
           Eğer X dersi ya da Y hocası çok iyiyse ama kişi bunu bilmiyorsa hiçbir
           zaman aratmayacak.
         </li>
         <li>
-          En önemlisi{' '}
-          <Label color="green" bold>
-            anonimlik.
-          </Label>{' '}
           Genel olarak bir düşünceyle ilgili fikir belirtirken Facebook'taki
           aşırı göz önünde olma durumu insanların fikirlerini engelleyebiliyor.
         </li>
       </ul>
       Çimin çok bir olayı yok. Sadece boun epostasıyla girebildiğin -okuldaki
       public epostaya sahip hocaların yasaklandığı- basit
-      filter/like/notification sistemi olan ve içerisinde son 3 senenin bütün
+      filter/like/notification sistemi olan ve içerisinde son 2 senenin bütün
       derslerini/hocalarını, okulun kulüplerini/yurtlarını/kampüslerini ve en
       önemlisi öğrencilerin sorularını/tavsiyelerini barındıran bir site.
       <br />
@@ -50,7 +45,7 @@ const About = () => {
       Herhangi bir öneri/tavsiye/hata ya da bebekle oynayan köpek videosu için:{' '}
       <a href="mailto:onur.temiz@boun.edu.tr">
         <Label color="green" bold pointer>
-          onur.temiz@boun.edu.tr
+          iletisim@bouncim.com
         </Label>
       </a>
     </div>

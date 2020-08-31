@@ -9,7 +9,7 @@ const Contribution = () => {
       </Label>
       <br />
       Böyle bir durumda{' '}
-      <a href="mailto:onur.temiz@boun.edu.tr?subject=Çim Bug">
+      <a href="mailto:iletisim@bouncim.com?subject=Çim Bug">
         <Label color="green" bold pointer>
           eposta
         </Label>
@@ -48,24 +48,24 @@ const Contribution = () => {
         Planlar/İhtiyaçlar
       </Label>
       <lu>
+        <li>Sitedeki tasarım ve işlevsellikle alakalı sıkıntıları giderme.</li>
         <li>
-          Fark ettiğiniz üzere sitenin tasarımı bazı yerlerde tutarlı değil ve
-          genel olarak bakıldığında da yetersiz -dizayn çöpü olmamız da bunda
-          büyük etken- Eğer daha iyi tasarım tavsiyeleriniz varsa uygulamaya
-          çalışırız.
+          Kota Takip ettiğin derslerde bildirim/email notification sistemi.
         </li>
+        <li>Consent generator</li>
         <li>
-          Gene tasarım çöpü olduğumuz için yapamadığımız şeylerden biri ikonlar.
-          Aslında ilk başta kampüsteki kedilerin/köpeklerin ikonlaşmış hallerini
-          istiyorduk. Çiko olsun Prenses olsun hayvanları ikonlaştırabilecek
+          Ders öneri sistemi. Mantık basit: Önceki derslerini veriyorsun,
+          aynılarını beğenenlerin ek beğendiklerini gösteriyoruz.
+        </li>
+        <li>Düzgün çalışan GPA calculator XD</li>
+        <li>
+          Çiko olsun Prenses olsun kampüs hayvanlarını ikonlaştırabilecek
           birisini arıyoruz.
         </li>
+        <li>Bir sürü yerde refactoring gerek.</li>
         <li>
-          Bilgisayar mühendisliği okumadığım için en iyi pratiklere sahip
-          değilim. Backend ve Frontend'de inanılmaz çöp kodlar bulunmakta.
-          Üstteki teknolojilerde yetkin birisi çok yardımcı olur.
+          Eğer bütün API sistemini Graphql'e taşıyabilirsek harika olurdu.
         </li>
-        <li>Değişecek..........!!!</li>
       </lu>
     </div>
   );

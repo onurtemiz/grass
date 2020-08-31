@@ -17,7 +17,6 @@ const addInf = async (start, count, search, findTime, notFindTime) => {
         ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&nt=${notFindTime}`
         : `${baseUrl}/search?start=${start}&total=${count}&q=${search}`;
     const res = await axios.get(url, config);
-    console.log('res', res.data);
     return res.data;
   } catch (e) {
     return e.response

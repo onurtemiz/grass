@@ -47,7 +47,6 @@ const QuotaTable = ({ c, setCourses, courses }) => {
     dispatch(unFollowCourse(user, course.id));
     setCourses(courses.filter((co) => co.id !== course.id));
   };
-  console.log(course);
   if (!course.quota) {
     return (
       <div style={{ marginLeft: '1em', marginTop: '1em' }}>

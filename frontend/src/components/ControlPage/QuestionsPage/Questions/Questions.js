@@ -50,7 +50,6 @@ const Questions = ({ main }) => {
 
 export default Questions;
 function filterQuestions(questions, filter, sorting) {
-  console.log('sorting', sorting);
   return questions
     .sort((a, b) => {
       if (sorting === 'mostRecent') {

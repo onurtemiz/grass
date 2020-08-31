@@ -12,7 +12,6 @@ const addInf = async (start, total, filter, daySort) => {
       `${baseUrl}/inf?start=${start}&total=${total}&filter=${filter}&day_sort=${daySort}`,
       config
     );
-    console.log(res.data);
     return res.data;
   } catch (e) {
     return e.response

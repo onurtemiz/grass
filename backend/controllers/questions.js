@@ -2,7 +2,7 @@ const questionsRouter = require('express').Router();
 const Question = require('../models/question');
 const middleware = require('../utils/middleware');
 const User = require('../models/user');
-
+const Comment = require('../models/comment');
 // questionsRouter.get('/refresh', async (req, res) => {
 //   const questions = await Question.find();
 //   for (let i = 0; i < questions.length; i++) {
@@ -113,6 +113,7 @@ questionsRouter.delete('/:id', async (req, res) => {
       error: 'Sileceğiniz soru idsi eksik',
     });
   }
+  await Comment.deleteMany({ question: req.params.id });
   await Question.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });

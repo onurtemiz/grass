@@ -14,7 +14,6 @@ const ControlReports = () => {
     const allReports = await reportsService.getAllReports();
     setReports(allReports);
   };
-  console.log('reports', reports);
   if (reports.length === 0) {
     return null;
   }

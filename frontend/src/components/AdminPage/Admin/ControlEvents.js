@@ -17,7 +17,6 @@ const ControlEvents = () => {
   if (events.length === 0) {
     return null;
   }
-  console.log(events);
   return (
     <div
       style={{

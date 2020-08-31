@@ -31,7 +31,6 @@ const Quotas = () => {
   if (courses.length === 0) {
     return <CommentsLoading />;
   }
-  console.log(courses);
   return (
     <>
       {courses.map((c) => (

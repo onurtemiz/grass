@@ -35,7 +35,6 @@ const CreditsSlider = () => {
 };
 
 const getMarks = (value) => {
-  console.log('value', value);
   let y = value.reduce((acc, elem) => {
     acc[elem] = elem; // or what ever object you want inside
     return acc;

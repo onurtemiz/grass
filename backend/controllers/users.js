@@ -239,10 +239,13 @@ usersRouter.put('/', async (req, res) => {
         error: 'Yeni kullanıcı adınız başkası tarafından alınmış.',
       });
     }
+    let re = new RegExp('[a-zA-Z0-9._-]+');
+
     if (
       body.username.length > 15 ||
       body.username.trim().length === 0 ||
-      body.username.trim().length !== body.username.length
+      body.username.trim().length !== body.username.length ||
+      re.exec(body.username)[0] !== body.username
     ) {
       return res.status(400).json({
         error: 'Yeni kullanıcı adınız 15 karakter veya daha az olmalı.',

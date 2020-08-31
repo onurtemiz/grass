@@ -24,14 +24,12 @@ const Home = () => {
 
   const getTip = async () => {
     const tip = await tipsService.getTip();
-    console.log('tip', tip);
     setTip(tip);
   };
 
   if (tip === null) {
     return null;
   }
-  console.log('tip', tip);
   return (
     <Container fluid>
       <HomeGrid verticalAlign="middle" centered columns={1} stretched>

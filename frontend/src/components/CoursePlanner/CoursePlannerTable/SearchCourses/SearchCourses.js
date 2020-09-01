@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Input } from 'semantic-ui-react';
+import { Input, Icon, Popup, Checkbox } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -26,6 +26,7 @@ const SearchCourses = () => {
   const [noResult, setNoResult] = useState(true);
   const first = useRef(false);
   const fetching = useRef(false);
+  const [isOffline, setIsOffline] = useState(false);
   const refValue = useRef('');
   const [storedTimeout, setStoredTimeout] = useState(null);
 
@@ -38,14 +39,17 @@ const SearchCourses = () => {
         fetching,
         search,
         findTime.map((t) => t.id),
-        notFindTime.map((t) => t.id)
+        notFindTime.map((t) => t.id),
+        isOffline
       )
     );
-  }, [search, findTime, notFindTime]);
+  }, [search, findTime, notFindTime, isOffline]);
 
   useEffect(() => {
-    setCurrentTarget(filterCourses(targets, search, findTime, notFindTime));
-  }, [targets, findTime, notFindTime]);
+    setCurrentTarget(
+      filterCourses(targets, search, findTime, notFindTime, isOffline)
+    );
+  }, [targets, findTime, notFindTime, isOffline]);
 
   const loadFunc = () => {
     if (!fetching.current) {
@@ -57,7 +61,8 @@ const SearchCourses = () => {
           fetching,
           search,
           findTime.map((t) => t.id),
-          notFindTime.map((t) => t.id)
+          notFindTime.map((t) => t.id),
+          isOffline
         )
       );
     }
@@ -89,15 +94,37 @@ const SearchCourses = () => {
 
   return (
     <>
-      <Input
-        icon="search"
-        placeholder={`Ders Arayın...`}
-        value={refValue.current}
-        onChange={(e) => handleValueChange(e)}
-        lang="tr"
-        size="big"
-        style={{ width: '100%' }}
-      />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Input
+          icon="search"
+          placeholder={`Ders Arayın...`}
+          value={refValue.current}
+          onChange={(e) => handleValueChange(e)}
+          lang="tr"
+          size="big"
+          style={{ width: '90%', marginLeft: '1em' }}
+        />
+        <Popup
+          content={
+            <Checkbox
+              checked={isOffline}
+              onClick={() => setIsOffline(!isOffline)}
+              label="Sadece Offline Dersleri Göster"
+            />
+          }
+          position="bottom right"
+          hoverable
+          trigger={
+            <Icon
+              name="filter"
+              color="blue"
+              size="big"
+              style={{ paddingLeft: '0.5em' }}
+              fitted
+            />
+          }
+        />
+      </div>
       <div
         style={{
           overflow: 'auto',
@@ -131,9 +158,16 @@ const SearchCourses = () => {
   );
 };
 
-const filterCourses = (courses, search, findTime, notFindTime) => {
+const filterCourses = (courses, search, findTime, notFindTime, isOffline) => {
   let s = search.toUpperCase();
   let currentCourses = courses
+    .filter((c) => {
+      if (isOffline) {
+        return c.place !== 'Online';
+      } else {
+        return true;
+      }
+    })
     .filter(
       (c) =>
         c.name.toUpperCase().includes(s) ||

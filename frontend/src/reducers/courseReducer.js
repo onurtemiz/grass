@@ -784,7 +784,8 @@ export const searchCourse = (
   fetching,
   search,
   findTime,
-  notFindTime
+  notFindTime,
+  isOffline
 ) => {
   return async (dispatch) => {
     fetching.current = true;
@@ -794,7 +795,8 @@ export const searchCourse = (
       count,
       search,
       findTime,
-      notFindTime
+      notFindTime,
+      isOffline
     );
     if (res.error) {
       toast.error(`${res.error}`, {

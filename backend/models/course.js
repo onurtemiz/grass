@@ -23,6 +23,8 @@ const courseSchema = new mongoose.Schema({
   dep: { type: String },
   quota: { type: mongoose.Schema.Types.Mixed, default: {} },
   lastChange: { type: Date, default: Date.now() },
+  place: { type: String },
+  final: { type: String },
 });
 
 courseSchema.set(uniqueValidator);
@@ -36,7 +38,12 @@ courseSchema.set('toJSON', {
   },
 });
 
-courseSchema.statics.getSearchResult = async function (search, start, total) {
+courseSchema.statics.getSearchResult = async function (
+  search,
+  start,
+  total,
+  isOffline
+) {
   let searchParams = {
     $and: [
       {
@@ -45,8 +52,10 @@ courseSchema.statics.getSearchResult = async function (search, start, total) {
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
+      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
     ],
   };
+  console.log(isOffline);
   let courses = await this.find(searchParams)
     .sort({ name: 1 })
     .skip(Number(start))
@@ -59,7 +68,8 @@ courseSchema.statics.getTSearchResult = async function (
   search,
   start,
   total,
-  times
+  times,
+  isOffline
 ) {
   let searchParams = {
     $and: [
@@ -70,6 +80,7 @@ courseSchema.statics.getTSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
+      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
     ],
   };
   let courses = await this.find(searchParams)
@@ -85,7 +96,8 @@ courseSchema.statics.getTNSearchResult = async function (
   start,
   total,
   times,
-  ntimes
+  ntimes,
+  isOffline
 ) {
   let searchParams = {
     $and: [
@@ -97,6 +109,7 @@ courseSchema.statics.getTNSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
+      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
     ],
   };
   let courses = await this.find(searchParams)
@@ -111,7 +124,8 @@ courseSchema.statics.getNSearchResult = async function (
   search,
   start,
   total,
-  ntimes
+  ntimes,
+  isOffline
 ) {
   let searchParams = {
     $and: [
@@ -122,6 +136,7 @@ courseSchema.statics.getNSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
+      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
     ],
   };
   let courses = await this.find(searchParams)

@@ -6,16 +6,23 @@ const baseUrl =
     ? 'http://localhost:3001/api/courses'
     : '/api/courses';
 
-const addInf = async (start, count, search, findTime, notFindTime) => {
+const addInf = async (
+  start,
+  count,
+  search,
+  findTime,
+  notFindTime,
+  isOffline
+) => {
   try {
     const url =
       findTime.length > 0 && notFindTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&nt=${notFindTime}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&nt=${notFindTime}&of=${isOffline}`
         : findTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&of=${isOffline}`
         : notFindTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&nt=${notFindTime}`
-        : `${baseUrl}/search?start=${start}&total=${count}&q=${search}`;
+        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&nt=${notFindTime}&of=${isOffline}`
+        : `${baseUrl}/search?start=${start}&total=${count}&q=${search}&of=${isOffline}`;
     const res = await axios.get(url, config);
     return res.data;
   } catch (e) {

@@ -132,6 +132,24 @@ const SubCourse = ({ course }) => {
             <Icon name="add" />
             Bütün sectionları ekle
           </Label>
+          <br />
+          <Label
+            color={course.place === 'Online' ? 'blue' : 'green'}
+            bold
+            pointer
+            nolink
+          >
+            {course.place} Ders
+          </Label>{' '}
+          •{' '}
+          <Label
+            color={course.place === 'Online' ? 'blue' : 'green'}
+            bold
+            pointer
+            nolink
+          >
+            {course.final} Final
+          </Label>
         </Card.Description>
       </Card>
     </div>

@@ -3,58 +3,6 @@ const Course = require('../models/course');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const lodash = require('lodash');
-// const jsonData = require('../2018-2019-2.json');
-// coursesRouter.get('/loadjson/', async (req, res) => {
-//   let re = new RegExp('([a-zA-Z]+)([0-9][a-zA-Z0-9]+).([0-9]+)');
-//   const lessons = Object.keys(jsonData);
-
-//   for (i = 0; i < lessons.length; i++) {
-//     let currentCourse = jsonData[lessons[i]];
-//     let result = re.exec(currentCourse.code);
-//     if (
-//       !currentCourse.instructor ||
-//       !currentCourse.hours ||
-//       !currentCourse.code ||
-//       !currentCourse.days ||
-//       !currentCourse.credits ||
-//       !currentCourse.name ||
-//       !currentCourse.ects
-//     ) {
-//       console.log('atlandi');
-//       continue;
-//     }
-//     let course = new Course({
-//       areaCode: result[1],
-//       digitCode: result[2],
-//       sectionCode: result[3],
-//       parentName: currentCourse.instructor,
-//       hours: currentCourse.hours,
-//       name: currentCourse.code,
-//       days: convertDaysToInt(currentCourse.days),
-//       credits: currentCourse.credits,
-//       ects: currentCourse.ects,
-//       fullName: currentCourse.name,
-//     });
-
-//     await course.save();
-
-//     console.log(
-//       `${i}: ${course.parentName} ${course.areaCode}${course.digitCode}.${course.sectionCode}`
-//     );
-//   }
-//   res.status(200).json({
-//     status: 'done',
-//   });
-// });
-
-// coursesRouter.get('/refresh', async (req, res) => {
-//   const courses = await Course.find();
-//   for (let i = 0; i < courses.length; i++) {
-//     courses[i].cellIds = convertDayHourtoIds(courses[i].days, courses[i].hours);
-//     await courses[i].save();
-//   }
-//   res.end();
-// });
 
 const convertDayHourtoIds = (days, hours) => {
   const TOTAL_HOURS = 14;
@@ -138,14 +86,27 @@ coursesRouter.get('/search', async (req, res) => {
       q.start,
       q.total,
       times,
-      ntimes
+      ntimes,
+      q.of
     );
   } else if (q.t) {
-    response = await Course.getTSearchResult(search, q.start, q.total, times);
+    response = await Course.getTSearchResult(
+      search,
+      q.start,
+      q.total,
+      times,
+      q.of
+    );
   } else if (q.nt) {
-    response = await Course.getNSearchResult(search, q.start, q.total, ntimes);
+    response = await Course.getNSearchResult(
+      search,
+      q.start,
+      q.total,
+      ntimes,
+      q.of
+    );
   } else {
-    response = await Course.getSearchResult(search, q.start, q.total);
+    response = await Course.getSearchResult(search, q.start, q.total, q.of);
   }
   res.json(response);
 });

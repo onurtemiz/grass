@@ -52,10 +52,13 @@ courseSchema.statics.getSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
-      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
+
+      {
+        place:
+          isOffline === 'true' ? { $in: ['Classroom'] } : { $nin: ['asd'] },
+      },
     ],
   };
-  console.log(isOffline);
   let courses = await this.find(searchParams)
     .sort({ name: 1 })
     .skip(Number(start))
@@ -80,7 +83,10 @@ courseSchema.statics.getTSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
-      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
+      {
+        place:
+          isOffline === 'true' ? { $in: ['Classroom'] } : { $nin: ['asd'] },
+      },
     ],
   };
   let courses = await this.find(searchParams)
@@ -109,7 +115,10 @@ courseSchema.statics.getTNSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
-      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
+      {
+        place:
+          isOffline === 'true' ? { $in: ['Classroom'] } : { $nin: ['asd'] },
+      },
     ],
   };
   let courses = await this.find(searchParams)
@@ -136,7 +145,10 @@ courseSchema.statics.getNSearchResult = async function (
           { parentName: { $regex: search, $options: 'i' } },
         ],
       },
-      { place: isOffline ? { $in: ['Classroom'] } : { $nin: ['asd'] } },
+      {
+        place:
+          isOffline === 'true' ? { $in: ['Classroom'] } : { $nin: ['asd'] },
+      },
     ],
   };
   let courses = await this.find(searchParams)

@@ -32,9 +32,12 @@ eventsSchema.statics.getInfEvent = async function (
   let dayFilter = utils.getDayFilterFuture(daySort);
   let searchParams = {
     $or: [
-      { title: { $regex: search, $options: 'i' } },
-      { subTitle: { $regex: search, $options: 'i' } },
-    ],
+      {title: { $regex: search.toUpperCase() ,$options: 'i'}},
+      {title: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+        {subTitle: { $regex: search.toUpperCase() ,$options: 'i'}},
+        {subTitle: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+  ],
+   
     date: dayFilter,
     approved: true,
   };

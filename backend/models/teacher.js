@@ -22,7 +22,11 @@ teacherSchema.set(uniqueValidator);
 
 teacherSchema.statics.getFilteredInf = function (search, start, total) {
   return this.find({
-    name: { $regex: search, $options: 'i' },
+    $or:[
+    {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+    {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
+    ]
+
   })
     .sort({ name: 1 })
     .skip(Number(start))

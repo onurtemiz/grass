@@ -40,7 +40,7 @@ const AllTips = () => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            <LinearProgress />
+          <CommentsLoading/>
           </div>
         }
         useWindow={false}

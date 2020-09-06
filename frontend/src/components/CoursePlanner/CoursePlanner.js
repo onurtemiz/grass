@@ -11,9 +11,9 @@ const CoursePlanner = () => {
   return isMobile ? (
     <div style={{ height: '150vh' }}>
       <Grid style={{ margin: '0.5em' }}>
-        <Grid.Row>
+      <Grid.Row>
           <Grid.Column>
-            <SearchCourses stretched />
+            <CoursePlannerTable />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -23,9 +23,11 @@ const CoursePlanner = () => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <CoursePlannerTable />
+            <SearchCourses stretched />
           </Grid.Column>
         </Grid.Row>
+        
+        
         <Grid.Row>
           <Grid.Column>
             <ProgramOptions />

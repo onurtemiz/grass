@@ -47,7 +47,6 @@ const MainComponent = () => {
     'lessons',
     'clubs',
     'questions',
-    'events',
     'tips',
     'campuses',
     'dorms',
@@ -72,8 +71,6 @@ const MainComponent = () => {
       setActiveIndex(categories.indexOf('dorms'));
     } else if (location.pathname.includes('tips')) {
       setActiveIndex(categories.indexOf('tips'));
-    } else if (location.pathname.includes('events')) {
-      setActiveIndex(categories.indexOf('events'));
     }
   }, [location]);
 
@@ -97,8 +94,6 @@ const MainComponent = () => {
       history.push('/campuses');
     } else if (data.activeIndex === categories.indexOf('dorms')) {
       history.push('/dorms');
-    } else if (data.activeIndex === categories.indexOf('events')) {
-      history.push('/events');
     }
   };
 
@@ -208,25 +203,6 @@ const MainComponent = () => {
     {
       menuItem: {
         content: (
-          <Label bold pointer color={getColor(categories.indexOf('events'))}>
-            Etkinlikler
-          </Label>
-        ),
-        color: 'green',
-        key: categories.indexOf('events'),
-      },
-      render: () => (
-        <Segment
-          style={{ marginRight: '0.5em' }}
-          basic={isMobile ? true : false}
-        >
-          <EventsPage />
-        </Segment>
-      ),
-    },
-    {
-      menuItem: {
-        content: (
           <Label bold pointer color={getColor(categories.indexOf('tips'))}>
             Tavsiyeler
           </Label>
@@ -299,19 +275,6 @@ const MainComponent = () => {
     },
   ];
   return (
-    // <Tab
-    //   menu={{
-    //     fluid: true,
-    //     vertical: true,
-    //     tabular: true,
-    //     pointing: false,
-    //     stackable: true,
-    //   }}
-    //   panes={panes}
-    //   onTabChange={(event, data) => handleIndex(event, data)}
-    //   activeIndex={activeIndex}
-    //   style={{ paddingTop: '1em' }}
-    // />
     <>
       {width <= 1000 ? (
         <Tab

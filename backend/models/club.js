@@ -25,8 +25,11 @@ clubSchema.statics.getFilteredInf = function (
   try {
     return this.find({
       $or: [
-        { fullName: { $regex: search, $options: 'i' } },
-        { name: { $regex: search, $options: 'i' } },
+          {fullName: { $regex: search.toUpperCase() ,$options: 'i'}},
+          {fullName: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+            {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+            {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+   
       ],
     })
       .sort({ name: 1 })

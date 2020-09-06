@@ -104,7 +104,7 @@ usersRouter.put('/notifications/seen', async (req, res) => {
 
 usersRouter.delete('/notifications', async (req, res) => {
   const q = req.query;
-  if (q.all === true) {
+  if (q.all === 'true') {
     await Notification.deleteMany({ target: req.user._id });
   } else {
     await Notification.findByIdAndDelete(q.id);
@@ -251,6 +251,11 @@ usersRouter.put('/', async (req, res) => {
         error: 'Yeni kullanıcı adınız 15 karakter veya daha az olmalı.',
       });
     }
+    if(re.exec(body.username)[0] !== body.username){
+      return res.status(400).json({
+        error: "Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir."
+      })
+    }
     await User.findByIdAndUpdate(user._id, { username: body.username });
   }
   if (body.password) {
@@ -318,40 +323,20 @@ usersRouter.get('/achievement', async (req, res) => {
     isApproved: true,
     user: req.user._id,
   }).countDocuments();
-  req.user.achievements = getAchievements(
+  const userAchievements = getAchievements(
     req.user,
     likes,
     comments,
     questions,
     tips
   );
-  await req.user.save();
+
+  await User.updateOne({_id:req.user._id},{achievements:userAchievements})
   res.json(req.user.achievements);
 });
 
 const getAchievements = (user, likes, comments, questions, tips) => {
-  const achievements = {
-    comment1: false,
-    comment5: false,
-    comment10: false,
-    comment20: false,
-    comment50: false,
-    comment100: false,
-    pati1: false,
-    pati10: false,
-    pati50: false,
-    pati100: false,
-    pati200: false,
-    pati500: false,
-    pati1000: false,
-    tip1: false,
-    tip10: false,
-    question1: false,
-    question10: false,
-    betaTester: false,
-    mod: false,
-    admin: false,
-  };
+  const achievements = user.achievements;
   handleTips(tips, achievements);
   handleComments(comments, achievements);
   handleQuestions(questions, achievements);
@@ -368,127 +353,45 @@ usersRouter.put('/icon', async (req, res) => {
   res.end();
 });
 
-usersRouter.get('/:username', async (req, res) => {
+usersRouter.get('/u/:username', async (req, res) => {
   const totalLikedUser = await User.getTotalLike(req.params.username);
 
   res.json(totalLikedUser);
 });
 
-// usersRouter.get('/', async (req, res) => {
-//   const q = req.query;
-
-//   if (!q.id) {
-//     return res.json({
-//       error: 'Onur bir şeyleri batırdı. Hata kodu 2',
-//     });
-//   }
-//   const user = await User.findById(q.id);
-
-//   if (!user) {
-//     return res.json({
-//       error: 'Aradığınız kullanıcı bulunamadı.',
-//     });
-//   }
-
-//   res.json(user.toJSON());
-// });
-
 module.exports = usersRouter;
 function handleExtras(user, achievements) {
-  if (user.userStatus === 'admin') {
-    achievements.admin = true;
-  } else if (user.userStatus === 'mod') {
-    achievements.mod = true;
-  }
-  if (user.extras) {
-    achievements.betaTester = true;
-  }
+  achievements.admin = user.userStatus === 'admin' ? true : false;
+  achievements.mod = user.userStatus === 'mod' ? true : false;
 }
 
 function handlePatis(likes, achievements) {
-  if (likes >= 1000) {
-    achievements.pati1000 = true;
-    achievements.pati500 = true;
-    achievements.pati200 = true;
-    achievements.pati100 = true;
-    achievements.pati50 = true;
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 500) {
-    achievements.pati500 = true;
-    achievements.pati200 = true;
-    achievements.pati100 = true;
-    achievements.pati50 = true;
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 200) {
-    achievements.pati200 = true;
-    achievements.pati100 = true;
-    achievements.pati50 = true;
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 100) {
-    achievements.pati100 = true;
-    achievements.pati50 = true;
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 50) {
-    achievements.pati50 = true;
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 10) {
-    achievements.pati10 = true;
-    achievements.pati1 = true;
-  } else if (likes >= 1) {
-    achievements.pati1 = true;
-  }
+  achievements.pati1 = likes >= 1 ? true : false
+  achievements.pati10 = likes >= 10 ? true : false
+  achievements.pati50 = likes >= 50 ? true : false
+  achievements.pati100 = likes >= 100 ? true : false
+  achievements.pati200 = likes >= 200 ? true : false
+  achievements.pati500 = likes >= 500 ? true : false
+  achievements.pati1000 = likes >= 1000 ? true : false
 }
 
 function handleQuestions(questions, achievements) {
-  if (questions >= 10) {
-    achievements.question10 = true;
-    achievements.question1 = true;
-  } else if (questions >= 1) {
-    achievements.question1 = true;
-  }
+  achievements.question1 = questions >= 1 ?  true : false;
+  achievements.question10 = questions >= 10 ?  true : false;
+
 }
 
 function handleComments(comments, achievements) {
-  if (comments >= 100) {
-    achievements.comment100 = true;
-    achievements.comment50 = true;
-    achievements.comment20 = true;
-    achievements.comment10 = true;
-    achievements.comment5 = true;
-    achievements.comment1 = true;
-  } else if (comments >= 50) {
-    achievements.comment50 = true;
-    achievements.comment20 = true;
-    achievements.comment10 = true;
-    achievements.comment5 = true;
-    achievements.comment1 = true;
-  } else if (comments >= 20) {
-    achievements.comment20 = true;
-    achievements.comment10 = true;
-    achievements.comment5 = true;
-    achievements.comment1 = true;
-  } else if (comments >= 10) {
-    achievements.comment10 = true;
-    achievements.comment5 = true;
-    achievements.comment1 = true;
-  } else if (comments >= 5) {
-    achievements.comment5 = true;
-    achievements.comment1 = true;
-  } else if (comments >= 1) {
-    achievements.comment1 = true;
-  }
+  achievements.comment1 = comments >= 1 ? true : false
+  achievements.comment10 = comments >= 10 ? true : false
+  achievements.comment20 = comments >= 20 ? true : false
+  achievements.comment50 = comments >= 50 ? true : false
+  achievements.comment100 = comments >= 100 ? true : false
+  
 }
 
 function handleTips(tips, achievements) {
-  if (tips >= 10) {
-    achievements.tip10 = true;
-    achievements.tip1 = true;
-  } else if (tips >= 1) {
-    achievements.tip1 = true;
-  }
+  achievements.tip1 = tips >= 1 ?true: false;
+  achievements.tip10 = tips >= 10 ?true: false;
+
 }

@@ -8,7 +8,7 @@ const initialState = {
   total: 0,
   hasMore: false,
   start: 0,
-  count: 20,
+  count: 50,
 };
 const teacherReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -22,7 +22,6 @@ const teacherReducer = (state = initialState, action) => {
         total: action.data.total,
         hasMore: action.data.hasMore,
         start: action.data.start,
-        count: action.data.count,
         teachers: uniq,
       };
       return currentState;

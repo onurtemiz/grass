@@ -13,7 +13,7 @@ const Icons = ({ user }) => {
     {
       name: 'chess pawn',
       description: 'İlk yorumunu yaptın!',
-      achievement: 'comment1',
+      achievement: 'comment1'
     },
     {
       name: 'chess bishop',

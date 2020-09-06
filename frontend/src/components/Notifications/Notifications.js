@@ -22,9 +22,14 @@ const Notifications = () => {
     setUnseenNotifications(notifications.filter((n) => n.seen !== true));
   }, [notifications]);
   useEffect(() => {
+    const getSortedNotifications = async(setLoading)=>{
+      const notifications = await userService.getNotifications(setLoading);
+      if(Array.isArray(notifications)){
+      setNotifications(notifications.sort((a,b)=>new Date(b.date) - new Date(a.date)))}
+    }
+    getSortedNotifications(setLoading)
     setLoading(true);
     setOpen(false);
-    userService.getNotifications(setNotifications, setLoading);
   }, [location]);
   return (
     <Popup

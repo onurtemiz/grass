@@ -55,7 +55,9 @@ function filterTeachers(teachers, filter) {
     .filter((t) =>
       t.name
         .toLocaleUpperCase('tr-TR')
-        .includes(filter.toLocaleUpperCase('tr-TR'))
+        .includes(filter.toLocaleUpperCase('tr-TR')) || t.name
+        .toUpperCase()
+        .includes(filter.toUpperCase()) 
     )
     .sort(compareNames);
 }

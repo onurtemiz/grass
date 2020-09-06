@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../../../reducers/teacherReducer';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../../../utils/config';
+import { compareNames} from '../../../../utils/utils';
 import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import {
@@ -13,6 +14,7 @@ import {
   Header,
   Container,
   Segment,
+  Label as SLabel,
 } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
@@ -41,7 +43,7 @@ const Teacher = () => {
 
       {
         <ul style={{ listStyle: 'none', fontSize: '1.7em', paddingLeft: '0' }}>
-          {teacher.lessons.map((l) => (
+          {teacher.lessons.sort(compareNames).map((l) => (
             <li
               key={l.id}
               style={{
@@ -54,10 +56,15 @@ const Teacher = () => {
               <Link to={LESSON_PATH(l)}>
                 <Label color="green" bold pointer>
                   {' '}
-                  {l.name.toUpperCase()} ·{' '}
-                </Label>
+                  {l.name.toUpperCase()}
+                </Label> 
               </Link>
+              <Label color='blue' bold>
+              {" "}·{' '}</Label>
               <Follow idToFollow={l.id} user={user} />
+              {l.active ? (
+              <SLabel color="green">Bu dönem açık</SLabel>
+            ) : null}
             </li>
           ))}
         </ul>

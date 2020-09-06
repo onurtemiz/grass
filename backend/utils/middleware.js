@@ -45,6 +45,13 @@ const authAdmin = (req, res, next) => {
   next();
 };
 
+const searchFilter = (req,res,next)=>{
+  if(req.query.search){
+    req.query.search = req.query.search.replace(/\W/g, '');
+  }
+  next()
+}
+
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response
@@ -81,5 +88,5 @@ module.exports = {
   errorHandler,
   tokenExtractor,
   authUser,
-  authAdmin,
+  authAdmin,searchFilter
 };

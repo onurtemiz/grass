@@ -6,6 +6,7 @@ import { Header, Label as SLabel, Icon } from 'semantic-ui-react';
 import { Link, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 import { getPopulatedUser } from '../../../reducers/usersReducer';
 import { Label } from '../../Nav/NavTheme';
+import UserIcons from './UserIcons'
 const User = ({ u }) => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:username/');
@@ -40,7 +41,7 @@ const User = ({ u }) => {
       >
         <Label color="green">{user.username} · </Label>
         <Label color="blue">
-          {user.totalLikes} <Icon name="paw" color="blue" />
+          {user.totalLikes} <Icon name="paw" color="blue" /> · <UserIcons achievements={user.achievements} />
         </Label>
       </Header>
 

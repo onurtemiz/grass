@@ -7,7 +7,10 @@ teachersRouter.get('/total', async (req, res) => {
   const search = req.query.search ? req.query.search : '';
 
   const total = await Teacher.find({
-    name: { $regex: search, $options: 'i' },
+    $or:[
+      {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+      {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
+      ]
   }).countDocuments();
 
   res.json({ total: total });
@@ -23,66 +26,16 @@ teachersRouter.get('/:name', async (req, res) => {
 teachersRouter.get('/', async (req, res) => {
   const q = req.query;
   const search = q.search ? q.search : '';
-  const teachers =
-    'start' in q && 'total' in q
-      ? await Teacher.getFilteredInf(search, q.start, q.total)
-      : await Teacher.find({})
-          .sort({ name: 1 })
-          .populate('lessons')
-          .populate('comments');
-
+  if(!'start' in q || !'total' in q){
+    return res.status(400).json({
+      error:'Onur bir şeyleri batırdı. Hata kodu 44'
+    })
+  }
+  const teachers = await Teacher.getFilteredInf(search, q.start, q.total)
+     
   res.json(teachers.map((t) => t.toJSON()));
 });
 
-// teachersRouter.get('/delete5', async (req, res) => {
-//   const teachers = await Teacher.find({});
-//   for (i = 0; i < teachers.length; i++) {
-//     lessons = teachers[i].lessons;
-//     if (teachers[i].lessons[0] === undefined) {
-//       console.log(`${teachers[i]} deleted`);
-//       await Teacher.deleteOne({ _id: teachers[i]._id });
-//     }
-//   }
-//   res.status(200).json({
-//     status: 'done',
-//   });
-// });
 
-teachersRouter.post('/', async (req, res) => {
-  if (!req.body.name) {
-    return res.status(400).json({
-      error: 'name should be present',
-    });
-  }
-  const body = req.body;
-  let teacher = await Teacher.findOne({ name: body.name });
-  if (teacher) {
-    return res.status(400).json({
-      error: 'teacher present',
-    });
-  }
-  teacher = new Teacher({
-    name: body.name,
-  });
-  await teacher.save();
-  res.status(201).json(teacher.toJSON());
-});
-// teachersRouter.get('/loadjson', async (req, res) => {
-//   const lessons = Object.keys(jsonData);
-//   for (i = 0; i < lessons.length; i++) {
-//     let teacher = jsonData[lessons[i]].instructor;
-//     let teacherExists = await Teacher.exists({ name: teacher });
-//     if (!teacherExists) {
-//       let newTeacher = new Teacher({
-//         name: teacher,
-//       });
-//       console.log('teacher', teacher);
-//       await newTeacher.save();
-//     }
-//   }
-//   res.status(200).json({
-//     status: 'done',
-//   });
-// });
 
 module.exports = teachersRouter;

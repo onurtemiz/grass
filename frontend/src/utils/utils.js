@@ -49,7 +49,9 @@ export const useInfinite = (target, addInfFunc, filterFunc) => {
   }, [filter]);
 
   useEffect(() => {
+    if(targets.length > 0){
     setCurrentTarget(filterFunc(targets, filter, sorting));
+    }
   }, [targets, sorting]);
 
   const loadFunc = () => {

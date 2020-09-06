@@ -172,7 +172,7 @@ const MultipleCourses = ({ stack }) => {
         />
         <Icon
           name={stackEye ? 'eye' : 'eye slash'}
-          color="green"
+          color={stackEye ? 'green' : "red"}
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleStackEye()}
         />
@@ -217,7 +217,7 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
         />
         <Icon
           name={c.visible ? 'eye' : 'eye slash'}
-          color="green"
+          color={c.visible ? 'green' : "red"}
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleCourseVisiblity(c)}
         />

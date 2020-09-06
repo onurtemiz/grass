@@ -73,7 +73,7 @@ const QuotaTable = ({ c, setCourses, courses }) => {
               />
             </Label>
           </Header>
-          Kota bilgisi henüz yok.
+          Bu dersin kota bilgisi henüz yayınlanmadı.
         </Segment>
       </div>
     );

@@ -56,11 +56,11 @@ const getFollowing = async (setFollowing) => {
   }
 };
 
-const getNotifications = async (setNotifications, setLoading) => {
+const getNotifications = async (setLoading) => {
   try {
     const res = await axios.get(`${baseUrl}/notifications`, config);
-    setNotifications(res.data);
     setLoading(false);
+    return res.data;
   } catch (e) {
     setLoading(false);
     return e.response
@@ -110,7 +110,7 @@ const unfollowLesson = async (id) => {
 };
 const getPopulatedUser = async (username) => {
   try {
-    const res = await axios.get(`${baseUrl}/${username}`, config);
+    const res = await axios.get(`${baseUrl}/u/${username}`, config);
     return res.data;
   } catch (e) {
     return e.response

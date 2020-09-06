@@ -35,11 +35,7 @@ const StaticPages = () => {
     setActiveIndex(data.activeIndex);
     if (data.activeIndex === 0) {
       history.push('/about');
-    } else if (data.activeIndex === 1) {
-      history.push('/contribution');
-    } else if (data.activeIndex === 2) {
-      history.push('/terms');
-    }
+    } 
   };
 
   const panes = [
@@ -56,22 +52,6 @@ const StaticPages = () => {
       render: () => (
         <Segment style={{ marginRight: '0.5em' }}>
           <About />
-        </Segment>
-      ),
-    },
-    {
-      menuItem: {
-        content: (
-          <Label bold pointer color={getColor(1)}>
-            Katkı Sağlamak
-          </Label>
-        ),
-        color: 'green',
-        key: 2,
-      },
-      render: () => (
-        <Segment style={{ marginRight: '0.5em' }}>
-          <Contribution />
         </Segment>
       ),
     },

@@ -36,7 +36,6 @@ const DefaultContainer = () => {
             '/questions',
             '/teachers',
             '/lessons',
-            '/events',
           ]}
           component={MainComponent}
         />
@@ -45,7 +44,7 @@ const DefaultContainer = () => {
         <Route path="/users/:username" component={User} />
         <Route path="/comments" component={AllComments} />
         <Route
-          path={['/statics', '/about', '/contribution', '/terms']}
+          path={['/statics', '/about', '/terms']}
           component={StaticPages}
         />
         <Route path="/planner" component={CoursePlanner} />

@@ -7,7 +7,10 @@ allRouter.get('/total', async (req, res) => {
   const search = req.query.search ? req.query.search : '';
 
   const teachers = await Teacher.find({
-    name: { $regex: search, $options: 'i' },
+    $or:[
+      {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+      {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
+      ]
   });
   const teachersId = teachers.map((t) => t.id);
 
@@ -27,7 +30,10 @@ allRouter.get('/', async (req, res) => {
   }
   const search = q.search ? q.search : '';
   const teachers = await Teacher.find({
-    name: { $regex: search, $options: 'i' },
+    $or:[
+      {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+      {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
+      ]
   });
   const teachersId = teachers.map((t) => t.id);
   const lessons = await Lesson.getFilteredAllInf(

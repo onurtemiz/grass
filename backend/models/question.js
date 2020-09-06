@@ -42,7 +42,10 @@ questionSchema.statics.getFilteredInf = function (
   return this.find({
     $and: [
       { isApproved: true },
-      { question: { $regex: search, $options: 'i' } },
+      {$or: [
+        {question: { $regex: search.toUpperCase() ,$options: 'i'}},
+        {question: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+      ]}
     ],
   })
     .sort(popular ? { date: sort } : { totalLength: -1 })

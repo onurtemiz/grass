@@ -25,6 +25,7 @@ import CommentReport from './CommentReport';
 import { Label } from '../../Nav/NavTheme';
 import { ReactSVG } from 'react-svg';
 import { isMobile } from 'react-device-detect';
+import UserIcon from '../../UserPage/User/UserIcon'
 
 const Comment = ({ comment, setIsUpdate, showSource }) => {
   const user = useSelector((state) => state.user);
@@ -40,7 +41,7 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
     dispatch(likeComment(comment.id));
     likeType === false ? setLikeType(true) : setLikeType(false);
   };
-
+  
   const handleRemove = () => {
     dispatch(removeComment(comment.id));
     setIsRemovePanel(false);
@@ -136,14 +137,15 @@ export const UserAndMeta = ({ comment, showSource }) => {
       <Link to={`/users/${comment.user.username}`}>
         <Label color={commentThemeColor(comment)} bold pointer>
           {comment.user.username}
-          {comment.user.iconName.length > 0 ? (
-            <>
-              {' '}
-              <UserIcon comment={comment} />
-            </>
-          ) : null}
+          
         </Label>
       </Link>
+      {comment.user.iconName.length > 0 && (
+            <>
+              {' '}
+      <UserIcon iconName={comment.user.iconName} themeColor={commentThemeColor(comment)}/>
+            </>
+          ) }
 
       <SComment.Metadata>
         {comment.likes.length} Pati · {moment(new Date(comment.date)).fromNow()}{' '}
@@ -231,17 +233,6 @@ const commentThemeColor = (comment) => {
     : 'blue';
 };
 
-const UserIcon = ({ comment }) => {
-  return (
-    <>
-      {' '}
-      <Icon
-        color={commentThemeColor(comment)}
-        name={comment.user.iconName}
-        fitted
-      />
-    </>
-  );
-};
+
 
 export default Comment;

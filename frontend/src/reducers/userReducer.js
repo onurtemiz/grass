@@ -37,14 +37,11 @@ const userReducer = (state = null, action) => {
       return unFollowedStateCourses;
     case 'UNFOLLOW_LESSON':
       const unfollowed = state.following.filter((id) => id !== action.data);
-
       return { ...state, following: unfollowed };
     case 'CHANGE_ICON':
-      const changedIconUser = { ...state, iconName: action.data };
-      return changedIconUser;
+      return { ...state, iconName: action.data };
     case 'CHECK_ACHIEVEMENT':
-      const changedAchievement = { ...state, achievements: action.data };
-      return changedAchievement;
+      return { ...state, achievements: action.data };
     default:
       return state;
   }

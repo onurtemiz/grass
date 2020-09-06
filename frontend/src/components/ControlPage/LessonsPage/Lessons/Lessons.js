@@ -20,10 +20,9 @@ const Lessons = ({ main }) => {
   if (!ready) {
     return <CommentsLoading />;
   }
-
   return (
     <div style={InfiniteListStyle}>
-      <Filter target="Ders" />
+      <Filter target={"Ders"} />
       <Divider />
       {!ready ? (
         <CommentsLoading />
@@ -53,6 +52,8 @@ const Lessons = ({ main }) => {
 export default Lessons;
 function filterLessons(lessons, filter) {
   return lessons
-    .filter((l) => l.name.toUpperCase().includes(filter.toUpperCase()))
+    .filter((l) => l.name.toUpperCase().includes(filter.toUpperCase()) || l.name
+        .toLocaleUpperCase('tr-TR')
+        .includes(filter.toLocaleUpperCase('tr-TR')) )
     .sort(compareNames);
 }

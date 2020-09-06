@@ -6,7 +6,7 @@ const initialState = {
   total: 0,
   hasMore: false,
   start: 0,
-  count: 20,
+  count: 50,
 };
 
 const lessonReducer = (state = initialState, action) => {
@@ -21,8 +21,6 @@ const lessonReducer = (state = initialState, action) => {
         total: action.data.total,
         hasMore: action.data.hasMore,
         start: action.data.start,
-        count: action.data.count,
-
         lessons: uniqLessons,
       };
       return currentState;
@@ -58,10 +56,9 @@ export const addInfLesson = (start, count, filter, first, fetching) => {
       hasMore: true,
       start: start + count,
       lessons: lessons,
-      total: total.total,
-      count: count,
+      total: total,
     };
-    if (total.total === 0 || total.total < count + start) {
+    if (total === 0 || total < count + start) {
       data.hasMore = false;
       data.start = 0;
     }

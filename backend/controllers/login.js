@@ -25,13 +25,11 @@ loginRouter.post('/', async (request, response) => {
       error: 'Şifreniz 8 veya daha çok karakterden oluşmalı.',
     });
   }
-  console.log('hey');
   const user = await User.findOne({ email: body.email });
   const passwordCorrect =
     user === null
       ? false
       : await bcrypt.compare(body.password, user.passwordHash);
-  console.log('hey');
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({

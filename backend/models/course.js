@@ -48,8 +48,10 @@ courseSchema.statics.getSearchResult = async function (
     $and: [
       {
         $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { parentName: { $regex: search, $options: 'i' } },
+            {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+            {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+              {parentName: { $regex: search.toUpperCase() ,$options: 'i'}},
+              {parentName: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
         ],
       },
 
@@ -79,9 +81,11 @@ courseSchema.statics.getTSearchResult = async function (
       ...times,
       {
         $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { parentName: { $regex: search, $options: 'i' } },
-        ],
+          {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+          {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+            {parentName: { $regex: search.toUpperCase() ,$options: 'i'}},
+            {parentName: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+      ],
       },
       {
         place:
@@ -111,9 +115,11 @@ courseSchema.statics.getTNSearchResult = async function (
       ...ntimes,
       {
         $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { parentName: { $regex: search, $options: 'i' } },
-        ],
+          {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+          {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+            {parentName: { $regex: search.toUpperCase() ,$options: 'i'}},
+            {parentName: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+      ],
       },
       {
         place:
@@ -141,9 +147,11 @@ courseSchema.statics.getNSearchResult = async function (
       ...ntimes,
       {
         $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { parentName: { $regex: search, $options: 'i' } },
-        ],
+          {name: { $regex: search.toUpperCase() ,$options: 'i'}},
+          {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+            {parentName: { $regex: search.toUpperCase() ,$options: 'i'}},
+            {parentName: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
+      ],
       },
       {
         place:

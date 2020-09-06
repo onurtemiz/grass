@@ -77,7 +77,10 @@ questionsRouter.get('/', async (req, res) => {
   const total = await Question.find({
     $and: [
       { isApproved: true },
-      { question: { $regex: search, $options: 'i' } },
+      {$or:[
+        {question: { $regex: search.toUpperCase() ,$options: 'i'}},
+        {question: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
+        ]}
     ],
   }).countDocuments();
   res.json({ questions: jsonQuestions, total: total });

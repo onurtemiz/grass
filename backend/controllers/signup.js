@@ -101,7 +101,7 @@ signupRouter.post('/', async (req, res) => {
     return res.status(400).json({
       error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
     });
-  } else if (re.exec(body.username)[0] !== body.username) {
+  } else if (usernameReg.exec(body.username)[0] !== body.username) {
     return res.status(400).json({
       error: "Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir."
     })

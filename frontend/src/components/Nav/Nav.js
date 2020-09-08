@@ -98,6 +98,9 @@ const Nav = ({ search, admin }) => {
           </Label>{' '}
           <Label pointer color="green">
             ÇİM
+          </Label>{" "}
+          <Label pointer color="blue">
+            BETA
           </Label>
         </label>
       </Menu.Item>

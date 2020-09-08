@@ -141,10 +141,7 @@ export const UserAndMeta = ({ comment, showSource }) => {
         </Label>
       </Link>
       {comment.user.iconName.length > 0 && (
-            <>
-              {' '}
-      <UserIcon iconName={comment.user.iconName} themeColor={commentThemeColor(comment)}/>
-            </>
+     <>{""} <UserIcon iconName={comment.user.iconName} themeColor={commentThemeColor(comment)}/></>
           ) }
 
       <SComment.Metadata>

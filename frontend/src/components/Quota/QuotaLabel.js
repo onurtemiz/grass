@@ -21,6 +21,8 @@ const QuotaLabel = ({ course }) => {
     }
   };
   return (
+    course.parentName ==='STAFF STAFF' ? null:
+    <>
     <Label
       color="blue"
       bold
@@ -30,6 +32,8 @@ const QuotaLabel = ({ course }) => {
     >
       <Icon name="sliders" /> {checked ? 'Kota Takip Bırak' : 'Kota Takip Et'}
     </Label>
+    </>
+    
   );
 };
 

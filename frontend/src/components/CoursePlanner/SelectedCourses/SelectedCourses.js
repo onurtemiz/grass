@@ -187,13 +187,7 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
     dispatch(removeSelectedCourse(course));
   };
 
-  const handleMouseEnter = (course) => {
-    dispatch(onHoverCourse(course));
-  };
-
-  const handleMouseLeave = (course) => {
-    dispatch(offHoverCourse(course));
-  };
+  
 
   const toggleCourseVisiblity = (course) => {
     dispatch(changeCourseVisibility(course));
@@ -201,8 +195,7 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
   return (
     <Table.Row>
       <Table.Cell
-        onMouseEnter={() => handleMouseEnter(c)}
-        onMouseLeave={() => handleMouseLeave(c)}
+     
       >
         <Label color="blue" bold>
           {c.name}{' '}

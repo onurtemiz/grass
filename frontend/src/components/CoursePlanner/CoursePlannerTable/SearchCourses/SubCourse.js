@@ -28,7 +28,7 @@ const SubCourse = ({ course }) => {
     if (foundCourse && foundCourse.clicked) {
       dispatch(removeSelectedCourse(course));
     } else {
-      dispatch(addSelectedCourse(course, false, true));
+      dispatch(addSelectedCourse(course));
     }
   };
   const handleAddAllSections = () => {
@@ -36,21 +36,15 @@ const SubCourse = ({ course }) => {
   };
 
   const handleMouseEnter = () => {
-    const isPresent = selectedCourses.find((c) => c.id === course.id);
-    if (!isPresent) {
-      dispatch(addSelectedCourse(course, true, false));
-    } else {
-      dispatch(onHoverCourse(course));
-    }
+    const foundCourse = selectedCourses.find((c) => c.id === course.id);
+    if(!foundCourse){
+      dispatch(onHoverCourse(course));}
   };
 
   const handleMouseLeave = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if (foundCourse && !foundCourse.clicked) {
-      dispatch(removeSelectedCourse(foundCourse));
-    } else if (foundCourse && foundCourse.hover) {
-      dispatch(offHoverCourse(foundCourse));
-    }
+    if(foundCourse && !foundCourse.clicked){
+      dispatch(offHoverCourse(course));}
   };
 
   const convertDays = (days) => {

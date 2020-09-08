@@ -41,7 +41,7 @@ const User = ({ u }) => {
       >
         <Label color="green">{user.username} · </Label>
         <Label color="blue">
-          {user.totalLikes} <Icon name="paw" color="blue" /> · <UserIcons achievements={user.achievements} />
+          {user.totalLikes} <Icon name="paw" color="blue" /> <UserIcons achievements={user.achievements} />
         </Label>
       </Header>
 

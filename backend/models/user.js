@@ -86,7 +86,6 @@ userSchema.statics.getTotalLike = async function (username) {
     userStatus: user.userStatus,
     id: user._id,
     iconName: user.iconName,
-    achievements:user.achievements,
     totalLikes:
       user.comments.length !== 0
         ? user.comments

@@ -11,6 +11,7 @@ const Dorm = require('../models/dorm');
 const Campus = require('../models/campus');
 const Notification = require('../models/notification');
 const Tip = require('../models/tip');
+const utils = require('../utils/utils');
 
 usersRouter.put('/modal', async (req, res) => {
   req.user.sawModal = true;
@@ -208,6 +209,10 @@ usersRouter.post('/depsem_info/update', async (req, res) => {
   });
 });
 
+usersRouter.get('/achievement/get',async(req,res)=>{
+  res.json({icons});
+})
+
 usersRouter.put('/', async (req, res) => {
   const body = req.body;
 
@@ -244,11 +249,10 @@ usersRouter.put('/', async (req, res) => {
     if (
       body.username.length > 15 ||
       body.username.trim().length === 0 ||
-      body.username.trim().length !== body.username.length ||
-      re.exec(body.username)[0] !== body.username
+      body.username.trim().length !== body.username.length
     ) {
       return res.status(400).json({
-        error: 'Yeni kullanıcı adınız 15 karakter veya daha az olmalı.',
+        error: 'Yeni kullanıcı adınız sadece 15 karakter veya daha az olabilir.',
       });
     }
     if(re.exec(body.username)[0] !== body.username){
@@ -312,42 +316,18 @@ usersRouter.get('/mainuser', async (req, res) => {
 });
 
 usersRouter.get('/achievement', async (req, res) => {
-  const totalLikedUser = await User.getTotalLike(req.user.username);
-  const likes = totalLikedUser.totalLikes;
-  const comments = req.user.comments.length;
-  const questions = await Question.find({
-    user: req.user._id,
-    isApproved: true,
-  }).countDocuments();
-  const tips = await Tip.find({
-    isApproved: true,
-    user: req.user._id,
-  }).countDocuments();
-  const userAchievements = getAchievements(
-    req.user,
-    likes,
-    comments,
-    questions,
-    tips
-  );
+ 
+  const achievements = await utils.getUserAchievements(req.user)
 
-  await User.updateOne({_id:req.user._id},{achievements:userAchievements})
+  await User.updateOne({_id:req.user._id},{achievements})
   res.json(req.user.achievements);
 });
 
-const getAchievements = (user, likes, comments, questions, tips) => {
-  const achievements = user.achievements;
-  handleTips(tips, achievements);
-  handleComments(comments, achievements);
-  handleQuestions(questions, achievements);
-  handlePatis(likes, achievements);
-  handleExtras(user, achievements);
-  return achievements;
-};
 
 usersRouter.put('/icon', async (req, res) => {
-  if (req.user.achievements[`${req.query.iconCode}`]) {
-    req.user.iconName = req.query.name;
+  if (req.user.achievements[`${req.query.iconCode}`] == true) {
+    const icon = icons.find(i=>i.achievement===req.query.iconCode)
+    req.user.iconName = icon.name;
     await req.user.save();
   }
   res.end();
@@ -355,43 +335,102 @@ usersRouter.put('/icon', async (req, res) => {
 
 usersRouter.get('/u/:username', async (req, res) => {
   const totalLikedUser = await User.getTotalLike(req.params.username);
-
-  res.json(totalLikedUser);
+  const user = await User.findOne({username:req.params.username})
+  const achievements = await utils.getUserAchievements(user)
+  res.json({...totalLikedUser,achievements});
 });
 
 module.exports = usersRouter;
-function handleExtras(user, achievements) {
-  achievements.admin = user.userStatus === 'admin' ? true : false;
-  achievements.mod = user.userStatus === 'mod' ? true : false;
-}
 
-function handlePatis(likes, achievements) {
-  achievements.pati1 = likes >= 1 ? true : false
-  achievements.pati10 = likes >= 10 ? true : false
-  achievements.pati50 = likes >= 50 ? true : false
-  achievements.pati100 = likes >= 100 ? true : false
-  achievements.pati200 = likes >= 200 ? true : false
-  achievements.pati500 = likes >= 500 ? true : false
-  achievements.pati1000 = likes >= 1000 ? true : false
-}
+const icons = [
+  {
+    name: 'chess pawn',
+    description: 'İlk yorumunu yaptın!',
+    achievement: 'comment1'
+  },
+  {
+    name: 'chess bishop',
+    description: '5 yorum yaptın!',
+    achievement: 'comment5',
+  },
+  {
+    name: 'chess knight',
+    description: '10 yorum yaptın!',
+    achievement: 'comment10',
+  },
+  {
+    name: 'chess rock',
+    description: '20 yorum yaptın!',
+    achievement: 'comment20',
+  },
+  {
+    name: 'chess king',
+    description: '50 yorum yaptın!',
+    achievement: 'comment50',
+  },
+  {
+    name: 'chess queen',
+    description: '100 yorum yaptın!',
+    achievement: 'comment100',
+  },
 
-function handleQuestions(questions, achievements) {
-  achievements.question1 = questions >= 1 ?  true : false;
-  achievements.question10 = questions >= 10 ?  true : false;
+  {
+    name: 'bolt',
+    description: 'İlk kez patilendin!',
+    achievement: 'pati1',
+  },
+  {
+    name: 'paper plane',
+    description: '10 kez patilendin!',
+    achievement: 'pati10',
+  },
+  {
+    name: 'plane',
+    description: '50 kez patilendin!',
+    achievement: 'pati50',
+  },
+  {
+    name: 'fighter jet',
+    description: '100 kez patilendin!',
+    achievement: 'pati100',
+  },
+  {
+    name: 'space shuttle',
+    description: '200 kez patilendin!',
+    achievement: 'pati200',
+  },
+  {
+    name: 'chess pawn',
+    description: '500 kez patilendin!',
+    achievement: 'pati500',
+  },
+  {
+    name: 'quidditch',
+    description: '1000 kez patilendin!',
+    achievement: 'pati1000',
+  },
 
-}
-
-function handleComments(comments, achievements) {
-  achievements.comment1 = comments >= 1 ? true : false
-  achievements.comment10 = comments >= 10 ? true : false
-  achievements.comment20 = comments >= 20 ? true : false
-  achievements.comment50 = comments >= 50 ? true : false
-  achievements.comment100 = comments >= 100 ? true : false
-  
-}
-
-function handleTips(tips, achievements) {
-  achievements.tip1 = tips >= 1 ?true: false;
-  achievements.tip10 = tips >= 10 ?true: false;
-
-}
+  {
+    name: 'leaf',
+    description: 'İlk tavsiyeni verdin!',
+    achievement: 'tip1',
+  },
+  {
+    name: 'tree',
+    description: '10 tavsive verdin!',
+    achievement: 'tip10',
+  },
+  {
+    name: 'gem',
+    description: 'İlk sorunu sordun!',
+    achievement: 'question1',
+  },
+  {
+    name: 'tint',
+    description: '10 soru sordun!',
+    achievement: 'question10',
+  },
+  { name: 'cogs', description: 'Beta Tester', achievement: 'betaTester' },
+  { name: 'shield', description: 'Moderatör', achievement: 'mod' },
+  { name: 'user secret', description: 'Admin', achievement: 'admin' },
+];

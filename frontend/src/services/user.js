@@ -61,7 +61,7 @@ const getNotifications = async (setLoading) => {
     const res = await axios.get(`${baseUrl}/notifications`, config);
     setLoading(false);
     return res.data;
-  } catch (e) {
+} catch (e) {
     setLoading(false);
     return e.response
       ? e.response.data
@@ -145,9 +145,20 @@ const changeIcon = async (iconName, iconCode) => {
   }
 };
 
+const getAchievement = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/achievement/get`, config);
+    return res.data;
+  } catch (e) {
+    return e.response
+      ? e.response.data
+      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
 const checkAchievement = async () => {
   try {
-    const res = await axios.get(`${baseUrl}/achievement`, config);
+    const res = await axios.get(`${baseUrl}/achievement/`, config);
     return res.data;
   } catch (e) {
     return e.response
@@ -189,7 +200,7 @@ export default {
   getPopulatedUser,
   followLesson,
   unfollowLesson,
-  checkAdmin,
+  checkAdmin,getAchievement,
   getFollowing,
   getNotifications,
   deleteNotifications,

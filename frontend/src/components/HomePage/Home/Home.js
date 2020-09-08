@@ -58,7 +58,7 @@ const Home = () => {
         </Grid.Row>
         <Label
           color="blue"
-          pointer
+          
           bold
           style={{ position: 'fixed', bottom: '3em', width: '100%' }}
         >

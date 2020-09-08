@@ -10,25 +10,20 @@ import {
 } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  setCell,
   findTimeCell,
   resetTimeCell,
-  removeCourseFromCell,
-  addCourseToCell,
   notFindTimeCell,
   setCurrentScenario,
-  changeCoursesVisibility,
   toggleCellCoursesVisiblity,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
-import { getIdByDayHour } from '../../../utils/utils';
 import CommentsLoading from '../../Comments/CommentsLoading';
 import { isMobile } from 'react-device-detect';
+import { compareNames } from '../../../utils/utils';
 
 const CoursePlannerTable = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const scenarios = useSelector((state) => state.courses.scenarios);
-  const currentScenario = useSelector((state) => state.courses.currentScenario);
   const [scenariosActivePage, setScenariosActivePage] = useState(0);
   const cells = useSelector((state) => state.courses.cells);
   const extraHours = useSelector((state) => state.courses.extraHours);
@@ -37,10 +32,7 @@ const CoursePlannerTable = () => {
   const [visible, setVisible] = useState(false);
   const [paginationVisible, setPaginationVisible] = useState(false);
   const TOTAL_HOURS = 14;
-  useEffect(() => {
-    insertSelectedToTable();
-    removeFromTable();
-  }, [selectedCourses]);
+
 
   useEffect(() => {
     if (scenarios.length > 0 && scenariosActivePage > 0) {
@@ -48,9 +40,7 @@ const CoursePlannerTable = () => {
     }
   }, [scenariosActivePage, scenarios]);
 
-  useEffect(() => {
-    dispatch(changeCoursesVisibility(currentScenario));
-  }, [currentScenario]);
+
 
   useEffect(() => {
     if (scenarios.length > 0) {
@@ -115,31 +105,7 @@ const CoursePlannerTable = () => {
     setRows(rows);
   }, [cells, visible]);
 
-  const removeFromTable = () => {
-    cells.forEach((cell) => {
-      if (cell.courses.length !== 0) {
-        cell.courses.forEach((cellCourse) => {
-          const course = selectedCourses.find(
-            (selectedCourse) => selectedCourse.id === cellCourse.id
-          );
-          if (!course) {
-            dispatch(removeCourseFromCell(cell, cellCourse));
-          }
-        });
-      }
-    });
-  };
-
-  const insertSelectedToTable = () => {
-    selectedCourses.forEach((selectedCourse) => {
-      selectedCourse.days.forEach((day, index) => {
-        let cellId = getIdByDayHour(index, selectedCourse);
-        let cell = cells.find((ce) => ce.id === cellId);
-        if (!cell) return;
-        dispatch(addCourseToCell(cell, selectedCourse));
-      });
-    });
-  };
+  
 
   if (cells.length === 0 || rows.length === 0) {
     return <CommentsLoading />;
@@ -229,7 +195,7 @@ const CoursePlannerTable = () => {
 };
 
 const CellDropdown = ({ c, f }) => {
-  const visibleCourses = c.courses.filter((cCourse) => cCourse.visible);
+  const visibleCourses = c.courses.filter((cCourse) => cCourse.visible == true);
   return (
     <Table.Cell
       selectable
@@ -271,7 +237,7 @@ const FirstThreeCells = ({ visibleCourses, c }) => {
   return (
     <>
       {c.courses
-        .filter((cCourse) => cCourse.visible)
+        .filter((cCourse) => cCourse.visible).sort(compareNames)
         .slice(0, 3)
         .map((cellCourse) => {
           return (
@@ -297,7 +263,7 @@ const AllCells = ({ visibleCourses, c, upper }) => {
     <>
       {visibleCourses.length !== 0
         ? c.courses
-            .filter((cCourse) => cCourse.visible)
+            .filter((cCourse) => cCourse.visible).sort(compareNames)
             .map((cellCourse) => {
               return (
                 <>

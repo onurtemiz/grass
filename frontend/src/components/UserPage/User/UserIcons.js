@@ -15,9 +15,16 @@ const UserIcons = ({achievements})=>{
     }
   }, [])
   return(
-  activeAchievements.map((achievement)=>{
-      return (<span style={{marginRight:'0.5em'}}><UserIcon themeColor='purple' achievement={achievement} key={achievement}/></span>)
-    })
+    <>
+    {activeAchievements && activeAchievements.length>0 &&
+    <>
+    <span>· </span>
+    {activeAchievements.map((achievement)=>{
+      return <span style={{marginRight:'0.5em'}}><UserIcon themeColor='purple' achievement={achievement} key={achievement}/></span>
+    })}
+    </>
+    }
+  </>
   )
 }
 export default UserIcons

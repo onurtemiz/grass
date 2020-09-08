@@ -12,7 +12,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   onOffConflict,
   changeConflictRange,
-  changeConflictRequired,
 } from '../../../reducers/courseReducer';
 import { Label, StyledSlider } from '../../Nav/NavTheme';
 import Slider from 'rc-slider';

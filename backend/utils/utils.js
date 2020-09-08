@@ -1,6 +1,10 @@
 const moment = require('moment');
 const nodemailer = require('nodemailer');
 const randomstring = require('randomstring');
+const User = require('../models/user')
+const Tip = require('../models/tip')
+const Question = require('../models/question')
+
 const {
   passwordResetTemplate,
   emailVerificationTemplate,
@@ -96,9 +100,78 @@ const getDayFilterFuture = (daySort) => {
   }
 };
 
+ const getUserAchievements = async(user)=>{
+  const totalLikedUser = await User.getTotalLike(user.username);
+  const likes = totalLikedUser.totalLikes;
+  const comments = user.comments.length;
+  const questions = await Question.find({
+    user: user._id,
+    isApproved: true,
+  }).countDocuments();
+  const tips = await Tip.find({
+    isApproved: true,
+    user: user._id,
+  }).countDocuments();
+  return getAchievements(
+    user,
+    likes,
+    comments,
+    questions,
+    tips
+  );
+}
+
+const getAchievements = (user, likes, comments, questions, tips) => {
+  const achievements = user.achievements;
+  handleTips(tips, achievements);
+  handleComments(comments, achievements);
+  handleQuestions(questions, achievements);
+  handlePatis(likes, achievements);
+  handleExtras(user, achievements);
+  return achievements;
+};
+
+function handleExtras(user, achievements) {
+  achievements.admin = user.userStatus === 'admin' ? true : false;
+  achievements.mod = user.userStatus === 'mod' ? true : false;
+}
+
+function handlePatis(likes, achievements) {
+  achievements.pati1 = likes >= 1 ? true : false
+  achievements.pati10 = likes >= 10 ? true : false
+  achievements.pati50 = likes >= 50 ? true : false
+  achievements.pati100 = likes >= 100 ? true : false
+  achievements.pati200 = likes >= 200 ? true : false
+  achievements.pati500 = likes >= 500 ? true : false
+  achievements.pati1000 = likes >= 1000 ? true : false
+}
+
+function handleQuestions(questions, achievements) {
+  achievements.question1 = questions >= 1 ?  true : false;
+  achievements.question10 = questions >= 10 ?  true : false;
+
+}
+
+function handleComments(comments, achievements) {
+  achievements.comment1 = comments >= 1 ? true : false
+  achievements.comment10 = comments >= 10 ? true : false
+  achievements.comment20 = comments >= 20 ? true : false
+  achievements.comment50 = comments >= 50 ? true : false
+  achievements.comment100 = comments >= 100 ? true : false
+  
+}
+
+function handleTips(tips, achievements) {
+  achievements.tip1 = tips >= 1 ?true: false;
+  achievements.tip10 = tips >= 10 ?true: false;
+
+}
+
+
+
 module.exports = {
   getDayFilter,
   getDayFilterFuture,
   sendActivationEmail,
-  sendForgotPasswordEmail,
+  sendForgotPasswordEmail,getUserAchievements
 };

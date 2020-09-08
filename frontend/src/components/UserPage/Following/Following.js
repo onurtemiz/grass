@@ -15,6 +15,7 @@ import {
 import { Label, HeadingStyle } from '../../Nav/NavTheme';
 import userService from '../../../services/user';
 import NoFollowingUser from './NoFollowingUser';
+import CommentsLoading from '../../Comments/CommentsLoading';
 const Following = () => {
   const user = useSelector((state) => state.user);
   const [following, setFollowing] = useState();
@@ -36,24 +37,13 @@ const Following = () => {
     return 0;
   };
 
-  if (user.following.length === 0) {
+  if (user.following.length === 0 || (following && getLength(following) === 0)) {
     return <NoFollowingUser />;
   }
-
-  if (getLength(following) !== user.following.length) {
-    return [...Array(2)].map((e, i) => (
-      <Placeholder style={{ marginTop: '1em', marginLeft: '1em' }} key={i}>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder>
-    ));
+  if(following == null){
+    return <CommentsLoading/>
   }
+
   return (
     <div>
       <Header color="green" as="h1">

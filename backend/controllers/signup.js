@@ -81,12 +81,12 @@ signupRouter.post('/verify', async (req, res) => {
 
 signupRouter.post('/', async (req, res) => {
   const body = req.body;
-  const reResult = body.email.match(/^[A-Z0-9._%+-]+@boun.edu.tr$/i);
+  const reResult = body.email.match(/^[A-Z0-9.]+@boun.edu.tr$/i);
   let usernameReg = new RegExp('[a-zA-Z0-9._-]+');
 
   if (!body.email || reResult === null) {
     return res.status(400).json({
-      error: 'Eposta adresi boun uzantılı olmalı.',
+      error: 'Sadece geçerli boun epostaları kayıt olabilir.',
     });
   } else if (!body.password || body.password.trim().length < 8) {
     return res.status(400).json({

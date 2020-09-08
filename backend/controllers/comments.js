@@ -357,6 +357,10 @@ commentsRouter.put('/pati_comment/:id', async (req, res) => {
     return res.status(400).json({
       error: 'Yorum bulunamadı.',
     });
+  }else if(comment.user.equals(user._id)){
+    return res.status(400).json({
+      error: 'Kendi yorumunuzu beğenemezsiniz.'
+    })
   }
 
   const isLiked = comment.likes.some((u) => u.equals(user._id));

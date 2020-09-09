@@ -106,17 +106,21 @@ tipsRouter.get('/all', middleware.authAdmin, async (req, res) => {
 });
 
 tipsRouter.get('/random', async (req, res) => {
-  const totalTips = await Tip.find({ isApproved: true }).countDocuments();
+  const tips = await Tip.find({ isApproved: true })
 
-  const randTip = await Tip.findOne({ isApproved: true }).skip(
-    Math.floor(Math.random() * totalTips)
-  );
+  const sumOfWeights = tips.reduce(function(memo, tip) {
+    return memo + tip.likes.length+1;
+  }, 0)
 
-  const jsonTip = randTip.toJSON();
+  
+  
+  const tip = tips.find(getRandom(sumOfWeights));
+  
+  const jsonTip = tip.toJSON();
   if (jsonTip.isAnonim) {
     return res.json(jsonTip);
   } else {
-    const user = await User.findById(randTip.user);
+    const user = await User.findById(tip.user);
     return res.json({
       ...jsonTip,
       user: user.username,
@@ -160,3 +164,11 @@ tipsRouter.get('/', async (req, res) => {
 });
 
 module.exports = tipsRouter;
+
+function getRandom(sumOfWeights) {
+  let random = Math.floor(Math.random() * (sumOfWeights + 1));
+    return function(tip) {
+    random -= tip.likes.length+1;
+    return random <= 0;
+  };
+  }

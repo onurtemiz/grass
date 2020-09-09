@@ -45,7 +45,7 @@ const Tips = ({ home }) => {
       <Modal open={isOpen}>
         <Modal.Header>
           <Label color="blue">
-            Tavsiyeniz <Label color="green">150</Label> harften az olmalı.
+            Tavsiyeniz <Label color="green">250</Label> harften az olmalı.
           </Label>
         </Modal.Header>
         <Modal.Content>
@@ -70,8 +70,8 @@ const Tips = ({ home }) => {
                   ref={register({
                     required: 'Lütfen tavsiyenizi yazın',
                     maxLength: {
-                      value: 150,
-                      message: 'Tavsiyeniz 150 karakterden daha az olmalı.',
+                      value: 250,
+                      message: 'Tavsiyeniz 250 karakterden daha az olmalı.',
                     },
                   })}
                   name="tip"

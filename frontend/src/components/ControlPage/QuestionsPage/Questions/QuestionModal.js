@@ -56,8 +56,8 @@ const QuestionModal = () => {
                       ref={register({
                         required: 'Lütfen sorunuzu yazın',
                         maxLength: {
-                          value: 42,
-                          message: 'Sorunuz 42 karakter veya daha az olmalı.',
+                          value: 150,
+                          message: 'Sorunuz 150 karakter veya daha az olmalı.',
                         },
                         validate: (comment) =>
                           comment.trim().length !== 0 ||
@@ -65,7 +65,7 @@ const QuestionModal = () => {
                       })}
                     />
                   }
-                  content="Sorunuz 42 harf ya da daha az olmalı."
+                  content="Sorunuz 150 harf ya da daha az olmalı."
                   position="right center"
                 />
                 {errors.question && (

@@ -3,7 +3,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false);
 
 const tipSchema = new mongoose.Schema({
-  tip: { type: String, unique: true, required: true, maxlength: 150 },
+  tip: { type: String, unique: true, required: true, maxlength: 250 },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

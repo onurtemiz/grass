@@ -19,7 +19,7 @@ questionsRouter.post('/', async (req, res) => {
       error: 'Eksik bilgi girildi.',
     });
   }
-  if (body.question.length > 42) {
+  if (body.question.length > 150) {
     return res.status(400).json({
       error: 'Sorunuz 42 karakterden çok',
     });

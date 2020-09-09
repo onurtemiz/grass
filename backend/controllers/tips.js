@@ -83,7 +83,7 @@ tipsRouter.post('/', async (req, res) => {
     !req.user ||
     typeof body.isAnonim === 'undefined' ||
     !user ||
-    body.tip.length > 150
+    body.tip.length > 250
   ) {
     return res.status(400).json({
       error: 'Geçersiz tavsiye. Hata kodu 13',

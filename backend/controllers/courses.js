@@ -59,7 +59,6 @@ coursesRouter.get('/update', async (req, res) => {
   if (course) {
     course = await updateCourseQuota(course);
   }
-  console.log(course);
   res.json(course.toJSON());
 });
 

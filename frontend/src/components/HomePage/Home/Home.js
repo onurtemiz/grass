@@ -46,7 +46,7 @@ const Home = () => {
               <Search />
             </HomeSearch>
             <br />
-            <Label color="green" bold>
+            <Label color="green" bold style={{overflowWrap:'anywhere'}}>
               {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor:{' '}
               <Label color="blue" bold>
                 {tip.tip}

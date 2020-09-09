@@ -31,7 +31,7 @@ const SubQuestion = ({ question, main }) => {
               }
         }
       >
-        <Card.Header style={{ display: 'inline' }}>
+        <Card.Header style={{ display: 'inline',overflowWrap:'anywhere' }}>
           <Header as="h2">
             <Header.Content>
               <Label color="blue" bold pointer>

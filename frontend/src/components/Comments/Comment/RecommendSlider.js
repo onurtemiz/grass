@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyledSlider } from '../../Nav/NavTheme';
 
 const RecommendSlider = ({ recommend, setRecommend }) => {

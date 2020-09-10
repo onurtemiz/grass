@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfQuestions } from '../../../../reducers/questionReducer';
-import { LinearProgress } from '@material-ui/core';
 import SubQuestion from './SubQuestion';
-import QuestionModal from './QuestionModal';
-import { Divider } from 'semantic-ui-react';
 import CommentsLoading from '../../../Comments/CommentsLoading';
-import Filter from '../../../Filter/Filter';
 import { useInfinite } from '../../../../utils/utils';
 import NoSubResult from '../../../Search/NoSubResult';
 import { InfiniteListStyle } from '../../../Nav/NavTheme';

@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import {
-  Grid,
-  Container,
   Modal,
   Button,
-  Header,
-  Segment,
   Form,
   Checkbox,
   Divider,
-  Loader,
   Label as ErrorLabel,
 } from 'semantic-ui-react';
 import { Label } from '../../Nav/NavTheme';

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Label, StyledDropdown } from '../../Nav/NavTheme';
 import queryString from 'query-string';
 import { useLocation, useHistory } from 'react-router-dom';
-import userService from '../../../services/user';
 
 const CommentSort = () => {
   const filter = useSelector((state) => state.comments.filter);

@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Container,
-  Modal,
-  Button,
-  Header,
-  Placeholder,
 } from 'semantic-ui-react';
 import { HomeSearch, HomeHeader, HomeGrid } from './HomeTheme';
 import Search from '../../Search/Search';
 import { Label } from '../../Nav/NavTheme';
-import CommentForm from '../../Comments/CommentForm/CommentForm';
 import { useLocation } from 'react-router-dom';
 import Tips from './Tips';
 import tipsService from '../../../services/tips';

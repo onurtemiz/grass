@@ -1,8 +1,4 @@
-import loginService from '../services/login';
-import signupService from '../services/signup';
-import commentsService from '../services/comments';
 import userService from '../services/user';
-import { setToken } from '../utils/token';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
 

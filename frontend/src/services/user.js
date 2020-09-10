@@ -62,7 +62,7 @@ const getNotifications = async (setLoading) => {
     setLoading(false);
     return res.data;
 } catch (e) {
-    if(e.response.data.error === 'Onur bir şeyleri batırdı. Hata kodu 11'){
+    if(e.response && e.response.data &&  e.response.data.error === 'Onur bir şeyleri batırdı. Hata kodu 11'){
       window.localStorage.removeItem('grassUser')
       window.location.reload();
     }else{

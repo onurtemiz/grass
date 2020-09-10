@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Input,
   Grid,
   Checkbox,
-  Button,
-  Accordion,
-  Icon,
 } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   toggleTryEmptyDay,
-  onOffConflict,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
 import CreditsSlider from './CreditsSlider';

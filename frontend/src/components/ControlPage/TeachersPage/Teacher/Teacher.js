@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../../../reducers/teacherReducer';
@@ -8,17 +8,11 @@ import { compareNames} from '../../../../utils/utils';
 import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
 import {
-  Icon,
-  Button,
   Divider,
-  Header,
-  Container,
-  Segment,
   Label as SLabel,
 } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
-import commentsService from '../../../../services/comments';
 import { Label } from '../../../Nav/NavTheme';
 
 const Teacher = () => {

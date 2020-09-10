@@ -1,17 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LESSON_PATH, TEACHER_PATH } from '../../../../utils/config';
+import { LESSON_PATH } from '../../../../utils/config';
 import {
   Card,
   Header,
-  Divider,
-  Statistic,
-  Icon,
   Label as SLabel,
 } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 const SubLesson = ({ lesson, main }) => {
-  const header = () => {};
 
   return (
     <div

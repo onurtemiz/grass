@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { withRouter, useLocation, Redirect } from 'react-router';
-import { LinearProgress } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import {  useLocation, Redirect } from 'react-router';
 
-import * as Yup from 'yup'; // for everything
 import {
   Button,
   Form,
   Grid,
   Header,
-  Image,
-  Message,
   Segment,
   Icon,
   Label,
@@ -20,9 +14,8 @@ import {
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
-import signupServices from '../../services/signup';
 import queryString from 'query-string';
-import { changePassword, resetPassword } from '../../reducers/userReducer';
+import {  resetPassword } from '../../reducers/userReducer';
 
 const ResetPassword = ({ setActiveIndex }) => {
   const dispatch = useDispatch();

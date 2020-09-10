@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { signupUser, verifyUser } from '../../reducers/userReducer';
+import {  verifyUser } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation, Redirect } from 'react-router-dom';
+import {  useLocation, Redirect } from 'react-router-dom';
 import {
-  Button,
-  Form,
   Grid,
-  Header,
-  Message,
-  Segment,
-  Icon,
-  Label,
-  Divider,
   Loader,
 } from 'semantic-ui-react';
-import { useForm } from 'react-hook-form';
 import { HomeHeader } from '../HomePage/Home/HomeTheme';
 import queryString from 'query-string';
 import { Label as SLabel } from '../Nav/NavTheme';

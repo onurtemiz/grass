@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import useField from '../../UserPage/EditUser/useField';
-import { Form, Button, Loader, Segment, Label } from 'semantic-ui-react';
+import { Form, Button, Segment, } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import clubsService from '../../../services/clubs';
 import Clubs from '../../ControlPage/ClubsPage/Clubs/Clubs';

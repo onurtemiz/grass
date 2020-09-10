@@ -1,9 +1,8 @@
 import React from 'react';
-import { Table, Grid, Button, Icon } from 'semantic-ui-react';
+import {  Grid, Button, Icon } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addNewRequiredColumn,
-  removeRequiredColumn,
 } from '../../../reducers/courseReducer';
 import RequiredColumn from './RequiredColumn';
 const RequiredCourses = () => {

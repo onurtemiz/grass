@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import 'rc-slider/assets/index.css';
 import {
-  Input,
-  Grid,
   Checkbox,
-  Button,
   Accordion,
   Icon,
 } from 'semantic-ui-react';
@@ -14,7 +11,6 @@ import {
   changeConflictRange,
 } from '../../../reducers/courseReducer';
 import { Label, StyledSlider } from '../../Nav/NavTheme';
-import Slider from 'rc-slider';
 
 const ConflictOptions = () => {
   const conflict = useSelector((state) => state.courses.conflict);

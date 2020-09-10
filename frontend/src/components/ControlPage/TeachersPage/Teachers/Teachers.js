@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTeacher } from '../../../../reducers/teacherReducer';
 import SubTeacher from './SubTeacher';
-import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';

@@ -3,16 +3,31 @@ import { useSelector } from 'react-redux';
 import NoQuotas from './NoQuotas';
 import courseService from '../../services/courses';
 import CommentsLoading from '../Comments/CommentsLoading';
-import { Table } from 'semantic-ui-react';
 import QuotaTable from './QuotaTable';
-import lodash from 'lodash';
 import UserQuotaPopup from './UserQuotaPopup';
+import {Card} from 'semantic-ui-react'
+import { isMobile } from 'react-device-detect';
+import {uniqueId} from 'lodash'
+
+import { toast } from 'react-toastify';
 const Quotas = () => {
   const user = useSelector((state) => state.user);
   const [courses, setCourses] = useState([]);
 
   const getCourses = useCallback(async () => {
     const c = await courseService.getCoursesByUser();
+    if (c.error) {
+      toast.error(`${c.error}`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     setCourses(c);
   }, []);
 
@@ -32,16 +47,16 @@ const Quotas = () => {
     return <CommentsLoading />;
   }
   return (
-    <>
+    <Card.Group stackable style={!isMobile ? {marginTop:'1em',marginLeft:'1em'}:{marginTop:'1em'}} >
       {courses.map((c) => (
         <QuotaTable
           c={c}
           setCourses={setCourses}
           courses={courses}
-          key={lodash.uniqueId()}
+          key={uniqueId()}
         />
       ))}
-    </>
+      </Card.Group>
   );
 };
 

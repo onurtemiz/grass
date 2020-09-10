@@ -1,7 +1,6 @@
-import Search from '../Search/Search';
 import styled from 'styled-components';
 import Slider, { Range } from 'rc-slider';
-import { Menu, Icon, Dropdown } from 'semantic-ui-react';
+import {  Dropdown } from 'semantic-ui-react';
 import { isMobile } from 'react-device-detect';
 
 export const InfiniteListStyle = !isMobile

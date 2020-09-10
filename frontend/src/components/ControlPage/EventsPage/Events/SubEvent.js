@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, Header, Segment, Popup } from 'semantic-ui-react';
+import { Card, Header} from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 import { isMobile } from 'react-device-detect';
 import moment from 'moment';

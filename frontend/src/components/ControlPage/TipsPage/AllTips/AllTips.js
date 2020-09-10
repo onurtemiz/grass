@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfTip } from '../../../../reducers/tipReduer';
 import SubTip from './SubTip';
-import { LinearProgress } from '@material-ui/core';
-import NoComments from '../../../Comments/NoComments';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import { InfiniteListStyle } from '../../../Nav/NavTheme';
-import { Segment } from 'semantic-ui-react';
 
 const AllTips = () => {
   const count = useSelector((state) => state.tips.count);

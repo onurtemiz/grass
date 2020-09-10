@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState,  useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Progress } from 'semantic-ui-react';
-import lodash, { keys } from 'lodash';
+import { Button } from 'semantic-ui-react';
+import lodash  from 'lodash';
 import { setScenarios } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
 const CreateProgram = () => {
@@ -11,7 +11,6 @@ const CreateProgram = () => {
   const creditsRange = useSelector((state) => state.courses.creditsRange);
   const requiredCourses = useSelector((state) => state.courses.requiredCourses);
   const conflict = useSelector((state) => state.courses.conflict);
-  const scenarios = useSelector((state) => state.courses.scenarios);
   const tryEmptyDay = useSelector((state) => state.courses.tryEmptyDay);
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const [value, setValue] = useState('Program Oluştur');
@@ -261,10 +260,6 @@ function arraysEqual(a, b) {
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
 
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
   let sortedA = a.sort(compareNames);
   let sortedB = b.sort(compareNames);
 

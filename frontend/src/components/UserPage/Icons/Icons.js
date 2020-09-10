@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Icon, Popup, Button } from 'semantic-ui-react';
+import { Grid, Icon, Popup } from 'semantic-ui-react';
 import { changeIcon, checkAchievement } from '../../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';

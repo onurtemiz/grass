@@ -154,6 +154,7 @@ function handleQuestions(questions, achievements) {
 
 function handleComments(comments, achievements) {
   achievements.comment1 = comments >= 1 ? true : false
+  achievements.comment5 = comments >= 5 ? true : false
   achievements.comment10 = comments >= 10 ? true : false
   achievements.comment20 = comments >= 20 ? true : false
   achievements.comment50 = comments >= 50 ? true : false

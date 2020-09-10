@@ -124,7 +124,7 @@ const RequiredColumn = ({ rc, i }) => {
                 />
               ) : (
                 <Popup
-                  content="Kesin Olmalı grubuna eklediğin derslerden biri kesinlikle oluşturulan programda yer alır."
+                  content="Her bir Kesin Olmalı Ders Grubu altında yer alan derslerden sadece bir tanesi her olası programınızda kesin yer alacak."
                   trigger={
                     <Icon
                       name="question circle outline"
@@ -165,6 +165,7 @@ const RequiredColumn = ({ rc, i }) => {
                       return (
                         <Dropdown.Item
                           onClick={() => handleAddToRequiredColumn(rc, sc)}
+                          key={sc.name}
                         >
                           {sc.name}
                         </Dropdown.Item>
@@ -177,9 +178,13 @@ const RequiredColumn = ({ rc, i }) => {
           </Table.Row>
           {stackedCourses.map((stack) => {
             return stack.courses.length === 1 ? (
-              <SingleRowCourse rc={rc} course={stack.courses[0]} />
+              <SingleRowCourse
+                rc={rc}
+                course={stack.courses[0]}
+                key={stack.id}
+              />
             ) : (
-              <MultiRowCourse rc={rc} stack={stack} />
+              <MultiRowCourse rc={rc} stack={stack} key={stack.id} />
             );
           })}
         </Table.Body>

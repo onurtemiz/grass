@@ -36,12 +36,14 @@ const EditComment = ({ comment, setIsUpdate }) => {
   };
 
   return (
-    <Segment compact basic loading={isLoading}>
-      <Form reply style={{ marginBottom: '1em', marginLeft: '1em' }}>
+      
+      <Segment compact basic loading={isLoading} style={{ paddingLeft: '0', marginLeft: '0' }}>
+      <Form reply style={{ marginBottom: '1em' }}>
         <Form.Field inline>
           <TextareaAutosize
             rows={4}
-            style={{ width: '30vw', height: '4rem' }}
+            style={{ width: '90vw', height: '4rem', maxWidth: '350px' }}
+
             placeholder="Nasıldır?"
             name="comment"
             ref={register({

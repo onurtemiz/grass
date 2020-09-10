@@ -99,11 +99,10 @@ const Search = ({ size }) => {
       onSearchChange={(e) => handleOnSearchChange(e)}
       value={refValue.current}
       results={current}
-      placeholder="Ders, Hoca, Kulüp ya da Soru Arayın."
+      placeholder="Burayı kullanmak yerine manzaraya tıkla (Evet burası daha bitmedi)"
       size={size ? size : 'massive'}
       noResultsMessage="Aradığınız kritere uygun bir şey bulunamadı."
       resultRenderer={resRender}
-      autoFocus
     ></S>
   );
 };

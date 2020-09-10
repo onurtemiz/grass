@@ -209,9 +209,9 @@ usersRouter.post('/depsem_info/update', async (req, res) => {
   });
 });
 
-usersRouter.get('/achievement/get',async(req,res)=>{
-  res.json({icons});
-})
+usersRouter.get('/achievement/get', async (req, res) => {
+  res.json({ icons });
+});
 
 usersRouter.put('/', async (req, res) => {
   const body = req.body;
@@ -252,13 +252,15 @@ usersRouter.put('/', async (req, res) => {
       body.username.trim().length !== body.username.length
     ) {
       return res.status(400).json({
-        error: 'Yeni kullanıcı adınız sadece 15 karakter veya daha az olabilir.',
+        error:
+          'Yeni kullanıcı adınız sadece 15 karakter veya daha az olabilir.',
       });
     }
-    if(re.exec(body.username)[0] !== body.username){
+    if (re.exec(body.username)[0] !== body.username) {
       return res.status(400).json({
-        error: "Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir."
-      })
+        error:
+          'Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir.',
+      });
     }
     await User.findByIdAndUpdate(user._id, { username: body.username });
   }
@@ -316,17 +318,15 @@ usersRouter.get('/mainuser', async (req, res) => {
 });
 
 usersRouter.get('/achievement', async (req, res) => {
- 
-  const achievements = await utils.getUserAchievements(req.user)
+  const achievements = await utils.getUserAchievements(req.user);
 
-  await User.updateOne({_id:req.user._id},{achievements})
+  await User.updateOne({ _id: req.user._id }, { achievements });
   res.json(req.user.achievements);
 });
 
-
 usersRouter.put('/icon', async (req, res) => {
   if (req.user.achievements[`${req.query.iconCode}`] == true) {
-    const icon = icons.find(i=>i.achievement===req.query.iconCode)
+    const icon = icons.find((i) => i.achievement === req.query.iconCode);
     req.user.iconName = icon.name;
     await req.user.save();
   }
@@ -335,9 +335,9 @@ usersRouter.put('/icon', async (req, res) => {
 
 usersRouter.get('/u/:username', async (req, res) => {
   const totalLikedUser = await User.getTotalLike(req.params.username);
-  const user = await User.findOne({username:req.params.username})
-  const achievements = await utils.getUserAchievements(user)
-  res.json({...totalLikedUser,achievements});
+  const user = await User.findOne({ username: req.params.username });
+  const achievements = await utils.getUserAchievements(user);
+  res.json({ ...totalLikedUser, achievements });
 });
 
 module.exports = usersRouter;
@@ -346,7 +346,7 @@ const icons = [
   {
     name: 'chess pawn',
     description: 'İlk yorumunu yaptın!',
-    achievement: 'comment1'
+    achievement: 'comment1',
   },
   {
     name: 'chess bishop',
@@ -400,7 +400,7 @@ const icons = [
     achievement: 'pati200',
   },
   {
-    name: 'chess pawn',
+    name: 'rocket',
     description: '500 kez patilendin!',
     achievement: 'pati500',
   },

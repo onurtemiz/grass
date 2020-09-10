@@ -2,8 +2,6 @@ import React from 'react';
 import { Label } from '../../Nav/NavTheme';
 const About = () => {
   return (
-   
-    
     <div>
       Boğaziçine yeni başlayan biri hangi dersin hocasının iyi olduğu gibi
       konularda bilgi edinmek istediği zaman Buddy-Ekşi gibi platformlarda daha
@@ -33,11 +31,11 @@ const About = () => {
       </ul>
       Çimin çok bir olayı yok. Sadece boun epostasıyla girebildiğin -okuldaki
       public epostaya sahip hocaların yasaklandığı- basit
-      filter/like/notification sistemi olan ve içerisinde son 2 senenin bütün
+      filter/like/notification sistemi olan ve içerisinde son 4 senenin bütün
       derslerini/hocalarını, okulun kulüplerini/yurtlarını/kampüslerini ve en
       önemlisi öğrencilerin sorularını/tavsiyelerini barındıran bir site.
       <br />
-      <br /> 
+      <br />
       Herhangi bir öneri/tavsiye/hata ya da bebekle oynayan köpek videosu için:{' '}
       <a href="mailto:onur.temiz@boun.edu.tr">
         <Label color="green" bold pointer>

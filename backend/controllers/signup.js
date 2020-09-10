@@ -34,7 +34,7 @@ signupRouter.post('/reset_password', async (req, res) => {
   const passwordHash = await bcrypt.hash(body.password, 10);
   user.passwordHash = passwordHash;
   user.passwordVerification = randomstring.generate();
-  user.verified =true;
+  user.verified = true;
   await user.save();
   res.end();
 });
@@ -92,20 +92,16 @@ signupRouter.post('/', async (req, res) => {
     return res.status(400).json({
       error: 'Şifre 8 veya daha fazla karakterden oluşmalı.',
     });
-  } else if (
-    !body.username ||
-    body.username.trim().length > 15 ||
-    body.username.trim().length === 0 ||
-    body.username.trim().length !== body.username.length
-  ) {
+  } else if (!body.username || body.username.trim().length > 15) {
     return res.status(400).json({
       error: 'Kullanıcı adı 15 veya daha az karakterden oluşmalı.',
     });
   } else if (usernameReg.exec(body.username)[0] !== body.username) {
     return res.status(400).json({
-      error: "Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir."
-    })
-  }else if (inBanList(body.email)) {
+      error:
+        'Kullanıcı adınız sadece harf, sayı ya da ._- karakterlerini içerebilir.',
+    });
+  } else if (inBanList(body.email)) {
     return res.status(400).json({
       error: 'Site sadece Boğaziçi Öğrencilerine açıktır.',
     });

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Grid,
-  Container,
-} from 'semantic-ui-react';
+import { Grid, Container } from 'semantic-ui-react';
 import { HomeSearch, HomeHeader, HomeGrid } from './HomeTheme';
 import Search from '../../Search/Search';
 import { Label } from '../../Nav/NavTheme';
 import { useLocation } from 'react-router-dom';
 import Tips from './Tips';
 import tipsService from '../../../services/tips';
+import { isMobile } from 'react-device-detect';
+
 const Home = () => {
   const [tip, setTip] = useState(null);
   const location = useLocation();
@@ -26,7 +25,7 @@ const Home = () => {
     return null;
   }
   return (
-    <Container fluid>
+    <Container fluid style={{ marginTop: '4em' }}>
       <HomeGrid verticalAlign="middle" centered columns={1} stretched>
         <Grid.Row centered stretched>
           <Grid.Column textAlign="center">
@@ -37,11 +36,15 @@ const Home = () => {
               Daha iyi bir Boğaziçi deneyimi
             </Label>
             <br />
-            <HomeSearch>
-              <Search />
-            </HomeSearch>
+            {!isMobile && (
+              <>
+                <HomeSearch>
+                  <Search />
+                </HomeSearch>
+              </>
+            )}
             <br />
-            <Label color="green" bold style={{overflowWrap:'anywhere'}}>
+            <Label color="green" bold style={{ overflowWrap: 'anywhere' }}>
               {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor:{' '}
               <Label color="blue" bold>
                 {tip.tip}
@@ -53,7 +56,6 @@ const Home = () => {
         </Grid.Row>
         <Label
           color="blue"
-          
           bold
           style={{ position: 'fixed', bottom: '3em', width: '100%' }}
         >

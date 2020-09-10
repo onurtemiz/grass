@@ -15,7 +15,6 @@ const SquareComments = ({ height }) => {
   const comments = useSelector((state) => state.comments.comments);
   const filter = useSelector((state) => state.comments.filter);
   const daySort = useSelector((state) => state.comments.daySort);
-
   const [currentComments, setCurrentComments] = useState([]);
   const dispatch = useDispatch();
   const first = useRef(false);

@@ -5,6 +5,7 @@ import {
   Icon,
   Pagination,
   Popup,
+  Label as SLabel,
 } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -31,14 +32,11 @@ const CoursePlannerTable = () => {
   const [paginationVisible, setPaginationVisible] = useState(false);
   const TOTAL_HOURS = 14;
 
-
   useEffect(() => {
     if (scenarios.length > 0 && scenariosActivePage > 0) {
       dispatch(setCurrentScenario(scenarios[scenariosActivePage - 1]));
     }
   }, [scenariosActivePage, scenarios]);
-
-
 
   useEffect(() => {
     if (scenarios.length > 0) {
@@ -102,8 +100,6 @@ const CoursePlannerTable = () => {
     }
     setRows(rows);
   }, [cells, visible]);
-
-  
 
   if (cells.length === 0 || rows.length === 0) {
     return <CommentsLoading />;
@@ -235,16 +231,18 @@ const FirstThreeCells = ({ visibleCourses, c }) => {
   return (
     <>
       {c.courses
-        .filter((cCourse) => cCourse.visible).sort(compareNames)
+        .filter((cCourse) => cCourse.visible)
         .slice(0, 3)
         .map((cellCourse) => {
           return (
-            <>
-              <Label color={'red'} bold key={cellCourse.name}>
-                {cellCourse.name}
-              </Label>
+            <div key={cellCourse.name}>
+              <SLabel style={{ marginTop: '0.5em' }} color={cellCourse.color}>
+                <Label color="white" bold>
+                  {cellCourse.name}
+                </Label>
+              </SLabel>
               <br />
-            </>
+            </div>
           );
         })}
       <Icon name="caret down" onClick={() => makeCellCoursesVisible()} />
@@ -257,32 +255,24 @@ const AllCells = ({ visibleCourses, c, upper }) => {
   const makeCellCoursesHidden = () => {
     dispatch(toggleCellCoursesVisiblity(c, false));
   };
+
   return (
     <>
-      {visibleCourses.length !== 0
-        ? c.courses
-            .filter((cCourse) => cCourse.visible).sort(compareNames)
-            .map((cellCourse) => {
-              return (
-                <>
-                  <Label
-                    color={
-                      visibleCourses.length > 1
-                        ? 'red'
-                        : cellCourse.hover
-                        ? 'green'
-                        : 'blue'
-                    }
-                    bold
-                    key={cellCourse.name}
-                  >
+      {visibleCourses.length !== 0 &&
+        c.courses
+          .filter((cCourse) => cCourse.visible)
+          .map((cellCourse) => {
+            return (
+              <div key={cellCourse.name}>
+                <SLabel color={cellCourse.color} style={{ marginTop: '0.5em' }}>
+                  <Label color="white" bold>
                     {cellCourse.name}
                   </Label>
-                  <br />
-                </>
-              );
-            })
-        : null}
+                </SLabel>
+                <br />
+              </div>
+            );
+          })}
       {upper ? (
         <Icon name="caret up" onClick={() => makeCellCoursesHidden()} />
       ) : null}

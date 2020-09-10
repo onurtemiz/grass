@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema({
       admin: false,
     },
   },
+  created: { type: Date, default: Date.now() },
 });
 
 userSchema.set(uniqueValidator);

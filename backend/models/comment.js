@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false);
 const moment = require('moment');
-const utils = require('../utils/utils');
+const utils = require('../utils/helpers');
 const commentSchema = new mongoose.Schema({
   teacher: {
     type: mongoose.Schema.Types.ObjectId,

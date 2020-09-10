@@ -27,6 +27,7 @@ const Signup = () => {
   const [send, setSend] = useState(false);
   const [email, setEmail] = useState('');
   const [activationLoading, setActivaitonLoading] = useState(false);
+  const usernameReg = new RegExp('[a-zA-Z0-9._-]+');
 
   useEffect(() => {
     register(
@@ -72,9 +73,9 @@ const Signup = () => {
           value: 1,
           message: 'Kullanıcı adınız en az 1 harften oluşmalı',
         },
-        validate: (comment) =>
-          comment.trim().length !== 0 ||
-          'Kullanıcı adınız sadece boşluklardan oluşamaz.',
+        validate: (username) =>
+          usernameReg.exec(username)[0] === username ||
+          'Kullanıcı adınız sadece harf sayı ve ._- karakterlerinden oluşabilir.',
       }
     );
   }, []);

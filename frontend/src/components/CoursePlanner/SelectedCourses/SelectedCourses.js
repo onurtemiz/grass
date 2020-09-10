@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table,  Icon } from 'semantic-ui-react';
+import { Table, Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Label } from '../../Nav/NavTheme';
 import {
@@ -97,7 +97,7 @@ const SelectedCourses = () => {
                     key={stack.courses[0].id}
                   />
                 ) : (
-                  <MultipleCourses stack={stack} id={i} />
+                  <MultipleCourses stack={stack} id={i} key={i} />
                 );
               })
             )}
@@ -147,7 +147,7 @@ const MultipleCourses = ({ stack }) => {
 
         {stack.courses.sort(compareNames).map((stackCourse) => {
           return (
-            <Label color="green" bold>
+            <Label color="green" bold key={stackCourse.id}>
               {stackCourse.sectionCode}{' '}
             </Label>
           );
@@ -168,7 +168,7 @@ const MultipleCourses = ({ stack }) => {
         />
         <Icon
           name={stackEye ? 'eye' : 'eye slash'}
-          color={stackEye ? 'green' : "red"}
+          color={stackEye ? 'green' : 'red'}
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleStackEye()}
         />
@@ -183,16 +183,12 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
     dispatch(removeSelectedCourse(course));
   };
 
-  
-
   const toggleCourseVisiblity = (course) => {
     dispatch(changeCourseVisibility(course));
   };
   return (
     <Table.Row>
-      <Table.Cell
-     
-      >
+      <Table.Cell>
         <Label color="blue" bold>
           {c.name}{' '}
         </Label>
@@ -206,7 +202,7 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
         />
         <Icon
           name={c.visible ? 'eye' : 'eye slash'}
-          color={c.visible ? 'green' : "red"}
+          color={c.visible ? 'green' : 'red'}
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleCourseVisiblity(c)}
         />

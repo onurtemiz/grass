@@ -458,14 +458,20 @@ const addInfCoursesReducer = (state,action)=>{
 }
 
 // SELECTED
+const colors = ['red','orange','yellow','olive','green','teal','blue','violet','purple','pink','brown']
 
 const addAllSectionsToSelectedReducer = (state,action)=>{
-  const selectedCourses = action.data.map((course)=>({
+  const selectedCourses = action.data.map((course)=>{
+    const color = colors.shift();
+    colors.push(color);
+    return{
     ...course,
     hover:false,
     clicked:true,
-    visible:true
-  }))
+    visible:true,
+    color
+  }
+})
   const currentSelectedCourses = lodash.uniqBy([...selectedCourses,...state.selectedCourses],'id');
   
 
@@ -474,17 +480,20 @@ const addAllSectionsToSelectedReducer = (state,action)=>{
     courses: lodash.uniqBy([...state.courses,...action.data],'id'),
     selectedCourses: currentSelectedCourses,
     extraHours: checkExtraHour(currentSelectedCourses),
-    cells:addCoursesToCells(state,action.data)
+    cells:addCoursesToCells(state,selectedCourses)
   }
 }
 
 const addCourseToSelectedReducer= (state,action)=>{
-  const currentSelectedCourses = lodash.uniqBy([{...action.data,clicked:true,visible:true},...state.selectedCourses],'id')
+  const color = colors.shift();
+  colors.push(color);
+  const course = {...action.data,clicked:true,visible:true,color}
+  const currentSelectedCourses = lodash.uniqBy([course,...state.selectedCourses],'id')
   return{
     ...state,
     selectedCourses: currentSelectedCourses,
     extraHours: checkExtraHour(currentSelectedCourses),
-    cells:addCourseToCells(state,action)
+    cells:addCourseToCells(state,{data:course})
   }
 }
 
@@ -790,13 +799,14 @@ const setCurrentScenarioReducer = (state,action)=>{
 // HOVERS
 
 const onHoverCourseReducer = (state,action)=>{
+  const course = {...action.data,hover:true,visible:true,color:'green'}
   const courseCells = action.data.cellIds.map(id=>{
     let cell = state.cells.find(c=>c.id===id);
-    return {...cell,courses:lodash.uniqBy([action.data,...cell.courses],'id')}
+    return {...cell,courses:lodash.uniqBy([course,...cell.courses],'id')}
   })
   return{
     ...state,
-    selectedCourses: lodash.uniqBy([{...action.data,hover:true,visible:true},...state.selectedCourses],'id'),
+    selectedCourses: lodash.uniqBy([course,...state.selectedCourses],'id'),
     cells:lodash.uniqBy([...courseCells,...state.cells],'id')
   }
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=dev nodemon index.js",
     "start": "NODE_ENV=prod node index.js",
-    "build:ui": "cd ../frontend && npm run install && npm run build --prod && rm -rf ../backend/build && cp -r build ../backend/",
+    "build:ui": "cd ../frontend && npm install && npm run build --prod && rm -rf ../backend/build && cp -r build ../backend/",
     "deploy": "cd ../ && git subtree push --prefix backend heroku master && cd ./backend",
     "deploy:full": "npm run build:ui && git add . && git commit -am 'buildui' && npm run deploy",
     "test": "NODE_ENV=test jest --verbose --runInBand",

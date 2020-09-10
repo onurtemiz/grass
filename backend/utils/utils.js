@@ -4,11 +4,29 @@ const randomstring = require('randomstring');
 const User = require('../models/user')
 const Tip = require('../models/tip')
 const Question = require('../models/question')
+const handlebars = require('handlebars')
+const fs = require('fs');
 
-const {
-  passwordResetTemplate,
-  emailVerificationTemplate,
-} = require('./emailTemplates');
+
+// const {
+//   passwordResetTemplate,
+//   emailVerificationTemplate,
+// } = require('./emailTemplates');
+
+
+const readHTMLFile =  function(path, callback) {
+  fs.readFile(path, {encoding: 'utf-8'}, async function (err, html) {
+      if (err) {
+          throw err;
+          callback(err);
+      }
+      else {
+          await callback(null, html);
+      }
+  });
+};
+
+
 
 const getDayFilter = (daySort) => {
   if (daySort === 'today') {
@@ -53,12 +71,22 @@ const sendForgotPasswordEmail = async (user) => {
       : 'http://localhost:3000';
   const forgotPasswordLink = `${baseUrl}/reset_password?code=${user.passwordVerification}&u=${user._id}`;
 
-  await transporter.sendMail({
-    from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
-    to: user.email, // list of receivers
-    subject: 'Boun Çim Şifre Sıfırlama', // Subject line
-    html: passwordResetTemplate(user, forgotPasswordLink), // html body
+  await readHTMLFile(__dirname + '/../pass-reset-template.html', async function(err, html) {
+    var template = handlebars.compile(html);
+    var replacements = {
+         username: user.username,
+         reset_url:forgotPasswordLink,
+    };
+    const htmlToSend = template(replacements);
+
+    await transporter.sendMail({
+      from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
+      to: user.email, // list of receivers
+      subject: 'Boun Çim Şifre Sıfırlama', // Subject line
+      html: htmlToSend, // html body
+    });
   });
+
 };
 
 const sendActivationEmail = async (user) => {

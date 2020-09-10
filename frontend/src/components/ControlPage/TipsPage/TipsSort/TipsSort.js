@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Icon, Dropdown } from 'semantic-ui-react';
+import { Menu, Dropdown } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Label, StyledDropdown } from '../../../Nav/NavTheme';
+import {  StyledDropdown } from '../../../Nav/NavTheme';
 import { changeSort } from '../../../../reducers/tipReduer';
 import Tips from '../../../HomePage/Home/Tips';
 import { commentSortToLabel } from '../../../Comments/CommentSort/CommentSort';

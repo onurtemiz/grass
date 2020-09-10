@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { updateUser } from '../../../reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import { LinearProgress } from '@material-ui/core';
 
-import * as Yup from 'yup'; // for everything
 import {
   Button,
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   Icon,
   Label,
   Divider,
 } from 'semantic-ui-react';
-import useField from './useField';
 import { useForm } from 'react-hook-form';
 
 const EditUser = ({ setActiveIndex }) => {

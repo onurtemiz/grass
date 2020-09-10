@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { followCourse, unFollowCourse } from '../../reducers/userReducer';
-import { Dropdown, Button, Checkbox, Popup, Icon } from 'semantic-ui-react';
+import {  Icon } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 
 const QuotaLabel = ({ course }) => {

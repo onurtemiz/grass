@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { addInfClubs } from '../../../../reducers/clubReducer';
-import { LinearProgress } from '@material-ui/core';
 import { Divider } from 'semantic-ui-react';
 import { SubClub, SubClubAdmin } from './SubClub';
 import CommentsLoading from '../../../Comments/CommentsLoading';

@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Grid,
-  Container,
   Modal,
   Button,
-  Header,
-  Segment,
   Form,
   Checkbox,
   Divider,
-  Loader,
-  Label as ErrorLabel,
   Dropdown,
-  Icon,
 } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
-import TextareaAutosize from 'react-textarea-autosize';
-import { useForm } from 'react-hook-form';
-import userService from '../../services/user';
 import { useDispatch } from 'react-redux';
 import { updateDepSemInfo } from '../../reducers/userReducer';
 

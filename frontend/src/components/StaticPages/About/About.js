@@ -1,5 +1,4 @@
 import React from 'react';
-import { Header, Container } from 'semantic-ui-react';
 import { Label } from '../../Nav/NavTheme';
 const About = () => {
   return (

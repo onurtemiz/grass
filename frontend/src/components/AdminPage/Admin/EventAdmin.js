@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CLUB_PATH } from '../../../utils/config';
-import { Card, Header, Segment, Form, Button } from 'semantic-ui-react';
+import { Card, Button } from 'semantic-ui-react';
 import { Label } from '../../Nav/NavTheme';
-import { ClubForm } from '../Admin/ControlClub';
-import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import TextareaAutosize from 'react-textarea-autosize';
 import eventsService from '../../../services/events';
-import SubQuestion from '../../ControlPage/QuestionsPage/Questions/SubQuestion';
 import moment from 'moment';
 const EventAdmin = ({ e }) => {
   const [event, setEvent] = useState(e);

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Comments from '../../Comments/Comments/IdComments';
-import { Placeholder, Header, Icon, Divider } from 'semantic-ui-react';
-import { Link, useRouteMatch } from 'react-router-dom';
-import { getLessonById } from '../../../reducers/allReducer';
+import { useSelector } from 'react-redux';
+import {  Header,  Divider } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import Follow from '../../Follow/Follow';
 import {
   LESSON_PATH,

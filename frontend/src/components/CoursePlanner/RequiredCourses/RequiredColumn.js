@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Grid, Button, Icon, Dropdown, Popup } from 'semantic-ui-react';
+import { Table, Grid, Icon, Dropdown, Popup } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   removeRequiredColumn,
@@ -9,7 +9,6 @@ import {
   addToRequiredColumnMulti,
 } from '../../../reducers/courseReducer';
 import { Label } from '../../Nav/NavTheme';
-import RequiredCourses from './RequiredCourses';
 import { compareNames } from '../../../utils/utils';
 
 const RequiredColumn = ({ rc, i }) => {

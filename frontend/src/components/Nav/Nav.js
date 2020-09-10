@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Filter from '../Filter/Filter';
 import { useRouteMatch, useLocation } from 'react-router-dom';
 
 import {
-  Container,
-  Dropdown,
-  Image,
   Menu,
-  Segment,
   Icon,
-  Header,
-  Tab,
 } from 'semantic-ui-react';
-import { NavSearch, Label } from './NavTheme';
-import { useSelector } from 'react-redux';
-import Search from '../Search/Search';
+import {  Label } from './NavTheme';
 import Notifications from '../Notifications/Notifications';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../reducers/userReducer';
 
 const Nav = ({ search, admin }) => {
-  const user = useSelector((state) => state.user);
   const [active, setActive] = useState('');
   const match = useRouteMatch('/:path');
   const homeMatch = useRouteMatch('/');

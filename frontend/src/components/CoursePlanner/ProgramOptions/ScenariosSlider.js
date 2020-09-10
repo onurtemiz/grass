@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'rc-slider/assets/index.css';
-import Slider, { Range } from 'rc-slider';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeScenariosSlider } from '../../../reducers/courseReducer';
 import { Label, StyledSlider } from '../../Nav/NavTheme';

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Table,
-  Menu,
   Dropdown,
-  Button,
   Icon,
   Pagination,
   Popup,

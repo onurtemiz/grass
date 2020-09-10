@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Icon } from 'semantic-ui-react';
+import { Table,  Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Label } from '../../Nav/NavTheme';
 import {
   removeSelectedCourse,
-  onHoverCourse,
-  offHoverCourse,
   changeCourseVisibility,
   removeSelectedCoursesWithStack,
   toggleSelectedCoursesEye,
 } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
-import CreateProgram from '../ProgramOptions/CreateProgram';
 
 const SelectedCourses = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const [credits, setCredits] = useState(0);
   const [courseLength, setCourseLength] = useState(0);
   const [stackedCourses, setStackedCourses] = useState([]);
-  const dispatch = useDispatch();
   useEffect(() => {
     setCredits(
       selectedCourses

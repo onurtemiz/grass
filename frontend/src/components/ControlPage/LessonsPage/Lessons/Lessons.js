@@ -6,7 +6,6 @@ import CommentsLoading from '../../../Comments/CommentsLoading';
 import Filter from '../../../Filter/Filter';
 import { Divider } from 'semantic-ui-react';
 import { compareNames, useInfinite } from '../../../../utils/utils';
-import { LinearProgress } from '@material-ui/core';
 import NoSubResult from '../../../Search/NoSubResult';
 import { InfiniteListStyle } from '../../../Nav/NavTheme';
 

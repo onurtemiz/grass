@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Divider } from 'semantic-ui-react';
+import React, { useState, useEffect } from 'react';
+import { Card  } from 'semantic-ui-react';
 import eventsService from '../../../services/events';
 import EventAdmin from './EventAdmin';
 const ControlEvents = () => {

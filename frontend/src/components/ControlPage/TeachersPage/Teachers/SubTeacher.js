@@ -1,8 +1,7 @@
 import React from 'react';
-import SubLesson from '../../LessonsPage/Lessons/SubLesson';
-import { TEACHER_PATH, LESSON_PATH } from '../../../../utils/config';
+import { TEACHER_PATH } from '../../../../utils/config';
 import { Link } from 'react-router-dom';
-import { Card, Header, Icon } from 'semantic-ui-react';
+import { Card, Header } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 
 const SubTeacher = ({ teacher, main }) => {

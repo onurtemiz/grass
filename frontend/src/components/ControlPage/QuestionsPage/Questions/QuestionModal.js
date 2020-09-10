@@ -4,7 +4,6 @@ import {
   Button,
   Header,
   Form,
-  Checkbox,
   Label as ErrorLabel,
   Popup,
   Divider,

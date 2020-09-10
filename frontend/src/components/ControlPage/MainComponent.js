@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import {
-  Header,
   Tab,
-  Menu,
-  Icon,
   Segment,
-  Responsive,
-  Container,
 } from 'semantic-ui-react';
-import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
+import {  useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
 import Teachers from './TeachersPage/Teachers/Teachers';
 import Teacher from './TeachersPage/Teacher/Teacher';
@@ -22,15 +16,12 @@ import Campus from './CampusesPage/Campus/Campus';
 import Dorm from './DormsPage/Dorm/Dorm';
 import Dorms from './DormsPage/Dorms/Dorms';
 import Question from './QuestionsPage/Question/Question';
-import Questions from './QuestionsPage/Questions/Questions';
 import Tips from './TipsPage/Tips';
 import QuestionsPage from './QuestionsPage/QuestionsPage';
-import EventsPage from './EventsPage/EventsPage';
 import { useWindowDimensions } from '../../utils/utils';
 import { isMobile } from 'react-device-detect';
 
 const MainComponent = () => {
-  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
   const teacherPageMatch = useRouteMatch('/teachers/:name');
   const lessonPageMatch = useRouteMatch(

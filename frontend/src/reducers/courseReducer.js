@@ -1,9 +1,6 @@
-import allService from '../services/all';
 import coursesServices from '../services/courses';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
-import { getIdByDayHour } from '../utils/utils';
-import actions from 'redux-form/lib/actions';
 
 const actionTypes = {
   ADD_INF_COURSES: 'ADD_INF_COURSES',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, } from 'react';
 import { Card, Button, Divider } from 'semantic-ui-react';
 import reportsService from '../../../services/reports';
 import commentsServices from '../../../services/comments';

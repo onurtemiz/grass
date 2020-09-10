@@ -1,6 +1,5 @@
 /* eslint-disable default-case */
 import teachersService from '../services/teachers';
-import lessonsService from '../services/lessons';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
 const initialState = {

@@ -6,8 +6,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { searchCourse } from '../../../../reducers/courseReducer';
 import {
   compareNames,
-  getIdByDayHour,
-  useInfinite,
 } from '../../../../utils/utils';
 import SubCourse from './SubCourse';
 import CommentsLoading from '../../../Comments/CommentsLoading';

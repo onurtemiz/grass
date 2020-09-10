@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-import { addInfQuestions } from '../../../../reducers/questionReducer';
-import { LinearProgress } from '@material-ui/core';
-import { Divider } from 'semantic-ui-react';
 import CommentsLoading from '../../../Comments/CommentsLoading';
-import Filter from '../../../Filter/Filter';
-import { daySortToInt, useInfinite } from '../../../../utils/utils';
 import NoSubResult from '../../../Search/NoSubResult';
 import moment from 'moment';
 import { addInfEvent } from '../../../../reducers/eventReducer';

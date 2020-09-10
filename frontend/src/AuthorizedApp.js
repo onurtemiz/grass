@@ -1,27 +1,34 @@
 import React from 'react';
 import Nav from './components/Nav/Nav';
-import Contribution from './components/StaticPages/Contribution/Contribution';
-import About from './components/StaticPages/About/About';
-import Home from './components/HomePage/Home/Home';
 import User from './components/UserPage/User/User';
-import AllComments from './components/CommentsPage/AllComments/AllComments';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Feed from './components/FeedPage/Feed/Feed';
-import Admin from './components/AdminPage/Admin/Admin';
 import useAdmin from './components/AdminPage/Admin/useAdmin';
+import 'react-toastify/dist/ReactToastify.css';
+
+import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
+import Patreon from './components/Patreon/Patreon';
+
+
+import Admin from './components/AdminPage/Admin/Admin';
 import ControlTips from './components/AdminPage/Admin/ControlTips';
 import ControlReports from './components/AdminPage/Admin/ControlReports';
-import MainUser from './components/UserPage/User/MainUser';
-import 'react-toastify/dist/ReactToastify.css';
-import MainComponent from './components/ControlPage/MainComponent';
 import ControlClub from './components/AdminPage/Admin/ControlClub';
 import ControlEvents from './components/AdminPage/Admin/ControlEvents';
 import ControlQuestions from './components/AdminPage/Admin/ControlQuestions';
-import StaticPages from './components/StaticPages/StaticPages';
-import FirstTimeModal from './components/FirstTimeModal/FirstTimeModal';
-import CoursePlanner from './components/CoursePlanner/CoursePlanner';
-import Patreon from './components/Patreon/Patreon';
-import Quotas from './components/Quota/Quotas';
+
+
+const Home = React.lazy(() => import('./components/HomePage/Home/Home'));
+const Feed = React.lazy(() => import('./components/FeedPage/Feed/Feed'));
+const Quotas = React.lazy(() => import('./components/Quota/Quotas'));
+const CoursePlanner = React.lazy(() => import('./components/CoursePlanner/CoursePlanner'));
+const StaticPages = React.lazy(() => import('./components/StaticPages/StaticPages'));
+const AllComments = React.lazy(() => import('./components/CommentsPage/AllComments/AllComments'));
+const MainUser = React.lazy(() => import('./components/UserPage/User/MainUser'));
+
+const MainComponent = React.lazy(() => import('./components/ControlPage/MainComponent'));
+
+
+
 const DefaultContainer = () => {
   return (
     <>

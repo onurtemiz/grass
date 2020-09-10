@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { postComment } from '../../../reducers/commentReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Button, Segment, Label, Checkbox } from 'semantic-ui-react';
+import { Form, Button, Segment, Label } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
-import { Label as StyledLabel } from '../../Nav/NavTheme';
 import RecommendSlider from '../Comment/RecommendSlider';
 import Comment from '../Comment/Comment';
-import CommentsLoading from '../CommentsLoading';
 
 const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
   const [tools, setTools] = useState(false);

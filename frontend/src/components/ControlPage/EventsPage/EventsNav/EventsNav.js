@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Label, StyledDropdown } from '../../../Nav/NavTheme';
-import { changeSort } from '../../../../reducers/questionReducer';
 import Filter from '../../../Filter/Filter';
 import EventModal from './EventModal';
 import { daySortToText } from '../../../Comments/CommentSort/CommentSort';
 import { changeDaySort } from '../../../../reducers/eventReducer';
-import { isMobile } from 'react-device-detect';
 
 const EventsNav = () => {
   const daySort = useSelector((state) => state.events.filter);

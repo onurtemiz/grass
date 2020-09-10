@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import UserQuotaPopup from './UserQuotaPopup';
-import { Dropdown, Button, Checkbox, Popup, Loader } from 'semantic-ui-react';
-import { followCourse } from '../../reducers/userReducer';
+import {  Button, Popup, Loader } from 'semantic-ui-react';
 import courseService from '../../services/courses';
 import QuotaOption from './QuotaOption';
 
 const LessonQuotaButton = ({ lesson }) => {
-  const user = useSelector((state) => state.user);
   const [courses, setCourses] = useState([]);
   const getCourses = useCallback(async () => {
     const c = await courseService.getSectionsByLesson(lesson);

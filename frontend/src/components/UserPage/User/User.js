@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../../Comments/Comments/IdComments';
-import { Header, Label as SLabel, Icon } from 'semantic-ui-react';
-import { Link, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
+import { Header,  Icon } from 'semantic-ui-react';
+import { useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 import { getPopulatedUser } from '../../../reducers/usersReducer';
 import { Label } from '../../Nav/NavTheme';
 import UserIcons from './UserIcons'

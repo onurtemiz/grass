@@ -3,7 +3,6 @@ import { Modal, Button, Divider } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import { useSelector, useDispatch } from 'react-redux';
 import { sawModal } from '../../reducers/userReducer';
-import { Link } from 'react-router-dom';
 
 const FirstTimeModal = () => {
   const [isOpen, setIsOpen] = useState(false);

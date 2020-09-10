@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Header, Tab, Menu, Icon, Segment } from 'semantic-ui-react';
-import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
+import {  Tab, Segment } from 'semantic-ui-react';
+import {  useLocation, useHistory } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
-import Contribution from './Contribution/Contribution';
 import About from './About/About';
-import Terms from './Terms/Terms';
 import { isMobile } from 'react-device-detect';
 
 const StaticPages = () => {
-  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
 
   const history = useHistory();

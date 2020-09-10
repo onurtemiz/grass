@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CLUB_PATH } from '../../../utils/config';
 import { Card, Header, Segment, Form, Button } from 'semantic-ui-react';
 import { Label } from '../../Nav/NavTheme';
-import { ClubForm } from '../Admin/ControlClub';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import questionsService from '../../../services/questions';
-import SubQuestion from '../../ControlPage/QuestionsPage/Questions/SubQuestion';
 const QuestionAdmin = ({ question }) => {
   const [isEdit, setIsEdit] = useState(false);
   const handleEdit = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Feed, Icon, Segment } from 'semantic-ui-react';
+import { Feed, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
 import userService from '../../services/user';

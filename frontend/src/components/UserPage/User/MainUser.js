@@ -2,17 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedMainUser } from '../../../reducers/userReducer';
-import { LinearProgress } from '@material-ui/core';
-import Comments from '../../Comments/Comments/IdComments';
-import { Header, Tab, Menu, Icon } from 'semantic-ui-react';
-import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
+import {  Tab, } from 'semantic-ui-react';
+import { useLocation, useHistory } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 import Following from '../Following/Following';
 import { Label } from '../../Nav/NavTheme';
 import User from './User';
 import Icons from '../Icons/Icons';
 import { isMobile } from 'react-device-detect';
-import QuotaFollowing from '../QuotaFollowing/QuotaFollowing';
 
 const MainUser = () => {
   const dispatch = useDispatch();

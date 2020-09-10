@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import usersService from '../../../services/user';
-import useAdmin from './useAdmin';
+import React from 'react';
+import {  Link } from 'react-router-dom';
 import { Label } from '../../Nav/NavTheme';
 import { Header } from 'semantic-ui-react';
 

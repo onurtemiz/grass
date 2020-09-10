@@ -5,7 +5,6 @@ import {
   Feed,
   Button,
   Placeholder,
-  Label as SLabel,
 } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import userService from '../../services/user';

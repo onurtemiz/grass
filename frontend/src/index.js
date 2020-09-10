@@ -7,12 +7,13 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { LinearProgress } from '@material-ui/core';
-
 import 'semantic-ui-less/semantic.less';
+
 
 ReactGA.initialize('UA-129377768-2');
 
 const history = createBrowserHistory();
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 history.listen(location => {
   ReactGA.set({ page: location.pathname }); 

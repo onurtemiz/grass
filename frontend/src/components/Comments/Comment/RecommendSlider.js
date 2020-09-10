@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyledSlider } from '../../Nav/NavTheme';
+import 'rc-slider/assets/index.css';
 
 const RecommendSlider = ({ recommend, setRecommend }) => {
   return (

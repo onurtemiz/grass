@@ -6,7 +6,6 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useForm } from 'react-hook-form';
 import RecommendSlider from '../Comment/RecommendSlider';
 import Comment from '../Comment/Comment';
-
 const CommentForm = ({ typeId, commentType, teacherId, noRecommend }) => {
   const [tools, setTools] = useState(false);
   const dispatch = useDispatch();

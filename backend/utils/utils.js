@@ -8,11 +8,6 @@ const handlebars = require('handlebars')
 const fs = require('fs');
 
 
-// const {
-//   passwordResetTemplate,
-//   emailVerificationTemplate,
-// } = require('./emailTemplates');
-
 
 const readHTMLFile =  function(path, callback) {
   fs.readFile(path, {encoding: 'utf-8'}, async function (err, html) {
@@ -97,11 +92,21 @@ const sendActivationEmail = async (user) => {
       ? 'https://www.bouncim.com'
       : 'http://localhost:3000';
   const verificationLink = `${baseUrl}/verify?code=${user.verifyToken}&u=${user._id}`;
-  await transporter.sendMail({
-    from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
-    to: user.email, // list of receivers
-    subject: 'Boun Çim Aktivasyon Linki', // Subject line
-    html: emailVerificationTemplate(user, verificationLink), // html body
+ 
+  await readHTMLFile(__dirname + '/../verify-template.html', async function(err, html) {
+    var template = handlebars.compile(html);
+    var replacements = {
+         username: user.username,
+         verify_url:verificationLink,
+    };
+    const htmlToSend = template(replacements);
+
+    await transporter.sendMail({
+      from: '"Boun Çim" <iletisim@bouncim.com>', // sender address
+      to: user.email, // list of receivers
+      subject: 'Boun Çim Aktivasyon Linki', // Subject line
+      html: htmlToSend, // html body
+    });
   });
 };
 

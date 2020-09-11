@@ -128,11 +128,13 @@ async function handleExtras(user, achievements) {
   const comment = await Comment.findOne({ user: user._id });
   achievements.betaTester =
     comment && new Date(user.created) < new Date(2020, 8, 15);
+  achievements.patreon = user.patreon;
 }
 
 function handlePatis(likes, achievements) {
   achievements.pati1 = likes >= 1 ? true : false;
   achievements.pati10 = likes >= 10 ? true : false;
+  achievements.pati20 = likes >= 20 ? true : false;
   achievements.pati50 = likes >= 50 ? true : false;
   achievements.pati100 = likes >= 100 ? true : false;
   achievements.pati200 = likes >= 200 ? true : false;
@@ -142,6 +144,7 @@ function handlePatis(likes, achievements) {
 
 function handleQuestions(questions, achievements) {
   achievements.question1 = questions >= 1 ? true : false;
+  achievements.question5 = questions >= 5 ? true : false;
   achievements.question10 = questions >= 10 ? true : false;
 }
 
@@ -156,6 +159,7 @@ function handleComments(comments, achievements) {
 
 function handleTips(tips, achievements) {
   achievements.tip1 = tips >= 1 ? true : false;
+  achievements.tip5 = tips >= 5 ? true : false;
   achievements.tip10 = tips >= 10 ? true : false;
 }
 

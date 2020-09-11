@@ -26,11 +26,19 @@ const CommentSort = () => {
 
   useEffect(() => {
     if (firstRender.current) {
-      history.push(`?sort=${active}&day=${day}`);
+      window.history.replaceState(
+        null,
+        'Boun Çim - Daha iyi bir Boğaziçi Deneyimi',
+        `?sort=${active}&day=${day}`
+      );
     } else {
       const q = queryString.parse(location.search);
       if (!q.sort && !q.day) {
-        history.push(`?sort=${active}&day=${day}`);
+        window.history.replaceState(
+          null,
+          'Boun Çim - Daha iyi bir Boğaziçi Deneyimi',
+          `?sort=${active}&day=${day}`
+        );
       }
       firstRender.current = true;
     }

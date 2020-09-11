@@ -386,26 +386,31 @@ const icons = [
   },
   {
     name: 'plane',
+    description: '20 kez patilendin!',
+    achievement: 'pati20',
+  },
+  {
+    name: 'fighter jet',
     description: '50 kez patilendin!',
     achievement: 'pati50',
   },
   {
-    name: 'fighter jet',
+    name: 'space shuttle',
     description: '100 kez patilendin!',
     achievement: 'pati100',
   },
   {
-    name: 'space shuttle',
+    name: 'rocket',
     description: '200 kez patilendin!',
     achievement: 'pati200',
   },
   {
-    name: 'rocket',
+    name: 'quidditch',
     description: '500 kez patilendin!',
     achievement: 'pati500',
   },
   {
-    name: 'quidditch',
+    name: 'rebel',
     description: '1000 kez patilendin!',
     achievement: 'pati1000',
   },
@@ -416,19 +421,34 @@ const icons = [
     achievement: 'tip1',
   },
   {
+    name: 'lemon',
+    description: '5 tavsiye verdin!',
+    achievement: 'tip5',
+  },
+  {
     name: 'tree',
     description: '10 tavsive verdin!',
     achievement: 'tip10',
   },
   {
-    name: 'gem',
+    name: 'tint',
     description: 'İlk sorunu sordun!',
     achievement: 'question1',
   },
   {
-    name: 'tint',
+    name: 'snowflake',
+    description: '5 soru sordun!',
+    achievement: 'question5',
+  },
+  {
+    name: 'gem',
     description: '10 soru sordun!',
     achievement: 'question10',
+  },
+  {
+    name: 'patreon',
+    description: 'Patreon Destekçisi',
+    achievement: 'patreon',
   },
   { name: 'cogs', description: 'Beta Tester', achievement: 'betaTester' },
   { name: 'shield', description: 'Moderatör', achievement: 'mod' },

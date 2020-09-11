@@ -128,7 +128,7 @@ async function handleExtras(user, achievements) {
   const comment = await Comment.findOne({ user: user._id });
   achievements.betaTester =
     comment && new Date(user.created) < new Date(2020, 8, 15);
-  achievements.patreon = user.patreon;
+  achievements.patreon = user.achievements.patreon;
 }
 
 function handlePatis(likes, achievements) {

@@ -17,12 +17,12 @@ const addInf = async (
   try {
     const url =
       findTime.length > 0 && notFindTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&nt=${notFindTime}&of=${isOffline}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&search=${search}&t=${findTime}&nt=${notFindTime}&of=${isOffline}`
         : findTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&t=${findTime}&of=${isOffline}`
+        ? `${baseUrl}/search?start=${start}&total=${count}&search=${search}&t=${findTime}&of=${isOffline}`
         : notFindTime.length > 0
-        ? `${baseUrl}/search?start=${start}&total=${count}&q=${search}&nt=${notFindTime}&of=${isOffline}`
-        : `${baseUrl}/search?start=${start}&total=${count}&q=${search}&of=${isOffline}`;
+        ? `${baseUrl}/search?start=${start}&total=${count}&search=${search}&nt=${notFindTime}&of=${isOffline}`
+        : `${baseUrl}/search?start=${start}&total=${count}&search=${search}&of=${isOffline}`;
     const res = await axios.get(url, config);
     return res.data;
   } catch (e) {

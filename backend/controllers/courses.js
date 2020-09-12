@@ -73,7 +73,7 @@ coursesRouter.get('/allsections', async (req, res) => {
 coursesRouter.get('/search', async (req, res) => {
   const q = req.query;
 
-  let search = q.q ? q.q : '';
+  let search = q.search ? q.search : '';
   let times;
   let ntimes;
   if (q.t) times = getTimeFilter(q);

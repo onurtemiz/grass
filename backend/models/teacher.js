@@ -22,17 +22,18 @@ teacherSchema.set(uniqueValidator);
 
 teacherSchema.statics.getFilteredInf = function (search, start, total) {
   return this.find({
-    $or:[
-    {name: { $regex: search.toUpperCase() ,$options: 'i'}},
-    {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}}
-    ]
-
+    $or: [
+      { name: { $regex: search.toUpperCase(), $options: 'i' } },
+      { name: { $regex: search.toLocaleUpperCase('tr-TR'), $options: 'i' } },
+    ],
   })
     .sort({ name: 1 })
     .skip(Number(start))
     .limit(Number(total))
-    .populate('lessons')
-    .populate('comment');
+    .populate({
+      path: 'lessons',
+      select: ['parentName', 'id', 'name', 'active', 'areaCode', 'digitCode'],
+    });
 };
 
 teacherSchema.set('toJSON', {

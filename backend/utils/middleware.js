@@ -45,12 +45,12 @@ const authAdmin = (req, res, next) => {
   next();
 };
 
-const searchFilter = (req,res,next)=>{
-  if(req.query.search){
+const searchFilter = (req, res, next) => {
+  if (req.query.search) {
     req.query.search = req.query.search.replace(/\W/g, '');
   }
-  next()
-}
+  next();
+};
 
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
@@ -74,7 +74,6 @@ const errorHandler = (error, request, response, next) => {
     });
   }
   if (error.name === 'JsonWebTokenError') {
-    console.log(JSON.stringify(error));
     return response.status(401).json({
       error: 'Onur bir şeyleri batırdı. Hata kodu 11',
     });
@@ -88,5 +87,6 @@ module.exports = {
   errorHandler,
   tokenExtractor,
   authUser,
-  authAdmin,searchFilter
+  authAdmin,
+  searchFilter,
 };

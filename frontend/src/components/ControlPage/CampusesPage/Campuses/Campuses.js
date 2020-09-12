@@ -14,7 +14,6 @@ const Campuses = ({ main }) => {
   if (campuses.length === 0) {
     return <CommentsLoading />;
   }
-
   return (
     <div style={InfiniteListStyle}>
       <InfiniteScroll

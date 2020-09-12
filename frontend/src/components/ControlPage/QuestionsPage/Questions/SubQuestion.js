@@ -31,10 +31,10 @@ const SubQuestion = ({ question, main }) => {
               }
         }
       >
-        <Card.Header style={{ display: 'inline',overflowWrap:'anywhere' }}>
+        <Card.Header style={{ display: 'inline', overflowWrap: 'anywhere' }}>
           <Header as="h2">
             <Header.Content>
-              <Label color="blue" bold pointer>
+              <Label color="blue" bold nolink pointer>
                 {question.question}
               </Label>
             </Header.Content>
@@ -48,7 +48,7 @@ const SubQuestion = ({ question, main }) => {
             maxWidth: '100ch',
           }}
         >
-          <Label color="green" bold pointer>
+          <Label color="green" bold nolink pointer>
             {question.description}
           </Label>
         </Card.Description>

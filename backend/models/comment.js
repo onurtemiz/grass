@@ -73,7 +73,7 @@ commentSchema.statics.getSquareComments = async function (
 
     .populate({
       path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+      select: ['areaCode', 'digitCode', 'name', 'parentName', 'id'],
     })
     .populate({ path: 'club', select: ['name'] })
     .populate({ path: 'campus', select: ['name'] })
@@ -116,7 +116,7 @@ commentSchema.statics.getFeedComments = async function (
 
     .populate({
       path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+      select: ['areaCode', 'digitCode', 'name', 'parentName', 'id'],
     })
     .populate({ path: 'club', select: ['name'] })
     .populate({ path: 'campus', select: ['name'] })
@@ -159,7 +159,7 @@ commentSchema.statics.getIdComments = async function (
     })
     .populate({
       path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+      select: ['areaCode', 'digitCode', 'name', 'parentName', 'id'],
     })
     .populate({ path: 'club', select: ['name'] })
     .populate({ path: 'campus', select: ['name'] })
@@ -194,7 +194,7 @@ commentSchema.statics.getUserComment = async function (id, userId) {
     })
     .populate({
       path: 'lesson',
-      select: ['areaCode', 'digitCode', 'name', 'parentName'],
+      select: ['areaCode', 'digitCode', 'name', 'parentName', 'id'],
     })
     .populate({ path: 'club', select: ['name'] })
     .populate({ path: 'campus', select: ['name'] })

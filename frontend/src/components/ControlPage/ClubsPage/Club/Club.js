@@ -15,7 +15,6 @@ const Club = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/clubs/:name');
   const clubs = useSelector((state) => state.clubs.clubs);
-  const user = useSelector((state) => state.user);
   const [club, setClub] = useState(null);
   useEffect(() => {
     dispatch(getClubPageByName(match.params.name));
@@ -39,7 +38,7 @@ const Club = () => {
             {club.fullName}
           </Label>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={club.id} user={user} />
+            <Follow idToFollow={club.id} />
           </div>
         </div>
       ) : (
@@ -51,7 +50,7 @@ const Club = () => {
               ·{' '}
             </Label>
           </Label>
-          <Follow idToFollow={club.id} user={user} />
+          <Follow idToFollow={club.id} />
         </Label>
       )}
 

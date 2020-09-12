@@ -15,7 +15,6 @@ const Question = () => {
   const questions = useSelector((state) => state.questions.questions);
   const dispatch = useDispatch();
   const match = useRouteMatch('/questions/:id');
-  const user = useSelector((state) => state.user);
   const [question, setQuestion] = useState(null);
 
   useEffect(() => {
@@ -40,14 +39,14 @@ const Question = () => {
             {question.question}
           </Label>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={question.id} user={user} />
+            <Follow idToFollow={question.id}  />
           </div>
         </div>
       ) : (
         <div style={HeadingStyle}>
           <Label color="blue" bold>
             {question.question} ·{' '}
-            <Follow idToFollow={question.id} user={user} />
+            <Follow idToFollow={question.id}  />
           </Label>
         </div>
       )}

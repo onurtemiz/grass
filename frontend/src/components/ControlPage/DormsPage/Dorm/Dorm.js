@@ -13,7 +13,6 @@ import { isMobile } from 'react-device-detect';
 
 const Dorm = () => {
   const match = useRouteMatch('/dorms/:name');
-  const user = useSelector((state) => state.user);
   const [dorm, setDorm] = useState(null);
   useEffect(() => {
     dormService.getDormByName(match.params.name, setDorm);
@@ -30,12 +29,12 @@ const Dorm = () => {
             {dorm.name}
           </Label>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={dorm.id} user={user} />
+            <Follow idToFollow={dorm.id} />
           </div>
         </div>
       ) : (
         <Label color="blue" bold style={HeadingStyle}>
-          {dorm.name} · <Follow idToFollow={dorm.id} user={user} />
+          {dorm.name} · <Follow idToFollow={dorm.id} />
         </Label>
       )}
       <br />

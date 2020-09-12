@@ -13,7 +13,6 @@ import { isMobile } from 'react-device-detect';
 
 const Campus = () => {
   const match = useRouteMatch('/campuses/:name');
-  const user = useSelector((state) => state.user);
   const [campus, setCampus] = useState(null);
   useEffect(() => {
     campusService.getCampusByName(match.params.name, setCampus);
@@ -30,12 +29,12 @@ const Campus = () => {
             {campus.name}
           </Label>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={campus.id} user={user} />
+            <Follow idToFollow={campus.id} />
           </div>
         </div>
       ) : (
         <Label color="blue" bold style={HeadingStyle}>
-          {campus.name} · <Follow idToFollow={campus.id} user={user} />
+          {campus.name} · <Follow idToFollow={campus.id} />
         </Label>
       )}
 

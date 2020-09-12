@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
 import Comments from '../../Comments/Comments/IdComments';
-import { Header,  Icon } from 'semantic-ui-react';
+import { Header, Icon } from 'semantic-ui-react';
 import { useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 import { getPopulatedUser } from '../../../reducers/usersReducer';
 import { Label } from '../../Nav/NavTheme';
-import UserIcons from './UserIcons'
+import UserIcons from './UserIcons';
+import Follow from '../../Follow/Follow';
 const User = ({ u }) => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:username/');
@@ -41,8 +42,18 @@ const User = ({ u }) => {
       >
         <Label color="green">{user.username} · </Label>
         <Label color="blue">
-          {user.totalLikes} <Icon name="paw" color="blue" /> <UserIcons achievements={user.achievements} />
+          {user.totalLikes} <Icon name="paw" color="blue" />
+          <UserIcons achievements={user.achievements} />
         </Label>
+
+        {user.username !== currentUser.username && (
+          <>
+            <Label color="blue" bold>
+              ·{' '}
+            </Label>
+            <Follow idToFollow={user.id} />
+          </>
+        )}
       </Header>
 
       <Comments

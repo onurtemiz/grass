@@ -13,7 +13,6 @@ import { Label, HeadingStyle, HeadingStyleMobile } from '../../../Nav/NavTheme';
 import LessonQuotaButton from '../../../Quota/LessonQuotaButton';
 const Lesson = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const match = useRouteMatch('/lessons/:areaCode/:digitCode/:teacherName');
   const location = useLocation();
   const lessons = useSelector((state) => state.all.all);
@@ -57,7 +56,7 @@ const Lesson = () => {
             </Label>
           </Link>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={lesson.id} user={user} />
+            <Follow idToFollow={lesson.id} />
 
             {lesson.active ? (
               <div style={{ marginTop: '0.5em' }}>
@@ -80,7 +79,7 @@ const Lesson = () => {
               ·{' '}
             </Label>
           </Link>
-          <Follow idToFollow={lesson.id} user={user} />
+          <Follow idToFollow={lesson.id} />
           {lesson.active ? <LessonQuotaButton lesson={lesson} /> : null}
         </div>
       )}

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const randomstring = require('randomstring');
-
+const Tip = require('./tip');
 mongoose.set('useFindAndModify', false);
 
 const userSchema = new mongoose.Schema({
@@ -86,24 +86,21 @@ userSchema.statics.getTotalLike = async function (username) {
     path: 'comments',
     populate: [{ path: 'lesson' }],
   });
+  const tips = await Tip.find({
+    $and: [{ user: user._id }, { isApproved: true }, { isAnonim: false }],
+  });
+  const totalTipLikes = tips.reduce((total, tip) => total + tip.likesLength, 0);
+  const totalCommentLikes = user.comments
+    .map((c) =>
+      c.likes.reduce((total, l) => (user.equals(l) ? total : (total += 1)), 0)
+    )
+    .reduce((total, c) => total + c, 0);
   let totalLike = {
     username: user.username,
     userStatus: user.userStatus,
     id: user._id,
     iconName: user.iconName,
-    totalLikes:
-      user.comments.length !== 0
-        ? user.comments
-            .map((c) =>
-              c.likes.length !== 0
-                ? c.likes.reduce(
-                    (total, l) => (user.equals(l) ? total : (total += 1)),
-                    0
-                  )
-                : 0
-            )
-            .reduce((total, c) => total + c)
-        : 0,
+    totalLikes: totalTipLikes + totalCommentLikes,
   };
 
   return totalLike;

@@ -99,6 +99,7 @@ commentSchema.statics.getFeedComments = async function (
 
     $or: [
       { lesson: { $in: ids } },
+      { user: { $in: ids } },
       { club: { $in: ids } },
       { dorm: { $in: ids } },
       { campus: { $in: ids } },

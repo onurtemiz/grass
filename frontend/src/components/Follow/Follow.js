@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { followLesson, unfollowLesson } from '../../reducers/userReducer';
 import { Icon, Button } from 'semantic-ui-react';
-const Follow = ({ user, idToFollow }) => {
+const Follow = ({ idToFollow }) => {
   const [following, setFollowing] = useState(false);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
     const isUserFollows = user.following.find((id) => id === idToFollow);

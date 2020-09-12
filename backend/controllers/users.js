@@ -26,12 +26,32 @@ usersRouter.get('/following', async (req, res) => {
   const dorms = await Dorm.find({ _id: { $in: user.following } });
   const campuses = await Campus.find({ _id: { $in: user.following } });
   const lessons = await Lesson.find({ _id: { $in: user.following } });
+  const users = await User.find({ _id: { $in: user.following } });
   const allFollowing = {
-    clubs: clubs.map((c) => c.toJSON()),
-    questions: questions.map((c) => c.toJSON()),
-    dorms: dorms.map((c) => c.toJSON()),
-    campuses: campuses.map((c) => c.toJSON()),
-    lessons: lessons.map((l) => l.toJSON()),
+    clubs: clubs.map((c) => {
+      return { name: c.name, id: c._id };
+    }),
+    questions: questions.map((c) => {
+      return { question: c.question, id: c._id };
+    }),
+    dorms: dorms.map((c) => {
+      return { name: c.name, id: c._id };
+    }),
+    campuses: campuses.map((c) => {
+      return { name: c.name, id: c._id };
+    }),
+    lessons: lessons.map((l) => {
+      return {
+        name: l.name,
+        areaCode: l.areaCode,
+        digitCode: l.digitCode,
+        parentName: l.parentName,
+        id: l._id,
+      };
+    }),
+    users: users.map((l) => {
+      return { username: l.username, id: l._id };
+    }),
   };
   res.json(allFollowing);
 });

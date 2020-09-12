@@ -74,7 +74,10 @@ function filterComments(comments, user, filter, daySort) {
   return comments
 
     .filter((c) => {
-      return user.following.includes(c[`${c.commentType}`].id);
+      return (
+        user.following.includes(c[`${c.commentType}`].id) ||
+        user.following.includes(c.user.id)
+      );
     })
     .filter((c) => {
       if (dayInt === null) {

@@ -19,7 +19,6 @@ const Teacher = () => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/teachers/:name');
   const teachers = useSelector((state) => state.teachers.teachers);
-  const user = useSelector((state) => state.user);
   useEffect(() => {
     dispatch(getTeacherPage(match.params.name));
   }, []);
@@ -55,7 +54,7 @@ const Teacher = () => {
               </Link>
               <Label color='blue' bold>
               {" "}·{' '}</Label>
-              <Follow idToFollow={l.id} user={user} />
+              <Follow idToFollow={l.id} />
               {l.active ? (
               <SLabel color="green">Bu dönem açık</SLabel>
             ) : null}

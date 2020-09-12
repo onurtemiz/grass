@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { searchCourse } from '../../../../reducers/courseReducer';
-import {
-  compareNames,
-} from '../../../../utils/utils';
+import { compareNames } from '../../../../utils/utils';
 import SubCourse from './SubCourse';
 import CommentsLoading from '../../../Comments/CommentsLoading';
 import NoSubResult from '../../../Search/NoSubResult';

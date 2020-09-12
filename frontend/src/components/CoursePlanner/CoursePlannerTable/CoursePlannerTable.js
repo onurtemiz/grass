@@ -15,7 +15,7 @@ import {
   setCurrentScenario,
   toggleCellCoursesVisiblity,
 } from '../../../reducers/courseReducer';
-import { Label } from '../../Nav/NavTheme';
+import { Label, StyledLabel } from '../../Nav/NavTheme';
 import CommentsLoading from '../../Comments/CommentsLoading';
 import { isMobile } from 'react-device-detect';
 import { compareNames } from '../../../utils/utils';
@@ -236,11 +236,14 @@ const FirstThreeCells = ({ visibleCourses, c }) => {
         .map((cellCourse) => {
           return (
             <div key={cellCourse.name}>
-              <SLabel style={{ marginTop: '0.5em' }} color={cellCourse.color}>
+              <StyledLabel
+                style={{ marginTop: '0.5em' }}
+                color={cellCourse.color}
+              >
                 <Label color="white" bold>
                   {cellCourse.name}
                 </Label>
-              </SLabel>
+              </StyledLabel>
               <br />
             </div>
           );
@@ -264,11 +267,14 @@ const AllCells = ({ visibleCourses, c, upper }) => {
           .map((cellCourse) => {
             return (
               <div key={cellCourse.name}>
-                <SLabel color={cellCourse.color} style={{ marginTop: '0.5em' }}>
+                <StyledLabel
+                  color={cellCourse.color}
+                  style={{ marginTop: '0.5em' }}
+                >
                   <Label color="white" bold>
                     {cellCourse.name}
                   </Label>
-                </SLabel>
+                </StyledLabel>
                 <br />
               </div>
             );

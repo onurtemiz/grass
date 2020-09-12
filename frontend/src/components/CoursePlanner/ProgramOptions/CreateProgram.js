@@ -1,7 +1,7 @@
-import React, { useState,  useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
-import lodash  from 'lodash';
+import lodash from 'lodash';
 import { setScenarios } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
 const CreateProgram = () => {
@@ -30,8 +30,8 @@ const CreateProgram = () => {
 
   const createProgram = async () => {
     const canProgram = checkCanProgram();
-    if (!canProgram) {
-      setValue('Program Oluşturulamıyor');
+    if (!canProgram.can) {
+      setValue(canProgram.error);
       return;
     }
     setLoading(true);
@@ -39,13 +39,18 @@ const CreateProgram = () => {
 
   const getOnlySelectedCourses = (requiredColumns) => {
     let onlys = [];
-    let requiredColumnsIds = requiredColumns.map((rcColumn) => {
-      let rcColumnIds = rcColumn.courses.map((rcCourse) => rcCourse.id);
-      return rcColumnIds;
-    });
-    requiredColumnsIds = lodash.flatten(requiredColumnsIds);
+    let requiredColumnCourses = requiredColumns.map(
+      (rcColumn) => rcColumn.courses
+    );
+    requiredColumnCourses = lodash.flatten(requiredColumnCourses);
     selectedCourses.forEach((sc) => {
-      if (!requiredColumnsIds.includes(sc.id)) {
+      let presents = false;
+      requiredColumnCourses.forEach((rc) => {
+        if (rc.areaCode === sc.areaCode && rc.digitCode === sc.digitCode) {
+          presents = false;
+        }
+      });
+      if (!presents) {
         onlys.push(sc);
       }
     });
@@ -58,9 +63,9 @@ const CreateProgram = () => {
     let otherSelectedCourses = getOnlySelectedCourses(requiredColumns);
     let requiredCoursesCourses = [...requiredColumns.map((rc) => rc.courses)];
 
-    let stackedSelectedCourses = stackedCourses([
-      ...otherSelectedCourses,
-    ]).map((stack) => [, ...stack.courses]);
+    let stackedSelectedCourses = stackedCourses(
+      otherSelectedCourses
+    ).map((stack) => [, ...stack.courses]);
 
     loopTwoTimesStack(
       requiredCoursesCourses,
@@ -77,7 +82,6 @@ const CreateProgram = () => {
     let stackedSelectedCourses = stackedCourses(
       selectedCourses
     ).map((stack) => [, ...stack.courses]);
-
     loopOverStack(stackedSelectedCourses, possibleScenarios, maxProgramsLength);
     return possibleScenarios;
   };
@@ -177,14 +181,19 @@ const CreateProgram = () => {
   };
 
   const checkCanProgram = () => {
-    const selectedCoursesCredits = getTotalCoursesCredits(selectedCourses);
-    if (
-      !(selectedCoursesCredits >= creditsRange[0]) ||
-      !(selectedCourses.length >= courseRange[0])
-    ) {
-      return false;
+    const singledCourses = lodash.uniqBy(selectedCourses, (c) => {
+      return `${c.areaCode}${c.digitCode}`;
+    });
+    if (singledCourses.length < courseRange[0]) {
+      return { can: false, error: 'Minimum Ders Aralığı Karşılanmıyor!' };
     }
-    return true;
+
+    const selectedCoursesCredits = getTotalCoursesCredits(singledCourses);
+    if (selectedCoursesCredits < creditsRange[0]) {
+      return { can: false, error: 'Minimum Kredi Aralığı Karşılanmıyor!' };
+    }
+
+    return { can: true };
   };
 
   const getCoursesConflictLength = (courses) => {
@@ -225,26 +234,35 @@ const CreateProgram = () => {
     scenariosSlider,
     createWithoutRequired
   ) {
-    const requiredColumnsWithCourses = requiredCourses.filter((rc) => {
-      if (rc.courses.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    const requiredColumnsWithCourses = requiredCourses.filter(
+      (rc) => rc.courses.length > 0
+    );
+    let scenarios;
     if (requiredColumnsWithCourses.length > 0) {
-      dispatch(setScenarios(createWithRequired(scenariosSlider)));
+      scenarios = createWithRequired(scenariosSlider);
     } else {
-      dispatch(setScenarios(createWithoutRequired(scenariosSlider)));
+      scenarios = createWithoutRequired(scenariosSlider);
     }
+
+    if (scenarios.length > 0) {
+      dispatch(setScenarios(scenarios));
+      setValue('Program Oluşturuldu');
+    } else {
+      dispatch(setScenarios([]));
+      setValue('Bu Parametrelerde Program Oluşturulamadı');
+    }
+
     setLoading(false);
-    setValue('Program Oluşturuldu');
   }
 
   return (
     <div>
       <Button
-        color="blue"
+        color={
+          value === 'Program Oluşturuldu' || value === 'Program Oluştur'
+            ? 'blue'
+            : 'red'
+        }
         onClick={() => createProgram()}
         loading={loading}
         fluid
@@ -254,20 +272,6 @@ const CreateProgram = () => {
     </div>
   );
 };
-
-function arraysEqual(a, b) {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-  if (a.length !== b.length) return false;
-
-  let sortedA = a.sort(compareNames);
-  let sortedB = b.sort(compareNames);
-
-  for (var i = 0; i < a.length; ++i) {
-    if (sortedA[i] !== sortedB[i]) return false;
-  }
-  return true;
-}
 
 function between(n, a, b, inclusive) {
   var min = Math.min.apply(Math, [a, b]),

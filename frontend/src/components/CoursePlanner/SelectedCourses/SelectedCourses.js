@@ -9,6 +9,8 @@ import {
   toggleSelectedCoursesEye,
 } from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
+import { LESSON_PATH } from '../../../utils/config';
+import { Link } from 'react-router-dom';
 
 const SelectedCourses = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -206,14 +208,23 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
           style={{ float: 'right', cursor: 'pointer' }}
           onClick={() => toggleCourseVisiblity(c)}
         />
-        {last ? (
+        {last && (
           <Icon
             name={'caret up'}
             color="green"
             style={{ float: 'right', cursor: 'pointer' }}
             onClick={() => toggleStackVisibility()}
           />
-        ) : null}
+        )}
+        {c.parentName !== 'STAFF STAFF' && (
+          <Link to={LESSON_PATH(c)}>
+            <Icon
+              name={'comment'}
+              color={'green'}
+              style={{ float: 'right', cursor: 'pointer' }}
+            />
+          </Link>
+        )}
       </Table.Cell>
     </Table.Row>
   );

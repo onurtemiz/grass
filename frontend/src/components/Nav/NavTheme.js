@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import Slider, { Range } from 'rc-slider';
-import {  Dropdown } from 'semantic-ui-react';
+import { Dropdown, Label as SLabel } from 'semantic-ui-react';
 import { isMobile } from 'react-device-detect';
+
+export const StyledLabel = styled(SLabel)`
+  background: ${({ color }) => color} !important;
+`;
 
 export const InfiniteListStyle = !isMobile
   ? { minHeight: '300px', maxHeight: '500px', overflow: 'auto' }

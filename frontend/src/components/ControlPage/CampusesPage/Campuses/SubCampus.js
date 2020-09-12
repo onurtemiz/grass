@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { CAMPUS_PATH } from '../../../../utils/config';
 import { Card, Header } from 'semantic-ui-react';
@@ -28,7 +28,7 @@ export const SubCampus = ({ campus, main }) => {
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2">
             <Header.Content>
-              <Label color="blue" bold pointer >
+              <Label color="blue" bold nolink pointer>
                 {campus.name.toLocaleUpperCase('TR')}
               </Label>
             </Header.Content>

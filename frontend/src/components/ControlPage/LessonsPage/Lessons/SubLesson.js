@@ -1,14 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../../../utils/config';
-import {
-  Card,
-  Header,
-  Label as SLabel,
-} from 'semantic-ui-react';
+import { Card, Header, Label as SLabel } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 const SubLesson = ({ lesson, main }) => {
-
   return (
     <div
       style={
@@ -47,6 +42,7 @@ const SubLesson = ({ lesson, main }) => {
             color="green"
             bold
             pointer
+            nolink
             key={`${lesson.parentName}${lesson.name}`}
           >
             {lesson.parentName}

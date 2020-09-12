@@ -29,7 +29,7 @@ export const SubDorm = ({ dorm, main }) => {
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2">
             <Header.Content>
-              <Label color="blue" bold pointer>
+              <Label color="blue" bold nolink pointer>
                 {dorm.name.toLocaleUpperCase('TR')}
               </Label>
             </Header.Content>

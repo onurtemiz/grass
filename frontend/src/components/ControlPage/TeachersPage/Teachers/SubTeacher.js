@@ -48,7 +48,13 @@ const SubTeacher = ({ teacher, main }) => {
 
         <Card.Description>
           {teacher.lessons.map((l, i) => (
-            <Label color="green" bold pointer key={`${teacher.name}${l.name}`}>
+            <Label
+              color="green"
+              bold
+              pointer
+              nolink
+              key={`${teacher.name}${l.name}`}
+            >
               {getLessonString(l.name, i)}
             </Label>
           ))}

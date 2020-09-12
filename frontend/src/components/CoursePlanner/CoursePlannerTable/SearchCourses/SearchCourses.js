@@ -131,7 +131,7 @@ const SearchCourses = () => {
         {!ready ? (
           <CommentsLoading />
         ) : noResult ? (
-          <NoSubResult />
+          <div>Sonuç bulunamadı.</div>
         ) : (
           <InfiniteScroll
             pageStart={0}

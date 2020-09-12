@@ -34,14 +34,14 @@ export const SubClub = ({ club, main }) => {
         <Card.Header style={{ display: 'inline' }}>
           <Header as="h2">
             <Header.Content>
-              <Label color="blue" bold pointer>
+              <Label color="blue" bold nolink pointer>
                 {club.name.toUpperCase()}
               </Label>
             </Header.Content>
           </Header>
         </Card.Header>
         <Card.Description>
-          <Label color="green" bold pointer key={`${club.name}`}>
+          <Label color="green" bold nolink pointer key={`${club.name}`}>
             {club.fullName}
           </Label>
         </Card.Description>

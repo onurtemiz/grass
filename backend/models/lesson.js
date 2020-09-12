@@ -29,17 +29,16 @@ lessonSchema.set(uniqueValidator);
 lessonSchema.statics.getFilteredInf = async function (search, start, total) {
   const searchParams = {
     $or: [
-      {name: { $regex: search.toUpperCase() ,$options: 'i'}},
-      {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
-    ]
-  }
-  const lessons =  await this.find(searchParams)
+      { name: { $regex: search.toUpperCase(), $options: 'i' } },
+      { name: { $regex: search.toLocaleUpperCase('tr-TR'), $options: 'i' } },
+    ],
+  };
+  const lessons = await this.find(searchParams)
     .sort({ name: 1 })
     .skip(Number(start))
-    .limit(Number(total))
-    .populate('comments');
-    const t =  await this.find(searchParams).countDocuments();
-    return{lessons,total:t}
+    .limit(Number(total));
+  const t = await this.find(searchParams).countDocuments();
+  return { lessons, total: t };
 };
 
 lessonSchema.statics.getFilteredAllInf = function (
@@ -51,10 +50,10 @@ lessonSchema.statics.getFilteredAllInf = function (
   try {
     return this.find({
       $or: [
-        {name: { $regex: search.toUpperCase() ,$options: 'i'}},
-        {name: { $regex: search.toLocaleUpperCase('tr-TR') ,$options: 'i'}},
-        { teacher: { $in: teachersId } }
-      ]
+        { name: { $regex: search.toUpperCase(), $options: 'i' } },
+        { name: { $regex: search.toLocaleUpperCase('tr-TR'), $options: 'i' } },
+        { teacher: { $in: teachersId } },
+      ],
     })
       .sort({ name: 1 })
       .skip(Number(start))

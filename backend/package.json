@@ -32,8 +32,7 @@
     "mongoose-unique-validator": "^2.0.3",
     "nodemailer": "^6.4.11",
     "randomstring": "^1.1.5",
-    "rate-limiter-flexible": "^2.1.10",
-    "socket.io": "^2.3.0"
+    "rate-limiter-flexible": "^2.1.10"
   },
   "devDependencies": {
     "jest": "^26.4.2",

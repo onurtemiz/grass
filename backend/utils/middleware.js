@@ -47,7 +47,7 @@ const authAdmin = (req, res, next) => {
 
 const searchFilter = (req, res, next) => {
   if (req.query.search) {
-    req.query.search = req.query.search.replace(/\W/g, '');
+    req.query.search = req.query.search.replace(/[-[\]{}()*+?.,\\^$|#]/g, '');
   }
   next();
 };

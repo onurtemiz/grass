@@ -57,14 +57,16 @@ export default Clubs;
 function filterClubs(clubs, filter) {
   return clubs
     .filter((c) => {
-      if (
+      return (
         c.fullName.toUpperCase().includes(filter.toUpperCase()) ||
-        c.name.toUpperCase().includes(filter.toUpperCase())
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+        c.fullName
+          .toLocaleUpperCase('tr-tr')
+          .includes(filter.toLocaleUpperCase('tr-tr')) ||
+        c.name.toUpperCase().includes(filter.toUpperCase()) ||
+        c.name
+          .toLocaleUpperCase('tr-tr')
+          .includes(filter.toLocaleUpperCase('tr-tr'))
+      );
     })
     .sort(compareNames);
 }

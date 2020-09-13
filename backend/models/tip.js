@@ -40,7 +40,7 @@ tipSchema.statics.getFilteredInf = function (
   total = Number.MAX_SAFE_INTEGER
 ) {
   return this.find({ isApproved: true })
-    .sort(popular ? { date: sort } : { totalLength: -1 })
+    .sort(popular ? { totalLength: -1 } : { date: sort })
     .skip(Number(start))
     .limit(Number(total));
 };

@@ -33,9 +33,12 @@ const Campus = () => {
           </div>
         </div>
       ) : (
-        <Label color="blue" bold style={HeadingStyle}>
-          {campus.name} · <Follow idToFollow={campus.id} />
-        </Label>
+        <div style={HeadingStyle}>
+          <Label color="blue" bold style={{ marginRight: '0.5em' }}>
+            {campus.name}
+          </Label>
+          <Follow idToFollow={campus.id} />
+        </div>
       )}
 
       <br />

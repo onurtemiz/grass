@@ -34,7 +34,7 @@ const Dorm = () => {
         </div>
       ) : (
         <Label color="blue" bold style={HeadingStyle}>
-          {dorm.name} · <Follow idToFollow={dorm.id} />
+          {dorm.name} <Follow idToFollow={dorm.id} />
         </Label>
       )}
       <br />

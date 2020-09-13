@@ -39,19 +39,18 @@ const Question = () => {
             {question.question}
           </Label>
           <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={question.id}  />
+            <Follow idToFollow={question.id} />
           </div>
         </div>
       ) : (
-        <div style={HeadingStyle}>
-          <Label color="blue" bold>
-            {question.question} ·{' '}
-            <Follow idToFollow={question.id}  />
+        <div style={{ ...HeadingStyle, display: 'flex', alignItems: 'center' }}>
+          <Label color="blue" bold style={{ marginRight: '0.5em' }}>
+            {question.question}
           </Label>
+          <Follow idToFollow={question.id} />
         </div>
       )}
 
-      <br />
       <br />
       {question.description}
       <br />

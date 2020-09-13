@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Tab,
-  Segment,
-} from 'semantic-ui-react';
-import {  useRouteMatch, useLocation, useHistory } from 'react-router-dom';
+import { Tab, Segment } from 'semantic-ui-react';
+import { useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
 import Teachers from './TeachersPage/Teachers/Teachers';
 import Teacher from './TeachersPage/Teacher/Teacher';
@@ -27,7 +24,7 @@ const MainComponent = () => {
   const lessonPageMatch = useRouteMatch(
     '/lessons/:areaCode/:digitCode/:teacherName'
   );
-  const clubPageMatch = useRouteMatch('/clubs/:name');
+  const clubPageMatch = useRouteMatch('/community/:name');
   const campusPageMatch = useRouteMatch('/campuses/:name');
   const dormitoryPageMatch = useRouteMatch('/dorms/:name');
   const questionPageMatch = useRouteMatch('/questions/:id');
@@ -52,7 +49,7 @@ const MainComponent = () => {
       setActiveIndex(categories.indexOf('teachers'));
     } else if (location.pathname.includes('lessons')) {
       setActiveIndex(categories.indexOf('lessons'));
-    } else if (location.pathname.includes('clubs')) {
+    } else if (location.pathname.includes('community')) {
       setActiveIndex(categories.indexOf('clubs'));
     } else if (location.pathname.includes('questions')) {
       setActiveIndex(categories.indexOf('questions'));
@@ -76,7 +73,7 @@ const MainComponent = () => {
     } else if (data.activeIndex === categories.indexOf('lessons')) {
       history.push('/lessons');
     } else if (data.activeIndex === categories.indexOf('clubs')) {
-      history.push('/clubs');
+      history.push('/community');
     } else if (data.activeIndex === categories.indexOf('questions')) {
       history.push('/questions');
     } else if (data.activeIndex === categories.indexOf('tips')) {
@@ -147,7 +144,7 @@ const MainComponent = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(categories.indexOf('clubs'))}>
-            Kulüpler
+            Öğrenci Toplulukları
           </Label>
         ),
         color: 'green',

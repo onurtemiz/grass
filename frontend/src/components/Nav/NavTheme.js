@@ -72,12 +72,14 @@ export const HeadingStyle = {
   display: 'flex',
   whiteSpace: 'pre-wrap',
   alignItems: 'center',
+  lineHeight: '1.5',
 };
 
 export const HeadingStyleMobile = {
   display: 'flex',
   fontSize: '2em',
   flexDirection: 'column',
+  lineHeight: '1.5',
 };
 
 export const StyledDropdown = styled(Dropdown)`

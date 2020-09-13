@@ -13,7 +13,7 @@ import { isMobile } from 'react-device-detect';
 
 const Club = () => {
   const dispatch = useDispatch();
-  const match = useRouteMatch('/clubs/:name');
+  const match = useRouteMatch('/community/:name');
   const clubs = useSelector((state) => state.clubs.clubs);
   const [club, setClub] = useState(null);
   useEffect(() => {
@@ -29,37 +29,25 @@ const Club = () => {
   }
   return (
     <div>
-      {isMobile ? (
-        <div style={HeadingStyleMobile}>
-          <Label color="blue" bold>
+      <div>
+        <div style={HeadingStyle}>
+          <Label color="blue" bold style={{ marginRight: '0.5em' }}>
             {club.name}
           </Label>
-          <Label color="green" bold style={{ marginTop: '0.5em' }}>
-            {club.fullName}
-          </Label>
-          <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={club.id} />
-          </div>
-        </div>
-      ) : (
-        <Label color="blue" bold style={HeadingStyle}>
-          {club.name} ·{' '}
-          <Label color="green" bold>
-            {club.fullName}{' '}
-            <Label color="blue" bold>
-              ·{' '}
-            </Label>
-          </Label>
           <Follow idToFollow={club.id} />
-        </Label>
-      )}
-
+        </div>
+        <div style={HeadingStyle}>
+          <Label color="green" bold>
+            {club.fullName} <Label color="blue" bold></Label>
+          </Label>
+        </div>
+      </div>
       <br />
-      <>
+      <div style={{ width: isMobile ? '90vw' : '50vw' }}>
         {club.description.length === 0
           ? 'Kulüp yöneticileri iletişime geçer ise kendileri buraya açıklama ekleyebilir.'
           : club.description}
-      </>
+      </div>
       <CommentForm typeId={club.id} commentType="club" />
       <Divider />
       <CommentSort />

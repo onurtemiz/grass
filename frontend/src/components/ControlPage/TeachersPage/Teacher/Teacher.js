@@ -4,13 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTeacherPage } from '../../../../reducers/teacherReducer';
 import { Link } from 'react-router-dom';
 import { LESSON_PATH } from '../../../../utils/config';
-import { compareNames} from '../../../../utils/utils';
+import { compareNames } from '../../../../utils/utils';
 import IdComments from '../../../Comments/Comments/IdComments';
 import { LinearProgress } from '@material-ui/core';
-import {
-  Divider,
-  Label as SLabel,
-} from 'semantic-ui-react';
+import { Divider, Label as SLabel } from 'semantic-ui-react';
 import CommentSort from '../../../Comments/CommentSort/CommentSort';
 import Follow from '../../../Follow/Follow';
 import { Label } from '../../../Nav/NavTheme';
@@ -30,12 +27,19 @@ const Teacher = () => {
 
   return (
     <div>
-      <Label color="blue" bold style={{ fontSize: '2em' }}>
+      <Label color="blue" bold style={{ fontSize: '2em', lineHeight: '1.5' }}>
         {teacher.name}
       </Label>
 
       {
-        <ul style={{ listStyle: 'none', fontSize: '1.7em', paddingLeft: '0' }}>
+        <ul
+          style={{
+            listStyle: 'none',
+            fontSize: '1.7em',
+            paddingLeft: '0',
+            lineHeight: '1.5',
+          }}
+        >
           {teacher.lessons.sort(compareNames).map((l) => (
             <li
               key={l.id}
@@ -47,17 +51,18 @@ const Teacher = () => {
               }}
             >
               <Link to={LESSON_PATH(l)}>
-                <Label color="green" bold pointer>
+                <Label
+                  color="green"
+                  bold
+                  pointer
+                  style={{ marginRight: '0.5em' }}
+                >
                   {' '}
                   {l.name.toUpperCase()}
-                </Label> 
+                </Label>
               </Link>
-              <Label color='blue' bold>
-              {" "}·{' '}</Label>
               <Follow idToFollow={l.id} />
-              {l.active ? (
-              <SLabel color="green">Bu dönem açık</SLabel>
-            ) : null}
+              {l.active ? <SLabel color="green">Bu dönem açık</SLabel> : null}
             </li>
           ))}
         </ul>

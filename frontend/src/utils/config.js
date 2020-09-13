@@ -12,7 +12,7 @@ export const USER_PATH = (user) => {
 };
 
 export const CLUB_PATH = (club) => {
-  return `/clubs/${club.name ? club.name : club}`;
+  return `/community/${club.name ? club.name : club}`;
 };
 
 export const CAMPUS_PATH = (campus) => {

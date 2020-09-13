@@ -43,48 +43,60 @@ const Lesson = () => {
   return (
     <div>
       {isMobile ? (
-        <div style={HeadingStyleMobile}>
+        <div style={{ fontSize: '2em', lineHeight: '1.5' }}>
           <Label color="blue" bold>
             {lesson.name.toUpperCase()}
           </Label>
-          <Link
-            to={`/teachers/${lesson.parentName}`}
-            style={{ marginTop: '0.5em' }}
-          >
-            <Label color="green" bold pointer>
-              {lesson.parentName}
-            </Label>
-          </Link>
-          <div style={{ marginTop: '0.5em' }}>
-            <Follow idToFollow={lesson.id} />
-
-            {lesson.active ? (
-              <div style={{ marginTop: '0.5em' }}>
-                <LessonQuotaButton lesson={lesson} />
-              </div>
-            ) : null}
+          <div>
+            <Link
+              to={`/teachers/${lesson.parentName}`}
+              style={{ marginTop: '0.5em' }}
+            >
+              <Label color="green" bold pointer>
+                {lesson.parentName}
+              </Label>
+            </Link>
           </div>
+          <div style={{ color: '#00000066', fontSize: '0.7em' }}>
+            {lesson.fullName && lesson.fullName}
+          </div>
+          <div>
+            <Follow idToFollow={lesson.id} />
+          </div>
+          <div>{lesson.active && <LessonQuotaButton lesson={lesson} />}</div>
         </div>
       ) : (
-        <div style={HeadingStyle}>
-          <Label color="blue" bold>
-            {lesson.name.toUpperCase()} ·{' '}
-          </Label>
-
+        <div style={HeadingStyleMobile}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Label
+              color="blue"
+              bold
+              style={{
+                marginRight: '0.5em',
+              }}
+            >
+              {lesson.name.toUpperCase()}
+            </Label>
+            <Follow idToFollow={lesson.id} />
+            <span style={{ marginRight: '0.5em' }}></span>
+            {lesson.active && <LessonQuotaButton lesson={lesson} />}
+          </div>
           <Link to={`/teachers/${lesson.parentName}`}>
             <Label color="green" bold pointer>
               {lesson.parentName}
-            </Label>{' '}
-            <Label color="blue" bold>
-              ·{' '}
             </Label>
           </Link>
-          <Follow idToFollow={lesson.id} />
-          {lesson.active ? <LessonQuotaButton lesson={lesson} /> : null}
+          <div style={{ color: '#00000066', fontSize: '0.7em' }}>
+            {lesson.fullName && lesson.fullName}
+          </div>
         </div>
       )}
 
-      <br />
       <CommentForm
         typeId={lesson.id}
         teacherId={lesson.teacher}

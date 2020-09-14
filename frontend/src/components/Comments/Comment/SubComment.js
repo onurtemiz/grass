@@ -9,19 +9,14 @@ import {
   DORM_PATH,
   QUESTION_PATH,
 } from '../../../utils/config';
-import {
-  Comment as SComment,
-  Icon,
-  Segment,
-  Confirm,
-} from 'semantic-ui-react';
+import { Comment as SComment, Icon, Segment, Confirm } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/tr';
 import HiddenComment from './HiddenComment';
 import CommentReport from './CommentReport';
 import { Label } from '../../Nav/NavTheme';
-import UserIcon from '../../UserPage/User/UserIcon'
+import UserIcon from '../../UserPage/User/UserIcon';
 
 const Comment = ({ comment, setIsUpdate, showSource }) => {
   const user = useSelector((state) => state.user);
@@ -37,7 +32,7 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
     dispatch(likeComment(comment.id));
     likeType === false ? setLikeType(true) : setLikeType(false);
   };
-  
+
   const handleRemove = () => {
     dispatch(removeComment(comment.id));
     setIsRemovePanel(false);
@@ -133,18 +128,23 @@ export const UserAndMeta = ({ comment, showSource }) => {
       <Link to={`/users/${comment.user.username}`}>
         <Label color={commentThemeColor(comment)} bold pointer>
           {comment.user.username}
-          
         </Label>
       </Link>
       {comment.user.iconName.length > 0 && (
-     <>{""} <UserIcon iconName={comment.user.iconName} themeColor={commentThemeColor(comment)}/></>
-          ) }
+        <>
+          {' '}
+          <UserIcon
+            iconName={comment.user.iconName}
+            themeColor={commentThemeColor(comment)}
+          />
+        </>
+      )}
 
       <SComment.Metadata>
         {comment.likes.length} Pati · {moment(new Date(comment.date)).fromNow()}{' '}
-        {comment.edited ? ' · (düzenlendi)' : null}
-        {!!showSource ? ' · ' : null}
-        {!!showSource ? (
+        {comment.edited && ' · (düzenlendi)'}
+        {!!showSource && ' · '}
+        {!!showSource && (
           <>
             {comment.commentType === 'lesson' ? (
               <LessonType comment={comment} />
@@ -162,7 +162,7 @@ export const UserAndMeta = ({ comment, showSource }) => {
               <QuestionType comment={comment} />
             ) : null}
           </>
-        ) : null}
+        )}
       </SComment.Metadata>
     </SComment.Author>
   );
@@ -225,7 +225,5 @@ const commentThemeColor = (comment) => {
     ? 'red'
     : 'blue';
 };
-
-
 
 export default Comment;

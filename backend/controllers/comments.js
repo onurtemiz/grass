@@ -12,15 +12,6 @@ const Question = require('../models/question');
 const Notification = require('../models/notification');
 const rateLimit = require('express-rate-limit');
 
-// commentsRouter.get('/refresh', async (req, res) => {
-//   const comments = await Comment.find();
-//   for (let i = 0; i < comments.length; i++) {
-//     comments[i].recommend = 0;
-//     await comments[i].save();
-//   }
-//   res.end();
-// });
-
 const getCommentFilter = async (q) => {
   let popular = q.filter === 'mostPopular';
   const sort = q.filter === 'mostRecent' ? -1 : 1;
@@ -357,10 +348,10 @@ commentsRouter.put('/pati_comment/:id', async (req, res) => {
     return res.status(400).json({
       error: 'Yorum bulunamadı.',
     });
-  }else if(comment.user.equals(user._id)){
+  } else if (comment.user.equals(user._id)) {
     return res.status(400).json({
-      error: 'Kendi yorumunuzu beğenemezsiniz.'
-    })
+      error: 'Kendi yorumunuzu beğenemezsiniz.',
+    });
   }
 
   const isLiked = comment.likes.some((u) => u.equals(user._id));

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {  Tab, Segment } from 'semantic-ui-react';
-import {  useLocation, useHistory } from 'react-router-dom';
+import { Tab, Segment } from 'semantic-ui-react';
+import { useLocation, useHistory } from 'react-router-dom';
 import { Label } from '../Nav/NavTheme';
 import About from './About/About';
 import { isMobile } from 'react-device-detect';
+import Sss from './Sss/Sss';
 
 const StaticPages = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -16,7 +17,7 @@ const StaticPages = () => {
       location.pathname.includes('about')
     ) {
       setActiveIndex(0);
-    } else if (location.pathname.includes('contribution')) {
+    } else if (location.pathname.includes('sss')) {
       setActiveIndex(1);
     } else if (location.pathname.includes('terms')) {
       setActiveIndex(2);
@@ -31,7 +32,9 @@ const StaticPages = () => {
     setActiveIndex(data.activeIndex);
     if (data.activeIndex === 0) {
       history.push('/about');
-    } 
+    } else if (data.activeIndex === 1) {
+      history.push('/sss');
+    }
   };
 
   const panes = [
@@ -43,11 +46,27 @@ const StaticPages = () => {
           </Label>
         ),
         color: 'green',
-        key: 1,
+        key: 0,
       },
       render: () => (
         <Segment style={{ marginRight: '0.5em' }}>
           <About />
+        </Segment>
+      ),
+    },
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(1)}>
+            SSS
+          </Label>
+        ),
+        color: 'green',
+        key: 1,
+      },
+      render: () => (
+        <Segment style={{ marginRight: '0.5em' }}>
+          <Sss />
         </Segment>
       ),
     },

@@ -1,8 +1,13 @@
 import React from 'react';
 import { Label } from '../../Nav/NavTheme';
+import { Header, Divider } from 'semantic-ui-react';
 const About = () => {
   return (
     <div>
+      <Header as="h1" color="blue">
+        Hakkında
+      </Header>
+      <Divider />
       Boğaziçine yeni başlayan biri hangi dersin hocasının iyi olduğu gibi
       konularda bilgi edinmek istediği zaman Buddy-Ekşi gibi platformlarda daha
       önceden hoca ya da ders hakkında ne dendiğine bakıyor. Aynı şekilde hangi
@@ -36,12 +41,19 @@ const About = () => {
       önemlisi öğrencilerin sorularını/tavsiyelerini barındıran bir site.
       <br />
       <br />
-      Herhangi bir öneri/tavsiye/hata ya da bebekle oynayan köpek videosu için:{' '}
+      Herhangi bir öneri/tavsiye/hata ya da özellikle bebekle oynayan köpek
+      videosu için:{' '}
       <a href="mailto:onur.temiz@boun.edu.tr">
         <Label color="green" bold pointer>
           iletisim@bouncim.com
         </Label>
       </a>
+      <br />
+      <br />
+      <p>
+        Not: Destekleri ve fikirleri için özellikle G.V.ye, Ceme, Ufuğa, Maliye,
+        Seline ve tavsiye veren diğer bütün arkadaşlarıma teşekkür ederim :).
+      </p>
     </div>
   );
 };

@@ -144,7 +144,7 @@ const MainComponent = () => {
       menuItem: {
         content: (
           <Label bold pointer color={getColor(categories.indexOf('clubs'))}>
-            Öğrenci Toplulukları
+            Kulüpler ve Öğrenci Toplulukları
           </Label>
         ),
         color: 'green',

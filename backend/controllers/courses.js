@@ -3,6 +3,7 @@ const Course = require('../models/course');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const lodash = require('lodash');
+const rateLimit = require('express-rate-limit');
 
 const convertDayHourtoIds = (days, hours) => {
   const TOTAL_HOURS = 14;
@@ -54,10 +55,21 @@ coursesRouter.get('/user', async (req, res) => {
   res.json(courses.map((c) => c.toJSON()));
 });
 
-coursesRouter.get('/update', async (req, res) => {
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 15 minutes
+  max: 45, // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Çok sık güncellediniz! Lütfen 1 dakika sonra tekrar deneyin.',
+  },
+});
+
+coursesRouter.get('/update', limiter, async (req, res) => {
   let course = await Course.findById(req.query.course);
   if (course) {
     course = await updateCourseQuota(course);
+  }
+  if (course.error) {
+    return res.json({ error: course.error });
   }
   res.json(course.toJSON());
 });
@@ -133,34 +145,38 @@ function getNTimeFilter(q) {
 
 const updateCourseQuota = async (course) => {
   const quotaLink = getQuotaLink(course, '2019/2020-3');
-  const d = await axios.get(quotaLink);
-  let $ = cheerio.load(d.data);
-  const tables = {};
+  try {
+    const d = await axios.get(quotaLink);
+    let $ = cheerio.load(d.data);
+    const tables = {};
 
-  $('.schtd2, .schtd').each(function (i, elem) {
-    let tableName = $(this).parent().find('.rectitle').text().trim();
-    if (!tables[`${tableName}`]) {
-      tables[`${tableName}`] = [];
+    $('.schtd2, .schtd').each(function (i, elem) {
+      let tableName = $(this).parent().find('.rectitle').text().trim();
+      if (!tables[`${tableName}`]) {
+        tables[`${tableName}`] = [];
+      }
+      let row = {};
+      $(this)
+        .parent()
+        .find('.title td')
+        .each(function (i, elem) {
+          if (!row[`${$(this).text().trim()}`])
+            row[`${$(this).text().trim()}`] = '';
+        });
+      tables[`${tableName}`].push(row);
+    });
+    $('.schtd2 td, .schtd td').each(function (i, elem) {
+      insertCellToIndex($(this).text().trim(), i, tables);
+    });
+    if (!lodash.isEmpty(tables)) {
+      course.quota = tables;
     }
-    let row = {};
-    $(this)
-      .parent()
-      .find('.title td')
-      .each(function (i, elem) {
-        if (!row[`${$(this).text().trim()}`])
-          row[`${$(this).text().trim()}`] = '';
-      });
-    tables[`${tableName}`].push(row);
-  });
-  $('.schtd2 td, .schtd td').each(function (i, elem) {
-    insertCellToIndex($(this).text().trim(), i, tables);
-  });
-  if (!lodash.isEmpty(tables)) {
-    course.quota = tables;
+    course.lastChange = Date.now();
+    await course.save();
+    return course;
+  } catch (e) {
+    return { error: 'Registrationa bağlanılamadı.' };
   }
-  course.lastChange = Date.now();
-  await course.save();
-  return course;
 };
 
 const getQuotaLink = (c, semester) => {

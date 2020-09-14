@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteMatch, useLocation } from 'react-router-dom';
 
-import {
-  Menu,
-  Icon,
-} from 'semantic-ui-react';
-import {  Label } from './NavTheme';
+import { Menu, Icon } from 'semantic-ui-react';
+import { Label } from './NavTheme';
 import Notifications from '../Notifications/Notifications';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../reducers/userReducer';
@@ -88,7 +85,7 @@ const Nav = ({ search, admin }) => {
           </Label>{' '}
           <Label pointer color="green">
             ÇİM
-          </Label>{" "}
+          </Label>{' '}
           <Label pointer color="blue">
             BETA
           </Label>

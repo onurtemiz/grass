@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Card,
-  Icon,
-} from 'semantic-ui-react';
+import { Card, Icon } from 'semantic-ui-react';
 import { Label } from '../../../Nav/NavTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,14 +30,16 @@ const SubCourse = ({ course }) => {
 
   const handleMouseEnter = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if(!foundCourse){
-      dispatch(onHoverCourse(course));}
+    if (!foundCourse) {
+      dispatch(onHoverCourse(course));
+    }
   };
 
   const handleMouseLeave = () => {
     const foundCourse = selectedCourses.find((c) => c.id === course.id);
-    if(foundCourse && !foundCourse.clicked){
-      dispatch(offHoverCourse(course));}
+    if (foundCourse && !foundCourse.clicked) {
+      dispatch(offHoverCourse(course));
+    }
   };
 
   const convertDays = (days) => {
@@ -82,17 +81,19 @@ const SubCourse = ({ course }) => {
           <Label color="green" bold pointer nolink>
             {course.parentName}
           </Label>
-          <Link to={LESSON_PATH(course)}>
-            <Label
-              color="blue"
-              bold
-              pointer
-              style={{ float: 'right', fontSize: '0.8em' }}
-            >
-              <Icon name="comments" />
-              Yorumlara bak
-            </Label>
-          </Link>
+          {course.parentName !== 'STAFF STAFF' && (
+            <Link to={LESSON_PATH(course)}>
+              <Label
+                color="blue"
+                bold
+                pointer
+                style={{ float: 'right', fontSize: '0.8em' }}
+              >
+                <Icon name="comments" />
+                Yorumlara bak
+              </Label>
+            </Link>
+          )}
         </Card.Header>
         <Card.Meta>
           {course.fullName} <QuotaLabel course={course} />
@@ -140,6 +141,22 @@ const SubCourse = ({ course }) => {
           >
             {course.final} Final
           </Label>
+          {course.parentName !== 'STAFF STAFF' && (
+            <a
+              target="_blank"
+              href={`http://registration.boun.edu.tr/scripts/schedule/coursedescription.asp?course=${course.areaCode}${course.digitCode}&section=${course.sectionCode}&term=2019%2F2020-1`}
+            >
+              <Label
+                color="blue"
+                bold
+                pointer
+                style={{ float: 'right', fontSize: '0.8em' }}
+              >
+                <Icon name="file alternate" />
+                Geçmiş Syllabusa Bak
+              </Label>
+            </a>
+          )}
         </Card.Description>
       </Card>
     </div>

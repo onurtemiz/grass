@@ -56,7 +56,10 @@ const DefaultContainer = () => {
         <Route path="/user" component={MainUser} />
         <Route path="/users/:username" component={User} />
         <Route path="/comments" component={AllComments} />
-        <Route path={['/statics', '/about', '/sss']} component={StaticPages} />
+        <Route
+          path={['/statics', '/about', '/sss', '/feedback']}
+          component={StaticPages}
+        />
         <Route path="/planner" component={CoursePlanner} />
         <Route path="/quotas" component={Quotas} />
         <Route path="/">

@@ -112,8 +112,8 @@ const RequiredColumn = ({ rc, i }) => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
-              <Label color="blue" bold>
-                Kesin Olmalı Ders Grubu {i + 1}
+              <Label color="blue" bold style={{ fontSize: '12px' }}>
+                Bu Derslerden Biri Kesin Eklensin
               </Label>
               {i > 0 ? (
                 <Icon
@@ -124,7 +124,7 @@ const RequiredColumn = ({ rc, i }) => {
                 />
               ) : (
                 <Popup
-                  content="Her bir Kesin Olmalı Ders Grubu altında yer alan derslerden sadece bir tanesi her olası programınızda kesin yer alacak."
+                  content="Oluşturulan her bir programda aşağıdaki derslerden bir tanesi programda kesinlikle yer alacak."
                   trigger={
                     <Icon
                       name="question circle outline"

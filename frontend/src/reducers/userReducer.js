@@ -329,11 +329,11 @@ export const sawModal = () => {
   };
 };
 
-export const getPopulatedMainUser = () => {
+export const getPopulatedMainUser = (user) => {
   return async (dispatch) => {
-    const user = await userService.getPopulatedMainUser();
-    if (user.error) {
-      toast.error(`${user.error}`, {
+    const currentUser = await userService.getPopulatedUser(user.username);
+    if (currentUser.error) {
+      toast.error(`${currentUser.error}`, {
         position: 'bottom-left',
         autoClose: 5000,
         hideProgressBar: true,
@@ -345,10 +345,10 @@ export const getPopulatedMainUser = () => {
       return;
     }
     dispatch({
-      type: 'SET_LIKES',
-      data: user,
+      type: 'UPDATE_USER',
+      data: currentUser,
     });
-    setLocaleUser(user);
+    setLocaleUser(currentUser);
   };
 };
 

@@ -96,7 +96,7 @@ const SubCourse = ({ course }) => {
           )}
         </Card.Header>
         <Card.Meta>
-          {course.fullName} <QuotaLabel course={course} />
+          {course.fullName} <QuotaLabel course={course} text />
         </Card.Meta>
 
         <Card.Description>
@@ -156,6 +156,12 @@ const SubCourse = ({ course }) => {
                 Geçmiş Syllabusa Bak
               </Label>
             </a>
+          )}
+          <br />
+          {course.req && (
+            <Label color="blue" bold>
+              Bu Bölümlere Zorunlu: {course.req}
+            </Label>
           )}
         </Card.Description>
       </Card>

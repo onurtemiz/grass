@@ -77,8 +77,6 @@ const commentReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       };
-    case 'UPDATE_USER':
-      return initialState;
     default:
       return state;
   }

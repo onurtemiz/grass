@@ -5,10 +5,10 @@ import { Label } from '../Nav/NavTheme';
 import About from './About/About';
 import { isMobile } from 'react-device-detect';
 import Sss from './Sss/Sss';
+import Feedback from './Feedback/Feedback';
 
 const StaticPages = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
@@ -19,7 +19,7 @@ const StaticPages = () => {
       setActiveIndex(0);
     } else if (location.pathname.includes('sss')) {
       setActiveIndex(1);
-    } else if (location.pathname.includes('terms')) {
+    } else if (location.pathname.includes('feedback')) {
       setActiveIndex(2);
     }
   }, [location]);
@@ -34,6 +34,8 @@ const StaticPages = () => {
       history.push('/about');
     } else if (data.activeIndex === 1) {
       history.push('/sss');
+    } else if (data.activeIndex === 2) {
+      history.push('/feedback');
     }
   };
 
@@ -67,6 +69,23 @@ const StaticPages = () => {
       render: () => (
         <Segment style={{ marginRight: '0.5em' }}>
           <Sss />
+        </Segment>
+      ),
+    },
+
+    {
+      menuItem: {
+        content: (
+          <Label bold pointer color={getColor(2)}>
+            Feedback
+          </Label>
+        ),
+        color: 'green',
+        key: 2,
+      },
+      render: () => (
+        <Segment style={{ marginRight: '0.5em' }}>
+          <Feedback />
         </Segment>
       ),
     },

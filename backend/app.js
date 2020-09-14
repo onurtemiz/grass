@@ -21,6 +21,7 @@ const questionsRouter = require('./controllers/questions');
 const coursesRouter = require('./controllers/courses');
 const eventsRouter = require('./controllers/events');
 const signupRouter = require('./controllers/signup');
+const feedbacksRouter = require('./controllers/feedbacks');
 
 // const tok = require('./heh');
 // tok();
@@ -61,6 +62,7 @@ apiRouter.use(middleware.tokenExtractor);
 apiRouter.use(middleware.authUser);
 apiRouter.use(middleware.searchFilter);
 apiRouter.use('/users', usersRouter);
+apiRouter.use('/feedback', feedbacksRouter);
 apiRouter.use('/courses', coursesRouter);
 apiRouter.use('/events', eventsRouter);
 apiRouter.use('/questions', questionsRouter);

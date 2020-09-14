@@ -37,19 +37,27 @@ const User = ({ u }) => {
       <Header
         as="h1"
         style={
-          u ? { marginLeft: '1em' } : { marginLeft: '1em', marginTop: '1em' }
+          u
+            ? { marginLeft: '1em' }
+            : {
+                marginLeft: '1em',
+                marginTop: '1em',
+                display: 'flex',
+                alignItems: 'center',
+              }
         }
       >
-        <Label color="green">{user.username} · </Label>
+        <Label color="green" style={{ marginRight: '0.5em' }}>
+          {user.username}
+        </Label>
         <Label color="blue">
           {user.totalLikes} <Icon name="paw" color="blue" />
-          <UserIcons achievements={user.achievements} />
         </Label>
-
+        <UserIcons achievements={user.achievements} />
         {user.username !== currentUser.username && (
           <>
             <Label color="blue" bold>
-              ·{' '}
+              {' '}
             </Label>
             <Follow idToFollow={user.id} />
           </>

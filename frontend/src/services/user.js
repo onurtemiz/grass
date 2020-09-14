@@ -61,15 +61,20 @@ const getNotifications = async (setLoading) => {
     const res = await axios.get(`${baseUrl}/notifications`, config);
     setLoading(false);
     return res.data;
-} catch (e) {
-    if(e.response && e.response.data &&  e.response.data.error === 'Onur bir şeyleri batırdı. Hata kodu 11'){
-      window.localStorage.removeItem('grassUser')
+  } catch (e) {
+    if (
+      e.response &&
+      e.response.data &&
+      e.response.data.error === 'Onur bir şeyleri batırdı. Hata kodu 11'
+    ) {
+      window.localStorage.removeItem('grassUser');
       window.location.reload();
-    }else{
-    setLoading(false);
-    return e.response
-      ? e.response.data
-      : 'Onur bir şeyleri batırdı. Hata kodu 42';}
+    } else {
+      setLoading(false);
+      return e.response
+        ? e.response.data
+        : 'Onur bir şeyleri batırdı. Hata kodu 42';
+    }
   }
 };
 
@@ -115,17 +120,6 @@ const unfollowLesson = async (id) => {
 const getPopulatedUser = async (username) => {
   try {
     const res = await axios.get(`${baseUrl}/u/${username}`, config);
-    return res.data;
-  } catch (e) {
-    return e.response
-      ? e.response.data
-      : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
-  }
-};
-
-const getPopulatedMainUser = async () => {
-  try {
-    const res = await axios.get(`${baseUrl}/mainuser`, config);
     return res.data;
   } catch (e) {
     return e.response
@@ -204,11 +198,11 @@ export default {
   getPopulatedUser,
   followLesson,
   unfollowLesson,
-  checkAdmin,getAchievement,
+  checkAdmin,
+  getAchievement,
   getFollowing,
   getNotifications,
   deleteNotifications,
-  getPopulatedMainUser,
   changeIcon,
   checkAchievement,
   sawModal,

@@ -11,6 +11,7 @@ import {
 import { compareNames } from '../../../utils/utils';
 import { LESSON_PATH } from '../../../utils/config';
 import { Link } from 'react-router-dom';
+import QuotaLabel from '../../Quota/QuotaLabel';
 
 const SelectedCourses = () => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
@@ -202,12 +203,6 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
             handleClick(c);
           }}
         />
-        <Icon
-          name={c.visible ? 'eye' : 'eye slash'}
-          color={c.visible ? 'green' : 'red'}
-          style={{ float: 'right', cursor: 'pointer' }}
-          onClick={() => toggleCourseVisiblity(c)}
-        />
         {last && (
           <Icon
             name={'caret up'}
@@ -216,6 +211,12 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
             onClick={() => toggleStackVisibility()}
           />
         )}
+        <Icon
+          name={c.visible ? 'eye' : 'eye slash'}
+          color={c.visible ? 'green' : 'red'}
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => toggleCourseVisiblity(c)}
+        />
         {c.parentName !== 'STAFF STAFF' && (
           <Link to={LESSON_PATH(c)}>
             <Icon
@@ -225,6 +226,22 @@ export const SingleCourseSelected = ({ c, last, toggleStackVisibility }) => {
             />
           </Link>
         )}
+        {c.parentName !== 'STAFF STAFF' && (
+          <a
+            target="_blank"
+            href={`http://registration.boun.edu.tr/scripts/schedule/coursedescription.asp?course=${c.areaCode}${c.digitCode}&section=${c.sectionCode}&term=2019%2F2020-1`}
+          >
+            <Label
+              color="green"
+              bold
+              pointer
+              style={{ float: 'right', fontSize: '0.8em' }}
+            >
+              <Icon name="file alternate" />
+            </Label>
+          </a>
+        )}
+        {c.parentName !== 'STAFF STAFF' && <QuotaLabel course={c} />}
       </Table.Cell>
     </Table.Row>
   );

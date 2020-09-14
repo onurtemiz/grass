@@ -327,16 +327,6 @@ usersRouter.get('/admin', async (req, res) => {
   }
 });
 
-usersRouter.get('/mainuser', async (req, res) => {
-  const totalLikedUser = await User.getTotalLike(req.user.username);
-  const jsonedUser = req.user.toJSON();
-  let user = {
-    ...jsonedUser,
-    ...totalLikedUser,
-  };
-  res.json(user);
-});
-
 usersRouter.get('/achievement', async (req, res) => {
   const achievements = await utils.getUserAchievements(req.user);
 

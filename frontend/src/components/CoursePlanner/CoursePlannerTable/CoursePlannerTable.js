@@ -110,7 +110,7 @@ const CoursePlannerTable = () => {
         <Table.Row>
           <Table.HeaderCell textAlign="center">
             <Popup
-              content="Herhangi bir saate tıkla"
+              content="Herhangi bir hücreye tıkla"
               trigger={
                 <Icon name="question circle outline" color="grey" size="big" />
               }

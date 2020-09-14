@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePlannerTable from './CoursePlannerTable/CoursePlannerTable';
-import {  Grid } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import SelectedCourses from './SelectedCourses/SelectedCourses';
 import RequiredCourses from './RequiredCourses/RequiredCourses';
 import SearchCourses from './CoursePlannerTable/SearchCourses/SearchCourses';
@@ -11,7 +11,7 @@ const CoursePlanner = () => {
   return isMobile ? (
     <div style={{ height: '150vh' }}>
       <Grid style={{ margin: '0.5em' }}>
-      <Grid.Row>
+        <Grid.Row>
           <Grid.Column>
             <CoursePlannerTable />
           </Grid.Column>
@@ -26,8 +26,7 @@ const CoursePlanner = () => {
             <SearchCourses stretched />
           </Grid.Column>
         </Grid.Row>
-        
-        
+
         <Grid.Row>
           <Grid.Column>
             <ProgramOptions />
@@ -53,7 +52,7 @@ const CoursePlanner = () => {
             <SearchCourses stretched />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row columns={5}>
+        <Grid.Row columns={4}>
           <RequiredCourses />
         </Grid.Row>
       </Grid>

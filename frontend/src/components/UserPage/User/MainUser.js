@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPopulatedMainUser } from '../../../reducers/userReducer';
-import {  Tab, } from 'semantic-ui-react';
+import { Tab } from 'semantic-ui-react';
 import { useLocation, useHistory } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 import Following from '../Following/Following';
@@ -18,7 +18,7 @@ const MainUser = () => {
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
-    dispatch(getPopulatedMainUser());
+    dispatch(getPopulatedMainUser(user));
   }, [location]);
   useEffect(() => {
     if (location.pathname.includes('follows')) {

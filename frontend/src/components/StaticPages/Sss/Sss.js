@@ -32,7 +32,7 @@ const Sss = () => {
       </p>
       <p>
         <Label color="green" bold>
-          Kesin Olmalı Ders Grubu:
+          Bu Derslerden Biri Kesin Eklensin:
         </Label>{' '}
         Mesela Almanca ya da Fransızca almak istiyorsunuz. İkisinden birinin
         oluşturulacak programda %100 olmasını istiyorsunuz. O vakit bir Kesin
@@ -108,7 +108,7 @@ const Sss = () => {
         Mama Kabım ve Meydan nedir?
       </Header>
       <p>
-        Mama Kabı takip ettiğiniz kişilerin ya da konuları bulunduğu sayfadır.
+        Mama Kabı takip ettiğiniz kişilerin ya da konuların bulunduğu sayfadır.
         Meydan ise bütün yorumların bulunduğu sayfa.
       </p>
 

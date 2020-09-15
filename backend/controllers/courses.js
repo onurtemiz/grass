@@ -55,15 +55,15 @@ coursesRouter.get('/user', async (req, res) => {
   res.json(courses.map((c) => c.toJSON()));
 });
 
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 15 minutes
-  max: 45, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Çok sık güncellediniz! Lütfen 1 dakika sonra tekrar deneyin.',
-  },
-});
+// const limiter = rateLimit({
+//   windowMs: 60 * 1000, // 15 minutes
+//   max: 45, // limit each IP to 100 requests per windowMs
+//   message: {
+//     error: 'Çok sık güncellediniz! Lütfen 1 dakika sonra tekrar deneyin.',
+//   },
+// });
 
-coursesRouter.get('/update', limiter, async (req, res) => {
+coursesRouter.get('/update', async (req, res) => {
   let course = await Course.findById(req.query.course);
   if (course) {
     course = await updateCourseQuota(course);

@@ -5,7 +5,7 @@ import { config } from '../utils/token';
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001/api/feedback'
-    : '/api/dorms';
+    : '/api/feedback';
 
 const postFeedback = async (body, setLoading) => {
   try {

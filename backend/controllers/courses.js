@@ -4,7 +4,6 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const lodash = require('lodash');
 const rateLimit = require('express-rate-limit');
-
 const convertDayHourtoIds = (days, hours) => {
   const TOTAL_HOURS = 14;
   let ids = [];

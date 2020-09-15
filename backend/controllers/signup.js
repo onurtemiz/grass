@@ -7,13 +7,6 @@ const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
 const utils = require('../utils/utils');
 
-const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 15 minutes
-  max: 15, // limit each IP to 100 requests per windowMs
-  message: { error: 'Lütfen 1 saat sonra tekrar deneyin.' },
-});
-
-signupRouter.use(limiter);
 
 signupRouter.post('/reset_password', async (req, res) => {
   const user = await User.findOne({

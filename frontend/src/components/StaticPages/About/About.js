@@ -45,7 +45,7 @@ const About = () => {
       videosu için:{' '}
       <a href="mailto:onur.temiz@boun.edu.tr">
         <Label color="green" bold pointer>
-          iletisim@bouncim.com
+          onur.temiz@boun.edu.tr
         </Label>
       </a>
       <br />

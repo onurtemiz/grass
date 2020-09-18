@@ -2,6 +2,7 @@ const tipsRouter = require('express').Router();
 const User = require('../models/user');
 const Tip = require('../models/tip');
 const middleware = require('../utils/middleware');
+const Notification = require('../models/notification');
 
 tipsRouter.get('/total', async (req, res) => {
   const total = await Tip.find({ isApproved: true }).countDocuments();
@@ -42,9 +43,22 @@ tipsRouter.put('/like', async (req, res) => {
   if (isLiked) {
     tip.likes = tip.likes.filter((u) => !u.equals(user._id));
     tip.likesLength = tip.likesLength - 1;
+    await Notification.deleteMany({
+      tool: tip._id,
+      responsible: user._id,
+      target: tip.user,
+      notificationType: 'tiplike',
+    });
   } else {
     tip.likes = tip.likes.concat(user._id);
     tip.likesLength = tip.likesLength + 1;
+    notify = new Notification({
+      tool: tip._id,
+      responsible: user._id,
+      target: tip.user,
+      notificationType: 'tiplike',
+    });
+    await notify.save();
   }
   await tip.save();
   let jsonedTip;

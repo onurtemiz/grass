@@ -44,12 +44,27 @@ const Home = () => {
               </>
             )}
             <br />
-            <Label color="green" bold style={{ overflowWrap: 'anywhere' }}>
-              {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor:{' '}
-              <Label color="blue" bold>
-                {tip.tip}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Label
+                color="green"
+                bold
+                style={{
+                  overflowWrap: 'anywhere',
+                  marginRight: '10vw',
+                  marginLeft: '10vw',
+                }}
+              >
+                {tip.isAnonim ? 'Boğaziçili' : tip.user} Tavsiye Ediyor:{' '}
+                <Label color="blue" bold>
+                  {tip.tip}
+                </Label>
               </Label>
-            </Label>
+            </div>
             <br />
             <Tips />
           </Grid.Column>

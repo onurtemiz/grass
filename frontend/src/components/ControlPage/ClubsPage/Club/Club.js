@@ -44,9 +44,19 @@ const Club = () => {
       </div>
       <br />
       <div style={{ width: isMobile ? '90vw' : '50vw' }}>
-        {club.description.length === 0
-          ? 'Kulüp yöneticileri iletişime geçer ise kendileri buraya açıklama ekleyebilir.'
-          : club.description}
+        {club.description.length === 0 ? (
+          <span>
+            Yöneticiler{' '}
+            <a href="mailto:onur.temiz@boun.edu.tr">
+              <Label color="green" bold pointer>
+                iletişime
+              </Label>
+            </a>{' '}
+            geçerler ise kendileri buraya açıklama ekleyebilir.
+          </span>
+        ) : (
+          club.description
+        )}
       </div>
       <CommentForm typeId={club.id} commentType="club" />
       <Divider />

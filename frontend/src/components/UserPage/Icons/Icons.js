@@ -3,26 +3,23 @@ import { Grid, Icon, Popup } from 'semantic-ui-react';
 import { changeIcon, checkAchievement } from '../../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
-import usersService from '../../../services/user'
+import usersService from '../../../services/user';
 
 const Icons = ({ user }) => {
-  const [achievements,setAchievements] = useState([]);
+  const [achievements, setAchievements] = useState([]);
   useEffect(() => {
     dispatch(checkAchievement());
   }, [achievements]);
 
-  useEffect(()=>{
-    const getAchievements = async()=>{
+  useEffect(() => {
+    const getAchievements = async () => {
       const allAchievements = await usersService.getAchievement();
-      setAchievements(allAchievements.icons)
-    }
-    getAchievements()
-  },[])
+      setAchievements(allAchievements.icons);
+    };
+    getAchievements();
+  }, []);
   const dispatch = useDispatch();
 
-
-
-  
   const blueColor = '#2185d1';
   const greenColor = '#21BA45';
 
@@ -31,7 +28,7 @@ const Icons = ({ user }) => {
   };
   if (!user.achievements || !achievements.length > 0) {
     return <LinearProgress />;
-  };
+  }
 
   return (
     <Grid columns="6">

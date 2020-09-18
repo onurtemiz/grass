@@ -409,7 +409,11 @@ commentsRouter.put('/update_comment/:id', async (req, res) => {
   }
 
   comment.comment = body.comment;
-  comment.edited = true;
+  comment.edited =
+    Math.floor(Math.abs(new Date(comment.date) - Date.now()) / 1000 / 60) <= 5
+      ? false
+      : true;
+
   comment.recommend = body.recommend;
 
   await comment.save();

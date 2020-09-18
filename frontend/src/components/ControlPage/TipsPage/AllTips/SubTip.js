@@ -7,6 +7,7 @@ import { likeTip } from '../../../../reducers/tipReduer';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import UserIcon from '../../../UserPage/User/UserIcon';
 
 const SubTip = ({ tip }) => {
   const [likeType, setLikeType] = useState(false);
@@ -20,7 +21,6 @@ const SubTip = ({ tip }) => {
     likeType === false ? setLikeType(true) : setLikeType(false);
   };
   moment.locale('tr');
-
   return (
     <Segment
       color="blue"
@@ -40,12 +40,14 @@ const SubTip = ({ tip }) => {
             </SComment.Author>
             <SComment.Text>{tip.tip}</SComment.Text>
             <SComment.Actions>
-              <SComment.Action onClick={handleLike} active={likeType}>
-                <Icon name="paw" color={likeType ? 'blue' : 'green'} />
-                <Label bold pointer color={likeType ? 'blue' : 'green'}>
-                  {likeType === true ? 'Patiledin' : 'Patile'}
-                </Label>
-              </SComment.Action>
+              {user.username !== tip.user && (
+                <SComment.Action onClick={handleLike} active={likeType}>
+                  <Icon name="paw" color={likeType ? 'blue' : 'green'} />
+                  <Label bold pointer color={likeType ? 'blue' : 'green'}>
+                    {likeType === true ? 'Patiledin' : 'Patile'}
+                  </Label>
+                </SComment.Action>
+              )}
             </SComment.Actions>
           </SComment.Content>
         </SComment>
@@ -63,17 +65,19 @@ const UserName = ({ tip }) => {
     );
   } else {
     return (
-      <Link to={`/users/${tip.user}`}>
-        <Label color="blue" bold pointer>
-          {tip.user}
-          {tip.userIcon.length > 0 ? (
-            <>
-              {' '}
-              <Icon color="blue" name={tip.userIcon} />
-            </>
-          ) : null}
-        </Label>
-      </Link>
+      <>
+        <Link to={`/users/${tip.user}`}>
+          <Label color="blue" bold pointer>
+            {tip.user}
+          </Label>
+        </Link>
+        {tip.userIcon && tip.userIcon.length > 0 && (
+          <>
+            {' '}
+            <UserIcon iconName={tip.userIcon} themeColor="blue" />
+          </>
+        )}
+      </>
     );
   }
 };

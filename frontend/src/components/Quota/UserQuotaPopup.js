@@ -68,6 +68,7 @@ const UserQuotaPopup = () => {
     'İşletme',
     'Kimya',
     'Kimya Öğretmenliği',
+    'Kimya Mühendisliği',
     'Makina Mühendisliği',
     'Matematik',
     'Matematik Öğretmenliği',

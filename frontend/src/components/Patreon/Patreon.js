@@ -15,7 +15,11 @@ const Patreon = () => {
       {isMobile ? (
         <Button
           as="a"
-          style={{ backgroundColor: '#e85b46', padding: '1em', color: 'white' }}
+          style={{
+            backgroundColor: '#e85b46',
+            margin: '0.5em',
+            color: 'white',
+          }}
           href="https://www.patreon.com/bePatron?u=38417344"
           target="_blank"
           rel="noopener noreferrer"

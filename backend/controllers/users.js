@@ -462,5 +462,5 @@ const icons = [
   },
   { name: 'cogs', description: 'Beta Tester', achievement: 'betaTester' },
   { name: 'shield', description: 'Moderatör', achievement: 'mod' },
-  { name: 'user secret', description: 'Admin', achievement: 'admin' },
+  { name: 'sun', description: 'Admin', achievement: 'admin' },
 ];

@@ -17,7 +17,14 @@ const UserIcon = ({ iconName, themeColor, achievement }) => {
       {selectedIconName ? (
         <Popup
           content={icons[selectedIconName].description}
-          trigger={<Icon color={themeColor} name={selectedIconName} fitted />}
+          trigger={
+            <Icon
+              color={themeColor}
+              name={selectedIconName}
+              fitted
+              loading={selectedIconName === 'sun' ? true : false}
+            />
+          }
           inverted
           on={['hover']}
           position="top left"
@@ -119,6 +126,6 @@ const icons = {
 
   cogs: { description: 'Beta Tester', achievement: 'betaTester' },
   shield: { description: 'Moderatör', achievement: 'mod' },
-  'user secret': { description: 'Admin', achievement: 'admin' },
+  sun: { description: 'Admin', achievement: 'admin' },
 };
 export default UserIcon;

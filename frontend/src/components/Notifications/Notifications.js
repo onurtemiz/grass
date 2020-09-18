@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Popup,
-  Icon,
-  Feed,
-  Button,
-  Placeholder,
-} from 'semantic-ui-react';
+import { Popup, Icon, Feed, Button, Placeholder } from 'semantic-ui-react';
 import { Label } from '../Nav/NavTheme';
 import userService from '../../services/user';
 import LikeNotification from './LikeNotification';
 import NewCommentNotification from './NewCommentNotification';
 import { useLocation } from 'react-router-dom';
+import PatiLikeNotification from './PatiLikeNotification';
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [unseenNotifications, setUnseenNotifications] = useState([]);
@@ -21,12 +16,15 @@ const Notifications = () => {
     setUnseenNotifications(notifications.filter((n) => n.seen !== true));
   }, [notifications]);
   useEffect(() => {
-    const getSortedNotifications = async(setLoading)=>{
+    const getSortedNotifications = async (setLoading) => {
       const notifications = await userService.getNotifications(setLoading);
-      if(Array.isArray(notifications)){
-      setNotifications(notifications.sort((a,b)=>new Date(b.date) - new Date(a.date)))}
-    }
-    getSortedNotifications(setLoading)
+      if (Array.isArray(notifications)) {
+        setNotifications(
+          notifications.sort((a, b) => new Date(b.date) - new Date(a.date))
+        );
+      }
+    };
+    getSortedNotifications(setLoading);
     setLoading(true);
     setOpen(false);
   }, [location]);
@@ -144,6 +142,13 @@ const NotificationFeed = ({
                 setNotifications={setNotifications}
               />
             ) : null
+          ) : n.notificationType === 'tiplike' ? (
+            <PatiLikeNotification
+              notification={n}
+              key={n.id}
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
           ) : null
         )}
       </Feed>

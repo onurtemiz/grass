@@ -7,7 +7,7 @@ import { unFollowCourse } from '../../reducers/userReducer';
 import { isMobile } from 'react-device-detect';
 import lodash from 'lodash';
 import { toast } from 'react-toastify';
-
+import styled from 'styled-components';
 import moment from 'moment';
 const QuotaTable = ({ c, setCourses, courses }) => {
   const [tables, setTables] = useState([]);
@@ -53,7 +53,7 @@ const QuotaTable = ({ c, setCourses, courses }) => {
   };
 
   return (
-    <Card>
+    <StyledCard>
       <Dimmer active={loading} inverted>
         <Loader />
       </Dimmer>
@@ -136,8 +136,12 @@ const QuotaTable = ({ c, setCourses, courses }) => {
               })}
         </Card.Description>
       </Card.Content>
-    </Card>
+    </StyledCard>
   );
 };
 
 export default QuotaTable;
+
+const StyledCard = styled(Card)`
+  width: unset !important;
+`;

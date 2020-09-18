@@ -5,9 +5,9 @@ import courseService from '../../services/courses';
 import CommentsLoading from '../Comments/CommentsLoading';
 import QuotaTable from './QuotaTable';
 import UserQuotaPopup from './UserQuotaPopup';
-import {Card} from 'semantic-ui-react'
+import { Card } from 'semantic-ui-react';
 import { isMobile } from 'react-device-detect';
-import {uniqueId} from 'lodash'
+import { uniqueId } from 'lodash';
 
 import { toast } from 'react-toastify';
 const Quotas = () => {
@@ -47,7 +47,14 @@ const Quotas = () => {
     return <CommentsLoading />;
   }
   return (
-    <Card.Group stackable style={!isMobile ? {marginTop:'1em',marginLeft:'1em'}:{marginTop:'1em'}} >
+    <Card.Group
+      stackable
+      style={
+        !isMobile
+          ? { marginTop: '1em', marginLeft: '1em', alignItems: 'baseline' }
+          : { marginTop: '1em', alignItems: 'baseline' }
+      }
+    >
       {courses.map((c) => (
         <QuotaTable
           c={c}
@@ -56,7 +63,7 @@ const Quotas = () => {
           key={uniqueId()}
         />
       ))}
-      </Card.Group>
+    </Card.Group>
   );
 };
 

@@ -8,6 +8,8 @@ import { getPopulatedUser } from '../../../reducers/usersReducer';
 import { Label } from '../../Nav/NavTheme';
 import UserIcons from './UserIcons';
 import Follow from '../../Follow/Follow';
+import { isMobile } from 'react-device-detect';
+
 const User = ({ u }) => {
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:username/');
@@ -33,37 +35,59 @@ const User = ({ u }) => {
     return <LinearProgress />;
   }
   return (
-    <div style={{ minHeight: '90vh', maxHeight: '100%', marginLeft: '1em' }}>
-      <Header
-        as="h1"
-        style={
-          u
-            ? { marginLeft: '1em' }
-            : {
-                marginLeft: '1em',
-                marginTop: '1em',
-                display: 'flex',
-                alignItems: 'center',
-              }
-        }
-      >
-        <Label color="green" style={{ marginRight: '0.5em' }}>
-          {user.username}
-        </Label>
-        <Label color="blue">
-          {user.totalLikes} <Icon name="paw" color="blue" />
-        </Label>
-        <UserIcons achievements={user.achievements} />
-        {user.username !== currentUser.username && (
-          <>
-            <Label color="blue" bold>
-              {' '}
+    <div
+      style={{
+        minHeight: '90vh',
+        maxHeight: '100%',
+        marginLeft: '1em',
+      }}
+    >
+      {isMobile ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '2em',
+            lineHeight: '1.5',
+            marginTop: '0.5em',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Label color="green" bold style={{ marginRight: '0.5em' }}>
+              {user.username}
+            </Label>
+            <Label color="blue" bold style={{ marginRight: '0.5em' }}>
+              {user.totalLikes} <Icon name="paw" color="blue" />
             </Label>
             <Follow idToFollow={user.id} />
-          </>
-        )}
-      </Header>
-
+          </div>
+          <UserIcons achievements={user.achievements} />
+        </div>
+      ) : (
+        <div
+          style={{
+            fontSize: '2em',
+            lineHeight: '1.5',
+            marginTop: '0.5em',
+          }}
+        >
+          <Label color="green" bold style={{ marginRight: '0.5em' }}>
+            {user.username}
+          </Label>
+          <Label color="blue" bold>
+            {user.totalLikes} <Icon name="paw" color="blue" />
+          </Label>
+          <UserIcons achievements={user.achievements} />
+          {user.username !== currentUser.username && (
+            <>
+              <Label color="blue" bold>
+                {' '}
+              </Label>
+              <Follow idToFollow={user.id} />
+            </>
+          )}
+        </div>
+      )}
       <Comments
         type="user"
         typeId={user.id}

@@ -86,14 +86,6 @@ const Comment = ({ comment, setIsUpdate, showSource }) => {
                 </SComment.Action>
               ) : null}
               {user.id === comment.user.id ? (
-                <SComment.Action onClick={handleUpdate}>
-                  <Icon name="edit outline" color="green" />
-                  <Label bold pointer color="green">
-                    Düzenle
-                  </Label>
-                </SComment.Action>
-              ) : null}
-              {user.id === comment.user.id ? (
                 <>
                   <SComment.Action onClick={() => setIsRemovePanel(true)}>
                     <Icon name="delete" color="red" />
@@ -142,7 +134,6 @@ export const UserAndMeta = ({ comment, showSource }) => {
 
       <SComment.Metadata>
         {comment.likes.length} Pati · {moment(new Date(comment.date)).fromNow()}{' '}
-        {comment.edited && ' · (düzenlendi)'}
         {!!showSource && ' · '}
         {!!showSource && (
           <>

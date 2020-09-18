@@ -147,7 +147,13 @@ const CreateProgram = () => {
   const canAddToScenarios = (potentialCourses) => {
     if (
       between(potentialCourses.length, courseRange[0], courseRange[1], true) &&
-      creditsMatch(potentialCourses) &&
+      // creditsMatch(potentialCourses) &&
+      between(
+        getTotalCoursesCredits(potentialCourses),
+        creditsRange[0],
+        creditsRange[1],
+        true
+      ) &&
       emptyDayMatch(potentialCourses) &&
       conflictMatch(potentialCourses)
     ) {

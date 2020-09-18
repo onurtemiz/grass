@@ -389,45 +389,45 @@ commentsRouter.put('/pati_comment/:id', async (req, res) => {
   res.json(populatedComment.toJSON());
 });
 
-commentsRouter.put('/update_comment/:id', async (req, res) => {
-  const body = req.body;
-  const comment = await Comment.findById(req.params.id);
+// commentsRouter.put('/update_comment/:id', async (req, res) => {
+//   const body = req.body;
+//   const comment = await Comment.findById(req.params.id);
 
-  const user = req.user;
+//   const user = req.user;
 
-  if (!comment) {
-    return res.status(400).json({
-      error: 'Yorum bulunamadı.',
-    });
-  }
+//   if (!comment) {
+//     return res.status(400).json({
+//       error: 'Yorum bulunamadı.',
+//     });
+//   }
 
-  const isUserHave = user.comments.some((c) => c.equals(req.params.id));
-  if (!isUserHave) {
-    return res.status(400).json({
-      error: 'Yorumu düzenlemeye hakkınız yok.',
-    });
-  }
+//   const isUserHave = user.comments.some((c) => c.equals(req.params.id));
+//   if (!isUserHave) {
+//     return res.status(400).json({
+//       error: 'Yorumu düzenlemeye hakkınız yok.',
+//     });
+//   }
 
-  comment.comment = body.comment;
-  comment.edited =
-    Math.floor(Math.abs(new Date(comment.date) - Date.now()) / 1000 / 60) <= 5
-      ? false
-      : true;
+//   comment.comment = body.comment;
+//   comment.edited =
+//     Math.floor(Math.abs(new Date(comment.date) - Date.now()) / 1000 / 60) <= 5
+//       ? false
+//       : true;
 
-  comment.recommend = body.recommend;
+//   comment.recommend = body.recommend;
 
-  await comment.save();
-  const populatedComment = await Comment.findById(comment._id)
-    .populate('user')
-    .populate('teacher')
-    .populate('lesson')
-    .populate('club')
-    .populate('dorm')
-    .populate('campus')
-    .populate('question');
+//   await comment.save();
+//   const populatedComment = await Comment.findById(comment._id)
+//     .populate('user')
+//     .populate('teacher')
+//     .populate('lesson')
+//     .populate('club')
+//     .populate('dorm')
+//     .populate('campus')
+//     .populate('question');
 
-  res.json(populatedComment.toJSON());
-});
+//   res.json(populatedComment.toJSON());
+// });
 
 commentsRouter.delete('/:id', async (req, res) => {
   const comment = await Comment.findById(req.params.id);

@@ -1,5 +1,6 @@
 const coursesRouter = require('express').Router();
 const Course = require('../models/course');
+const User = require('../models/user');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const lodash = require('lodash');
@@ -30,6 +31,16 @@ const convertDaysToInt = (days) => {
   }
   return intDays;
 };
+
+coursesRouter.put('/planner/save', async (req, res) => {
+  req.user.planner = req.body;
+  await req.user.save();
+  res.end();
+});
+
+coursesRouter.get('/planner/get', async (req, res) => {
+  res.json(req.user.planner);
+});
 
 coursesRouter.get('/lesson', async (req, res) => {
   const q = req.query;

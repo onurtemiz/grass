@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import lodash from 'lodash';
-import { setScenarios } from '../../../reducers/courseReducer';
+import {
+  setScenarios,
+  resetCurrentState,
+} from '../../../reducers/courseReducer';
 import { compareNames } from '../../../utils/utils';
 const CreateProgram = () => {
   const dispatch = useDispatch();
@@ -260,9 +263,15 @@ const CreateProgram = () => {
 
     setLoading(false);
   }
+  const resetState = () => {
+    dispatch(resetCurrentState(setLoading));
+  };
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Button color="red" onClick={() => resetState()}>
+        Plannerı Sıfırla{' '}
+      </Button>
       <Button
         color={
           value === 'Program Oluşturuldu' || value === 'Program Oluştur'
@@ -271,7 +280,6 @@ const CreateProgram = () => {
         }
         onClick={() => createProgram()}
         loading={loading}
-        fluid
       >
         {value}
       </Button>

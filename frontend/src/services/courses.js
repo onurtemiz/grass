@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { config } from '../utils/token';
+import { toast } from 'react-toastify';
 
 const baseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
@@ -43,6 +44,39 @@ const getSectionsByLesson = async (lesson) => {
     return e.response
       ? e.response.data
       : { error: 'Onur bir şeyleri batırdı. Hata kodu 42' };
+  }
+};
+
+const saveState = async (state) => {
+  try {
+    await axios.put(`${baseUrl}/planner/save`, state, config);
+  } catch (e) {
+    toast.error(`Course Planner Kaydedilemedi.`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+};
+
+const getState = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/planner/get`, config);
+    return res.data;
+  } catch (e) {
+    toast.error(`Course Planner Alınamadı.`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 };
 
@@ -92,4 +126,6 @@ export default {
   getSectionsByLesson,
   getCoursesByUser,
   quotaUpdate,
+  saveState,
+  getState,
 };

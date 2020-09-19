@@ -120,11 +120,33 @@ const SubCourse = ({ course }) => {
                 {course.final} Final
               </Label>
             </div>
+
             {course.req && (
               <Label color="blue" bold pointer nolink>
                 Bu Bölümlere Zorunlu: {course.req}
               </Label>
             )}
+            {course.extras &&
+              course.extras.length > 0 &&
+              course.extras.map((e, i) => {
+                return (
+                  <div key={i}>
+                    <Label color="blue" bold pointer nolink>
+                      {e.name}
+                    </Label>{' '}
+                    <Label color="blue" bold pointer nolink>
+                      <Icon name="calendar" />
+
+                      {convertDays(e.days)}
+                    </Label>{' '}
+                    <Label color="green" bold pointer nolink>
+                      <Icon name="clock" />
+
+                      {course.hours}
+                    </Label>
+                  </div>
+                );
+              })}
           </div>
           <div
             style={{

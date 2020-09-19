@@ -19,15 +19,19 @@ import { Label, StyledLabel } from '../../Nav/NavTheme';
 import CommentsLoading from '../../Comments/CommentsLoading';
 import { isMobile } from 'react-device-detect';
 import { compareNames } from '../../../utils/utils';
+import { resetCurrentState } from '../../../reducers/courseReducer';
+import coursesService from '../../../services/courses';
 
-const CoursePlannerTable = () => {
+const CoursePlannerTable = ({ saving }) => {
   const selectedCourses = useSelector((state) => state.courses.selectedCourses);
   const scenarios = useSelector((state) => state.courses.scenarios);
   const [scenariosActivePage, setScenariosActivePage] = useState(0);
   const cells = useSelector((state) => state.courses.cells);
   const extraHours = useSelector((state) => state.courses.extraHours);
+  const state = useSelector((state) => state.courses);
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
+  const [saveColor, setSaveColor] = useState(false);
   const [visible, setVisible] = useState(false);
   const [paginationVisible, setPaginationVisible] = useState(false);
   const TOTAL_HOURS = 14;
@@ -71,6 +75,47 @@ const CoursePlannerTable = () => {
     setVisible(!visible);
   };
 
+  const resetState = () => {
+    dispatch(resetCurrentState());
+  };
+
+  const saveState = () => {
+    setSaveColor(true);
+    setTimeout(() => {
+      setSaveColor(false);
+    }, 2000);
+    const {
+      selectedCourses,
+      cells,
+      findTime,
+      notFindTime,
+      tryEmptyDay,
+      conflict,
+      extraHours,
+      requiredCourses,
+      creditsRange,
+      scenariosSlider,
+      courseRange,
+      scenarios,
+      currentScenario,
+    } = state;
+    coursesService.saveState({
+      selectedCourses,
+      cells,
+      findTime,
+      notFindTime,
+      tryEmptyDay,
+      conflict,
+      extraHours,
+      requiredCourses,
+      creditsRange,
+      scenariosSlider,
+      courseRange,
+      scenarios,
+      currentScenario,
+    });
+  };
+
   useEffect(() => {
     const rows = [];
     for (let i = 0; i < TOTAL_HOURS; i++) {
@@ -109,13 +154,16 @@ const CoursePlannerTable = () => {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell textAlign="center">
-            <Popup
-              content="Herhangi bir hücreye tıkla"
-              trigger={
-                <Icon name="question circle outline" color="grey" size="big" />
-              }
-              position="right center"
-            />
+            {saving ? (
+              <Icon name="sync" loading={true} color="green" size="large" />
+            ) : (
+              <Icon
+                name="save outline"
+                color={saveColor ? 'green' : 'blue'}
+                size="large"
+                onClick={() => saveState()}
+              />
+            )}
           </Table.HeaderCell>
 
           <Table.HeaderCell>

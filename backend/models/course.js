@@ -25,6 +25,8 @@ const courseSchema = new mongoose.Schema({
   lastChange: { type: Date, default: Date.now() },
   place: { type: String },
   final: { type: String },
+  extras: [{ type: mongoose.Schema.Types.Mixed }],
+
 });
 
 courseSchema.set(uniqueValidator);

@@ -46,6 +46,10 @@ const actionTypes = {
   ADD_WHITE_TIME_TO_CELL: 'ADD_WHITE_TIME_TO_CELL',
   ADD_BLACK_TIME_TO_CELL: 'ADD_BLACK_TIME_TO_CELL',
   RESET_TIME_FROM_CELL: 'RESET_TIME_FROM_CELL',
+
+  // SAVING - LOADING
+  LOAD_CURRENT_STATE: 'LOAD_CURRENT_STATE',
+  RESET_CURRENT_STATE: 'RESET_CURRENT_STATE',
 };
 
 const getCells = () => {
@@ -69,7 +73,7 @@ const getCells = () => {
 
   return cells;
 };
-const initialState = {
+export const initialState = {
   courses: [],
   total: 0,
   hasMore: false,
@@ -156,9 +160,22 @@ const courseReducer = (state = initialState, action) => {
     case actionTypes.RESET_TIME_FROM_CELL:
       return resetTimeFromCellReducer(state, action);
 
+    case actionTypes.LOAD_CURRENT_STATE:
+      return loadCurrentSaveReducer(state, action);
+    case actionTypes.RESET_CURRENT_STATE:
+      return initialState;
     default:
       return state;
   }
+};
+
+export const resetCurrentState = (setLoading) => {
+  return (dispatch) => {
+    dispatch({
+      type: actionTypes.RESET_CURRENT_STATE,
+    });
+    setLoading(false);
+  };
 };
 
 export const addToRequiredColumnMulti = (rc, stack) => {
@@ -432,6 +449,29 @@ export const addAllSections = (areaCode, digitCode) => {
       type: actionTypes.ADD_ALL_SECTIONS_TO_SELECTED,
       data: courses,
     });
+  };
+};
+
+export const getCurrentState = (setLoading) => {
+  return async (dispatch) => {
+    const state = await coursesServices.getState();
+    if (!state || state.error) {
+      toast.error(`Course Planner Alınamadı.`, {
+        position: 'bottom-left',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    dispatch({
+      type: actionTypes.LOAD_CURRENT_STATE,
+      data: state,
+    });
+    setLoading(false);
   };
 };
 
@@ -964,6 +1004,13 @@ const resetTimeFromCellReducer = (state, action) => {
     findTime: state.findTime.filter((t) => t.id !== action.data.time.id),
     notFindTime: state.notFindTime.filter((t) => t.id !== action.data.time.id),
     cells: lodash.uniqBy([action.data.cell, ...state.cells], 'id'),
+  };
+};
+
+const loadCurrentSaveReducer = (state, action) => {
+  return {
+    ...state,
+    ...action.data,
   };
 };
 

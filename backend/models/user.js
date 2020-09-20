@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema({
     },
   },
   created: { type: Date, default: Date.now() },
-  planner: { type: mongoose.Schema.Types.Mixed },
+  planner: { type: mongoose.Schema.Types.Mixed, default: {} },
 });
 
 userSchema.set(uniqueValidator);

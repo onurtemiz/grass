@@ -1067,6 +1067,7 @@ export const searchCourse = (
       type: 'ADD_INF_COURSES',
       data: data,
     });
+
     if (start === 0) {
       first.current = true;
     }

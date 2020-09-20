@@ -3,6 +3,11 @@ export const LESSON_PATH = (lesson) => {
     lesson.parentName
   }`;
 };
+
+export const LESSONS_PATH = (lesson) => {
+  return `/lessons/${lesson.areaCode.toLowerCase()}/${lesson.digitCode}`;
+};
+
 export const TEACHER_PATH = (teacher) => {
   return `/teachers/${teacher.name}`;
 };

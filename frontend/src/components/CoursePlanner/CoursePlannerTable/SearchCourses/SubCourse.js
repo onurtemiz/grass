@@ -68,7 +68,7 @@ const SubCourse = ({ course }) => {
       <Card
         fluid
         style={{ padding: '0.5em' }}
-        onMouseEnter={() => handleMouseEnter()}
+        onMouseOver={() => handleMouseEnter()}
         onMouseLeave={() => handleMouseLeave()}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>

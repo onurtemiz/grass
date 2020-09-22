@@ -77,21 +77,24 @@ const CoursePlanner = () => {
         scenarios,
         currentScenario,
       } = state;
-      coursesService.saveState({
-        selectedCourses,
-        cells,
-        findTime,
-        notFindTime,
-        tryEmptyDay,
-        conflict,
-        extraHours,
-        requiredCourses,
-        creditsRange,
-        scenariosSlider,
-        courseRange,
-        scenarios,
-        currentScenario,
-      });
+      window.localStorage.setItem(
+        'planner',
+        JSON.stringify({
+          selectedCourses,
+          cells,
+          findTime,
+          notFindTime,
+          tryEmptyDay,
+          conflict,
+          extraHours,
+          requiredCourses,
+          creditsRange,
+          scenariosSlider,
+          courseRange,
+          scenarios,
+          currentScenario,
+        })
+      );
     }
   }, [saving]);
 

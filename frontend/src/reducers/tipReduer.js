@@ -84,16 +84,16 @@ export const addInfTip = (start, count, filter) => {
     }
     const total = await tipsService.getTotalTip();
     const data = {
-      hasMore: true,
+      hasMore: false,
       count: count,
       start: start + count,
       tips: tips,
       total: total.total,
     };
-    if (total.total === 0 || total.total < count + start) {
-      data.hasMore = false;
-      data.start = 0;
-    }
+    // if (total.total === 0 || total.total < count + start) {
+    //   data.hasMore = false;
+    //   data.start = 0;
+    // }
     dispatch({
       type: 'ADD_INF_TIP',
       data: data,

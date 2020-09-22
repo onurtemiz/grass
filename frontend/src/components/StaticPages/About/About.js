@@ -52,7 +52,8 @@ const About = () => {
       <br />
       <p>
         Not: Destekleri ve fikirleri için özellikle G.V.ye, Ceme, Ufuğa, Maliye,
-        Seline ve tavsiye veren diğer bütün arkadaşlarıma teşekkür ederim :).
+        Seline, Utkana ve tavsiye veren diğer bütün arkadaşlarıma teşekkür
+        ederim :).
       </p>
     </div>
   );

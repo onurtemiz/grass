@@ -39,10 +39,12 @@ tipSchema.statics.getFilteredInf = function (
   start = 0,
   total = Number.MAX_SAFE_INTEGER
 ) {
-  return this.find({ isApproved: true })
-    .sort(popular ? { totalLength: -1 } : { date: sort })
-    .skip(Number(start))
-    .limit(Number(total));
+  console.log(popular);
+  return this.find({ isApproved: true }).sort(
+    popular ? { _id: -1 } : { date: sort }
+  );
+  // .skip(Number(start))
+  // .limit(Number(total));
 };
 
 module.exports = mongoose.model('Tip', tipSchema);

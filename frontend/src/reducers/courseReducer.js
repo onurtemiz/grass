@@ -454,22 +454,11 @@ export const addAllSections = (areaCode, digitCode) => {
 
 export const getCurrentState = (setLoading) => {
   return async (dispatch) => {
-    const state = await coursesServices.getState();
-    if (!state || state.error) {
-      toast.error(`Course Planner Alınamadı.`, {
-        position: 'bottom-left',
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
+    const planner = window.localStorage.getItem('planner');
+    const jsonPlanner = JSON.parse(planner);
     dispatch({
       type: actionTypes.LOAD_CURRENT_STATE,
-      data: state,
+      data: jsonPlanner,
     });
     setLoading(false);
   };

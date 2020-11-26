@@ -10,6 +10,7 @@ const Comment = ({ comment, showSource }) => {
     maxWidth: '640px',
     marginTop: '1rem',
   };
+  console.log(comment);
   if (!isUpdate) {
     return (
       <div style={commentStyle}>

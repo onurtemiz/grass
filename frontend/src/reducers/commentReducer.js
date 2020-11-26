@@ -8,7 +8,7 @@ const initialState = {
   start: 0,
   count: 20,
   filter: 'mostRecent',
-  daySort: 'lastMonth',
+  daySort: 'allTime',
 };
 
 const commentReducer = (state = initialState, action) => {

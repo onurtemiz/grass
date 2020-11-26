@@ -29,7 +29,6 @@ const Follow = ({ idToFollow }) => {
       onClick={() => handleFollow()}
     >
       <Icon name="hockey puck" color="white" />
-
       <span>{following ? 'Takibi Bırak' : 'Takip Et'}</span>
     </Button>
   );

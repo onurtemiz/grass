@@ -30,7 +30,7 @@
     "moment": "^2.27.0",
     "mongoose": "^5.10.2",
     "mongoose-unique-validator": "^2.0.3",
-    "nodemailer": "^6.4.11",
+    "nodemailer": "^6.4.16",
     "randomstring": "^1.1.5",
     "rate-limiter-flexible": "^2.1.10"
   },

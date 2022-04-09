@@ -27,7 +27,7 @@
     "helmet": "^3.23.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.10.2",
     "mongoose-unique-validator": "^2.0.3",
     "nodemailer": "^6.4.11",
